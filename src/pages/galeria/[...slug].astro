@@ -4,6 +4,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
 import ImageLightbox from '@components/interactive/ImageLightbox.tsx';
 import { formatDate } from '@lib/utils';
+import { generateGalleryJsonLd } from '@lib/seo';
 
 type Gallery = CollectionEntry<'gallery'>;
 type GalleryVideo = { url: string; title: string; thumbnail?: string };
@@ -21,13 +22,13 @@ const { Content } = await render(gallery);
 const { title, date, description, images, videos } = gallery.data;
 const hasContent = (gallery as any).body && (gallery as any).body.trim().length > 0;
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'ImageGallery',
-  name: title,
-  datePublished: date.toISOString(),
-  numberOfItems: images.length,
-};
+const jsonLd = generateGalleryJsonLd({
+  title,
+  url: `/galeria/${gallery.id}`,
+  date,
+  description,
+  images,
+});
 ---
 
 <BaseLayout title={`${title} | Galería`} description={description} jsonLd={jsonLd}>

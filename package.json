@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^4.2.0",
+    "@astrojs/rss": "^4.0.17",
     "@astrojs/sitemap": "^3.4.0",
     "@formkit/auto-animate": "^0.8.2",
     "@hookform/resolvers": "^3.9.3",
@@ -54,6 +55,7 @@
     "gray-matter": "^4.0.3",
     "jsdom": "^29.0.1",
     "msw": "^2.12.13",
+    "playwright": "^1.58.2",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.9",

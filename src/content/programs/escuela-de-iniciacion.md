@@ -49,3 +49,7 @@ Los niños desarrollan equilibrio, coordinación y confianza sobre la bicicleta.
 ## Acompañamiento
 
 Cada grupo cuenta con un entrenador certificado y un monitor de apoyo. La relación máxima es de 10 niños por instructor, garantizando atención personalizada y seguridad en todo momento.
+
+## Seguridad y protección
+
+El club ofrece una póliza de accidentes personales con Aseguradora Solidaria de Colombia (vigencia marzo 2026 - marzo 2027) por un valor de $60.000 anuales por deportista. La póliza cubre gastos médicos hasta $5.000.000, rehabilitación integral hasta $10.000.000, traslado en ambulancia y renta diaria por hospitalización. La cobertura aplica durante todas las actividades autorizadas por el club.
