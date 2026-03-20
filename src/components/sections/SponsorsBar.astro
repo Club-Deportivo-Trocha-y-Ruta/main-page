@@ -6,7 +6,7 @@ import SectionTitle from '@components/common/SectionTitle.astro';
 type Sponsor = CollectionEntry<'sponsors'>;
 
 const sponsors = (await getCollection('sponsors'))
-  .filter((s: Sponsor) => !s.data.draft && s.data.active)
+  .filter((s: Sponsor) => !s.data.draft && s.data.active && !s.data.logo.includes('placeholder'))
   .sort((a: Sponsor, b: Sponsor) => a.data.order - b.data.order);
 ---
 

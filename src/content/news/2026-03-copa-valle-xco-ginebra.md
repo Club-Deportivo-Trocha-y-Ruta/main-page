@@ -95,21 +95,21 @@ En la jornada del sábado, **Jostin Villamizar García** logró el **4° lugar e
 
 Con los puntos acumulados entre Roldanillo y Ginebra, así queda la posición de nuestros corredores en la tabla general de la Copa Valle 2026:
 
-| Corredor | Categoría | Pos. General | Válida I | Válida II | Total |
-|----------|-----------|:------------:|:--------:|:---------:|:-----:|
-| Isabel Cristhina Quiñones Batero | Prejuvenil A Fem. | **4°** | 30 | 30 | **60** |
-| Samuel Ortiz Valencia | Prejuvenil A | **5°** | 25 | 33 | **58** |
-| Eileen Sophia Vargas Bonilla | Infantil A Fem. | **6°** | 25 | 21 | **46** |
-| Sofía Gómez | Infantil A Fem. | **7°** | 21 | 23 | **44** |
-| Juan Diego García | Élite | **7°** | 21 | 21 | **42** |
-| Mariana Coronado Delgado | Prejuvenil A Fem. | **6°** | 1 | 36 | **37** |
-| Miguel Ángel Anaya | Infantil A | **8°** | 36 | 0 | **36** |
-| Jostin Villamizar García | Infantil B | **11°** | 15 | 15 | **30** |
-| Samuel Anaya Molano | Preinfantil A | **8°** | 27 | 0 | **27** |
-| Juan David Giraldo Ortiz | Preinfantil B | **16°** | 11 | 7 | **18** |
-| Nicolás Segura López | Prejuvenil A | **17°** | 11 | 0 | **11** |
-| Matías Montoya | Infantil A | **24°** | 1 | 1 | **2** |
-| Héctor Eduardo Giraldo Ramírez | Promocional | **13°** | 0 | 1 | **1** |
+| Corredor | Categoría | Pos. General | Tendencia | Válida I | Válida II | Total |
+|----------|-----------|:------------:|:---------:|:--------:|:---------:|:-----:|
+| Isabel Cristhina Quiñones Batero | Prejuvenil A Fem. | **4°** | <span class="text-gray-400">— Estable</span> | 30 | 30 | **60** |
+| Samuel Ortiz Valencia | Prejuvenil A | **5°** | <span class="text-green-600 font-semibold">▲ +1</span> | 25 | 33 | **58** |
+| Eileen Sophia Vargas Bonilla | Infantil A Fem. | **6°** | <span class="text-gray-400">— Estable</span> | 25 | 21 | **46** |
+| Sofía Gómez | Infantil A Fem. | **7°** | <span class="text-green-600 font-semibold">▲ +1</span> | 21 | 23 | **44** |
+| Juan Diego García | Élite | **7°** | <span class="text-green-600 font-semibold">▲ +1</span> | 21 | 21 | **42** |
+| Mariana Coronado Delgado | Prejuvenil A Fem. | **6°** | <span class="text-green-600 font-semibold">▲ +1</span> | 1 | 36 | **37** |
+| Miguel Ángel Anaya | Infantil A | **8°** | <span class="text-red-500 font-semibold">▼ -6</span> | 36 | 0 | **36** |
+| Jostin Villamizar García | Infantil B | **11°** | <span class="text-gray-400">— Estable</span> | 15 | 15 | **30** |
+| Samuel Anaya Molano | Preinfantil A | **8°** | <span class="text-red-500 font-semibold">▼ -3</span> | 27 | 0 | **27** |
+| Juan David Giraldo Ortiz | Preinfantil B | **16°** | <span class="text-red-500 font-semibold">▼ -3</span> | 11 | 7 | **18** |
+| Nicolás Segura López | Prejuvenil A | **17°** | <span class="text-red-500 font-semibold">▼ -4</span> | 11 | 0 | **11** |
+| Matías Montoya | Infantil A | **24°** | <span class="text-red-500 font-semibold">▼ -6</span> | 1 | 1 | **2** |
+| Héctor Eduardo Giraldo Ramírez | Promocional | **13°** | <span class="text-primary font-semibold">★ Debut</span> | 0 | 1 | **1** |
 
 **Isabel Cristhina Quiñones** lidera la cosecha del club con 60 puntos acumulados y un sólido **4° puesto general** en Prejuvenil A Femenino, gracias a su consistencia en ambas válidas. Samuel Ortiz, con su podio en Ginebra, escaló al **5° lugar general** en Prejuvenil A.
 

@@ -10,7 +10,12 @@
     "lint:fix": "eslint src --ext .ts,.tsx,.astro --fix",
     "format": "prettier --write \"src/**/*.{astro,ts,tsx,css,md}\"",
     "format:check": "prettier --check \"src/**/*.{astro,ts,tsx,css,md}\"",
-    "typecheck": "astro check"
+    "typecheck": "astro check",
+    "test": "vitest",
+    "test:run": "vitest run --passWithNoTests",
+    "test:astro": "vitest --project astro",
+    "test:react": "vitest --project react",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@astrojs/react": "^4.2.0",
@@ -34,17 +39,30 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jsdom": "^28.0.1",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^4.1.0",
     "eslint": "^9.19.0",
     "eslint-plugin-astro": "^1.3.1",
+    "fast-glob": "^3.3.3",
+    "gray-matter": "^4.0.3",
+    "jsdom": "^29.0.1",
+    "msw": "^2.12.13",
     "playwright": "^1.58.2",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.9",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^4.1.0",
+    "vitest-axe": "^0.1.0"
   },
   "engines": {
     "node": ">=20.0.0"

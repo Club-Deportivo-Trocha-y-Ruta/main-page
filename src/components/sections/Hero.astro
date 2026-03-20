@@ -19,8 +19,19 @@ const VIDEO_END = 25;
 ---
 
 <section class="relative min-h-[60vh] md:min-h-[80vh] flex items-center justify-center bg-surface-dark overflow-hidden">
-  <!-- YouTube video background -->
-  <div class="hero-video-wrapper absolute inset-0 pointer-events-none" aria-hidden="true">
+  <!-- Poster image: visible on mobile, fallback on desktop if YouTube fails -->
+  <img
+    src="/images/hero-poster.jpg"
+    alt=""
+    class="hero-poster absolute inset-0 h-full w-full object-cover"
+    loading="eager"
+    decoding="async"
+    fetchpriority="high"
+    aria-hidden="true"
+  />
+
+  <!-- YouTube video background: only on desktop -->
+  <div class="hero-video-wrapper absolute inset-0 pointer-events-none hidden md:block" aria-hidden="true">
     <div id="hero-yt-player"></div>
   </div>
 
@@ -75,20 +86,34 @@ const VIDEO_END = 25;
     object-fit: cover;
   }
 
-  @media (max-width: 768px) {
-    .hero-video-wrapper :global(iframe) {
-      width: 300%;
-      height: 100%;
-      min-width: 300%;
+  /* Hide video when user prefers reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-video-wrapper {
+      display: none !important;
     }
   }
 </style>
 
 <script define:vars={{ YOUTUBE_VIDEO_ID, VIDEO_START, VIDEO_END }}>
+  const DESKTOP_BREAKPOINT = 768;
   let player;
   let loopInterval;
 
-  function onYouTubeIframeAPIReady() {
+  function isDesktop() {
+    return window.innerWidth >= DESKTOP_BREAKPOINT;
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function initYouTubePlayer() {
+    // Skip on mobile or if user prefers reduced motion
+    if (!isDesktop() || prefersReducedMotion()) return;
+
+    const container = document.getElementById('hero-yt-player');
+    if (!container) return;
+
     player = new YT.Player('hero-yt-player', {
       videoId: YOUTUBE_VIDEO_ID,
       playerVars: {
@@ -143,13 +168,24 @@ const VIDEO_END = 25;
     if (player && player.destroy) player.destroy();
   }, { once: true });
 
-  // Load YouTube IFrame API
-  if (!window.YT) {
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
-    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
-  } else {
-    onYouTubeIframeAPIReady();
+  // Re-initialize on View Transitions back-navigation
+  document.addEventListener('astro:after-swap', () => {
+    if (isDesktop() && !prefersReducedMotion()) {
+      if (window.YT && window.YT.Player) {
+        initYouTubePlayer();
+      }
+    }
+  });
+
+  // Load YouTube IFrame API only on desktop
+  if (isDesktop() && !prefersReducedMotion()) {
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+      window.onYouTubeIframeAPIReady = initYouTubePlayer;
+    } else {
+      initYouTubePlayer();
+    }
   }
 </script>

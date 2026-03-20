@@ -70,6 +70,20 @@
   }
 }
 
+/* Navigation progress bar */
+#nav-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: var(--color-primary);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: width 0.3s ease-out, opacity 0.3s ease;
+}
+
 /* Prose tables responsive — scroll horizontal en mobile */
 .prose :where(table) {
   display: block;
@@ -82,5 +96,9 @@
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  #nav-progress {
+    display: none;
   }
 }

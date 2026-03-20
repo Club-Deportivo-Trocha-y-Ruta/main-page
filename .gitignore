@@ -18,6 +18,7 @@ dist/
 .netlify/
 
 # Testing / QA
+coverage/
 .playwright-cli/
 playwright-report/
 test-results/

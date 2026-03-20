@@ -1,0 +1,85 @@
+---
+// NavigationProgress.astro
+// Barra de progreso durante navegación entre páginas (View Transitions)
+// Zero dependencias — usa eventos astro:before-preparation / astro:page-load
+---
+
+<div
+  id="nav-progress"
+  role="progressbar"
+  aria-hidden="true"
+  aria-label="Cargando página"
+></div>
+
+<script>
+  const THRESHOLD_MS = 200;
+  const TRICKLE_INTERVAL = 150;
+
+  let progressEl: HTMLElement | null = null;
+  let thresholdTimer: number | null = null;
+  let trickleTimer: number | null = null;
+  let currentProgress = 0;
+  let isVisible = false;
+
+  function getEl(): HTMLElement | null {
+    if (!progressEl || !progressEl.isConnected) {
+      progressEl = document.getElementById('nav-progress');
+    }
+    return progressEl;
+  }
+
+  function setProgress(value: number): void {
+    const el = getEl();
+    if (!el) return;
+    currentProgress = Math.min(value, 0.99);
+    el.style.width = `${currentProgress * 100}%`;
+  }
+
+  function show(): void {
+    const el = getEl();
+    if (!el || isVisible) return;
+    isVisible = true;
+    currentProgress = 0;
+    el.style.opacity = '1';
+    el.setAttribute('aria-hidden', 'false');
+    setProgress(0.1);
+
+    trickleTimer = window.setInterval(() => {
+      if (currentProgress < 0.9) {
+        const delta = (1 - currentProgress) * 0.08;
+        setProgress(currentProgress + delta);
+      }
+    }, TRICKLE_INTERVAL);
+  }
+
+  function complete(): void {
+    if (thresholdTimer !== null) {
+      clearTimeout(thresholdTimer);
+      thresholdTimer = null;
+    }
+    if (trickleTimer !== null) {
+      clearInterval(trickleTimer);
+      trickleTimer = null;
+    }
+
+    const el = getEl();
+    if (!el || !isVisible) return;
+
+    el.style.width = '100%';
+    setTimeout(() => {
+      el.style.opacity = '0';
+      el.setAttribute('aria-hidden', 'true');
+      setTimeout(() => {
+        el.style.width = '0%';
+        isVisible = false;
+        currentProgress = 0;
+      }, 300);
+    }, 150);
+  }
+
+  document.addEventListener('astro:before-preparation', () => {
+    thresholdTimer = window.setTimeout(show, THRESHOLD_MS);
+  });
+
+  document.addEventListener('astro:page-load', complete);
+</script>
