@@ -1,0 +1,132 @@
+# ============================================================
+# CI/CD — Club Deportivo Trocha y Ruta
+# ============================================================
+# Trigger: push (merge) a develop
+# Pipeline: checkout → node setup → install → typecheck
+#           → test → build → deploy FTPS
+#
+# Cada paso es un gate: si falla, el pipeline se detiene
+# y el deploy NO se ejecuta.
+#
+# Secrets requeridos en GitHub:
+#   FTP_SERVER      → hostname FTP de Hostinger (ej: ftp.clubdeportivotrochayruta.org)
+#   FTP_USERNAME    → usuario FTP (ej: u123456789)
+#   FTP_PASSWORD    → contraseña FTP del dominio principal
+#
+# Variables requeridas (Settings → Secrets and variables → Variables):
+#   PUBLIC_WEB3FORMS_KEY          → API key de Web3Forms
+#   PUBLIC_CLOUDINARY_CLOUD_NAME  → Cloud name de Cloudinary
+# ============================================================
+
+name: CI/CD → Develop
+
+on:
+  push:
+    # Solo se activa cuando se hace push/merge a develop.
+    # Los commits en feature branches NO disparan este workflow.
+    branches:
+      - develop
+
+# Cancela cualquier pipeline anterior en cola para develop si llega uno nuevo.
+# Evita deploys simultáneos y condiciones de carrera en public_html.
+concurrency:
+  group: deploy-develop
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Verificación de calidad
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # ── 1. Checkout ───────────────────────────────────────
+      - name: Checkout código fuente
+        uses: actions/checkout@v4
+
+      # ── 2. Setup Node.js ──────────────────────────────────
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          # Activa el caché de npm automáticamente usando package-lock.json
+          # como clave. Reduce npm ci de ~45s a ~8s en runs siguientes.
+          cache: 'npm'
+
+      # ── 3. Instalar dependencias ──────────────────────────
+      - name: Instalar dependencias
+        # npm ci garantiza instalación limpia y reproducible desde
+        # package-lock.json. Es el estándar para entornos de CI.
+        run: npm ci
+
+      # ── 4. Type check ─────────────────────────────────────
+      - name: Verificar tipos (astro check)
+        run: npm run typecheck
+
+      # ── 5. Tests unitarios — GATE DE CALIDAD ─────────────
+      # Si algún test falla, el pipeline se detiene aquí.
+      # El build y el deploy NO se ejecutan.
+      - name: Ejecutar pruebas unitarias (Vitest)
+        run: npm test
+
+  deploy:
+    name: Build & Deploy a Hostinger
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # El deploy solo se ejecuta si el job de CI pasa completamente.
+    # Cualquier fallo en typecheck o tests bloquea este job.
+    needs: ci
+
+    steps:
+      # ── 1. Checkout ───────────────────────────────────────
+      - name: Checkout código fuente
+        uses: actions/checkout@v4
+
+      # ── 2. Setup Node.js ──────────────────────────────────
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── 3. Instalar dependencias ──────────────────────────
+      - name: Instalar dependencias
+        run: npm ci
+
+      # ── 4. Build Astro ────────────────────────────────────
+      # astro check + astro build. Genera el directorio dist/
+      # con el sitio estático listo para subir a Hostinger.
+      - name: Build producción Astro
+        run: npm run build
+        env:
+          # Variables públicas incrustadas en el HTML durante el build.
+          # Se configuran como "Variables" (no Secrets) en GitHub Actions
+          # porque su valor ya es visible en el código fuente del cliente.
+          PUBLIC_WEB3FORMS_KEY: ${{ vars.PUBLIC_WEB3FORMS_KEY }}
+          PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ vars.PUBLIC_CLOUDINARY_CLOUD_NAME }}
+
+      # ── 5. Deploy FTPS incremental ────────────────────────
+      # Sube solo los archivos modificados comparando hashes
+      # almacenados en .ftp-deploy-sync-state.json en el servidor.
+      # Primera ejecución: ~90s (sube todo). Siguientes: ~10-30s.
+      - name: Deploy a Hostinger via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # FTPS = FTP con cifrado TLS via STARTTLS (puerto 21).
+          # Compatible con todos los planes de Hostinger sin SSH.
+          protocol: ftps
+          port: 21
+          local-dir: ./dist/
+          server-dir: /public_html/
+          # Archivo de estado que mantiene los hashes de archivos subidos.
+          # Permite el deploy incremental en ejecuciones posteriores.
+          state-name: .ftp-deploy-sync-state.json
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .ftp-deploy-sync-state.json
+          dry-run: false
