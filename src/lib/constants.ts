@@ -23,6 +23,7 @@ export const SOCIAL = {
   instagram: 'https://www.instagram.com/club_trochayruta/',
   facebook: 'https://www.facebook.com/trochayruta',
   youtube: 'https://www.youtube.com/@clubtrochayruta',
+  strava: 'https://www.strava.com/clubs/326554',
 } as const;
 
 export const NAV_ITEMS = [
@@ -42,3 +43,8 @@ export const SECONDARY_NAV = [
   { label: 'Transparencia', href: '/transparencia' },
   { label: 'Contacto', href: '/contacto' },
 ] as const;
+
+export const CHILD_SAFETY = {
+  icbfLine: '141',
+  policyUrl: '/politica-proteccion-infantil',
+} as const;
