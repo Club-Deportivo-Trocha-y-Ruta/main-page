@@ -28,7 +28,7 @@ const testimonials = (await getCollection('testimonials'))
 
   <div class="mx-auto max-w-3xl space-y-8">
     {testimonials.map((testimonial: CollectionEntry<'testimonials'>) => (
-      <Card class="p-8">
+      <Card class="p-5 sm:p-8">
         <blockquote>
           <p class="font-display italic text-lg text-text-primary leading-relaxed">
             "{testimonial.data.quote}"

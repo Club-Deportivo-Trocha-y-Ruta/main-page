@@ -45,11 +45,11 @@ const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = 
   <article class="mx-auto max-w-6xl px-4 py-10 md:py-16">
     <Breadcrumb items={[{ label: 'Equipo', href: '/equipo' }, { label: name }]} />
 
-    <div class="grid md:grid-cols-3 gap-12">
+    <div class="grid md:grid-cols-3 gap-8 md:gap-12">
       <!-- Foto -->
       <div class="md:col-span-1">
         <div
-          class="aspect-[3/4] max-w-sm bg-surface-muted rounded-2xl"
+          class="aspect-[3/4] max-w-xs mx-auto md:max-w-none bg-surface-muted rounded-2xl"
           role="img"
           aria-label={`Foto de ${name}`}
         >
@@ -73,7 +73,7 @@ const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = 
           )}
         </div>
 
-        <dl class="mt-6 grid grid-cols-2 gap-4 text-sm">
+        <dl class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
           <div>
             <dt class="text-xs text-text-secondary uppercase tracking-wide">Edad</dt>
             <dd class="font-semibold text-text-primary">{age} años</dd>
@@ -95,7 +95,7 @@ const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = 
     </div>
 
     <!-- Biografia -->
-    <div class="prose prose-lg max-w-3xl mt-12">
+    <div class="prose prose-lg max-w-3xl mt-12 overflow-x-auto">
       <Content />
     </div>
 

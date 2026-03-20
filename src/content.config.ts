@@ -96,6 +96,7 @@ const news = defineCollection({
     tags: z.array(z.string()).default([]),
     image: z.string(),
     imageAlt: z.string().optional(),
+    imageLayout: z.enum(['cover', 'contain']).default('cover'),
     excerpt: z.string().max(200),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
@@ -332,6 +333,41 @@ const pages = defineCollection({
   }),
 });
 
+const socialInitiatives = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: 'src/content/social-initiatives' }),
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    date: z.coerce.date(),
+    endDate: z.coerce.date().optional(),
+    type: z.enum(['ambiental', 'formacion', 'recreacion', 'educacion', 'alianza']),
+    status: z.enum(['activa', 'completada', 'pausada']).default('completada'),
+    recurrent: z.boolean().default(false),
+    frequency: z.string().optional(),
+    location: z.string().optional(),
+    neighborhood: z.string().optional(),
+    city: z.string().default('Yumbo'),
+    image: z.string(),
+    imageAlt: z.string().optional(),
+    gallery: z.array(z.string()).default([]),
+    impact: z.object({
+      beneficiaries: z.number().optional(),
+      treesPlanted: z.number().optional(),
+      volunteersInvolved: z.number().optional(),
+      areaRestored: z.string().optional(),
+      trainedPeople: z.number().optional(),
+      description: z.string().optional(),
+    }).optional(),
+    allies: z.array(z.string()).default([]),
+    relatedGallery: z.string().optional(),
+    relatedNews: z.array(z.string()).default([]),
+    featured: z.boolean().default(false),
+    draft: z.boolean().default(false),
+    order: z.number().default(0),
+    seo: seoSchema,
+  }),
+});
+
 export const collections = {
   riders,
   directivos,
@@ -345,4 +381,5 @@ export const collections = {
   rutas,
   pages,
   faqs,
+  socialInitiatives,
 };

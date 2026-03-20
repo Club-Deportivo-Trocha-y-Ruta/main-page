@@ -4,8 +4,9 @@ date: 2026-03-01
 author: "Club Trocha y Ruta"
 category: "competencias"
 tags: ["copa-valle", "xco", "ginebra", "resultados", "gymkanas"]
-image: "/images/news/copa-valle-ginebra-2026/DSC_8757.jpg"
-imageAlt: "Corredores del Club Trocha y Ruta compitiendo en la II Válida de la Copa Valle en la Pista La Floresta de Ginebra"
+image: "/images/news/copa-valle-ginebra-2026/portada-copa-valle-ginebra.jpg"
+imageAlt: "Afiche oficial de la II Válida Copa Valle de Ciclomontañismo en Pista La Floresta, Ginebra"
+imageLayout: contain
 excerpt: "Con 10 corredores en pista, el club sumó 2 podios y valiosos puntos en la segunda válida de la Copa Valle disputada en Ginebra."
 featured: true
 draft: false
