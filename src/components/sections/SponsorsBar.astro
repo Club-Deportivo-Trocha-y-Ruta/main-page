@@ -67,6 +67,10 @@ const sponsors = (await getCollection('sponsors'))
   @media (prefers-reduced-motion: reduce) {
     .animate-scroll {
       animation: none;
+      width: auto;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
     }
   }
 </style>

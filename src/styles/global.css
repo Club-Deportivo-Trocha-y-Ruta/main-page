@@ -74,7 +74,6 @@
 .prose :where(table) {
   display: block;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* Respect reduced motion preference */

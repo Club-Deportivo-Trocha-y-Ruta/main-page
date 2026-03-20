@@ -164,7 +164,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           autoComplete="name"
           aria-describedby={errors.name ? 'contact-name-error' : undefined}
           aria-invalid={errors.name ? 'true' : undefined}
-          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-base text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
             errors.name ? 'border-red-400' : 'border-gray-300'
           }`}
           placeholder="Tu nombre"
@@ -191,7 +191,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           autoComplete="email"
           aria-describedby={errors.email ? 'contact-email-error' : undefined}
           aria-invalid={errors.email ? 'true' : undefined}
-          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-base text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
             errors.email ? 'border-red-400' : 'border-gray-300'
           }`}
           placeholder="tu@email.com"
@@ -218,7 +218,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           autoComplete="tel"
           aria-describedby={errors.phone ? 'contact-phone-error' : undefined}
           aria-invalid={errors.phone ? 'true' : undefined}
-          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-base text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
             errors.phone ? 'border-red-400' : 'border-gray-300'
           }`}
           placeholder="300 123 4567"
@@ -243,7 +243,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           id="contact-subject"
           aria-describedby={errors.subject ? 'contact-subject-error' : undefined}
           aria-invalid={errors.subject ? 'true' : undefined}
-          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-base text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
             errors.subject ? 'border-red-400' : 'border-gray-300'
           }`}
           {...register('subject')}

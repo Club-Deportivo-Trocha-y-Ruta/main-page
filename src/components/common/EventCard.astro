@@ -21,19 +21,19 @@ const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> =
 };
 ---
 
-<a href={href} class="flex items-start gap-4 rounded-xl p-4 transition-colors hover:bg-surface-muted">
-  <div class="min-w-[4rem] rounded-lg bg-primary/10 p-3 text-center">
+<a href={href} class="flex items-start gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 transition-colors hover:bg-surface-muted">
+  <div class="min-w-[3.5rem] sm:min-w-[4rem] rounded-lg bg-primary/10 p-2 sm:p-3 text-center shrink-0">
     <span class="block text-xs font-semibold uppercase text-primary">
       {date.toLocaleDateString('es-CO', { month: 'short' })}
     </span>
-    <span class="block font-display text-2xl font-bold text-primary">
+    <span class="block font-display text-xl sm:text-2xl font-bold text-primary">
       {date.getDate()}
     </span>
   </div>
-  <div class="flex flex-col gap-1">
-    <h3 class="font-display font-semibold text-text-primary">{title}</h3>
+  <div class="flex flex-col gap-1 min-w-0">
+    <h3 class="font-display font-semibold text-text-primary leading-snug">{title}</h3>
     <p class="text-sm text-text-secondary"><span aria-hidden="true">📍</span> {location}</p>
-    <div class="mt-1 flex flex-wrap gap-2">
+    <div class="mt-1 flex flex-wrap gap-1.5 sm:gap-2">
       <Badge>{getCategoryLabel(category)}</Badge>
       <Badge variant={statusVariant[status] ?? 'neutral'}>{getEventStatusLabel(status)}</Badge>
     </div>

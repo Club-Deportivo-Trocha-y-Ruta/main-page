@@ -95,3 +95,39 @@ export function generateBreadcrumbJsonLd(
     })),
   };
 }
+
+export function generateSocialInitiativeJsonLd(initiative: {
+  title: string;
+  date: Date;
+  description: string;
+  location?: string;
+  image?: string;
+  url: string;
+  type: string;
+}) {
+  const typeMap: Record<string, string> = {
+    ambiental: 'Event',
+    formacion: 'EducationEvent',
+    recreacion: 'SportsEvent',
+    educacion: 'EducationEvent',
+    alianza: 'Event',
+  };
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': typeMap[initiative.type] ?? 'Event',
+    name: initiative.title,
+    startDate: initiative.date.toISOString(),
+    description: initiative.description,
+    image: initiative.image,
+    url: initiative.url,
+    location: initiative.location
+      ? { '@type': 'Place', name: initiative.location }
+      : undefined,
+    organizer: {
+      '@type': 'SportsOrganization',
+      name: 'Club Deportivo Trocha y Ruta',
+      url: 'https://clubdeportivotrochayruta.org',
+    },
+  };
+}
