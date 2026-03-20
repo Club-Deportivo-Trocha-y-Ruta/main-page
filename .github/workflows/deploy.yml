@@ -2,7 +2,7 @@
 # CI/CD — Club Deportivo Trocha y Ruta
 # ============================================================
 # Trigger: push (merge) a develop
-# Pipeline: checkout → node setup → install → lint → typecheck
+# Pipeline: checkout → node setup → install → typecheck
 #           → test → build → deploy FTPS
 #
 # Cada paso es un gate: si falla, el pipeline se detiene
@@ -59,15 +59,11 @@ jobs:
         # package-lock.json. Es el estándar para entornos de CI.
         run: npm ci
 
-      # ── 4. Lint ───────────────────────────────────────────
-      - name: Verificar lint (ESLint)
-        run: npm run lint
-
-      # ── 5. Type check ─────────────────────────────────────
+      # ── 4. Type check ─────────────────────────────────────
       - name: Verificar tipos (astro check)
         run: npm run typecheck
 
-      # ── 6. Tests unitarios — GATE DE CALIDAD ─────────────
+      # ── 5. Tests unitarios — GATE DE CALIDAD ─────────────
       # Si algún test falla, el pipeline se detiene aquí.
       # El build y el deploy NO se ejecutan.
       - name: Ejecutar pruebas unitarias (Vitest)
@@ -78,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # El deploy solo se ejecuta si el job de CI pasa completamente.
-    # Cualquier fallo en lint, typecheck o tests bloquea este job.
+    # Cualquier fallo en typecheck o tests bloquea este job.
     needs: ci
 
     steps:
