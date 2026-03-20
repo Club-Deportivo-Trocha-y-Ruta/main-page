@@ -5,7 +5,7 @@ import Card from '@components/common/Card.astro';
 import Button from '@components/common/Button.astro';
 
 const sponsors: CollectionEntry<'sponsors'>[] = (await getCollection('sponsors'))
-  .filter((s: CollectionEntry<'sponsors'>) => !s.data.draft && s.data.active)
+  .filter((s: CollectionEntry<'sponsors'>) => !s.data.draft && s.data.active && !s.data.logo.includes('placeholder'))
   .sort((a: CollectionEntry<'sponsors'>, b: CollectionEntry<'sponsors'>) => a.data.order - b.data.order);
 
 const levelOrder = ['principal', 'oficial', 'aliado', 'proveedor'] as const;
