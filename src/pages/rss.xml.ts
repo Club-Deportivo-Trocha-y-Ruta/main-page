@@ -18,7 +18,7 @@ export async function GET(context: APIContext) {
       pubDate: n.data.date,
       description: n.data.excerpt,
       link: `/noticias/${n.id}/`,
-      categories: [n.data.category, ...n.data.tags],
+      categories: [n.data.category, ...(n.data.tags ?? [])],
       ...(n.data.image
         ? {
             customData: `<enclosure url="${n.data.image.startsWith('http') ? n.data.image : `${SITE.url}${n.data.image}`}" type="image/jpeg" length="0"/>`,

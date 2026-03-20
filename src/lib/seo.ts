@@ -96,7 +96,9 @@ function organizationRef(): JsonLd {
 }
 
 function fullUrl(path: string): string {
-  return path.startsWith('http') ? path : `${SITE.url}${path}`;
+  if (path.startsWith('http')) return path;
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  return `${SITE.url}${normalized}`;
 }
 
 // ============================================================
@@ -229,9 +231,9 @@ export function generateEventJsonLd(event: EventInput): JsonLd {
         addressCountry: 'CO',
       },
     },
-    description: event.description,
-    image: event.image ? fullUrl(event.image) : undefined,
-    url: event.url ? fullUrl(event.url) : undefined,
+    ...(event.description ? { description: event.description } : {}),
+    ...(event.image ? { image: fullUrl(event.image) } : {}),
+    ...(event.url ? { url: fullUrl(event.url) } : {}),
     organizer: event.organizer
       ? { '@type': 'Organization', name: event.organizer }
       : organizationRef(),
@@ -323,7 +325,8 @@ export function generateArticleJsonLd(article: ArticleInput): JsonLd {
       : {}),
     author: {
       '@type': 'Organization',
-      name: article.author,
+      '@id': `${SITE.url}/#organization`,
+      name: SITE.name,
       url: SITE.url,
     },
     description: article.excerpt,
@@ -376,7 +379,7 @@ export function generateCourseJsonLd(course: CourseInput): JsonLd {
         '@type': 'Schedule',
         scheduleTimezone: 'America/Bogota',
         repeatFrequency: 'P1W',
-        byDay: course.schedule,
+        description: course.schedule,
       },
       ...(course.monthlyFee
         ? {
