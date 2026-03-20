@@ -13,6 +13,8 @@ import TestimonialsSlider from '@components/sections/TestimonialsSlider.astro';
 import SponsorsBar from '@components/sections/SponsorsBar.astro';
 import NewsPreview from '@components/sections/NewsPreview.astro';
 import AboutPreview from '@components/sections/AboutPreview.astro';
+import StravaWidget from '@components/sections/StravaWidget.astro';
+import SafeClubBadge from '@components/sections/SafeClubBadge.astro';
 import Button from '@components/common/Button.astro';
 
 const orgJsonLd = generateOrganizationJsonLd();
@@ -45,7 +47,13 @@ const orgJsonLd = generateOrganizationJsonLd();
     <NewsPreview />
   </div>
   <div class="reveal">
+    <StravaWidget />
+  </div>
+  <div class="reveal">
     <AboutPreview />
+  </div>
+  <div class="reveal">
+    <SafeClubBadge />
   </div>
 
   <!-- CTA Final -->

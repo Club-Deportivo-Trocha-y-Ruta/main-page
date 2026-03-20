@@ -1,0 +1,61 @@
+---
+import SectionTitle from '@components/common/SectionTitle.astro';
+import { SOCIAL } from '@lib/constants';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<section class:list={['py-16 bg-surface-muted', className]}>
+  <div class="mx-auto max-w-6xl px-4">
+    <div class="grid md:grid-cols-2 gap-10 items-center">
+      <!-- Texto -->
+      <div>
+        <SectionTitle
+          align="left"
+          title="Rutas del Club en Strava"
+          subtitle="Seguimos cada kilómetro. Únete al club en Strava para ver nuestros entrenamientos y rutas favoritas."
+        />
+        <a
+          href={SOCIAL.strava}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#FC4C02] px-5 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          aria-label="Ver club Trocha y Ruta en Strava"
+        >
+          <!-- Strava logo SVG inline -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" />
+          </svg>
+          Ver club en Strava
+        </a>
+      </div>
+
+      <!-- Widget iframe de Strava -->
+      <div class="flex justify-center md:justify-end">
+        <div class="overflow-hidden rounded-2xl shadow-md">
+          <iframe
+            allowtransparency="true"
+            frameborder="0"
+            height="160"
+            scrolling="no"
+            src="https://www.strava.com/clubs/326554/latest-rides/441a7d32b653759815f3795fa344acf244070137?show_rides=false"
+            width="300"
+            title="Últimas actividades del Club Trocha y Ruta en Strava"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
