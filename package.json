@@ -12,7 +12,7 @@
     "format:check": "prettier --check \"src/**/*.{astro,ts,tsx,css,md}\"",
     "typecheck": "astro check",
     "test": "vitest",
-    "test:run": "vitest run",
+    "test:run": "vitest run --passWithNoTests",
     "test:astro": "vitest --project astro",
     "test:react": "vitest --project react",
     "test:coverage": "vitest run --coverage"
