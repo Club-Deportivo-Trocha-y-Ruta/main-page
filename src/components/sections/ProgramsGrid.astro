@@ -9,7 +9,7 @@ const programs = (await getCollection('programs'))
   .filter((p: Program) => !p.data.draft)
   .sort((a: Program, b: Program) => a.data.order - b.data.order);
 
-const borderColors = ['border-t-primary', 'border-t-accent', 'border-t-cyan'];
+const borderColors = ['border-t-primary', 'border-t-accent', 'border-t-primary-light'];
 
 const excerpts: Record<string, string> = {
   'escuela-de-iniciacion': 'Primeros pasos en el ciclomontañismo. Desarrollo de habilidades motrices básicas y amor por la bicicleta en un ambiente seguro y divertido.',

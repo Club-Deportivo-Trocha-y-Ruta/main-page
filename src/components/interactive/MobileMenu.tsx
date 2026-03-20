@@ -85,7 +85,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
         aria-label="Abrir menú de navegación"
-        className="inline-flex items-center justify-center rounded-md p-2 text-text-secondary hover:bg-gray-100 hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="inline-flex items-center justify-center rounded-md p-2.5 text-text-secondary hover:bg-gray-100 hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <line x1="3" y1="6" x2="21" y2="6" />
@@ -113,10 +113,10 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
             role="dialog"
             aria-modal="true"
             aria-label="Menú de navegación"
-            className={`fixed top-0 right-0 z-50 h-full w-72 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+            className={`fixed top-0 right-0 z-50 h-full w-72 max-w-[85vw] bg-white shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
           >
             {/* Close button */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-100">
+            <div className="flex items-center justify-between p-4 border-b border-gray-100 shrink-0">
               <span className="font-display font-bold text-primary">Menú</span>
               <button
                 onClick={close}
@@ -131,7 +131,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
             </div>
 
             {/* Nav items */}
-            <nav className="p-4" aria-label="Navegación móvil">
+            <nav className="p-4 overflow-y-auto flex-1" aria-label="Navegación móvil">
               <ul className="space-y-1">
                 {navItems.map((item) => (
                   <li key={item.href}>
@@ -139,7 +139,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
                       href={item.href}
                       onClick={close}
                       aria-current={isActive(item.href) ? 'page' : undefined}
-                      className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
+                      className={`block rounded-md px-3 py-3 text-sm font-medium transition-colors ${
                         isActive(item.href)
                           ? 'bg-primary/10 text-primary font-semibold'
                           : 'text-text-secondary hover:bg-gray-50 hover:text-primary'
@@ -160,7 +160,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
                       href={item.href}
                       onClick={close}
                       aria-current={isActive(item.href) ? 'page' : undefined}
-                      className={`block rounded-md px-3 py-2.5 text-sm transition-colors ${
+                      className={`block rounded-md px-3 py-3 text-sm transition-colors ${
                         isActive(item.href)
                           ? 'text-primary font-semibold'
                           : 'text-text-secondary hover:bg-gray-50 hover:text-primary'

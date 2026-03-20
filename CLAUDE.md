@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Sitio web del **Club Deportivo Trocha y Ruta** — club de ciclomontañismo para niños desde 4 años en Yumbo, Valle del Cauca, Colombia. Reconstrucción completa desde WordPress a Astro estático.
 
-**Estado**: Pre-implementación. Los documentos de planning están en `docs/`. El código fuente aún no existe.
+**Estado**: Implementación avanzada. El sitio compila y genera 27 páginas estáticas. Faltan colecciones de contenido por poblar (directivos, results, rutas, pages) y ajustes de responsive/QA.
 
 ## Comandos
 
@@ -25,30 +25,42 @@ npm run typecheck    # astro check (type-checking)
 
 | Capa | Tecnología | Notas Críticas |
 |------|-----------|----------------|
-| Framework | Astro ^5.17.0 | SSG estático. **NO adoptar v6** sin validar breaking changes |
+| Framework | Astro ^5.17.0 | SSG estático, output `static`. **NO adoptar v6** sin validar breaking changes |
 | Estilos | Tailwind CSS ^4.1.0 | Via `@tailwindcss/vite`. **NO existe `tailwind.config.mjs`** — tokens en `@theme {}` dentro de `src/styles/global.css` |
+| Typography | @tailwindcss/typography ^0.5.19 | Plugin para prose styling en contenido Markdown |
 | Islands | React ^19.2.4 | Solo para 5 componentes interactivos en `src/components/interactive/` |
 | CMS | Sveltia CMS | Estático, sin npm. UI en `public/admin/index.html`. Config en `public/admin/config.yml` |
 | Hosting | Cloudflare Pages | Config en `wrangler.toml`. También hay `netlify.toml` como fallback |
 | Formularios | Web3Forms | API HTTP, 250/mes gratis. Variable: `PUBLIC_WEB3FORMS_KEY` |
-| Imágenes | Astro Image + Cloudinary | Locales via `<Image>` de `astro:assets`, CMS via Cloudinary URLs |
-| Analytics | Cloudflare Web Analytics + Umami | Sin cookies, sin banner consent |
-| Iconos | astro-icon + Phosphor Icons | Tree-shakeable, SVG inline |
+| Imágenes | Astro Image + Cloudinary | Locales via `<Image>` de `astro:assets`, dominio `res.cloudinary.com` habilitado en config |
+| Iconos | astro-icon + Phosphor Icons | `icon({ include: { ph: ['*'] } })` — todos los iconos Phosphor disponibles |
+| Carruseles | Swiper ^12.1.2 | Usado en TestimonialsCarousel |
+| Lightbox | yet-another-react-lightbox ^3.21.0 | Instalado (ImageLightbox usa implementación custom) |
+| Forms | react-hook-form ^7.53.2 + zod ^3.23.8 | Validación en ContactForm e InscriptionForm |
+| Animaciones | @formkit/auto-animate ^0.8.2 | Animaciones de formulario |
+| Optimización | sharp ^0.33.5 | Procesamiento de imágenes en build |
 
-### Tailwind 4 — Configuración Diferente
+### Tailwind 4 — Configuración en CSS
 
 Tailwind 4 **elimina el archivo de configuración JS**. Los design tokens se definen en CSS:
 
 ```css
 /* src/styles/global.css */
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
-  --color-primary: #046bd2;
-  --color-accent: #ef4297;
-  --color-cyan: #03b7df;
-  --color-surface-dark: #1a1a2e;
-  --color-surface-muted: #f8fafc;
+  --color-primary: #20b7c9;
+  --color-primary-dark: #1a96a4;
+  --color-primary-light: #4dc9d7;
+  --color-accent: #8be000;
+  --color-accent-dark: #6fb300;
+  --color-accent-light: #a3e63d;
+  --color-surface: #ffffff;
+  --color-surface-dark: #2f2f2f;
+  --color-surface-muted: #d8d8d8;
+  --color-text-primary: #2f2f2f;
+  --color-text-secondary: #5a5a5a;
   --font-sans: 'Inter Variable', system-ui, sans-serif;
   --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
@@ -67,35 +79,128 @@ Astro genera zero-JS por defecto. React solo se usa en estos 5 componentes:
 
 | Componente | Directiva | Justificación |
 |-----------|-----------|---------------|
-| `MobileMenu.tsx` | `client:load` | Crítico en mobile, debe hidratar inmediatamente |
-| `ContactForm.tsx` | `client:visible` | Validación con react-hook-form + zod |
-| `InscriptionForm.tsx` | `client:visible` | Formulario multi-paso (4 steps) |
-| `ImageLightbox.tsx` | `client:visible` | Lightbox de galería |
-| `Carousel.tsx` | `client:visible` | Carrusel Swiper para testimonios/sponsors |
+| `MobileMenu.tsx` | `client:load` | Crítico en mobile. Portal, focus trap, scroll lock, cierra en View Transitions |
+| `ContactForm.tsx` | `client:visible` | Validación con react-hook-form + zod, honeypot anti-spam, Web3Forms |
+| `InscriptionForm.tsx` | `client:visible` | Formulario multi-paso (4 steps), localStorage persistence (48h TTL) |
+| `ImageLightbox.tsx` | `client:visible` | Lightbox custom con keyboard nav, touch swipe, focus trap |
+| `TestimonialsCarousel.tsx` | `client:visible` | Carrusel Swiper (autoplay 5s, pagination) |
 
 **Regla**: Nunca usar `client:load` excepto para `MobileMenu`. Todo lo demás es `client:visible`.
 
+## Estructura del Proyecto
+
+```
+src/
+├── assets/images/          # logo.webp, skg_logo.svg
+├── components/
+│   ├── common/             # 12 componentes: Header, Footer, Button, Card, Badge,
+│   │   │                   #   EventCard, RiderCard, Breadcrumb, SectionTitle,
+│   │   │                   #   SocialLinks, YouTubeEmbed, SEOHead
+│   ├── sections/           # 11 secciones homepage: Hero, StatsCounter, ProgramsGrid,
+│   │   │                   #   UpcomingEvents, NewsPreview, NewsGallery, GalleryPreview,
+│   │   │                   #   TestimonialsSlider, TeamRoster, SponsorsBar, AboutPreview
+│   └── interactive/        # 5 React islands (ver tabla arriba)
+├── content/                # Content Collections (ver sección abajo)
+├── data/
+│   └── transparencia-documentos.json
+├── layouts/
+│   ├── BaseLayout.astro    # Root: ClientRouter, SEOHead, Header/Footer, scroll-reveal
+│   ├── PageLayout.astro    # Páginas con breadcrumb y título
+│   └── PostLayout.astro    # Artículos con fecha/autor/categoría, prose styling
+├── lib/
+│   ├── constants.ts        # SITE, CONTACT, SOCIAL, NAV_ITEMS, SECONDARY_NAV
+│   ├── utils.ts            # formatDate, slugify, getAge, getCategoryLabel, etc.
+│   └── seo.ts              # JSON-LD generators: Organization, Event, Article, Breadcrumb
+├── pages/                  # 17 páginas (ver sección abajo)
+├── styles/
+│   └── global.css          # Tailwind @theme, fonts, reveal animations, prose table fix
+└── types/                  # (vacío — tipos inline en componentes)
+```
+
+### Páginas Implementadas (17)
+
+| Ruta | Archivo | Descripción |
+|------|---------|-------------|
+| `/` | `index.astro` | Homepage con 11 secciones |
+| `/quienes-somos` | `quienes-somos.astro` | Historia, misión/visión, logros |
+| `/programas` | `programas/index.astro` | Listado de programas |
+| `/programas/[slug]` | `programas/[...slug].astro` | Detalle de programa |
+| `/equipo` | `equipo/index.astro` | Roster de corredores |
+| `/equipo/[slug]` | `equipo/[...slug].astro` | Perfil de corredor |
+| `/noticias` | `noticias/index.astro` | Listado de noticias con filtros |
+| `/noticias/[slug]` | `noticias/[...slug].astro` | Artículo con JSON-LD, galería |
+| `/calendario` | `calendario.astro` | Eventos próximos y pasados |
+| `/galeria` | `galeria/index.astro` | Álbumes fotográficos |
+| `/galeria/[slug]` | `galeria/[...slug].astro` | Álbum con lightbox |
+| `/contacto` | `contacto.astro` | Formulario + info de contacto |
+| `/inscripciones` | `inscripciones.astro` | Formulario multi-paso |
+| `/testimonios` | `testimonios.astro` | Testimonios de familias |
+| `/patrocinadores` | `patrocinadores.astro` | Sponsors por nivel |
+| `/transparencia` | `transparencia/index.astro` | Documentos de gobernanza |
+| `/404` | `404.astro` | Página de error |
+
 ## Arquitectura de Contenido
 
-11 Content Collections definidas en `src/content/config.ts`:
+11 Content Collections definidas en `src/content.config.ts` (nota: no `src/content/config.ts`):
 
-| Colección | Tipo | Descripción |
-|-----------|------|-------------|
-| `riders` | content | Corredores del club con categoría FCC, logros, redes |
-| `directivos` | content | Equipo directivo y staff técnico |
-| `news` | content | Noticias con categorías: competencias, club, entrenamiento, comunidad |
-| `events` | content | Eventos con status (upcoming/past), nivel, categoría XCO/XCM/ruta |
-| `results` | **data** | Resultados YAML/JSON (no Markdown), vinculados a eventos |
-| `programs` | content | 4 programas: Iniciación, Formación, Alto Rendimiento, Recreación |
-| `testimonials` | content | Testimonios de familias y corredores |
-| `sponsors` | content | Patrocinadores por nivel: principal, oficial, aliado, proveedor |
-| `gallery` | content | Álbumes fotográficos con array de imágenes |
-| `rutas` | content | Rutas de entrenamiento con datos GPS, dificultad, distancia |
-| `pages` | content | Páginas estáticas editables desde CMS |
+| Colección | Tipo | Archivos | Estado |
+|-----------|------|----------|--------|
+| `riders` | content (glob) | 5 .md | Poblada |
+| `directivos` | content (glob) | 0 | Sin contenido |
+| `news` | content (glob) | 4 .md | Poblada |
+| `events` | content (glob) | 8 .md | Poblada |
+| `results` | data (glob) | 0 .yaml/.json | Sin contenido |
+| `programs` | content (glob) | 3 .md | Poblada (faltan: Recreación) |
+| `testimonials` | content (glob) | 3 .md | Poblada |
+| `sponsors` | content (glob) | 6 .md | Poblada |
+| `gallery` | content (glob) | 2 .md | Poblada |
+| `rutas` | content (glob) | 0 | Sin contenido |
+| `pages` | content (glob) | 0 | Sin contenido |
 
-**Relaciones entre colecciones**: evento→galería (1:1), evento→results (1:N), evento→news (1:N), rider→program (N:1), ruta→program (N:M).
+### Relaciones entre colecciones
+- evento → galería (1:1, via `relatedGallery`)
+- evento → noticias (1:N, via `relatedNews` array)
+- evento → resultados (1:N, via `event` field en results)
+- noticia → galería (1:1, via `relatedGallery` y `galleryFolder`)
+- rider → programa (N:1, via `program`)
+- testimonial → rider (1:1, via `relatedRider`)
+- testimonial → programa (1:1, via `relatedProgram`)
+- ruta → programa (N:M, via `usedInPrograms` array)
 
-Schemas reutilizables: `seoSchema` (metaTitle, metaDescription, ogImage) y `socialMediaSchema` (instagram, facebook, strava, youtube, tiktok) se comparten entre colecciones.
+### Schemas reutilizables
+- `seoSchema`: metaTitle, metaDescription, ogImage
+- `socialMediaSchema`: instagram, facebook, strava, youtube, tiktok
+
+## Funcionalidades Implementadas
+
+### View Transitions
+- `ClientRouter` habilitado en BaseLayout
+- `transition:persist` en Header (mantiene estado entre navegaciones)
+- `transition:animate="fade"` en contenido principal
+- MobileMenu se cierra en evento `astro:before-preparation`
+
+### SEO y JSON-LD
+- `SEOHead.astro`: title, meta, Open Graph, Twitter Card, JSON-LD
+- Locale: `es_CO`
+- Generators en `src/lib/seo.ts`: SportsOrganization, SportsEvent, Article, BreadcrumbList
+- Sitemap generado por `@astrojs/sitemap`
+
+### Accesibilidad
+- Skip-to-content link
+- Focus visible outlines (2px primary, 2px offset)
+- ARIA attributes en navegación, formularios, lightbox
+- Focus trap en MobileMenu e ImageLightbox
+- Keyboard navigation completa (Escape, Tab, Arrow keys)
+- `prefers-reduced-motion` respetado
+
+### Formularios
+- **ContactForm**: 5 campos, Zod, honeypot anti-spam, Web3Forms POST
+- **InscriptionForm**: 4 pasos, 19+ campos, localStorage persistence (48h TTL), validación progresiva
+
+### Scroll Reveal
+- IntersectionObserver en BaseLayout
+- Clase `.reveal` → `.revealed` con animación opacity + translateY
+- Compatible con View Transitions (re-observa en `astro:page-load`)
 
 ## Convenciones
 
@@ -125,13 +230,29 @@ Schemas reutilizables: `seoSchema` (metaTitle, metaDescription, ogImage) y `soci
 - Mobile-first: base para mobile, `md:` para tablet, `lg:` para desktop
 - Colores: `text-primary`, `bg-accent`, `bg-surface-muted`, `bg-surface-dark`
 - Tipografía: `font-display` para headings, `font-sans` para body
+- Prose tables: scroll horizontal automático en mobile
 
 ## Variables de Entorno
 
 ```
-PUBLIC_WEB3FORMS_KEY        # API key de Web3Forms para formularios
+PUBLIC_WEB3FORMS_KEY         # API key de Web3Forms (ContactForm, InscriptionForm)
 PUBLIC_CLOUDINARY_CLOUD_NAME # Cloud name de Cloudinary
 ```
+
+## Assets Estáticos (public/)
+
+| Directorio | Contenido |
+|-----------|-----------|
+| `public/admin/` | Sveltia CMS: index.html + config.yml |
+| `public/fonts/` | InterVariable.woff2, PlusJakartaSans-Variable.woff2 |
+| `public/images/news/` | Fotos de noticias (ej. 64 JPGs copa-valle-ginebra) |
+| `public/images/sponsors/` | Logos de patrocinadores (SVG, PNG, JPG) |
+| `public/documentos/transparencia/` | 15 PDFs de gobernanza y cumplimiento |
+| `public/` | favicon (SVG, PNG 16/32/192/512), apple-touch-icon, robots.txt, site.webmanifest |
+
+## Datos Estáticos
+
+- `src/data/transparencia-documentos.json` — Metadata de documentos de transparencia (usado en `/transparencia`)
 
 ## Documentos de Referencia
 
@@ -141,7 +262,6 @@ PUBLIC_CLOUDINARY_CLOUD_NAME # Cloud name de Cloudinary
 | `docs/02-technical-architecture.md` | Configs exactos, package.json, ADRs — al configurar proyecto |
 | `docs/03-content-strategy.md` | Schemas Zod completos, taxonomía, CMS config.yml — al crear collections |
 | `docs/04-implementation-workflow.md` | Fases, tareas, dependencias — al planificar trabajo |
-| `PROMPT-PROYECTO.md` | Especificación original del proyecto |
 
 ## Agentes del Proyecto
 
@@ -161,3 +281,10 @@ PUBLIC_CLOUDINARY_CLOUD_NAME # Cloud name de Cloudinary
 - **WCAG 2.1 AA**: Headings jerárquicos, alt text, contraste 4.5:1, focus visible, keyboard nav
 - **Español colombiano**: Todo contenido visible al usuario en español. Código en inglés
 - **Node >= 20**: Requerido por Astro 5
+
+## Pendientes Conocidos
+
+- Colecciones sin contenido: `directivos`, `results`, `rutas`, `pages`
+- Programa "Recreación" falta en `src/content/programs/`
+- Directorio `src/types/` vacío (tipos definidos inline en componentes)
+- Analytics (Cloudflare Web Analytics / Umami) configurado como placeholder en BaseLayout

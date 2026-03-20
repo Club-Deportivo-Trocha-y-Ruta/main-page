@@ -45,9 +45,9 @@ const levelLabels: Record<string, string> = {
   <article class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
     <Breadcrumb items={[{ label: 'Programas', href: '/programas' }, { label: program.data.title }]} />
 
-    <div class="grid md:grid-cols-3 gap-12">
+    <div class="grid md:grid-cols-3 gap-8 md:gap-12">
       <!-- Sidebar (mobile first) -->
-      <aside class="order-1 md:order-2">
+      <aside class="order-2 md:order-2">
         <Card class="p-6 md:sticky md:top-24">
           <div class="flex flex-wrap items-center gap-2 mb-4">
             <Badge variant="cyan">{levelLabels[program.data.targetLevel] || program.data.targetLevel}</Badge>
@@ -137,7 +137,7 @@ const levelLabels: Record<string, string> = {
       </aside>
 
       <!-- Contenido principal -->
-      <div class="md:col-span-2 order-2 md:order-1">
+      <div class="md:col-span-2 order-1 md:order-1">
         <h1 class="text-3xl md:text-4xl font-display font-bold text-text-primary">
           {program.data.title}
         </h1>
@@ -159,7 +159,7 @@ const levelLabels: Record<string, string> = {
           </div>
         )}
 
-        <div class="prose prose-lg mt-8 max-w-none">
+        <div class="prose prose-lg mt-8 max-w-none overflow-x-auto">
           <Content />
         </div>
       </div>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <rect width="800" height="450" fill="#f8fafc"/>
+  <rect x="0" y="0" width="800" height="450" fill="#e2e8f0"/>
+  <g transform="translate(400,200)" fill="#94a3b8">
+    <path d="M-30-20 L-10-20 L-10 0 L10 0 L10-20 L30-20 L30 20 L-30 20 Z" stroke="#94a3b8" stroke-width="2" fill="none"/>
+    <circle cx="10" cy="-8" r="4" fill="none" stroke="#94a3b8" stroke-width="2"/>
+    <path d="M-25 15 L-12 0 L0 8 L12-5 L25 10" stroke="#94a3b8" stroke-width="2" fill="none"/>
+  </g>
+  <text x="400" y="260" font-family="system-ui, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle">Club Trocha y Ruta</text>
+</svg>

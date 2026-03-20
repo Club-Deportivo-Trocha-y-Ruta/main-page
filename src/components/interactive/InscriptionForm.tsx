@@ -324,7 +324,7 @@ export default function InscriptionForm({ programs }: Props) {
               <li key={step.label} className={`flex items-center ${idx < STEPS.length - 1 ? 'flex-1' : ''}`}>
                 <div className="flex flex-col items-center">
                   <span
-                    className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-colors ${
+                    className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-xs sm:text-sm font-bold transition-colors ${
                       isCompleted
                         ? 'bg-primary text-white'
                         : isCurrent
@@ -342,7 +342,7 @@ export default function InscriptionForm({ programs }: Props) {
                     )}
                   </span>
                   <span
-                    className={`mt-1 text-xs font-medium ${
+                    className={`mt-1 text-xs font-medium hidden sm:block ${
                       isCurrent ? 'text-primary' : isCompleted ? 'text-text-primary' : 'text-gray-400'
                     }`}
                   >
@@ -417,7 +417,7 @@ export default function InscriptionForm({ programs }: Props) {
                 <select
                   id="riderAge"
                   {...register('riderAge')}
-                  className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                  className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                 >
                   <option value="">Seleccionar edad</option>
                   {Array.from({ length: 47 }, (_, i) => i + 4).map((age) => (
@@ -454,7 +454,7 @@ export default function InscriptionForm({ programs }: Props) {
                     type="text"
                     {...register('riderName')}
                     autoComplete="name"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                   {errors.riderName && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.riderName.message}</p>
@@ -472,7 +472,7 @@ export default function InscriptionForm({ programs }: Props) {
                       <select
                         id="birthDay"
                         {...register('birthDay')}
-                        className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                       >
                         <option value="">Dia</option>
                         {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
@@ -485,7 +485,7 @@ export default function InscriptionForm({ programs }: Props) {
                       <select
                         id="birthMonth"
                         {...register('birthMonth')}
-                        className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                       >
                         <option value="">Mes</option>
                         {MONTHS.map((m, i) => (
@@ -498,7 +498,7 @@ export default function InscriptionForm({ programs }: Props) {
                       <select
                         id="birthYear"
                         {...register('birthYear')}
-                        className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                       >
                         <option value="">Año</option>
                         {Array.from({ length: 51 }, (_, i) => new Date().getFullYear() - i).map((y) => (
@@ -520,7 +520,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <select
                     id="gender"
                     {...register('gender')}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   >
                     <option value="">Seleccionar</option>
                     <option value="masculino">Masculino</option>
@@ -540,7 +540,7 @@ export default function InscriptionForm({ programs }: Props) {
                     {SHIRT_SIZES.map((size) => (
                       <label
                         key={size}
-                        className={`flex cursor-pointer items-center justify-center rounded-lg border-2 px-4 py-2 text-sm font-medium transition-colors ${
+                        className={`flex cursor-pointer items-center justify-center rounded-lg border-2 px-4 py-3 text-sm font-medium transition-colors ${
                           values.shirtSize === size
                             ? 'border-primary bg-primary/5 text-primary'
                             : 'border-gray-200 text-text-secondary hover:border-gray-300'
@@ -614,7 +614,7 @@ export default function InscriptionForm({ programs }: Props) {
                     type="text"
                     {...register('guardianName')}
                     autoComplete="name"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                   {errors.guardianName && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianName.message}</p>
@@ -631,7 +631,7 @@ export default function InscriptionForm({ programs }: Props) {
                     {...register('guardianPhone')}
                     placeholder="3001234567"
                     autoComplete="tel"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                   {errors.guardianPhone && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianPhone.message}</p>
@@ -647,7 +647,7 @@ export default function InscriptionForm({ programs }: Props) {
                     type="email"
                     {...register('guardianEmail')}
                     autoComplete="email"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                   {errors.guardianEmail && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianEmail.message}</p>
@@ -663,7 +663,7 @@ export default function InscriptionForm({ programs }: Props) {
                     type="text"
                     {...register('guardianAddress')}
                     autoComplete="street-address"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                 </div>
 
@@ -675,7 +675,7 @@ export default function InscriptionForm({ programs }: Props) {
                     id="riderEps"
                     type="text"
                     {...register('riderEps')}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                   {errors.riderEps && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.riderEps.message}</p>
@@ -689,7 +689,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <select
                     id="relationship"
                     {...register('relationship')}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   >
                     <option value="">Seleccionar</option>
                     {RELATIONSHIPS.map((r) => (
@@ -759,7 +759,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <input
                     type="checkbox"
                     {...register('acceptTerms')}
-                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    className="mt-0.5 h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
                   />
                   <span className="text-sm text-text-secondary">
                     Acepto los terminos y condiciones del Club Deportivo Trocha y Ruta <span className="text-red-500">*</span>
@@ -773,7 +773,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <input
                     type="checkbox"
                     {...register('acceptDataPolicy')}
-                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    className="mt-0.5 h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
                   />
                   <span className="text-sm text-text-secondary">
                     Autorizo el tratamiento de datos personales segun la Ley 1581 de 2012 <span className="text-red-500">*</span>
@@ -794,12 +794,12 @@ export default function InscriptionForm({ programs }: Props) {
         </div>
 
         {/* ─── Navigation Buttons ──────────────────────────────────────── */}
-        <div className="mt-8 flex items-center justify-between border-t border-gray-100 pt-6">
+        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-gray-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
           {currentStep > 0 ? (
             <button
               type="button"
               onClick={handleBack}
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -814,7 +814,7 @@ export default function InscriptionForm({ programs }: Props) {
             <button
               type="button"
               onClick={handleNext}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               Siguiente
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -825,7 +825,7 @@ export default function InscriptionForm({ programs }: Props) {
             <button
               type="submit"
               disabled={submitStatus === 'submitting'}
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60 disabled:cursor-not-allowed"
+              className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {submitStatus === 'submitting' ? (
                 <>
@@ -869,11 +869,11 @@ function SummarySection({
           Editar
         </button>
       </div>
-      <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+      <dl className="mt-2 grid grid-cols-1 gap-y-1 text-sm sm:grid-cols-2 sm:gap-x-4">
         {items.map((item) => (
           <div key={item.label} className="contents">
             <dt className="text-text-secondary">{item.label}</dt>
-            <dd className="text-text-primary font-medium">{item.value}</dd>
+            <dd className="text-text-primary font-medium break-all">{item.value}</dd>
           </div>
         ))}
       </dl>
