@@ -4,7 +4,7 @@ date: 2026-02-15
 author: "Club Trocha y Ruta"
 category: "club"
 tags: ["horarios", "entrenamiento", "2026"]
-image: "/images/placeholder-news.jpg"
+image: "/images/placeholder-news.svg"
 imageAlt: "Grupo de ciclistas entrenando en sendero"
 excerpt: "Conoce los horarios actualizados de entrenamiento para todos los programas del club a partir de marzo 2026."
 featured: false

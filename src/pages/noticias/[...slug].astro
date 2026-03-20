@@ -19,11 +19,11 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: NewsEntry };
 const { Content } = await render(entry);
 
-const { title, date, updatedDate, author, category, excerpt, image, tags, galleryFolder, galleryImages } = entry.data;
+const { title, date, updatedDate, author, category, excerpt, image, imageLayout, tags, galleryFolder, galleryImages } = entry.data;
 
-const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
+const badgeVariant: Record<string, 'primary' | 'accent' | 'neutral'> = {
   competencias: 'primary',
-  club: 'cyan',
+  club: 'primary',
   entrenamiento: 'accent',
   comunidad: 'neutral',
 };
@@ -45,18 +45,22 @@ const jsonLd = generateArticleJsonLd({
   <article class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
     <Breadcrumb items={[{ label: 'Noticias', href: '/noticias' }, { label: title }]} />
 
-    {image && (
-      <div class="mb-8 overflow-hidden rounded-xl">
-        <img src={image} alt={entry.data.imageAlt ?? title} class="w-full h-64 md:h-96 object-cover" loading="lazy" decoding="async" />
+    {image && imageLayout === 'contain' ? (
+      <div class="mb-8 overflow-hidden rounded-xl bg-surface-muted flex justify-center">
+        <img src={image} alt={entry.data.imageAlt ?? title} class="max-h-[32rem] md:max-h-[40rem] w-auto object-contain" loading="eager" decoding="async" fetchpriority="high" />
       </div>
-    )}
+    ) : image ? (
+      <div class="mb-8 overflow-hidden rounded-xl">
+        <img src={image} alt={entry.data.imageAlt ?? title} class="w-full h-64 md:h-96 object-cover" loading="eager" decoding="async" fetchpriority="high" />
+      </div>
+    ) : null}
 
     <header class="mb-8 max-w-3xl mx-auto">
       <Badge variant={badgeVariant[category] ?? 'neutral'}>{category}</Badge>
       <h1 class="mt-3 text-3xl md:text-4xl lg:text-5xl font-display font-bold leading-tight">
         {title}
       </h1>
-      <div class="mt-4 flex items-center gap-3 text-sm text-text-secondary">
+      <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text-secondary">
         <time datetime={date.toISOString()}>{formatDate(date)}</time>
         <span>&middot;</span>
         <span>{author}</span>

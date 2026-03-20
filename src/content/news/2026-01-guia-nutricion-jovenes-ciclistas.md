@@ -4,7 +4,7 @@ date: 2026-01-20
 author: "Club Trocha y Ruta"
 category: "entrenamiento"
 tags: ["nutrición", "salud", "consejos", "jóvenes"]
-image: "/images/placeholder-news.jpg"
+image: "/images/placeholder-news.svg"
 imageAlt: "Alimentos saludables para deportistas jóvenes"
 excerpt: "Consejos prácticos de nutrición para que los jóvenes ciclistas rindan al máximo en entrenamientos y competencias."
 featured: false
