@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/common/Button.astro';
+---
+
+<BaseLayout title="Página no encontrada">
+  <section class="flex min-h-[50vh] items-center justify-center py-20">
+    <div class="mx-auto max-w-lg px-4 text-center">
+      <span class="text-7xl" aria-hidden="true">🚵</span>
+      <h1 class="mt-6 text-3xl md:text-4xl font-display font-bold text-text-primary">
+        ¡Ruta no encontrada!
+      </h1>
+      <p class="mt-4 text-lg text-text-secondary">
+        Parece que te saliste del sendero. La página que buscas no existe o fue movida.
+      </p>
+      <div class="mt-8">
+        <Button href="/">Volver al inicio</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

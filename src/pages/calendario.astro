@@ -1,0 +1,69 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import EventCard from '@components/common/EventCard.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+
+type Event = CollectionEntry<'events'>;
+
+const events = (await getCollection('events')).filter((e: Event) => !e.data.draft);
+
+const upcoming = events
+  .filter((e: Event) => e.data.status === 'upcoming' || e.data.status === 'ongoing')
+  .sort((a: Event, b: Event) => a.data.date.getTime() - b.data.date.getTime());
+
+const past = events
+  .filter((e: Event) => e.data.status === 'past')
+  .sort((a: Event, b: Event) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<PageLayout
+  title="Calendario"
+  description="Próximas competencias y eventos del club"
+  breadcrumbs={[{ label: 'Calendario' }]}
+>
+  <div class="max-w-4xl mx-auto space-y-16">
+    <!-- Proximos eventos -->
+    <section>
+      <SectionTitle title="Próximos Eventos" align="left" />
+
+      {upcoming.length > 0 ? (
+        <div class="mt-6 divide-y divide-gray-100">
+          {upcoming.map((e: Event) => (
+            <EventCard
+              title={e.data.title}
+              date={e.data.date}
+              location={e.data.location}
+              category={e.data.category}
+              status={e.data.status}
+              href="/calendario"
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="mt-6 text-text-secondary text-center py-8">
+          No hay eventos programados por el momento.
+        </p>
+      )}
+    </section>
+
+    <!-- Eventos pasados -->
+    {past.length > 0 && (
+      <section>
+        <SectionTitle title="Eventos Pasados" align="left" />
+        <div class="mt-6 divide-y divide-gray-100">
+          {past.map((e: Event) => (
+            <EventCard
+              title={e.data.title}
+              date={e.data.date}
+              location={e.data.location}
+              category={e.data.category}
+              status={e.data.status}
+              href="/calendario"
+            />
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</PageLayout>

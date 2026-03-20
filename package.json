@@ -1,0 +1,50 @@
+{
+  "name": "trocha-y-ruta",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "lint": "eslint src --ext .ts,.tsx,.astro",
+    "lint:fix": "eslint src --ext .ts,.tsx,.astro --fix",
+    "format": "prettier --write \"src/**/*.{astro,ts,tsx,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{astro,ts,tsx,css,md}\"",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.2.0",
+    "@astrojs/sitemap": "^3.4.0",
+    "@formkit/auto-animate": "^0.8.2",
+    "@hookform/resolvers": "^3.9.3",
+    "@phosphor-icons/core": "^2.1.1",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.1.0",
+    "astro": "^5.17.0",
+    "astro-icon": "^1.1.4",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-hook-form": "^7.53.2",
+    "sharp": "^0.33.5",
+    "swiper": "^12.1.2",
+    "tailwindcss": "^4.1.0",
+    "yet-another-react-lightbox": "^3.21.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
+    "eslint": "^9.19.0",
+    "eslint-plugin-astro": "^1.3.1",
+    "prettier": "^3.4.2",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

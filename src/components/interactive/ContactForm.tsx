@@ -1,0 +1,323 @@
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useState, useRef } from 'react';
+
+const subjects = [
+  { value: '', label: 'Selecciona un asunto' },
+  { value: 'informacion', label: 'Información general' },
+  { value: 'inscripcion', label: 'Inscripción' },
+  { value: 'patrocinio', label: 'Patrocinio' },
+  { value: 'otro', label: 'Otro' },
+] as const;
+
+const contactSchema = z.object({
+  name: z
+    .string()
+    .min(1, 'El nombre es obligatorio')
+    .min(2, 'El nombre debe tener al menos 2 caracteres')
+    .max(100, 'El nombre no puede superar 100 caracteres'),
+  email: z
+    .string()
+    .min(1, 'El correo es obligatorio')
+    .email('Ingresa un correo electrónico válido'),
+  phone: z
+    .string()
+    .max(20, 'El teléfono no puede superar 20 caracteres')
+    .optional()
+    .or(z.literal('')),
+  subject: z
+    .string()
+    .min(1, 'Selecciona un asunto'),
+  message: z
+    .string()
+    .min(1, 'El mensaje es obligatorio')
+    .min(10, 'El mensaje debe tener al menos 10 caracteres')
+    .max(2000, 'El mensaje no puede superar 2000 caracteres'),
+});
+
+type ContactFormData = z.infer<typeof contactSchema>;
+
+interface Props {
+  defaultSubject?: string;
+}
+
+export default function ContactForm({ defaultSubject = '' }: Props) {
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+    mode: 'onTouched',
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      subject: defaultSubject,
+      message: '',
+    },
+  });
+
+  const onSubmit = async (data: ContactFormData) => {
+    setStatus('submitting');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: import.meta.env.PUBLIC_WEB3FORMS_KEY,
+          name: data.name,
+          email: data.email,
+          phone: data.phone || undefined,
+          subject: `[Trocha y Ruta] ${subjects.find((s) => s.value === data.subject)?.label ?? data.subject}`,
+          message: data.message,
+          botcheck: '',
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setStatus('success');
+        reset();
+      } else {
+        setStatus('error');
+        setErrorMessage(result.message || 'Hubo un error al enviar el formulario. Intenta de nuevo.');
+      }
+    } catch {
+      setStatus('error');
+      setErrorMessage('No se pudo conectar con el servidor. Verifica tu conexión e intenta de nuevo.');
+    }
+  };
+
+  if (status === 'success') {
+    return (
+      <div
+        role="status"
+        className="rounded-2xl bg-green-50 border border-green-200 p-8 text-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="48"
+          height="48"
+          viewBox="0 0 256 256"
+          className="mx-auto mb-4 text-green-600"
+          aria-hidden="true"
+        >
+          <path
+            fill="currentColor"
+            d="M128 24a104 104 0 1 0 104 104A104.12 104.12 0 0 0 128 24Zm45.66 85.66-56 56a8 8 0 0 1-11.32 0l-24-24a8 8 0 0 1 11.32-11.32L112 148.69l50.34-50.35a8 8 0 0 1 11.32 11.32Z"
+          />
+        </svg>
+        <h3 className="text-xl font-display font-bold text-green-800 mb-2">
+          Mensaje enviado
+        </h3>
+        <p className="text-green-700 mb-6">
+          Gracias por contactarnos. Te responderemos lo antes posible.
+        </p>
+        <button
+          type="button"
+          onClick={() => setStatus('idle')}
+          className="inline-flex items-center rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Enviar otro mensaje
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      className="space-y-6"
+    >
+      {/* Honeypot anti-spam */}
+      <input
+        type="checkbox"
+        name="botcheck"
+        className="hidden"
+        tabIndex={-1}
+        autoComplete="off"
+      />
+
+      {/* Nombre */}
+      <div>
+        <label
+          htmlFor="contact-name"
+          className="block text-sm font-medium text-text-primary mb-1.5"
+        >
+          Nombre completo <span className="text-accent">*</span>
+        </label>
+        <input
+          id="contact-name"
+          type="text"
+          autoComplete="name"
+          aria-describedby={errors.name ? 'contact-name-error' : undefined}
+          aria-invalid={errors.name ? 'true' : undefined}
+          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+            errors.name ? 'border-red-400' : 'border-gray-300'
+          }`}
+          placeholder="Tu nombre"
+          {...register('name')}
+        />
+        {errors.name && (
+          <p id="contact-name-error" role="alert" className="mt-1.5 text-sm text-red-600">
+            {errors.name.message}
+          </p>
+        )}
+      </div>
+
+      {/* Email */}
+      <div>
+        <label
+          htmlFor="contact-email"
+          className="block text-sm font-medium text-text-primary mb-1.5"
+        >
+          Correo electrónico <span className="text-accent">*</span>
+        </label>
+        <input
+          id="contact-email"
+          type="email"
+          autoComplete="email"
+          aria-describedby={errors.email ? 'contact-email-error' : undefined}
+          aria-invalid={errors.email ? 'true' : undefined}
+          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+            errors.email ? 'border-red-400' : 'border-gray-300'
+          }`}
+          placeholder="tu@email.com"
+          {...register('email')}
+        />
+        {errors.email && (
+          <p id="contact-email-error" role="alert" className="mt-1.5 text-sm text-red-600">
+            {errors.email.message}
+          </p>
+        )}
+      </div>
+
+      {/* Teléfono */}
+      <div>
+        <label
+          htmlFor="contact-phone"
+          className="block text-sm font-medium text-text-primary mb-1.5"
+        >
+          Teléfono <span className="text-text-secondary text-xs">(opcional)</span>
+        </label>
+        <input
+          id="contact-phone"
+          type="tel"
+          autoComplete="tel"
+          aria-describedby={errors.phone ? 'contact-phone-error' : undefined}
+          aria-invalid={errors.phone ? 'true' : undefined}
+          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+            errors.phone ? 'border-red-400' : 'border-gray-300'
+          }`}
+          placeholder="300 123 4567"
+          {...register('phone')}
+        />
+        {errors.phone && (
+          <p id="contact-phone-error" role="alert" className="mt-1.5 text-sm text-red-600">
+            {errors.phone.message}
+          </p>
+        )}
+      </div>
+
+      {/* Asunto */}
+      <div>
+        <label
+          htmlFor="contact-subject"
+          className="block text-sm font-medium text-text-primary mb-1.5"
+        >
+          Asunto <span className="text-accent">*</span>
+        </label>
+        <select
+          id="contact-subject"
+          aria-describedby={errors.subject ? 'contact-subject-error' : undefined}
+          aria-invalid={errors.subject ? 'true' : undefined}
+          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+            errors.subject ? 'border-red-400' : 'border-gray-300'
+          }`}
+          {...register('subject')}
+        >
+          {subjects.map((s) => (
+            <option key={s.value} value={s.value} disabled={s.value === ''}>
+              {s.label}
+            </option>
+          ))}
+        </select>
+        {errors.subject && (
+          <p id="contact-subject-error" role="alert" className="mt-1.5 text-sm text-red-600">
+            {errors.subject.message}
+          </p>
+        )}
+      </div>
+
+      {/* Mensaje */}
+      <div>
+        <label
+          htmlFor="contact-message"
+          className="block text-sm font-medium text-text-primary mb-1.5"
+        >
+          Mensaje <span className="text-accent">*</span>
+        </label>
+        <textarea
+          id="contact-message"
+          rows={5}
+          aria-describedby={errors.message ? 'contact-message-error' : undefined}
+          aria-invalid={errors.message ? 'true' : undefined}
+          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y ${
+            errors.message ? 'border-red-400' : 'border-gray-300'
+          }`}
+          placeholder="Escribe tu mensaje aquí..."
+          {...register('message')}
+        />
+        {errors.message && (
+          <p id="contact-message-error" role="alert" className="mt-1.5 text-sm text-red-600">
+            {errors.message.message}
+          </p>
+        )}
+      </div>
+
+      {/* Error global */}
+      {status === 'error' && (
+        <div role="alert" className="rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+          {errorMessage}
+        </div>
+      )}
+
+      {/* Submit */}
+      <button
+        type="submit"
+        disabled={status === 'submitting'}
+        className="inline-flex w-full items-center justify-center rounded-lg bg-primary px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {status === 'submitting' ? (
+          <>
+            <svg
+              className="mr-2 h-5 w-5 animate-spin"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Enviando...
+          </>
+        ) : (
+          'Enviar mensaje'
+        )}
+      </button>
+    </form>
+  );
+}

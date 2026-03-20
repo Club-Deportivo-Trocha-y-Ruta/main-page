@@ -1,0 +1,86 @@
+[
+  {
+    "nombre": "EF Club Trocha y Ruta 2024",
+    "descripcion": "Estados Financieros del club, vigencia 2024",
+    "categoria": "Financieros",
+    "archivo": "/documentos/transparencia/EF-Club-Trocha-y-Ruta-2024-1.pdf",
+    "anio": 2024
+  },
+  {
+    "nombre": "ER Club Trocha y Ruta 2024",
+    "descripcion": "Estado de Resultados del club, vigencia 2024",
+    "categoria": "Financieros",
+    "archivo": "/documentos/transparencia/ER-Club-Trocha-y-Ruta-2024.pdf",
+    "anio": 2024
+  },
+  {
+    "nombre": "ECF Club Trocha y Ruta 2024",
+    "descripcion": "Estado de Cambios Financieros del club, vigencia 2024",
+    "categoria": "Financieros",
+    "archivo": "/documentos/transparencia/ECF-Club-Trocha-y-Ruta-2024.pdf",
+    "anio": 2024
+  },
+  {
+    "nombre": "Informe de Gestión 2024",
+    "descripcion": "Informe anual de gestión y actividades del club",
+    "categoria": "Gestión",
+    "archivo": "/documentos/transparencia/INFORME-DE-GESTION-2024.pdf",
+    "anio": 2024
+  },
+  {
+    "nombre": "Estatutos Club Trocha y Ruta",
+    "descripcion": "Estatutos vigentes del club deportivo",
+    "categoria": "Legales",
+    "archivo": "/documentos/transparencia/ESTATUTOS-CLUB-TROCHA-Y-RUTA-1.pdf",
+    "anio": null
+  },
+  {
+    "nombre": "Reconocimiento Deportivo",
+    "descripcion": "Reconocimiento deportivo otorgado por el ente territorial",
+    "categoria": "Legales",
+    "archivo": "/documentos/transparencia/Reconocimiento-Deportivo.pdf",
+    "anio": null
+  },
+  {
+    "nombre": "Certificado de Existencia y Representación",
+    "descripcion": "Certificado de existencia y representación legal del club",
+    "categoria": "Legales",
+    "archivo": "/documentos/transparencia/CERTIFICADO-DE-EXISTENCIA-Y-REPRESENTACION.pdf",
+    "anio": null
+  },
+  {
+    "nombre": "Certificado de No Caducidad",
+    "descripcion": "Certificado de no caducidad del club deportivo",
+    "categoria": "Legales",
+    "archivo": "/documentos/transparencia/CERTIFICADO-DE-NO-CADUCIDAD-CLUB-DEPORTIVO-TROCHA-Y-RUTA.pdf",
+    "anio": null
+  },
+  {
+    "nombre": "RUT Actualizado",
+    "descripcion": "Registro Único Tributario actualizado del club",
+    "categoria": "Tributarios",
+    "archivo": "/documentos/transparencia/RUT-ACTUALIZADO-TROCHA-Y-RUTA.pdf",
+    "anio": null
+  },
+  {
+    "nombre": "Certificado de Cumplimiento 2024",
+    "descripcion": "Certificado de cumplimiento de obligaciones tributarias",
+    "categoria": "Tributarios",
+    "archivo": "/documentos/transparencia/CERTIFICADO-DE-CUMPLIMIENTO-2024.pdf",
+    "anio": 2024
+  },
+  {
+    "nombre": "Acta Marzo 2025",
+    "descripcion": "Acta de asamblea del mes de marzo de 2025",
+    "categoria": "Actas",
+    "archivo": "/documentos/transparencia/Acta-Marzo-2025.pdf",
+    "anio": 2025
+  },
+  {
+    "nombre": "Acta de Autorización Representante Legal",
+    "descripcion": "Acta de autorización del representante legal del club",
+    "categoria": "Actas",
+    "archivo": "/documentos/transparencia/ACTA-DE-AUTORIZACION-REPRESENTANTE-LEGAL-.pdf",
+    "anio": null
+  }
+]

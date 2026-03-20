@@ -1,0 +1,71 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import SEOHead from '@components/common/SEOHead.astro';
+import Header from '@components/common/Header.astro';
+import Footer from '@components/common/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  jsonLd?: Record<string, unknown>;
+}
+
+const { title, description, ogImage, jsonLd } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Font preloading -->
+    <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/PlusJakartaSans-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Preconnect / DNS prefetch -->
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    <link rel="dns-prefetch" href="https://api.web3forms.com" />
+    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
+    <!-- Theme color -->
+    <meta name="theme-color" content="#20b7c9" />
+    <SEOHead title={title} description={description} ogImage={ogImage} jsonLd={jsonLd} />
+    <ClientRouter />
+  </head>
+  <body class="min-h-screen flex flex-col bg-surface text-text-primary font-sans antialiased">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-primary focus:text-white"
+    >
+      Saltar al contenido principal
+    </a>
+    <Header transition:persist />
+    <main id="main-content" class="flex-1" transition:animate="fade">
+      <slot />
+    </main>
+    <Footer />
+    <!-- Scroll-reveal observer (compatible with View Transitions) -->
+    <script is:inline>
+      function initReveal() {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          document.querySelectorAll('.reveal:not(.revealed)').forEach(function(el) { observer.observe(el); });
+        } else {
+          document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('revealed'); });
+        }
+      }
+      initReveal();
+      document.addEventListener('astro:page-load', initReveal);
+    </script>
+    <!-- Cloudflare Web Analytics -->
+    <script is:inline defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "PLACEHOLDER_TOKEN"}'></script>
+  </body>
+</html>

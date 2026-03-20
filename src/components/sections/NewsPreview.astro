@@ -1,0 +1,83 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Card from '@components/common/Card.astro';
+import Badge from '@components/common/Badge.astro';
+import Button from '@components/common/Button.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+import { formatDate } from '@lib/utils';
+
+type NewsEntry = CollectionEntry<'news'>;
+
+const allNews = (await getCollection('news'))
+  .filter((n: NewsEntry) => !n.data.draft)
+  .sort((a: NewsEntry, b: NewsEntry) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
+const [featuredNews, ...otherNews] = allNews;
+
+const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
+  competencias: 'primary',
+  club: 'cyan',
+  entrenamiento: 'accent',
+  comunidad: 'neutral',
+};
+---
+
+<section class="py-20">
+  <div class="mx-auto max-w-6xl px-4">
+    <SectionTitle title="Últimas Noticias" />
+
+    {featuredNews && (
+      <div class="grid gap-8 md:grid-cols-2">
+        {/* Featured news - left column */}
+        <Card href={`/noticias/${featuredNews.id}`}>
+          {featuredNews.data.image ? (
+            <img src={featuredNews.data.image} alt={featuredNews.data.imageAlt ?? featuredNews.data.title} class="aspect-video w-full object-cover rounded-t-xl" loading="lazy" decoding="async" />
+          ) : (
+            <div class="aspect-video rounded-t-xl bg-surface-muted"></div>
+          )}
+          <div class="p-6">
+            <Badge variant={badgeVariant[featuredNews.data.category] ?? 'neutral'}>
+              {featuredNews.data.category}
+            </Badge>
+            <h3 class="mt-3 font-display text-xl font-bold text-text-primary">
+              {featuredNews.data.title}
+            </h3>
+            <p class="mt-2 text-text-secondary">{featuredNews.data.excerpt}</p>
+            <time class="mt-3 block text-sm text-text-secondary" datetime={featuredNews.data.date.toISOString()}>
+              {formatDate(featuredNews.data.date)}
+            </time>
+          </div>
+        </Card>
+
+        {/* Other news - right column */}
+        <div class="flex flex-col gap-8">
+          {otherNews.map((news: NewsEntry) => (
+            <Card href={`/noticias/${news.id}`}>
+              {news.data.image ? (
+                <img src={news.data.image} alt={news.data.imageAlt ?? news.data.title} class="aspect-video w-full object-cover rounded-t-xl" loading="lazy" decoding="async" />
+              ) : (
+                <div class="aspect-video rounded-t-xl bg-surface-muted"></div>
+              )}
+              <div class="p-5">
+                <Badge variant={badgeVariant[news.data.category] ?? 'neutral'}>
+                  {news.data.category}
+                </Badge>
+                <h3 class="mt-2 font-display text-lg font-bold text-text-primary">
+                  {news.data.title}
+                </h3>
+                <time class="mt-2 block text-sm text-text-secondary" datetime={news.data.date.toISOString()}>
+                  {formatDate(news.data.date)}
+                </time>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="mt-12 text-center">
+      <Button href="/noticias" variant="outline">Ver todas las noticias</Button>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,50 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Button from '@components/common/Button.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+
+type Gallery = CollectionEntry<'gallery'>;
+type GalleryImage = Gallery['data']['images'][number];
+
+const galleries = (await getCollection('gallery'))
+  .filter((g: Gallery) => !g.data.draft)
+  .sort((a: Gallery, b: Gallery) => b.data.date.getTime() - a.data.date.getTime());
+
+const featuredGallery = galleries[0];
+const images: GalleryImage[] = featuredGallery?.data.images.slice(0, 5) ?? [];
+---
+
+<section class="py-20">
+  <div class="max-w-6xl mx-auto px-4">
+    <SectionTitle title="Galería" />
+
+    {images.length > 0 && (
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:grid-rows-[200px_200px] md:gap-4">
+        {images.map((img: GalleryImage, i: number) => (
+          <div
+            class:list={[
+              'group relative overflow-hidden rounded-xl bg-surface-muted',
+              i === 0 ? 'col-span-2 row-span-2 aspect-square md:aspect-auto' : 'aspect-[4/3] md:aspect-auto',
+            ]}
+          >
+            <div
+              class="w-full h-full bg-surface-muted transition-transform duration-300 group-hover:scale-105"
+              role="img"
+              aria-label={img.alt}
+            >
+            </div>
+            {img.caption && (
+              <div class="absolute inset-0 flex items-end bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <p class="p-3 text-sm text-white font-medium">{img.caption}</p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
+
+    <div class="mt-10 text-center">
+      <Button href="/galeria" variant="outline">Ver galería completa</Button>
+    </div>
+  </div>
+</section>

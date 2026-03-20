@@ -1,0 +1,102 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+import Card from '@components/common/Card.astro';
+import { SITE, CONTACT } from '@lib/constants';
+import documentos from '../../data/transparencia-documentos.json';
+
+const categorias = ['Financieros', 'Gestión', 'Legales', 'Tributarios', 'Actas'] as const;
+
+const documentosPorCategoria = categorias.map((cat) => ({
+  nombre: cat,
+  docs: documentos.filter((d) => d.categoria === cat),
+})).filter((g) => g.docs.length > 0);
+---
+
+<PageLayout
+  title="Información Pública — Transparencia"
+  description="Documentos públicos, certificados y estados financieros del Club Deportivo Trocha y Ruta. Consulta y descarga la información institucional del club."
+  breadcrumbs={[{ label: 'Transparencia' }]}
+>
+  <div class="mx-auto max-w-4xl space-y-12">
+    <!-- Introducción -->
+    <div class="text-text-secondary leading-relaxed space-y-4">
+      <p>
+        El {SITE.name} opera bajo principios de transparencia y responsabilidad.
+        En cumplimiento de la normatividad colombiana vigente para clubes deportivos,
+        ponemos a disposición del público los siguientes documentos institucionales.
+      </p>
+    </div>
+
+    <!-- Documentos por categoría -->
+    {documentosPorCategoria.map((grupo) => (
+      <section>
+        <SectionTitle title={grupo.nombre} align="left" />
+        <div class="space-y-3">
+          {grupo.docs.map((doc) => (
+            <Card class="p-4 sm:p-5">
+              <div class="flex items-center justify-between gap-4">
+                <div class="min-w-0 flex-1">
+                  <h3 class="text-base font-semibold text-text-primary truncate">
+                    {doc.nombre}
+                  </h3>
+                  <p class="text-sm text-text-secondary mt-0.5 hidden sm:block">
+                    {doc.descripcion}
+                  </p>
+                </div>
+                <a
+                  href={doc.archivo}
+                  download
+                  class="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  aria-label={`Descargar ${doc.nombre} (PDF)`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                    <path d="M224,152v56a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V152a8,8,0,0,1,16,0v56H208V152a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,132.69V40a8,8,0,0,0-16,0v92.69L93.66,106.34a8,8,0,0,0-11.32,11.32Z"/>
+                  </svg>
+                  Descargar
+                </a>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <!-- Info del club -->
+    <section>
+      <SectionTitle title="Información del Club" align="left" />
+      <Card class="p-6">
+        <dl class="space-y-3 text-text-secondary">
+          <div class="flex flex-col sm:flex-row sm:gap-2">
+            <dt class="font-semibold text-text-primary">Nombre:</dt>
+            <dd>{SITE.name}</dd>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:gap-2">
+            <dt class="font-semibold text-text-primary">Fundación:</dt>
+            <dd>1 de mayo de {SITE.founded}</dd>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:gap-2">
+            <dt class="font-semibold text-text-primary">Dirección:</dt>
+            <dd>{CONTACT.address}</dd>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:gap-2">
+            <dt class="font-semibold text-text-primary">Correo:</dt>
+            <dd>
+              <a href={`mailto:${CONTACT.email}`} class="text-primary hover:underline">
+                {CONTACT.email}
+              </a>
+            </dd>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:gap-2">
+            <dt class="font-semibold text-text-primary">Teléfono:</dt>
+            <dd>
+              <a href={CONTACT.phoneLink} class="text-primary hover:underline">
+                {CONTACT.phone}
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </Card>
+    </section>
+  </div>
+</PageLayout>

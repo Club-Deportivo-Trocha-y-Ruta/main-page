@@ -1,0 +1,72 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Button from '@components/common/Button.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+
+type Sponsor = CollectionEntry<'sponsors'>;
+
+const sponsors = (await getCollection('sponsors'))
+  .filter((s: Sponsor) => !s.data.draft && s.data.active)
+  .sort((a: Sponsor, b: Sponsor) => a.data.order - b.data.order);
+---
+
+<section class="py-16">
+  <div class="max-w-6xl mx-auto px-4">
+    <SectionTitle title="Nos Apoyan" />
+
+    {sponsors.length > 0 && (
+      <div class="overflow-hidden relative">
+        <div class="animate-scroll flex gap-12 items-center">
+          {[...sponsors, ...sponsors].map((s) => (
+            <a
+              href={s.data.url || '#'}
+              target={s.data.url ? '_blank' : undefined}
+              rel={s.data.url ? 'noopener noreferrer' : undefined}
+              class="shrink-0"
+            >
+              <img
+                src={s.data.logo}
+                alt={s.data.name}
+                class:list={[
+                  'w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100',
+                  s.data.level === 'principal' ? 'h-16' : 'h-12',
+                ]}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="mt-10 text-center">
+      <Button href="/contacto?asunto=patrocinio" variant="outline">
+        Quiero ser patrocinador
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .animate-scroll {
+    animation: scroll 30s linear infinite;
+    width: max-content;
+  }
+  .animate-scroll:hover {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-scroll {
+      animation: none;
+    }
+  }
+</style>

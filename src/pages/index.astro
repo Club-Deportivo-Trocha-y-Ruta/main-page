@@ -1,0 +1,67 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { SITE } from '@lib/constants';
+import { generateOrganizationJsonLd } from '@lib/seo';
+
+import Hero from '@components/sections/Hero.astro';
+import StatsCounter from '@components/sections/StatsCounter.astro';
+import ProgramsGrid from '@components/sections/ProgramsGrid.astro';
+import UpcomingEvents from '@components/sections/UpcomingEvents.astro';
+import TeamRoster from '@components/sections/TeamRoster.astro';
+import GalleryPreview from '@components/sections/GalleryPreview.astro';
+import TestimonialsSlider from '@components/sections/TestimonialsSlider.astro';
+import SponsorsBar from '@components/sections/SponsorsBar.astro';
+import NewsPreview from '@components/sections/NewsPreview.astro';
+import AboutPreview from '@components/sections/AboutPreview.astro';
+import Button from '@components/common/Button.astro';
+
+const orgJsonLd = generateOrganizationJsonLd();
+---
+
+<BaseLayout title={SITE.name} description={SITE.description} jsonLd={orgJsonLd}>
+  <Hero />
+  <div class="reveal">
+    <StatsCounter />
+  </div>
+  <div class="reveal">
+    <ProgramsGrid />
+  </div>
+  <div class="reveal">
+    <UpcomingEvents />
+  </div>
+  <div class="reveal">
+    <TeamRoster />
+  </div>
+  <div class="reveal">
+    <GalleryPreview />
+  </div>
+  <div class="reveal">
+    <TestimonialsSlider />
+  </div>
+  <div class="reveal">
+    <SponsorsBar />
+  </div>
+  <div class="reveal">
+    <NewsPreview />
+  </div>
+  <div class="reveal">
+    <AboutPreview />
+  </div>
+
+  <!-- CTA Final -->
+  <section class="reveal bg-primary py-20">
+    <div class="mx-auto max-w-3xl px-4 text-center text-white">
+      <h2 class="text-3xl md:text-4xl font-display font-bold">
+        Inscribe a tu hijo hoy
+      </h2>
+      <p class="mt-4 text-lg text-white/90">
+        Formamos niños con valores a través del ciclomontañismo. Desde los 4 años, con entrenadores certificados.
+      </p>
+      <div class="mt-8">
+        <Button variant="accent" size="lg" href="/inscripciones">
+          Inscríbete ahora
+        </Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

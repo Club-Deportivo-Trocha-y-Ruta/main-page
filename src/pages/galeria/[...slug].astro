@@ -1,0 +1,83 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import ImageLightbox from '@components/interactive/ImageLightbox.tsx';
+import { formatDate } from '@lib/utils';
+
+type Gallery = CollectionEntry<'gallery'>;
+type GalleryVideo = { url: string; title: string; thumbnail?: string };
+
+export async function getStaticPaths() {
+  const galleries = await getCollection('gallery');
+  return galleries
+    .filter((g: Gallery) => !g.data.draft)
+    .map((g: Gallery) => ({ params: { slug: g.id }, props: { gallery: g } }));
+}
+
+const { gallery } = Astro.props as { gallery: Gallery };
+const { Content } = await render(gallery);
+
+const { title, date, description, images, videos } = gallery.data;
+const hasContent = (gallery as any).body && (gallery as any).body.trim().length > 0;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ImageGallery',
+  name: title,
+  datePublished: date.toISOString(),
+  numberOfItems: images.length,
+};
+---
+
+<BaseLayout title={`${title} | Galería`} description={description} jsonLd={jsonLd}>
+  <article class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+    <Breadcrumb items={[{ label: 'Galería', href: '/galeria' }, { label: title }]} />
+
+    <h1 class="text-3xl md:text-4xl font-display font-bold">{title}</h1>
+    <div class="mt-2 flex items-center gap-3 text-text-secondary">
+      <time datetime={date.toISOString()}>{formatDate(date)}</time>
+      <span>&middot;</span>
+      <span>{images.length} fotos</span>
+    </div>
+    {description && (
+      <p class="mt-4 text-lg text-text-secondary max-w-3xl">{description}</p>
+    )}
+
+    <!-- Grid de imágenes con lightbox -->
+    <div class="mt-8">
+      <ImageLightbox client:visible images={images} />
+    </div>
+
+    {hasContent && (
+      <div class="prose prose-lg mx-auto max-w-3xl mt-12">
+        <Content />
+      </div>
+    )}
+
+    {videos && videos.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-2xl font-display font-bold mb-6">Videos</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {videos.map((video: GalleryVideo) => (
+            <a
+              href={video.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group block rounded-lg overflow-hidden bg-surface-muted"
+            >
+              <div class="aspect-video bg-surface-muted flex items-center justify-center">
+                <span class="text-4xl text-text-secondary/30 group-hover:scale-110 transition-transform">▶</span>
+              </div>
+              <div class="p-4">
+                <p class="font-display font-semibold text-text-primary group-hover:text-primary transition-colors">
+                  {video.title}
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>

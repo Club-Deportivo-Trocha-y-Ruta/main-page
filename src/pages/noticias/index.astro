@@ -1,0 +1,63 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import Card from '@components/common/Card.astro';
+import Badge from '@components/common/Badge.astro';
+import { formatDate } from '@lib/utils';
+
+type NewsEntry = CollectionEntry<'news'>;
+
+const news = (await getCollection('news'))
+  .filter((n: NewsEntry) => !n.data.draft)
+  .sort((a: NewsEntry, b: NewsEntry) => b.data.date.getTime() - a.data.date.getTime());
+
+const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
+  competencias: 'primary',
+  club: 'cyan',
+  entrenamiento: 'accent',
+  comunidad: 'neutral',
+};
+---
+
+<PageLayout
+  title="Noticias"
+  description="Últimas novedades del Club Deportivo Trocha y Ruta"
+  breadcrumbs={[{ label: 'Noticias' }]}
+>
+  {news.length > 0 ? (
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {news.map((post: NewsEntry) => (
+        <Card href={`/noticias/${post.id}`}>
+          {post.data.image ? (
+            <img src={post.data.image} alt={post.data.imageAlt ?? post.data.title} class="aspect-video w-full object-cover rounded-t-xl" loading="lazy" decoding="async" />
+          ) : (
+            <div class="aspect-video bg-surface-muted rounded-t-xl flex items-center justify-center">
+              <span class="text-4xl text-text-secondary/30" aria-hidden="true">📰</span>
+            </div>
+          )}
+          <div class="p-6">
+            <Badge variant={badgeVariant[post.data.category] ?? 'neutral'}>
+              {post.data.category}
+            </Badge>
+            <h3 class="mt-3 text-lg font-display font-bold text-text-primary line-clamp-2">
+              {post.data.title}
+            </h3>
+            <p class="mt-2 text-sm text-text-secondary line-clamp-3">
+              {post.data.excerpt}
+            </p>
+            <time
+              datetime={post.data.date.toISOString()}
+              class="mt-3 block text-xs text-text-secondary"
+            >
+              {formatDate(post.data.date)}
+            </time>
+          </div>
+        </Card>
+      ))}
+    </div>
+  ) : (
+    <p class="text-center text-text-secondary py-12">
+      No hay noticias publicadas aún.
+    </p>
+  )}
+</PageLayout>

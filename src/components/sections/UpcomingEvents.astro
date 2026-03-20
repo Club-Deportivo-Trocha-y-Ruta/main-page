@@ -1,0 +1,38 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import EventCard from '@components/common/EventCard.astro';
+import Button from '@components/common/Button.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+
+const upcomingEvents = (await getCollection('events'))
+  .filter((e: CollectionEntry<'events'>) => !e.data.draft && e.data.status === 'upcoming')
+  .sort((a: CollectionEntry<'events'>, b: CollectionEntry<'events'>) => a.data.date.getTime() - b.data.date.getTime())
+  .slice(0, 3);
+---
+
+<section class="py-20">
+  <div class="mx-auto max-w-4xl px-4">
+    <SectionTitle title="Próximos Eventos" />
+    {upcomingEvents.length > 0 ? (
+      <div class="flex flex-col gap-4">
+        {upcomingEvents.map((event: CollectionEntry<'events'>) => (
+          <EventCard
+            title={event.data.title}
+            date={event.data.date}
+            location={event.data.location}
+            category={event.data.category}
+            status={event.data.status}
+            href={`/calendario/${event.id}`}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="py-8 text-center text-text-secondary">
+        No hay eventos programados por el momento.
+      </p>
+    )}
+    <div class="mt-8 text-center">
+      <Button href="/calendario" variant="outline">Ver calendario completo</Button>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,53 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Card from '@components/common/Card.astro';
+import Button from '@components/common/Button.astro';
+import YouTubeEmbed from '@components/common/YouTubeEmbed.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const testimonials = (await getCollection('testimonials'))
+  .filter((t: CollectionEntry<'testimonials'>) => !t.data.draft)
+  .sort((a: CollectionEntry<'testimonials'>, b: CollectionEntry<'testimonials'>) => a.data.order - b.data.order);
+---
+
+<PageLayout
+  title="Testimonios"
+  description="Lo que dicen las familias y corredores del club"
+  breadcrumbs={[{ label: 'Testimonios' }]}
+>
+  <!-- Video institucional -->
+  <div class="mx-auto max-w-3xl mb-12 reveal">
+    <YouTubeEmbed
+      videoId="rz0QLMHpMVM"
+      title="Pedaleando por un Sueño — Club Deportivo Trocha y Ruta"
+    />
+    <p class="mt-4 text-center text-text-secondary font-sans">
+      Conoce nuestra historia y el impacto del club en la comunidad de Yumbo.
+    </p>
+  </div>
+
+  <div class="mx-auto max-w-3xl space-y-8">
+    {testimonials.map((testimonial: CollectionEntry<'testimonials'>) => (
+      <Card class="p-8">
+        <blockquote>
+          <p class="font-display italic text-lg text-text-primary leading-relaxed">
+            "{testimonial.data.quote}"
+          </p>
+        </blockquote>
+        <div class="mt-4 h-0.5 w-12 bg-accent rounded-full" />
+        <div class="mt-4">
+          <p class="font-semibold text-text-primary">{testimonial.data.name}</p>
+          <p class="text-sm text-text-secondary">{testimonial.data.roleLabel}</p>
+        </div>
+      </Card>
+    ))}
+  </div>
+
+  <!-- CTA -->
+  <div class="mt-16 text-center">
+    <p class="text-xl text-text-secondary mb-6">¿Tienes una historia que contar?</p>
+    <Button variant="outline" href="/contacto">
+      Cuéntanos tu experiencia
+    </Button>
+  </div>
+</PageLayout>

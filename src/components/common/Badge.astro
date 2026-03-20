@@ -1,0 +1,32 @@
+---
+interface Props {
+  variant?: 'primary' | 'accent' | 'cyan' | 'neutral';
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { variant = 'primary', size = 'sm', class: className } = Astro.props;
+
+const variants: Record<string, string> = {
+  primary: 'bg-primary/10 text-primary',
+  accent: 'bg-accent/10 text-accent',
+  cyan: 'bg-primary/10 text-primary-dark',
+  neutral: 'bg-gray-100 text-text-secondary',
+};
+
+const sizes: Record<string, string> = {
+  sm: 'px-2.5 py-0.5 text-xs',
+  md: 'px-3 py-1 text-sm',
+};
+
+const classes = [
+  'inline-block rounded-full font-medium',
+  variants[variant],
+  sizes[size],
+  className,
+].filter(Boolean).join(' ');
+---
+
+<span class={classes}>
+  <slot />
+</span>

@@ -1,0 +1,50 @@
+---
+import Button from '@components/common/Button.astro';
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  backgroundImage?: string;
+}
+
+const {
+  title = 'Formando campeones en la vida y en la pista',
+  subtitle = 'Club Deportivo Trocha y Ruta · Yumbo, Valle del Cauca',
+  backgroundImage,
+} = Astro.props;
+---
+
+<section class="relative min-h-[60vh] md:min-h-[80vh] flex items-center justify-center bg-surface-dark overflow-hidden">
+  {backgroundImage && (
+    <img
+      src={backgroundImage}
+      alt=""
+      class="absolute inset-0 h-full w-full object-cover"
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+    />
+  )}
+  <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20"></div>
+  <div class="relative z-10 mx-auto max-w-4xl px-4 text-center text-white">
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight">
+      {title}
+    </h1>
+    <p class="mt-4 text-lg md:text-xl text-white/90">
+      {subtitle}
+    </p>
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <Button variant="accent" size="lg" href="/inscripciones">
+        Inscríbete
+      </Button>
+      <Button
+        variant="outline"
+        size="lg"
+        href="/quienes-somos"
+        class="border-white text-white hover:bg-white hover:text-surface-dark"
+      >
+        Conoce más
+      </Button>
+    </div>
+  </div>
+</section>

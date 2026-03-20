@@ -1,0 +1,45 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import RiderCard from '@components/common/RiderCard.astro';
+import Button from '@components/common/Button.astro';
+
+type Rider = CollectionEntry<'riders'>;
+
+const riders = (await getCollection('riders'))
+  .filter((r: Rider) => !r.data.draft && r.data.active)
+  .sort((a: Rider, b: Rider) => (a.data.order ?? 99) - (b.data.order ?? 99));
+---
+
+<PageLayout
+  title="Nuestro Equipo"
+  description="Los guerreros de la trocha"
+  breadcrumbs={[{ label: 'Equipo' }]}
+>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    {riders.map((r: Rider) => (
+      <RiderCard
+        name={r.data.name}
+        photo={r.data.photo}
+        category={r.data.category}
+        specialty={r.data.specialty}
+        href={`/equipo/${r.id}`}
+      />
+    ))}
+  </div>
+
+  {riders.length === 0 && (
+    <p class="text-center text-text-secondary py-12">
+      No hay corredores registrados por el momento.
+    </p>
+  )}
+
+  <div class="mt-16 text-center">
+    <p class="text-lg text-text-secondary mb-4">
+      ¿Quieres unirte al equipo?
+    </p>
+    <Button variant="accent" href="/inscripciones">
+      Inscribirme al club
+    </Button>
+  </div>
+</PageLayout>

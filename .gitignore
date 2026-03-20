@@ -1,0 +1,43 @@
+# Dependencias
+node_modules/
+
+# Astro
+dist/
+.astro/
+
+# Entorno
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Cloudflare / Wrangler
+.wrangler/
+
+# Netlify
+.netlify/
+
+# Testing / QA
+.playwright-cli/
+playwright-report/
+test-results/
+
+# TypeScript
+*.tsbuildinfo
+
+# Herramientas de desarrollo
+.claude/settings.local.json
+.serena/memories/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Logs
+npm-debug.log*

@@ -1,0 +1,35 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import RiderCard from '@components/common/RiderCard.astro';
+import Button from '@components/common/Button.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+
+type Rider = CollectionEntry<'riders'>;
+
+const featuredRiders = (await getCollection('riders'))
+  .filter((r: Rider) => !r.data.draft && r.data.featured)
+  .sort((a: Rider, b: Rider) => a.data.order - b.data.order)
+  .slice(0, 4);
+---
+
+<section class="py-20">
+  <div class="max-w-6xl mx-auto px-4">
+    <SectionTitle title="Equipo Destacado" subtitle="Los guerreros de la trocha" />
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {featuredRiders.map((r: Rider) => (
+        <RiderCard
+          name={r.data.name}
+          photo={r.data.photo}
+          category={r.data.category}
+          specialty={r.data.specialty}
+          href={`/equipo/${r.id}`}
+        />
+      ))}
+    </div>
+
+    <div class="mt-10 text-center">
+      <Button href="/equipo" variant="outline">Ver equipo completo</Button>
+    </div>
+  </div>
+</section>

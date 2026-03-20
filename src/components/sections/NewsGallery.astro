@@ -1,0 +1,57 @@
+---
+import ImageLightbox from '@components/interactive/ImageLightbox.tsx';
+
+interface Props {
+  /** Carpeta dentro de /images/ con las fotos */
+  imageFolder: string;
+  /** Lista de nombres de archivo */
+  imageFiles: string[];
+  /** Máximo de fotos visibles en el grid antes de "ver más" */
+  maxVisible?: number;
+  /** Slug del album en /galeria/ para enlazar */
+  albumSlug?: string;
+  /** Título de la sección */
+  title?: string;
+}
+
+const {
+  imageFolder,
+  imageFiles,
+  maxVisible = 9,
+  albumSlug,
+  title = 'Fotos del evento',
+} = Astro.props;
+
+const allImages = imageFiles.map((file) => ({
+  src: `${imageFolder}/${file}`,
+  alt: file.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
+}));
+
+const visibleImages = allImages.slice(0, maxVisible);
+const hasMore = allImages.length > maxVisible;
+---
+
+<section class="mt-12 pt-8 border-t border-surface-muted" aria-labelledby="news-gallery-title">
+  <h2 id="news-gallery-title" class="text-2xl font-display font-bold mb-6">
+    {title}
+    <span class="text-base font-normal text-text-secondary ml-2">
+      ({allImages.length} fotos)
+    </span>
+  </h2>
+
+  <ImageLightbox client:visible images={allImages} />
+
+  {hasMore && albumSlug && (
+    <div class="mt-6 text-center">
+      <a
+        href={`/galeria/${albumSlug}`}
+        class="inline-flex items-center gap-2 rounded-lg border-2 border-primary px-6 py-3 font-semibold text-primary hover:bg-primary hover:text-white transition-colors"
+      >
+        Ver álbum completo ({allImages.length} fotos)
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </a>
+    </div>
+  )}
+</section>

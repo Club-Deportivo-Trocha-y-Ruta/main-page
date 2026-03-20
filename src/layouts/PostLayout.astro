@@ -1,0 +1,66 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import Badge from '@components/common/Badge.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  date?: Date;
+  author?: string;
+  image?: string;
+  category?: string;
+}
+
+const { title, description, date, author, image, category } = Astro.props;
+
+const formattedDate = date
+  ? date.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })
+  : null;
+
+const breadcrumbs = [
+  { label: 'Noticias', href: '/noticias' },
+  { label: title },
+];
+---
+
+<BaseLayout title={title} description={description} ogImage={image}>
+  <article class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+    <Breadcrumb items={breadcrumbs} />
+
+    {image && (
+      <div class="mb-8 overflow-hidden rounded-xl">
+        <img
+          src={image}
+          alt=""
+          class="w-full h-64 md:h-96 object-cover"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </div>
+    )}
+
+    <header class="mb-8 max-w-3xl mx-auto">
+      {category && (
+        <div class="mb-3">
+          <Badge variant="primary" size="md">{category}</Badge>
+        </div>
+      )}
+      <h1 transition:animate="slide" class="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-text-primary leading-tight">
+        {title}
+      </h1>
+      {(formattedDate || author) && (
+        <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-text-secondary">
+          {formattedDate && <time datetime={date!.toISOString()}>{formattedDate}</time>}
+          {formattedDate && author && <span aria-hidden="true">&middot;</span>}
+          {author && <span>{author}</span>}
+        </div>
+      )}
+    </header>
+
+    <div class="prose prose-lg mx-auto max-w-3xl">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

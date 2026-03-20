@@ -1,0 +1,149 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import Card from '@components/common/Card.astro';
+import Badge from '@components/common/Badge.astro';
+import Button from '@components/common/Button.astro';
+import { SITE } from '@lib/constants';
+
+export async function getStaticPaths() {
+  const programs = await getCollection('programs');
+  return programs
+    .filter((p: CollectionEntry<'programs'>) => !p.data.draft)
+    .map((p: CollectionEntry<'programs'>) => ({ params: { slug: p.id }, props: { program: p } }));
+}
+
+const { program } = Astro.props as { program: CollectionEntry<'programs'> };
+const { Content } = await render(program);
+
+const { title } = program.data;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: title,
+  description: program.data.subtitle || title,
+  provider: { '@type': 'SportsOrganization', name: SITE.name, url: SITE.url },
+};
+
+const levelLabels: Record<string, string> = {
+  'iniciación': 'Iniciación',
+  'formación': 'Formación',
+  'competición': 'Competición',
+  'recreativo': 'Recreativo',
+};
+---
+
+<BaseLayout title={`${title} | Programas`} description={program.data.subtitle} jsonLd={jsonLd}>
+  <article class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+    <Breadcrumb items={[{ label: 'Programas', href: '/programas' }, { label: program.data.title }]} />
+
+    <div class="grid md:grid-cols-3 gap-12">
+      <!-- Sidebar (mobile first) -->
+      <aside class="order-1 md:order-2">
+        <Card class="p-6 md:sticky md:top-24">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <Badge variant="cyan">{levelLabels[program.data.targetLevel] || program.data.targetLevel}</Badge>
+            {program.data.enrollmentOpen ? (
+              <Badge variant="primary">Inscripciones abiertas</Badge>
+            ) : (
+              <Badge variant="neutral">Proximamente</Badge>
+            )}
+          </div>
+
+          <dl class="space-y-3 text-sm">
+            <div>
+              <dt class="text-xs text-text-secondary uppercase tracking-wide">Edades</dt>
+              <dd class="font-semibold">{program.data.ageRange}</dd>
+            </div>
+            <div>
+              <dt class="text-xs text-text-secondary uppercase tracking-wide">Horario</dt>
+              <dd class="font-semibold">{program.data.schedule}</dd>
+            </div>
+            {program.data.duration && (
+              <div>
+                <dt class="text-xs text-text-secondary uppercase tracking-wide">Duración</dt>
+                <dd class="font-semibold">{program.data.duration}</dd>
+              </div>
+            )}
+            {program.data.location && (
+              <div>
+                <dt class="text-xs text-text-secondary uppercase tracking-wide">Lugar</dt>
+                <dd class="font-semibold">{program.data.location}</dd>
+              </div>
+            )}
+            {program.data.monthlyFee && (
+              <div>
+                <dt class="text-xs text-text-secondary uppercase tracking-wide">Mensualidad</dt>
+                <dd class="font-semibold">{program.data.monthlyFee}</dd>
+              </div>
+            )}
+          </dl>
+
+          {program.data.requirements.length > 0 && (
+            <div class="mt-5 pt-5 border-t border-gray-200">
+              <h3 class="text-xs text-text-secondary uppercase tracking-wide mb-2">Requisitos</h3>
+              <ul class="space-y-1 text-sm">
+                {program.data.requirements.map((req: string) => (
+                  <li class="flex items-start gap-2">
+                    <span class="text-primary mt-0.5 shrink-0">&#8226;</span>
+                    <span>{req}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {program.data.equipmentNeeded.length > 0 && (
+            <div class="mt-5 pt-5 border-t border-gray-200">
+              <h3 class="text-xs text-text-secondary uppercase tracking-wide mb-2">Equipamiento</h3>
+              <ul class="space-y-1 text-sm">
+                {program.data.equipmentNeeded.map((item: string) => (
+                  <li class="flex items-start gap-2">
+                    <span class="text-primary mt-0.5 shrink-0">&#8226;</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div class="mt-6">
+            <Button variant="accent" href="/inscripciones" class="w-full text-center">
+              Inscribete
+            </Button>
+          </div>
+        </Card>
+      </aside>
+
+      <!-- Contenido principal -->
+      <div class="md:col-span-2 order-2 md:order-1">
+        <h1 class="text-3xl md:text-4xl font-display font-bold text-text-primary">
+          {program.data.title}
+        </h1>
+        {program.data.subtitle && (
+          <p class="mt-2 text-lg text-text-secondary">{program.data.subtitle}</p>
+        )}
+
+        {program.data.objectives.length > 0 && (
+          <div class="mt-6 rounded-lg bg-surface-muted p-5">
+            <h2 class="text-sm font-semibold uppercase tracking-wide text-text-secondary mb-3">Objetivos del programa</h2>
+            <ul class="space-y-2">
+              {program.data.objectives.map((obj: string) => (
+                <li class="flex items-start gap-2 text-sm">
+                  <span class="text-primary mt-0.5 shrink-0">&#10003;</span>
+                  <span>{obj}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div class="prose prose-lg mt-8 max-w-none">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

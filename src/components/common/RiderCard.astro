@@ -1,0 +1,57 @@
+---
+interface Props {
+  name: string;
+  photo: string;
+  category: string;
+  specialty?: string;
+  href: string;
+}
+
+const { name, category, specialty, href } = Astro.props;
+
+import Badge from '@components/common/Badge.astro';
+import { getCategoryLabel } from '@lib/utils';
+
+const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
+  juvenil: 'primary',
+  infantil: 'cyan',
+  'pre-infantil': 'cyan',
+  elite: 'accent',
+  sub23: 'primary',
+  master: 'neutral',
+};
+
+const specialtyLabels: Record<string, string> = {
+  xco: 'XCO',
+  xcm: 'XCM',
+  enduro: 'Enduro',
+  'múltiple': 'Múltiple',
+  ruta: 'Ruta',
+};
+---
+
+<a href={href} class="group block">
+  <div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-muted">
+    <div
+      class="w-full h-full bg-surface-muted transition-transform duration-300 group-hover:scale-105"
+      role="img"
+      aria-label={`Foto de ${name}`}
+    >
+    </div>
+  </div>
+  <div class="mt-3">
+    <h3 class="font-display font-semibold text-text-primary group-hover:text-primary transition-colors">
+      {name}
+    </h3>
+    <div class="mt-1.5">
+      <Badge variant={badgeVariant[category] ?? 'neutral'}>
+        {getCategoryLabel(category)}
+      </Badge>
+    </div>
+    {specialty && (
+      <p class="mt-1 text-xs text-text-secondary uppercase">
+        {specialtyLabels[specialty] ?? specialty}
+      </p>
+    )}
+  </div>
+</a>

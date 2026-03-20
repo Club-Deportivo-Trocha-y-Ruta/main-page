@@ -1,0 +1,45 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Card from '@components/common/Card.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+
+type Program = CollectionEntry<'programs'>;
+
+const programs = (await getCollection('programs'))
+  .filter((p: Program) => !p.data.draft)
+  .sort((a: Program, b: Program) => a.data.order - b.data.order);
+
+const borderColors = ['border-t-primary', 'border-t-accent', 'border-t-cyan'];
+
+const excerpts: Record<string, string> = {
+  'escuela-de-iniciacion': 'Primeros pasos en el ciclomontañismo. Desarrollo de habilidades motrices básicas y amor por la bicicleta en un ambiente seguro y divertido.',
+  'formacion-juvenil': 'Perfeccionamiento técnico y preparación para competencias departamentales. Entrenamiento estructurado con enfoque en disciplina deportiva.',
+  'alto-rendimiento': 'Programa competitivo de élite con planificación periodizada, preparación física avanzada y participación en circuitos nacionales.',
+};
+---
+
+<section class="py-20">
+  <div class="mx-auto max-w-6xl px-4">
+    <SectionTitle title="Nuestros Programas" subtitle="Formación integral para cada etapa" />
+
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+      {programs.map((program: Program, i: number) => (
+        <Card href={`/programas/${program.id}`} class={`border-t-4 ${borderColors[i % borderColors.length]}`}>
+          <div class="p-6">
+            <div class="mb-4 text-4xl" aria-hidden="true">&#x1F6B4;</div>
+            <h3 class="font-display text-xl font-bold text-text-primary">
+              {program.data.title}
+            </h3>
+            <p class="mt-1 text-sm text-text-secondary">{program.data.ageRange}</p>
+            <p class="mt-3 text-text-secondary">
+              {excerpts[program.id] ?? ''}
+            </p>
+            <span class="mt-4 inline-block font-semibold text-primary">
+              Ver programa &rarr;
+            </span>
+          </div>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>

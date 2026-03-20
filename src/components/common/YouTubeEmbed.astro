@@ -1,0 +1,22 @@
+---
+interface Props {
+  videoId: string;
+  title: string;
+  class?: string;
+}
+
+const { videoId, title, class: className = '' } = Astro.props;
+
+const src = `https://www.youtube.com/embed/${videoId}`;
+---
+
+<div class={`aspect-video rounded-xl overflow-hidden shadow-md ${className}`}>
+  <iframe
+    src={src}
+    {title}
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+    class="w-full h-full"
+  ></iframe>
+</div>

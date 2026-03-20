@@ -1,0 +1,58 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import Card from '@components/common/Card.astro';
+import Badge from '@components/common/Badge.astro';
+import { formatDate } from '@lib/utils';
+
+type Gallery = CollectionEntry<'gallery'>;
+
+const galleries = (await getCollection('gallery'))
+  .filter((g: Gallery) => !g.data.draft)
+  .sort((a: Gallery, b: Gallery) => b.data.date.getTime() - a.data.date.getTime());
+
+const categoryVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
+  competencia: 'primary',
+  entrenamiento: 'accent',
+  social: 'cyan',
+  general: 'neutral',
+};
+---
+
+<PageLayout
+  title="Galería"
+  description="Momentos que nos inspiran"
+  breadcrumbs={[{ label: 'Galería' }]}
+>
+  {galleries.length > 0 ? (
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {galleries.map((album: Gallery) => (
+        <Card href={`/galeria/${album.id}`}>
+          <div class="relative aspect-video bg-surface-muted rounded-t-xl overflow-hidden flex items-center justify-center">
+            <span class="text-4xl text-text-secondary/30" aria-hidden="true">📷</span>
+            <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+              {album.data.images.length} fotos
+            </span>
+          </div>
+          <div class="p-5">
+            <h3 class="text-lg font-display font-bold text-text-primary line-clamp-2">
+              {album.data.title}
+            </h3>
+            <div class="mt-2 flex items-center gap-3 text-sm text-text-secondary">
+              <time datetime={album.data.date.toISOString()}>
+                {formatDate(album.data.date)}
+              </time>
+              <Badge variant={categoryVariant[album.data.category] ?? 'neutral'} size="sm">
+                {album.data.category}
+              </Badge>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
+  ) : (
+    <p class="text-center text-text-secondary py-12">
+      No hay álbumes publicados aún.
+    </p>
+  )}
+</PageLayout>

@@ -1,0 +1,56 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+const allItems: BreadcrumbItem[] = [{ label: 'Inicio', href: '/' }, ...items];
+const parentItem = allItems.length > 1 ? allItems[allItems.length - 2] : null;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: allItems.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.label,
+    ...(item.href ? { item: new URL(item.href, Astro.site).href } : {}),
+  })),
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<!-- Mobile: solo link al padre -->
+{parentItem?.href && (
+  <nav aria-label="Volver" class="md:hidden mb-4">
+    <a href={parentItem.href} class="inline-flex items-center gap-1 text-sm text-text-secondary hover:text-primary transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      {parentItem.label}
+    </a>
+  </nav>
+)}
+
+<!-- Desktop: breadcrumb completo -->
+<nav aria-label="Breadcrumb" class="hidden md:block mb-6">
+  <ol class="flex items-center gap-2 text-sm text-text-secondary">
+    {allItems.map((item, index) => (
+      <li class="flex items-center gap-2">
+        {index > 0 && (
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        )}
+        {item.href && index < allItems.length - 1 ? (
+          <a href={item.href} class="hover:text-primary transition-colors">{item.label}</a>
+        ) : (
+          <span aria-current={index === allItems.length - 1 ? 'page' : undefined} class="text-text-primary font-medium">{item.label}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

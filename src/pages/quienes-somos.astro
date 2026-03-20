@@ -1,0 +1,97 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+import Card from '@components/common/Card.astro';
+import Button from '@components/common/Button.astro';
+import { SITE } from '@lib/constants';
+import { generateOrganizationJsonLd } from '@lib/seo';
+
+const orgJsonLd = generateOrganizationJsonLd();
+---
+
+<PageLayout
+  title="Quiénes Somos"
+  description="Historia, misión y valores del Club Deportivo Trocha y Ruta"
+  breadcrumbs={[{ label: 'Quiénes Somos' }]}
+>
+  <Fragment set:html={`<script type="application/ld+json">${JSON.stringify(orgJsonLd)}</script>`} />
+
+  <!-- Historia -->
+  <section class="mb-16">
+    <SectionTitle title="Nuestra Historia" />
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
+      <p>
+        Desde <strong class="text-text-primary">{SITE.founded}</strong>, el {SITE.name} ha dedicado
+        su labor a la formación integral de niños y jóvenes a través del ciclomontañismo en
+        <strong class="text-text-primary">Yumbo, Valle del Cauca</strong>.
+      </p>
+      <p>
+        Lo que comenzó como un grupo pequeño de familias apasionadas por la bicicleta, se convirtió
+        en una comunidad que promueve el deporte, la disciplina y el contacto con la naturaleza.
+        Hoy, más de una década después, seguimos pedaleando con el mismo compromiso: formar seres
+        humanos íntegros dentro y fuera de la competencia.
+      </p>
+    </div>
+  </section>
+
+  <!-- Misión, Visión y Valores -->
+  <section class="mb-16">
+    <SectionTitle title="Misión, Visión y Valores" />
+    <div class="grid gap-6 md:grid-cols-3">
+      <Card class="p-6">
+        <h3 class="text-xl font-display font-bold text-primary mb-3">Misión</h3>
+        <p class="text-text-secondary leading-relaxed">
+          Formar niños y jóvenes integrales a través del ciclomontañismo, promoviendo valores,
+          disciplina y amor por la naturaleza.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-xl font-display font-bold text-primary mb-3">Visión</h3>
+        <p class="text-text-secondary leading-relaxed">
+          Ser el club referente en formación deportiva infantil y juvenil en el Valle del Cauca,
+          reconocido por su excelencia deportiva y humana.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-xl font-display font-bold text-primary mb-3">Valores</h3>
+        <p class="text-text-secondary leading-relaxed">
+          Disciplina, trabajo en equipo, respeto por la naturaleza, perseverancia, honestidad
+          y compañerismo.
+        </p>
+      </Card>
+    </div>
+  </section>
+
+  <!-- Logros Destacados -->
+  <section class="mb-16">
+    <SectionTitle title="Logros Destacados" />
+    <div class="mx-auto max-w-2xl">
+      <ul class="space-y-4 text-lg text-text-secondary">
+        <li class="flex items-start gap-3">
+          <span class="text-2xl shrink-0" aria-hidden="true">🏆</span>
+          <span>Más de 100 medallas en competencias departamentales y nacionales</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-2xl shrink-0" aria-hidden="true">🚴</span>
+          <span>200+ niños formados desde {SITE.founded}</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-2xl shrink-0" aria-hidden="true">🌟</span>
+          <span>Representación en competencias nacionales desde 2018</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-2xl shrink-0" aria-hidden="true">🤝</span>
+          <span>Alianzas con Liga Vallecaucana de Ciclismo</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="text-center">
+    <p class="text-xl text-text-secondary mb-6">¿Quieres ser parte de nuestra historia?</p>
+    <Button variant="accent" size="lg" href="/inscripciones">
+      Inscríbete ahora
+    </Button>
+  </section>
+</PageLayout>
