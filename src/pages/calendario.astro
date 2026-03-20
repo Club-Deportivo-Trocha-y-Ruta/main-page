@@ -3,6 +3,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import EventCard from '@components/common/EventCard.astro';
 import SectionTitle from '@components/common/SectionTitle.astro';
+import { generateEventsListJsonLd } from '@lib/seo';
 
 type Event = CollectionEntry<'events'>;
 
@@ -15,12 +16,22 @@ const upcoming = events
 const past = events
   .filter((e: Event) => e.data.status === 'past')
   .sort((a: Event, b: Event) => b.data.date.getTime() - a.data.date.getTime());
+
+const allSorted = [...upcoming, ...past];
+const jsonLd = generateEventsListJsonLd(
+  allSorted.map((e: Event) => ({
+    title: e.data.title,
+    date: e.data.date,
+    url: '/calendario',
+  }))
+);
 ---
 
 <PageLayout
   title="Calendario"
   description="Próximas competencias y eventos del club"
   breadcrumbs={[{ label: 'Calendario' }]}
+  jsonLd={jsonLd}
 >
   <div class="max-w-4xl mx-auto space-y-16">
     <!-- Proximos eventos -->

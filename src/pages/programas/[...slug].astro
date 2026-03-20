@@ -5,7 +5,7 @@ import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Card from '@components/common/Card.astro';
 import Badge from '@components/common/Badge.astro';
 import Button from '@components/common/Button.astro';
-import { SITE } from '@lib/constants';
+import { generateCourseJsonLd } from '@lib/seo';
 
 export async function getStaticPaths() {
   const programs = await getCollection('programs');
@@ -19,13 +19,19 @@ const { Content } = await render(program);
 
 const { title } = program.data;
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Course',
-  name: title,
+const jsonLd = generateCourseJsonLd({
+  title,
+  url: `/programas/${program.id}`,
   description: program.data.subtitle || title,
-  provider: { '@type': 'SportsOrganization', name: SITE.name, url: SITE.url },
-};
+  image: program.data.image,
+  ageRange: program.data.ageRange,
+  ageMin: program.data.ageMin,
+  ageMax: program.data.ageMax,
+  targetLevel: program.data.targetLevel,
+  schedule: program.data.schedule,
+  monthlyFee: program.data.monthlyFee,
+  enrollmentOpen: program.data.enrollmentOpen,
+});
 
 const levelLabels: Record<string, string> = {
   'iniciación': 'Iniciación',

@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: NewsEntry };
 const { Content } = await render(entry);
 
-const { title, date, author, category, excerpt, image, galleryFolder, galleryImages } = entry.data;
+const { title, date, updatedDate, author, category, excerpt, image, tags, galleryFolder, galleryImages } = entry.data;
 
 const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
   competencias: 'primary',
@@ -32,10 +32,13 @@ const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = 
 const jsonLd = generateArticleJsonLd({
   title,
   date,
+  updatedDate,
   author,
   excerpt,
-  url: `${SITE.url}/noticias/${entry.id}`,
+  url: `/noticias/${entry.id}`,
   image,
+  category,
+  tags,
 });
 ---
 
