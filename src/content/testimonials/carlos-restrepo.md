@@ -1,5 +1,6 @@
 ---
 name: "Carlos Restrepo"
+type: "familia"
 role: "padre-de-familia"
 roleLabel: "Padre de familia"
 photo: "/images/placeholder-testimonial.jpg"

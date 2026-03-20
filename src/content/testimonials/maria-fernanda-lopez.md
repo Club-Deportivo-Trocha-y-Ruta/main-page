@@ -1,5 +1,6 @@
 ---
 name: "María Fernanda López"
+type: "familia"
 role: "madre-de-familia"
 roleLabel: "Madre de familia"
 photo: "/images/placeholder-testimonial.jpg"

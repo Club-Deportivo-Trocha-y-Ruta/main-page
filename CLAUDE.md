@@ -30,7 +30,7 @@ npm run typecheck    # astro check (type-checking)
 | Typography | @tailwindcss/typography ^0.5.19 | Plugin para prose styling en contenido Markdown |
 | Islands | React ^19.2.4 | Solo para 5 componentes interactivos en `src/components/interactive/` |
 | CMS | Sveltia CMS | Estático, sin npm. UI en `public/admin/index.html`. Config en `public/admin/config.yml` |
-| Hosting | Cloudflare Pages | Config en `wrangler.toml`. También hay `netlify.toml` como fallback |
+| Hosting | Hostinger (FTPS) | Deploy via GitHub Actions + FTP-Deploy-Action. 2 environments: `develop` y `production` |
 | Formularios | Web3Forms | API HTTP, 250/mes gratis. Variable: `PUBLIC_WEB3FORMS_KEY` |
 | Imágenes | Astro Image + Cloudinary | Locales via `<Image>` de `astro:assets`, dominio `res.cloudinary.com` habilitado en config |
 | Iconos | astro-icon + Phosphor Icons | `icon({ include: { ph: ['*'] } })` — todos los iconos Phosphor disponibles |
@@ -234,10 +234,22 @@ src/
 
 ## Variables de Entorno
 
-```
-PUBLIC_WEB3FORMS_KEY         # API key de Web3Forms (ContactForm, InscriptionForm)
-PUBLIC_CLOUDINARY_CLOUD_NAME # Cloud name de Cloudinary
-```
+Gestionadas via **GitHub Environments** (Settings → Environments). Cada environment (QA, PDN) tiene sus propios valores.
+
+| Variable | Descripción | Diferente por env |
+|----------|-------------|:-----------------:|
+| `PUBLIC_WEB3FORMS_KEY` | API key de Web3Forms (ContactForm, InscriptionForm) | No |
+| `PUBLIC_CLOUDINARY_CLOUD_NAME` | Cloud name de Cloudinary | No |
+| `PUBLIC_CF_ANALYTICS_TOKEN` | Token de Cloudflare Web Analytics | Sí (develop ≠ production) |
+
+Secrets de deploy (en cada environment): `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`
+
+### CI/CD
+
+| Workflow | Trigger | Environment | CI Gate |
+|----------|---------|-------------|---------|
+| `deploy.yml` | push a `develop` | `develop` | Sí (typecheck + tests) |
+| `deploy-prod.yml` | push a `main` | `production` | No (asume CI pasó en develop) |
 
 ## Assets Estáticos (public/)
 
@@ -287,4 +299,4 @@ PUBLIC_CLOUDINARY_CLOUD_NAME # Cloud name de Cloudinary
 - Colecciones sin contenido: `directivos`, `results`, `rutas`, `pages`
 - Programa "Recreación" falta en `src/content/programs/`
 - Directorio `src/types/` vacío (tipos definidos inline en componentes)
-- Analytics (Cloudflare Web Analytics / Umami) configurado como placeholder en BaseLayout
+- Analytics: Cloudflare Web Analytics activo, token via `PUBLIC_CF_ANALYTICS_TOKEN` (env var por environment)

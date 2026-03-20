@@ -372,7 +372,15 @@ collections:
     summary: "{{name}} — {{roleLabel}}"
     fields:
       - { label: "Nombre", name: "name", widget: "string", required: true }
-      - label: "Tipo"
+      - label: "Categoría del testimonio"
+        name: "type"
+        widget: "select"
+        default: "familia"
+        hint: "Familia/corredor para la página de testimonios; patrocinador para la página de patrocinadores"
+        options:
+          - { label: "Familia o corredor", value: "familia" }
+          - { label: "Patrocinador", value: "patrocinador" }
+      - label: "Rol"
         name: "role"
         widget: "select"
         options:
