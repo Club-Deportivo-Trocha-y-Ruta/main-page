@@ -30,13 +30,13 @@ export const NAV_ITEMS = [
   { label: 'Inicio', href: '/' },
   { label: 'Quiénes Somos', href: '/quienes-somos' },
   { label: 'Programas', href: '/programas' },
-  { label: 'Equipo', href: '/equipo' },
+  // { label: 'Equipo', href: '/equipo' }, // TODO: habilitar cuando se implemente la sección de equipo
   { label: 'Noticias', href: '/noticias' },
   { label: 'Calendario', href: '/calendario' },
 ] as const;
 
 export const SECONDARY_NAV = [
-  { label: 'Galería', href: '/galeria' },
+  // { label: 'Galería', href: '/galeria' }, // TODO: habilitar cuando se implemente la sección de galería
   { label: 'Testimonios', href: '/testimonios' },
   { label: 'Preguntas Frecuentes', href: '/preguntas-frecuentes' },
   { label: 'Patrocinadores', href: '/patrocinadores' },
