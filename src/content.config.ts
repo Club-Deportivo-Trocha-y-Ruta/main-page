@@ -305,6 +305,19 @@ const rutas = defineCollection({
   }),
 });
 
+const faqs = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: 'src/content/faqs' }),
+  schema: z.object({
+    question: z.string(),
+    answer: z.string(),
+    category: z
+      .enum(['general', 'inscripciones', 'entrenamiento', 'competencias', 'equipamiento', 'seguridad'])
+      .default('general'),
+    order: z.number().default(0),
+    draft: z.boolean().default(false),
+  }),
+});
+
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: 'src/content/pages' }),
   schema: z.object({
@@ -331,4 +344,5 @@ export const collections = {
   gallery,
   rutas,
   pages,
+  faqs,
 };

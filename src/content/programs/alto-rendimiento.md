@@ -55,3 +55,7 @@ Los integrantes de este programa representan al club en las principales competen
 ## Soporte técnico
 
 El programa ofrece acceso a servicio mecánico especializado, asesoría nutricional y acompañamiento en competencias. Trabajamos con un equipo multidisciplinario que incluye entrenador principal, preparador físico y apoyo en salud deportiva.
+
+## Seguridad y protección
+
+El club ofrece una póliza de accidentes personales con Aseguradora Solidaria de Colombia (vigencia marzo 2026 - marzo 2027) por un valor de $60.000 anuales por deportista. La póliza cubre gastos médicos hasta $5.000.000, rehabilitación integral hasta $10.000.000, incapacidad total y permanente hasta $10.000.000, traslado en ambulancia ($500.000), renta diaria por hospitalización ($50.000/día) y ambulancia para eventos. La cobertura aplica durante entrenamientos, competencias y eventos del club.

@@ -5,7 +5,7 @@ import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Card from '@components/common/Card.astro';
 import Badge from '@components/common/Badge.astro';
 import Button from '@components/common/Button.astro';
-import { SITE } from '@lib/constants';
+import { generateCourseJsonLd } from '@lib/seo';
 
 export async function getStaticPaths() {
   const programs = await getCollection('programs');
@@ -19,13 +19,19 @@ const { Content } = await render(program);
 
 const { title } = program.data;
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Course',
-  name: title,
+const jsonLd = generateCourseJsonLd({
+  title,
+  url: `/programas/${program.id}`,
   description: program.data.subtitle || title,
-  provider: { '@type': 'SportsOrganization', name: SITE.name, url: SITE.url },
-};
+  image: program.data.image,
+  ageRange: program.data.ageRange,
+  ageMin: program.data.ageMin,
+  ageMax: program.data.ageMax,
+  targetLevel: program.data.targetLevel,
+  schedule: program.data.schedule,
+  monthlyFee: program.data.monthlyFee,
+  enrollmentOpen: program.data.enrollmentOpen,
+});
 
 const levelLabels: Record<string, string> = {
   'iniciación': 'Iniciación',
@@ -108,6 +114,19 @@ const levelLabels: Record<string, string> = {
               </ul>
             </div>
           )}
+
+          <!-- Seguro -->
+          <div class="mt-5 pt-5 border-t border-gray-200">
+            <div class="flex items-start gap-2 text-sm">
+              <svg class="h-5 w-5 shrink-0 text-primary mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+              </svg>
+              <div>
+                <span class="font-semibold text-text-primary">Seguro deportivo disponible</span>
+                <p class="text-text-secondary text-xs mt-0.5">Póliza de accidentes personales con Aseguradora Solidaria de Colombia — $60.000/año</p>
+              </div>
+            </div>
+          </div>
 
           <div class="mt-6">
             <Button variant="accent" href="/inscripciones" class="w-full text-center">
