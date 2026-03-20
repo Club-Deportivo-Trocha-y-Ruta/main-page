@@ -13,6 +13,7 @@ const { items } = Astro.props;
 const allItems: BreadcrumbItem[] = [{ label: 'Inicio', href: '/' }, ...items];
 const parentItem = allItems.length > 1 ? allItems[allItems.length - 2] : null;
 
+const siteBase = Astro.site ?? Astro.url;
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -20,7 +21,7 @@ const jsonLd = {
     '@type': 'ListItem',
     position: index + 1,
     name: item.label,
-    ...(item.href ? { item: new URL(item.href, Astro.site).href } : {}),
+    ...(item.href ? { item: new URL(item.href, siteBase).href } : {}),
   })),
 };
 ---

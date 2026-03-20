@@ -70,7 +70,7 @@ const STORAGE_TTL = 48 * 60 * 60 * 1000; // 48 hours
 const STEPS = [
   { label: 'Programa', shortLabel: 'Programa' },
   { label: 'Corredor', shortLabel: 'Corredor' },
-  { label: 'Acudiente', shortLabel: 'Acudiente' },
+  { label: 'Acudiente / Emergencia', shortLabel: 'Acudiente' },
   { label: 'Confirmar', shortLabel: 'Confirmar' },
 ];
 
@@ -213,13 +213,13 @@ export default function InscriptionForm({ programs }: Props) {
 
     // Formatted fields
     formData.append('Programa', selectedProgram?.title ?? data.programId);
-    formData.append('Edad Corredor', `${data.riderAge} anos`);
+    formData.append('Edad Corredor', `${data.riderAge} años`);
     formData.append('Nombre Corredor', data.riderName);
     formData.append('Fecha Nacimiento', `${data.birthDay}/${data.birthMonth}/${data.birthYear}`);
     formData.append('Genero', data.gender);
     formData.append('Talla Camiseta', data.shirtSize);
     formData.append('Experiencia', data.experience);
-    formData.append('Nombre Acudiente', data.guardianName);
+    formData.append('Acudiente / Contacto Emergencia', data.guardianName);
     formData.append('Celular', data.guardianPhone);
     formData.append('Email', data.guardianEmail);
     if (data.guardianAddress) formData.append('Direccion', data.guardianAddress);
@@ -420,9 +420,9 @@ export default function InscriptionForm({ programs }: Props) {
                   className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                 >
                   <option value="">Seleccionar edad</option>
-                  {Array.from({ length: 15 }, (_, i) => i + 4).map((age) => (
+                  {Array.from({ length: 47 }, (_, i) => i + 4).map((age) => (
                     <option key={age} value={String(age)}>
-                      {age} anos
+                      {age} años
                     </option>
                   ))}
                 </select>
@@ -494,14 +494,14 @@ export default function InscriptionForm({ programs }: Props) {
                       </select>
                     </div>
                     <div>
-                      <label htmlFor="birthYear" className="sr-only">Ano</label>
+                      <label htmlFor="birthYear" className="sr-only">Año</label>
                       <select
                         id="birthYear"
                         {...register('birthYear')}
                         className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                       >
-                        <option value="">Ano</option>
-                        {Array.from({ length: 18 }, (_, i) => new Date().getFullYear() - i).map((y) => (
+                        <option value="">Año</option>
+                        {Array.from({ length: 51 }, (_, i) => new Date().getFullYear() - i).map((y) => (
                           <option key={y} value={String(y)}>{y}</option>
                         ))}
                       </select>
@@ -598,16 +598,16 @@ export default function InscriptionForm({ programs }: Props) {
           {currentStep === 2 && (
             <fieldset>
               <legend className="font-display text-xl font-bold text-text-primary">
-                Datos del acudiente
+                Acudiente / Contacto de emergencia
               </legend>
               <p className="mt-1 text-sm text-text-secondary">
-                Informacion del padre, madre o acudiente responsable.
+                Información del padre, madre o acudiente responsable. Esta persona será también el contacto de emergencia.
               </p>
 
               <div className="mt-6 space-y-5">
                 <div>
                   <label htmlFor="guardianName" className="block text-sm font-medium text-text-primary">
-                    Nombre completo <span className="text-red-500">*</span>
+                    Nombre completo del acudiente / contacto de emergencia <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="guardianName"
@@ -721,7 +721,7 @@ export default function InscriptionForm({ programs }: Props) {
                   onEdit={() => goToStep(0)}
                   items={[
                     { label: 'Programa', value: selectedProgram?.title ?? values.programId },
-                    { label: 'Edad', value: values.riderAge ? `${values.riderAge} anos` : '' },
+                    { label: 'Edad', value: values.riderAge ? `${values.riderAge} años` : '' },
                   ]}
                 />
 
@@ -740,7 +740,7 @@ export default function InscriptionForm({ programs }: Props) {
 
                 {/* Acudiente summary */}
                 <SummarySection
-                  title="Acudiente"
+                  title="Acudiente / Contacto de emergencia"
                   onEdit={() => goToStep(2)}
                   items={[
                     { label: 'Nombre', value: values.guardianName },
