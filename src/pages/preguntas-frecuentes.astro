@@ -1,0 +1,76 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+import FaqAccordion from '@components/common/FaqAccordion.astro';
+import Button from '@components/common/Button.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { SITE } from '@lib/constants';
+
+const allFaqs = (await getCollection('faqs'))
+  .filter((faq: CollectionEntry<'faqs'>) => !faq.data.draft)
+  .sort((a: CollectionEntry<'faqs'>, b: CollectionEntry<'faqs'>) => a.data.order - b.data.order);
+
+const categories = [
+  { key: 'general', label: 'General' },
+  { key: 'inscripciones', label: 'Inscripciones' },
+  { key: 'entrenamiento', label: 'Entrenamiento' },
+  { key: 'equipamiento', label: 'Equipamiento' },
+  { key: 'competencias', label: 'Competencias' },
+  { key: 'seguridad', label: 'Seguridad' },
+] as const;
+
+const faqsByCategory = categories
+  .map((cat) => ({
+    ...cat,
+    faqs: allFaqs
+      .filter((faq: CollectionEntry<'faqs'>) => faq.data.category === cat.key)
+      .map((faq: CollectionEntry<'faqs'>) => ({
+        question: faq.data.question,
+        answer: faq.data.answer,
+      })),
+  }))
+  .filter((cat) => cat.faqs.length > 0);
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: allFaqs.map((faq: CollectionEntry<'faqs'>) => ({
+    '@type': 'Question',
+    name: faq.data.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.data.answer,
+    },
+  })),
+};
+---
+
+<PageLayout
+  title="Preguntas Frecuentes"
+  description="Resolvemos tus dudas sobre el club, los programas, inscripciones y más"
+  breadcrumbs={[{ label: 'Preguntas Frecuentes' }]}
+>
+  <div class="mx-auto max-w-3xl">
+    {faqsByCategory.map((category) => (
+      <div class="mb-12 reveal">
+        <SectionTitle title={category.label} align="left" />
+        <FaqAccordion
+          items={category.faqs}
+        />
+      </div>
+    ))}
+  </div>
+
+  <!-- CTA -->
+  <div class="mt-8 text-center reveal">
+    <p class="text-xl text-text-secondary mb-6">
+      ¿No encontraste la respuesta que buscabas?
+    </p>
+    <Button variant="outline" href="/contacto">
+      Escríbenos y te ayudamos
+    </Button>
+  </div>
+
+  <!-- FAQ JSON-LD structured data -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+</PageLayout>
