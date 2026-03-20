@@ -70,6 +70,12 @@
   }
 }
 
+/* Prose tables responsive — scroll horizontal en mobile */
+.prose :where(table) {
+  display: block;
+  overflow-x: auto;
+}
+
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .reveal {

@@ -21,8 +21,8 @@ const { title, description, ogImage, breadcrumbs, jsonLd } = Astro.props;
 <BaseLayout title={title} description={description} ogImage={ogImage} jsonLd={jsonLd}>
   <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
     {breadcrumbs && <Breadcrumb items={breadcrumbs} />}
-    <div class="mb-10 text-center">
-      <h1 transition:animate="slide" class="text-4xl md:text-5xl font-display font-bold text-text-primary">
+    <div class="mb-8 md:mb-10 text-center">
+      <h1 transition:animate="slide" class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-text-primary">
         {title}
       </h1>
       {description && (
