@@ -4,7 +4,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Badge from '@components/common/Badge.astro';
 import { getCategoryLabel, getAge } from '@lib/utils';
-import { SITE } from '@lib/constants';
+import { generatePersonJsonLd } from '@lib/seo';
 
 type Rider = CollectionEntry<'riders'>;
 
@@ -17,15 +17,19 @@ export async function getStaticPaths() {
 
 const { rider } = Astro.props as { rider: Rider };
 const { Content } = await render(rider);
-const { name, category, specialty, birthDate, yearJoined, dorsalNumber, achievements } = rider.data;
+const { name, category, specialty, birthDate, yearJoined, dorsalNumber, achievements, photo, socialMedia } = rider.data;
 const age = getAge(birthDate);
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
+const jsonLd = generatePersonJsonLd({
   name,
-  memberOf: { '@type': 'SportsOrganization', name: SITE.name, url: SITE.url },
-};
+  url: `/equipo/${rider.id}`,
+  photo,
+  birthDate,
+  category,
+  specialty,
+  achievements,
+  socialMedia: socialMedia ?? undefined,
+});
 
 const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
   juvenil: 'primary',

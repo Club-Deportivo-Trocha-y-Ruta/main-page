@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { SITE } from '@lib/constants';
-import { generateOrganizationJsonLd } from '@lib/seo';
+import { generateOrganizationJsonLd, generateWebSiteJsonLd } from '@lib/seo';
 
 import Hero from '@components/sections/Hero.astro';
 import StatsCounter from '@components/sections/StatsCounter.astro';
@@ -15,10 +15,13 @@ import NewsPreview from '@components/sections/NewsPreview.astro';
 import AboutPreview from '@components/sections/AboutPreview.astro';
 import Button from '@components/common/Button.astro';
 
-const orgJsonLd = generateOrganizationJsonLd();
+const jsonLd = [
+  generateOrganizationJsonLd(),
+  generateWebSiteJsonLd(),
+];
 ---
 
-<BaseLayout title={SITE.name} description={SITE.description} jsonLd={orgJsonLd}>
+<BaseLayout title={SITE.name} description={SITE.description} jsonLd={jsonLd}>
   <Hero />
   <div class="reveal">
     <StatsCounter />

@@ -7,7 +7,9 @@ interface Props {
   description?: string;
   ogImage?: string;
   canonicalUrl?: string;
-  jsonLd?: Record<string, unknown>;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  ogType?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -16,6 +18,8 @@ const {
   ogImage = '',
   canonicalUrl,
   jsonLd,
+  ogType = 'website',
+  noindex = false,
 } = Astro.props;
 
 const isHome = Astro.url.pathname === '/';
@@ -24,14 +28,20 @@ const canonical = canonicalUrl || new URL(Astro.url.pathname, SITE.url).href;
 const ogImageUrl = ogImage
   ? ogImage.startsWith('http') ? ogImage : new URL(ogImage, SITE.url).href
   : '';
+
+// Normalize jsonLd to always be an array
+const jsonLdItems = jsonLd
+  ? Array.isArray(jsonLd) ? jsonLd : [jsonLd]
+  : [];
 ---
 
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
 
 <!-- Open Graph -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={ogType} />
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
 {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
@@ -45,6 +55,15 @@ const ogImageUrl = ogImage
 <meta name="twitter:description" content={description} />
 {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 
-{jsonLd && (
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-)}
+<!-- RSS Autodiscovery -->
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${SITE.name} - Noticias`}
+  href={new URL('/rss.xml', SITE.url).href}
+/>
+
+<!-- JSON-LD Structured Data -->
+{jsonLdItems.map((ld) => (
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(ld)} />
+))}
