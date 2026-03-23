@@ -277,12 +277,23 @@ Secrets de deploy (en cada environment): `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASS
 
 ## Agentes del Proyecto
 
-4 agentes en `.claude/agents/` para trabajo especializado:
+10 agentes en `.claude/agents/` para trabajo especializado:
 
+### Core (siempre disponibles)
 - **`project-pm`**: Coordinación, task management, integración
 - **`astro-dev`**: Componentes, layouts, páginas, React Islands, responsive
-- **`content-manager`**: Content Collections, Sveltia CMS, SEO, JSON-LD
+- **`content-manager`**: Content Collections, Sveltia CMS, SEO técnico, JSON-LD
 - **`qa-auditor`**: Lighthouse audit, WCAG 2.1 AA, Core Web Vitals, responsive testing
+
+### Calidad y Performance
+- **`accessibility-tester`**: WCAG 2.1/3.0 profundo, lectores de pantalla, ARIA, accesibilidad cognitiva y móvil
+- **`performance-engineer`**: Bundle size, LCP/INP/CLS, análisis de cuellos de botella, presupuesto de performance
+- **`image-optimizer`**: WebP/AVIF, srcset responsive, lazy loading, Cloudinary
+
+### SEO y Contenido
+- **`seo-auditor`**: Validación técnica JSON-LD, meta tags, Open Graph, sitemap, SEO local
+- **`seo-specialist`**: Estrategia keywords, análisis competitivo, roadmap SEO trimestral, rich snippets
+- **`content-marketer`**: Copies web, redes sociales, email a familias, calendario editorial, comunicación de eventos
 
 ## Restricciones
 
