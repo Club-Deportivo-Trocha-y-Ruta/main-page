@@ -1,0 +1,109 @@
+---
+interface Props {
+  videoId: string;
+  title: string;
+  thumbnailQuality?: 'default' | 'hq' | 'maxres';
+  class?: string;
+}
+
+const {
+  videoId,
+  title,
+  thumbnailQuality = 'hq',
+  class: className,
+} = Astro.props;
+
+const qualityMap = {
+  default: 'default.jpg',
+  hq: 'hqdefault.jpg',
+  maxres: 'maxresdefault.jpg',
+};
+
+const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/${qualityMap[thumbnailQuality]}`;
+---
+
+<div
+  class={`relative aspect-video rounded-xl overflow-hidden shadow-md cursor-pointer group ${className ?? ''}`}
+  data-video-facade
+  data-video-id={videoId}
+  data-video-title={title}
+  role="button"
+  tabindex="0"
+  aria-label={`Reproducir video: ${title}`}
+>
+  <!-- Thumbnail -->
+  <img
+    src={thumbnailUrl}
+    alt={title}
+    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+    loading="lazy"
+    decoding="async"
+  />
+
+  <!-- Overlay oscuro sutil -->
+  <div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300"></div>
+
+  <!-- Botón play -->
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div
+      class="flex items-center justify-center w-16 h-16 rounded-full bg-primary/90 group-hover:bg-primary shadow-lg transition-all duration-300 group-hover:scale-110"
+      aria-hidden="true"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="white"
+        class="w-7 h-7 translate-x-0.5"
+      >
+        <path d="M8 5.14v14l11-7-11-7z" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Título del video -->
+  <div class="absolute bottom-0 inset-x-0 px-4 py-3 bg-gradient-to-t from-black/70 to-transparent">
+    <p class="text-white text-sm font-medium truncate">{title}</p>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    function initFacades() {
+      document.querySelectorAll('[data-video-facade]').forEach(function (el) {
+        if (el.dataset.facadeReady) return;
+        el.dataset.facadeReady = 'true';
+
+        function activate() {
+          var videoId = el.dataset.videoId;
+          var title = el.dataset.videoTitle;
+          var wrapper = document.createElement('div');
+          wrapper.className = 'relative w-full h-full';
+          var iframe = document.createElement('iframe');
+          iframe.src =
+            'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+          iframe.title = title;
+          iframe.allow =
+            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          iframe.allowFullscreen = true;
+          iframe.className = 'absolute inset-0 w-full h-full';
+          wrapper.appendChild(iframe);
+          el.innerHTML = '';
+          el.appendChild(wrapper);
+          el.removeAttribute('tabindex');
+          el.removeAttribute('role');
+        }
+
+        el.addEventListener('click', activate);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activate();
+          }
+        });
+      });
+    }
+
+    initFacades();
+    document.addEventListener('astro:page-load', initFacades);
+  })();
+</script>
