@@ -2,9 +2,9 @@
 import PageLayout from '@layouts/PageLayout.astro';
 import SectionTitle from '@components/common/SectionTitle.astro';
 import Card from '@components/common/Card.astro';
-import Button from '@components/common/Button.astro';
 import { SITE } from '@lib/constants';
 import { generateOrganizationJsonLd } from '@lib/seo';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 
 const orgJsonLd = generateOrganizationJsonLd();
 ---
@@ -88,10 +88,7 @@ const orgJsonLd = generateOrganizationJsonLd();
   </section>
 
   <!-- CTA -->
-  <section class="text-center">
-    <p class="text-xl text-text-secondary mb-6">¿Quieres ser parte de nuestra historia?</p>
-    <Button variant="accent" size="lg" href="/inscripciones">
-      Inscríbete ahora
-    </Button>
+  <section class="mt-4">
+    <InscriptionCTA variant="inline" heading="¿Quieres ser parte de nuestra historia?" description="Únete a la comunidad Trocha y Ruta. Primera clase de prueba gratis, sin compromiso." />
   </section>
 </PageLayout>

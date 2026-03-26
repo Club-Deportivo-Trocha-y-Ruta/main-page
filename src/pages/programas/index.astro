@@ -3,6 +3,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import Card from '@components/common/Card.astro';
 import Badge from '@components/common/Badge.astro';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 
 const programs: CollectionEntry<'programs'>[] = (await getCollection('programs'))
   .filter((p: CollectionEntry<'programs'>) => !p.data.draft)
@@ -21,7 +22,7 @@ const levelLabels: Record<string, string> = {
   description="Formación integral para cada etapa del ciclomontañismo"
   breadcrumbs={[{ label: 'Programas' }]}
 >
-  <div class="space-y-8">
+  <div class="space-y-8 mb-12">
     {programs.map((program: CollectionEntry<'programs'>) => (
       <Card class="p-0 overflow-hidden">
         <div class="flex flex-col md:flex-row gap-6">
@@ -70,4 +71,6 @@ const levelLabels: Record<string, string> = {
       </Card>
     ))}
   </div>
+
+  <InscriptionCTA variant="inline" heading="Encuentra el programa ideal para tu hijo" description="Tenemos nivel para cada edad. Primera clase de prueba gratis, sin compromiso." />
 </PageLayout>

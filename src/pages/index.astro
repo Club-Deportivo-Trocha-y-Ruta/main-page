@@ -16,7 +16,8 @@ import NewsPreview from '@components/sections/NewsPreview.astro';
 import AboutPreview from '@components/sections/AboutPreview.astro';
 import StravaWidget from '@components/sections/StravaWidget.astro';
 import SafeClubBadge from '@components/sections/SafeClubBadge.astro';
-import Button from '@components/common/Button.astro';
+import FacebookFeed from '@components/sections/FacebookFeed.astro';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 
 const jsonLd = [
   generateOrganizationJsonLd(),
@@ -52,6 +53,9 @@ const jsonLd = [
     <NewsPreview />
   </div>
   <div class="reveal">
+    <FacebookFeed />
+  </div>
+  <div class="reveal">
     <StravaWidget />
   </div>
   <div class="reveal">
@@ -62,19 +66,11 @@ const jsonLd = [
   </div>
 
   <!-- CTA Final -->
-  <section class="reveal bg-primary py-20">
-    <div class="mx-auto max-w-3xl px-4 text-center text-white">
-      <h2 class="text-3xl md:text-4xl font-display font-bold">
-        Inscribe a tu hijo hoy
-      </h2>
-      <p class="mt-4 text-lg text-white/90">
-        Formamos niños con valores a través del ciclomontañismo. Desde los 4 años, con entrenadores certificados.
-      </p>
-      <div class="mt-8">
-        <Button variant="accent" size="lg" href="/inscripciones">
-          Inscríbete ahora
-        </Button>
-      </div>
-    </div>
-  </section>
+  <div class="reveal">
+    <InscriptionCTA
+      variant="banner"
+      heading="Tu hijo puede empezar desde los 4 años"
+      description="Formamos niños con valores a través del ciclomontañismo. Primera clase de prueba gratis, entrenadores certificados."
+    />
+  </div>
 </BaseLayout>
