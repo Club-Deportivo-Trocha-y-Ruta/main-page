@@ -440,6 +440,72 @@ export function generateBreadcrumbJsonLd(
   };
 }
 
+/**
+ * FAQPage — Páginas con preguntas frecuentes
+ * https://schema.org/FAQPage
+ */
+export function generateFAQPageJsonLd(
+  faqs: { question: string; answer: string }[]
+): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
+}
+
+/**
+ * SportsOrganization + SportsClub — Página /quienes-somos
+ * Schema enriquecido con datos de ubicación, área de servicio y disciplinas
+ * https://schema.org/SportsClub
+ */
+export function generateSportsClubJsonLd(): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': ['SportsOrganization', 'SportsClub'],
+    name: SITE.name,
+    alternateName: SITE.shortName,
+    url: SITE.url,
+    description: SITE.description,
+    sport: 'Mountain Biking',
+    foundingDate: '2010-05-01',
+    logo: fullUrl('/favicon-512x512.png'),
+    image: fullUrl('/images/hero-poster.jpg'),
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'CL 8 Norte 2 N° 55',
+      addressLocality: 'Yumbo',
+      addressRegion: 'Valle del Cauca',
+      addressCountry: 'CO',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 3.4572,
+      longitude: -76.495,
+    },
+    telephone: CONTACT.phoneLink,
+    email: CONTACT.email,
+    areaServed: {
+      '@type': 'City',
+      name: 'Yumbo',
+      containedInPlace: {
+        '@type': 'State',
+        name: 'Valle del Cauca',
+      },
+    },
+    sameAs: [SOCIAL.instagram, SOCIAL.facebook, SOCIAL.youtube, SOCIAL.strava].filter(Boolean),
+    slogan: SITE.tagline,
+    knowsAbout: ['Ciclomontañismo', 'Mountain Biking', 'Ciclismo juvenil', 'XCO', 'XCM'],
+  };
+}
+
 export function generateSocialInitiativeJsonLd(initiative: {
   title: string;
   date: Date;
