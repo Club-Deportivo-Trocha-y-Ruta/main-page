@@ -1,0 +1,108 @@
+---
+import SectionTitle from '@components/common/SectionTitle.astro';
+import { SOCIAL } from '@lib/constants';
+
+const facebookPageUrl = encodeURIComponent(SOCIAL.facebook);
+const embedSrc = `https://www.facebook.com/plugins/page.php?href=${facebookPageUrl}&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`;
+---
+
+<section class="py-16 bg-surface">
+  <div class="mx-auto max-w-7xl px-4">
+    <SectionTitle
+      title="Síguenos en Redes"
+      subtitle="Mantente al día con nuestras actividades"
+    />
+
+    <div class="mt-10 flex justify-center">
+      <div
+        class="w-full max-w-[500px] min-h-[500px] relative overflow-hidden rounded-xl border border-surface-muted"
+        id="fb-feed-wrapper"
+      >
+        <!-- Placeholder visible antes de la carga -->
+        <div
+          id="fb-feed-placeholder"
+          class="flex flex-col items-center justify-center gap-4 min-h-[500px] bg-surface-muted/30 px-6 py-12 text-center"
+          aria-hidden="false"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-14 text-[#1877F2] opacity-60"
+            aria-hidden="true"
+          >
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+          </svg>
+          <p class="text-text-secondary font-medium">Cargando publicaciones...</p>
+          <a
+            id="fb-feed-fallback"
+            href={SOCIAL.facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hidden mt-2 inline-flex items-center gap-2 rounded-lg border border-[#1877F2]/30 bg-[#1877F2]/5 px-4 py-2 text-sm font-semibold text-[#1877F2] transition-colors hover:bg-[#1877F2]/10"
+          >
+            Síguenos en Facebook
+          </a>
+        </div>
+
+        <!-- El iframe se inyecta aquí por JS -->
+        <div id="fb-feed-iframe-slot" class="hidden w-full min-h-[500px]"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ embedSrc }}>
+  (function () {
+    var wrapper = document.getElementById('fb-feed-wrapper');
+    if (!wrapper) return;
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          observer.unobserve(entry.target);
+
+          var placeholder = document.getElementById('fb-feed-placeholder');
+          var slot = document.getElementById('fb-feed-iframe-slot');
+          if (!slot) return;
+
+          var iframe = document.createElement('iframe');
+          iframe.src = embedSrc;
+          iframe.width = '500';
+          iframe.height = '500';
+          iframe.style.border = 'none';
+          iframe.style.overflow = 'hidden';
+          iframe.style.width = '100%';
+          iframe.style.minHeight = '500px';
+          iframe.setAttribute('scrolling', 'no');
+          iframe.setAttribute('frameborder', '0');
+          iframe.setAttribute('allowfullscreen', 'true');
+          iframe.setAttribute(
+            'allow',
+            'autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share'
+          );
+          iframe.setAttribute('title', 'Publicaciones de Facebook — Trocha y Ruta');
+          iframe.setAttribute('loading', 'lazy');
+
+          // Fallback: si en 5s el iframe no cargó, mostrar el link
+          var fallbackTimer = setTimeout(function () {
+            var fallback = document.getElementById('fb-feed-fallback');
+            if (fallback) fallback.classList.remove('hidden');
+          }, 5000);
+
+          iframe.addEventListener('load', function () {
+            clearTimeout(fallbackTimer);
+            if (placeholder) placeholder.style.display = 'none';
+            slot.classList.remove('hidden');
+          });
+
+          slot.appendChild(iframe);
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(wrapper);
+  })();
+</script>
