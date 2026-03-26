@@ -3,7 +3,7 @@ import SectionTitle from '@components/common/SectionTitle.astro';
 import { SOCIAL } from '@lib/constants';
 
 const facebookPageUrl = encodeURIComponent(SOCIAL.facebook);
-const embedSrc = `https://www.facebook.com/plugins/page.php?href=${facebookPageUrl}&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`;
+const embedSrc = `https://www.facebook.com/plugins/page.php?href=${facebookPageUrl}&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`;
 ---
 
 <section class="py-16 bg-surface">
@@ -87,6 +87,8 @@ const embedSrc = `https://www.facebook.com/plugins/page.php?href=${facebookPageU
 
           // Fallback: si en 5s el iframe no cargó, mostrar el link
           var fallbackTimer = setTimeout(function () {
+            var loadingText = placeholder && placeholder.querySelector('p');
+            if (loadingText) loadingText.textContent = 'Visita nuestra página para ver las últimas publicaciones';
             var fallback = document.getElementById('fb-feed-fallback');
             if (fallback) fallback.classList.remove('hidden');
           }, 5000);
