@@ -2,10 +2,10 @@
 interface Props {}
 
 const stats = [
-  { value: '15+', label: 'Años formando ciclistas' },
-  { value: '200+', label: 'Niños entrenados' },
-  { value: '50+', label: 'Competencias' },
-  { value: '100+', label: 'Medallas ganadas' },
+  { value: '15+', label: 'Años formando ciclistas', target: 15, suffix: '+' },
+  { value: '200+', label: 'Niños entrenados', target: 200, suffix: '+' },
+  { value: '50+', label: 'Competencias', target: 50, suffix: '+' },
+  { value: '100+', label: 'Medallas ganadas', target: 100, suffix: '+' },
 ];
 ---
 
@@ -14,8 +14,12 @@ const stats = [
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
       {stats.map((stat) => (
         <div>
-          <span class="block text-4xl md:text-5xl font-display font-bold text-primary">
-            {stat.value}
+          <span
+            class="block text-4xl md:text-5xl font-display font-bold text-primary"
+            data-count-target={stat.target}
+            data-count-suffix={stat.suffix}
+          >
+            0{stat.suffix}
           </span>
           <span class="mt-2 block text-sm text-text-secondary">
             {stat.label}
@@ -25,3 +29,53 @@ const stats = [
     </div>
   </div>
 </section>
+
+<script is:inline>
+  function initCounters() {
+    const counters = document.querySelectorAll('[data-count-target]:not([data-counted])');
+    if (!counters.length) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      counters.forEach(function (el) {
+        el.textContent = el.dataset.countTarget + (el.dataset.countSuffix || '');
+        el.dataset.counted = 'true';
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counters.forEach(function (el) {
+      observer.observe(el);
+    });
+  }
+
+  function animateCount(el) {
+    el.dataset.counted = 'true';
+    var target = parseInt(el.dataset.countTarget, 10);
+    var suffix = el.dataset.countSuffix || '';
+    var duration = 1500;
+    var start = performance.now();
+
+    function update(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.round(eased * target);
+      el.textContent = current + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  initCounters();
+  document.addEventListener('astro:page-load', initCounters);
+</script>
