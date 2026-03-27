@@ -30,7 +30,7 @@ npm run typecheck    # astro check (type-checking)
 | Typography | @tailwindcss/typography ^0.5.19 | Plugin para prose styling en contenido Markdown |
 | Islands | React ^19.2.4 | Solo para 5 componentes interactivos en `src/components/interactive/` |
 | CMS | Sveltia CMS | Estático, sin npm. UI en `public/admin/index.html`. Config en `public/admin/config.yml` |
-| Hosting | Cloudflare Pages | Config en `wrangler.toml`. También hay `netlify.toml` como fallback |
+| Hosting | Hostinger (FTPS) | Deploy via GitHub Actions + FTP-Deploy-Action. 2 environments: `develop` y `production` |
 | Formularios | Web3Forms | API HTTP, 250/mes gratis. Variable: `PUBLIC_WEB3FORMS_KEY` |
 | Imágenes | Astro Image + Cloudinary | Locales via `<Image>` de `astro:assets`, dominio `res.cloudinary.com` habilitado en config |
 | Iconos | astro-icon + Phosphor Icons | `icon({ include: { ph: ['*'] } })` — todos los iconos Phosphor disponibles |
@@ -234,10 +234,22 @@ src/
 
 ## Variables de Entorno
 
-```
-PUBLIC_WEB3FORMS_KEY         # API key de Web3Forms (ContactForm, InscriptionForm)
-PUBLIC_CLOUDINARY_CLOUD_NAME # Cloud name de Cloudinary
-```
+Gestionadas via **GitHub Environments** (Settings → Environments). Cada environment (QA, PDN) tiene sus propios valores.
+
+| Variable | Descripción | Diferente por env |
+|----------|-------------|:-----------------:|
+| `PUBLIC_WEB3FORMS_KEY` | API key de Web3Forms (ContactForm, InscriptionForm) | No |
+| `PUBLIC_CLOUDINARY_CLOUD_NAME` | Cloud name de Cloudinary | No |
+| `PUBLIC_CF_ANALYTICS_TOKEN` | Token de Cloudflare Web Analytics | Sí (develop ≠ production) |
+
+Secrets de deploy (en cada environment): `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`
+
+### CI/CD
+
+| Workflow | Trigger | Environment | CI Gate |
+|----------|---------|-------------|---------|
+| `deploy.yml` | push a `develop` | `develop` | Sí (typecheck + tests) |
+| `deploy-prod.yml` | push a `main` | `production` | No (asume CI pasó en develop) |
 
 ## Assets Estáticos (public/)
 
@@ -265,12 +277,23 @@ PUBLIC_CLOUDINARY_CLOUD_NAME # Cloud name de Cloudinary
 
 ## Agentes del Proyecto
 
-4 agentes en `.claude/agents/` para trabajo especializado:
+10 agentes en `.claude/agents/` para trabajo especializado:
 
+### Core (siempre disponibles)
 - **`project-pm`**: Coordinación, task management, integración
 - **`astro-dev`**: Componentes, layouts, páginas, React Islands, responsive
-- **`content-manager`**: Content Collections, Sveltia CMS, SEO, JSON-LD
+- **`content-manager`**: Content Collections, Sveltia CMS, SEO técnico, JSON-LD
 - **`qa-auditor`**: Lighthouse audit, WCAG 2.1 AA, Core Web Vitals, responsive testing
+
+### Calidad y Performance
+- **`accessibility-tester`**: WCAG 2.1/3.0 profundo, lectores de pantalla, ARIA, accesibilidad cognitiva y móvil
+- **`performance-engineer`**: Bundle size, LCP/INP/CLS, análisis de cuellos de botella, presupuesto de performance
+- **`image-optimizer`**: WebP/AVIF, srcset responsive, lazy loading, Cloudinary
+
+### SEO y Contenido
+- **`seo-auditor`**: Validación técnica JSON-LD, meta tags, Open Graph, sitemap, SEO local
+- **`seo-specialist`**: Estrategia keywords, análisis competitivo, roadmap SEO trimestral, rich snippets
+- **`content-marketer`**: Copies web, redes sociales, email a familias, calendario editorial, comunicación de eventos
 
 ## Restricciones
 
@@ -287,4 +310,4 @@ PUBLIC_CLOUDINARY_CLOUD_NAME # Cloud name de Cloudinary
 - Colecciones sin contenido: `directivos`, `results`, `rutas`, `pages`
 - Programa "Recreación" falta en `src/content/programs/`
 - Directorio `src/types/` vacío (tipos definidos inline en componentes)
-- Analytics (Cloudflare Web Analytics / Umami) configurado como placeholder en BaseLayout
+- Analytics: Cloudflare Web Analytics activo, token via `PUBLIC_CF_ANALYTICS_TOKEN` (env var por environment)

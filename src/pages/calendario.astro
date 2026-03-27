@@ -3,6 +3,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import EventCard from '@components/common/EventCard.astro';
 import SectionTitle from '@components/common/SectionTitle.astro';
+import ShareButtons from '@components/common/ShareButtons.astro';
 import { generateEventsListJsonLd } from '@lib/seo';
 
 type Event = CollectionEntry<'events'>;
@@ -34,6 +35,11 @@ const jsonLd = generateEventsListJsonLd(
   jsonLd={jsonLd}
 >
   <div class="max-w-4xl mx-auto space-y-16">
+    <!-- Compartir -->
+    <div class="flex justify-start">
+      <ShareButtons title="Calendario de Eventos - Trocha y Ruta" />
+    </div>
+
     <!-- Proximos eventos -->
     <section>
       <SectionTitle title="Próximos Eventos" align="left" />

@@ -1,11 +1,38 @@
 ---
-interface Props {}
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+// ─── Valores base históricos del club ─────────────────────────────────────────
+// Estos representan el acumulado real que el club conoce de sus 15+ años.
+// Actualizar manualmente cuando se tengan cifras más precisas.
+// Si el contenido de las collections supera estos valores, se usa el mayor.
+const BASE_STATS = {
+  riders: 80,        // niños que han pasado por el club desde 2010
+  events: 50,        // competencias en las que ha participado el club
+  medals: 100,       // medallas/podios acumulados
+};
+
+// ─── Años activos (siempre dinámico) ──────────────────────────────────────────
+const FOUNDING_DATE = new Date(2010, 4, 1); // 1 de mayo de 2010
+const now = new Date();
+const yearsActive = now.getFullYear() - FOUNDING_DATE.getFullYear()
+  - (now < new Date(now.getFullYear(), FOUNDING_DATE.getMonth(), FOUNDING_DATE.getDate()) ? 1 : 0);
+
+// ─── Datos dinámicos desde collections ────────────────────────────────────────
+const allRiders = await getCollection('riders');
+const ridersCount = allRiders.filter((r: CollectionEntry<'riders'>) => !r.data.draft).length;
+
+const allEvents = await getCollection('events');
+const eventsCount = allEvents.filter((e: CollectionEntry<'events'>) => !e.data.draft).length;
+
+// Usa el mayor entre el base histórico y el conteo dinámico
+const ridersTarget = Math.max(BASE_STATS.riders, ridersCount);
+const eventsTarget = Math.max(BASE_STATS.events, eventsCount);
 
 const stats = [
-  { value: '15+', label: 'Años formando ciclistas' },
-  { value: '200+', label: 'Niños entrenados' },
-  { value: '50+', label: 'Competencias' },
-  { value: '100+', label: 'Medallas ganadas' },
+  { value: `${yearsActive}+`, label: 'Años formando ciclistas', target: yearsActive, suffix: '+' },
+  { value: `${ridersTarget}+`, label: 'Niños entrenados', target: ridersTarget, suffix: '+' },
+  { value: `${eventsTarget}+`, label: 'Competencias', target: eventsTarget, suffix: '+' },
+  { value: `${BASE_STATS.medals}+`, label: 'Medallas ganadas', target: BASE_STATS.medals, suffix: '+' },
 ];
 ---
 
@@ -14,8 +41,12 @@ const stats = [
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
       {stats.map((stat) => (
         <div>
-          <span class="block text-4xl md:text-5xl font-display font-bold text-primary">
-            {stat.value}
+          <span
+            class="block text-4xl md:text-5xl font-display font-bold text-primary"
+            data-count-target={stat.target}
+            data-count-suffix={stat.suffix}
+          >
+            0{stat.suffix}
           </span>
           <span class="mt-2 block text-sm text-text-secondary">
             {stat.label}
@@ -25,3 +56,53 @@ const stats = [
     </div>
   </div>
 </section>
+
+<script is:inline>
+  function initCounters() {
+    const counters = document.querySelectorAll('[data-count-target]:not([data-counted])');
+    if (!counters.length) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      counters.forEach(function (el) {
+        el.textContent = el.dataset.countTarget + (el.dataset.countSuffix || '');
+        el.dataset.counted = 'true';
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counters.forEach(function (el) {
+      observer.observe(el);
+    });
+  }
+
+  function animateCount(el) {
+    el.dataset.counted = 'true';
+    var target = parseInt(el.dataset.countTarget, 10);
+    var suffix = el.dataset.countSuffix || '';
+    var duration = 1500;
+    var start = performance.now();
+
+    function update(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.round(eased * target);
+      el.textContent = current + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  initCounters();
+  document.addEventListener('astro:page-load', initCounters);
+</script>

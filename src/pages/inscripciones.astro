@@ -3,6 +3,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import InscriptionForm from '@components/interactive/InscriptionForm';
 import { CONTACT } from '@lib/constants';
+import { generateFAQPageJsonLd } from '@lib/seo';
 
 type Program = CollectionEntry<'programs'>;
 
@@ -15,12 +16,42 @@ const programList = programs.map((p: Program) => ({
   title: p.data.title,
   ageRange: p.data.ageRange,
 }));
+
+const faqs = [
+  {
+    question: '¿Desde qué edad pueden inscribirse los niños?',
+    answer: 'Los niños pueden inscribirse desde los 4 años en nuestro programa de iniciación.',
+  },
+  {
+    question: '¿Necesitan tener bicicleta propia?',
+    answer:
+      'Sí, cada niño debe tener su propia bicicleta de montaña en buen estado. No es necesario que sea profesional.',
+  },
+  {
+    question: '¿Cuánto cuesta la inscripción?',
+    answer:
+      'El costo incluye el seguro deportivo anual de $60.000 con Aseguradora Solidaria de Colombia. Las mensualidades varían según el programa.',
+  },
+  {
+    question: '¿Dónde se realizan los entrenamientos?',
+    answer:
+      'Los entrenamientos se realizan en Yumbo, Valle del Cauca. La dirección es CL 8 Norte 2 N° 55.',
+  },
+  {
+    question: '¿Pueden hacer una clase de prueba?',
+    answer:
+      'Sí, ofrecemos una primera clase de prueba gratuita para que el niño y la familia conozcan el club.',
+  },
+];
+
+const faqJsonLd = generateFAQPageJsonLd(faqs);
 ---
 
 <PageLayout
   title="Inscribe a tu hijo"
   description="El primer paso para formar un campeón"
   breadcrumbs={[{ label: 'Inscripciones' }]}
+  jsonLd={faqJsonLd}
 >
   <div class="mx-auto max-w-3xl">
     <InscriptionForm client:visible programs={programList} />

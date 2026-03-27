@@ -5,16 +5,24 @@
 # Pipeline: checkout → node setup → install → build → deploy FTPS
 #
 # A diferencia del pipeline de develop, este NO ejecuta tests
-# ni typecheck como gate. El build se ejecuta directamente.
+# ni typecheck como gate. Se asume que el código en main ya
+# pasó el CI gate en develop antes del merge.
 #
-# Secrets requeridos en GitHub (producción):
-#   FTP_SERVER_PROD   → hostname FTP de producción
-#   FTP_USERNAME_PROD → usuario FTP de producción
-#   FTP_PASSWORD_PROD → contraseña FTP de producción
+# Environment: production
+#   Las variables y secrets se configuran en GitHub bajo
+#   Settings → Environments → production.
+#   El environment determina qué valores se inyectan —
+#   no es necesario usar nombres distintos por entorno.
 #
-# Variables requeridas (Settings → Secrets and variables → Variables):
+# Variables requeridas en Environment production:
 #   PUBLIC_WEB3FORMS_KEY          → API key de Web3Forms
 #   PUBLIC_CLOUDINARY_CLOUD_NAME  → Cloud name de Cloudinary
+#   PUBLIC_CF_ANALYTICS_TOKEN     → Token CF Analytics production
+#
+# Secrets requeridos en Environment production:
+#   FTP_SERVER    → hostname FTP de producción (Hostinger)
+#   FTP_USERNAME  → usuario FTP
+#   FTP_PASSWORD  → contraseña FTP
 # ============================================================
 
 name: Deploy → Producción
@@ -34,6 +42,11 @@ jobs:
     name: Build & Deploy a Producción
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # El environment production inyecta sus propias variables y secrets en este job.
+    # GitHub descarga los valores configurados bajo Settings → Environments → production
+    # antes de ejecutar cualquier step. Esto permite usar nombres genéricos
+    # (FTP_SERVER, PUBLIC_CF_ANALYTICS_TOKEN) en ambos workflows sin colisión.
+    environment: production
 
     steps:
       # ── 1. Checkout ───────────────────────────────────────
@@ -52,23 +65,34 @@ jobs:
         run: npm ci
 
       # ── 4. Build Astro ────────────────────────────────────
-      - name: Build producción Astro
+      - name: Build Astro (production)
         run: npm run build
         env:
+          # Variables públicas incrustadas en el HTML durante el build.
+          # Se configuran como "Variables" (no Secrets) en el Environment production
+          # porque su valor ya es visible en el código fuente del cliente.
           PUBLIC_WEB3FORMS_KEY: ${{ vars.PUBLIC_WEB3FORMS_KEY }}
           PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ vars.PUBLIC_CLOUDINARY_CLOUD_NAME }}
+          PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CF_ANALYTICS_TOKEN }}
 
       # ── 5. Deploy FTPS incremental ────────────────────────
+      # Sube solo los archivos modificados comparando hashes
+      # almacenados en .ftp-deploy-sync-state.json en el servidor.
+      # Primera ejecución: ~90s (sube todo). Siguientes: ~10-30s.
       - name: Deploy a Producción via FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          server: ${{ secrets.FTP_SERVER_PROD }}
-          username: ${{ secrets.FTP_USERNAME_PROD }}
-          password: ${{ secrets.FTP_PASSWORD_PROD }}
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # FTPS = FTP con cifrado TLS via STARTTLS (puerto 21).
+          # Compatible con todos los planes de Hostinger sin SSH.
           protocol: ftps
           port: 21
           local-dir: ./dist/
           server-dir: /public_html/
+          # Archivo de estado que mantiene los hashes de archivos subidos.
+          # Permite el deploy incremental en ejecuciones posteriores.
           state-name: .ftp-deploy-sync-state.json
           exclude: |
             **/.git*

@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Badge from '@components/common/Badge.astro';
+import ShareButtons from '@components/common/ShareButtons.astro';
 
 interface Props {
   title: string;
@@ -63,6 +64,10 @@ const breadcrumbs = [
 
     <div class="prose prose-lg mx-auto max-w-3xl">
       <slot />
+    </div>
+
+    <div class="mx-auto max-w-3xl mt-8 pt-6 border-t border-gray-200">
+      <ShareButtons title={title} description={description} />
     </div>
   </article>
 </BaseLayout>

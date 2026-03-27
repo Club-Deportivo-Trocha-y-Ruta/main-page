@@ -6,17 +6,15 @@ import { generateOrganizationJsonLd, generateWebSiteJsonLd } from '@lib/seo';
 import Hero from '@components/sections/Hero.astro';
 import StatsCounter from '@components/sections/StatsCounter.astro';
 import ProgramsGrid from '@components/sections/ProgramsGrid.astro';
-import UpcomingEvents from '@components/sections/UpcomingEvents.astro';
-// TODO: Habilitar cuando se implemente contenido real
-// import TeamRoster from '@components/sections/TeamRoster.astro';
-// import GalleryPreview from '@components/sections/GalleryPreview.astro';
-import TestimonialsSlider from '@components/sections/TestimonialsSlider.astro';
-import SponsorsBar from '@components/sections/SponsorsBar.astro';
-import NewsPreview from '@components/sections/NewsPreview.astro';
 import AboutPreview from '@components/sections/AboutPreview.astro';
-import StravaWidget from '@components/sections/StravaWidget.astro';
+import TestimonialsSlider from '@components/sections/TestimonialsSlider.astro';
+import UpcomingEvents from '@components/sections/UpcomingEvents.astro';
+import NewsPreview from '@components/sections/NewsPreview.astro';
+import TrochaVerde from '@components/sections/TrochaVerde.astro';
+import SponsorsBar from '@components/sections/SponsorsBar.astro';
 import SafeClubBadge from '@components/sections/SafeClubBadge.astro';
-import Button from '@components/common/Button.astro';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
+import WaveSeparator from '@components/common/WaveSeparator.astro';
 
 const jsonLd = [
   generateOrganizationJsonLd(),
@@ -25,56 +23,77 @@ const jsonLd = [
 ---
 
 <BaseLayout title={SITE.name} description={SITE.description} jsonLd={jsonLd}>
+  <!-- 1. Gancho emocional -->
   <Hero />
+
+  <!-- Wave: Hero → Stats -->
+  <WaveSeparator from="fill-surface-dark" to="fill-surface-muted" />
+
+  <!-- 2. Credibilidad rápida -->
   <div class="reveal">
     <StatsCounter />
   </div>
+
+  <!-- 3. Qué ofrecemos -->
   <div class="reveal">
     <ProgramsGrid />
   </div>
+
+  <!-- 4. Quién está detrás -->
   <div class="reveal">
-    <UpcomingEvents />
+    <AboutPreview />
   </div>
-  <!-- TODO: Habilitar cuando se implemente contenido real -->
-  <!-- <div class="reveal">
-    <TeamRoster />
-  </div>
-  <div class="reveal">
-    <GalleryPreview />
-  </div> -->
+
+  <!-- 5. Prueba social -->
   <div class="reveal">
     <TestimonialsSlider />
   </div>
+
+  <!-- Wave: Testimonials → CTA -->
+  <WaveSeparator from="fill-surface-dark" to="fill-white" />
+
+  <!-- 6. CTA intermedio — momento de conversión -->
   <div class="reveal">
-    <SponsorsBar />
+    <section class="py-16 px-4">
+      <div class="mx-auto max-w-4xl">
+        <InscriptionCTA
+          variant="inline"
+          heading="Primera clase de prueba gratis"
+          description="Formamos niños con valores a través del ciclomontañismo. Entrenadores certificados, ambiente seguro y divertido."
+        />
+      </div>
+    </section>
   </div>
+
+  <!-- 7. Actividad y eventos -->
+  <div class="reveal">
+    <UpcomingEvents />
+  </div>
+
+  <!-- 8. Contenido editorial -->
   <div class="reveal">
     <NewsPreview />
   </div>
+
+  <!-- 9. Valores ambientales -->
   <div class="reveal">
-    <StravaWidget />
+    <TrochaVerde />
   </div>
+
+  <!-- 10. Trust signals: sponsors + protección infantil -->
   <div class="reveal">
-    <AboutPreview />
+    <SponsorsBar />
   </div>
   <div class="reveal">
     <SafeClubBadge />
   </div>
 
-  <!-- CTA Final -->
-  <section class="reveal bg-primary py-20">
-    <div class="mx-auto max-w-3xl px-4 text-center text-white">
-      <h2 class="text-3xl md:text-4xl font-display font-bold">
-        Inscribe a tu hijo hoy
-      </h2>
-      <p class="mt-4 text-lg text-white/90">
-        Formamos niños con valores a través del ciclomontañismo. Desde los 4 años, con entrenadores certificados.
-      </p>
-      <div class="mt-8">
-        <Button variant="accent" size="lg" href="/inscripciones">
-          Inscríbete ahora
-        </Button>
-      </div>
-    </div>
-  </section>
+  <!-- 11. CTA final -->
+  <div class="reveal">
+    <InscriptionCTA
+      variant="banner"
+      heading="Tu hijo puede empezar desde los 4 años"
+      description="Formamos niños con valores a través del ciclomontañismo. Primera clase de prueba gratis, entrenadores certificados."
+    />
+  </div>
 </BaseLayout>

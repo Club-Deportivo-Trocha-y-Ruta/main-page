@@ -1,5 +1,6 @@
 ---
 name: "Santiago Ramírez"
+type: "familia"
 role: "corredor-juvenil"
 roleLabel: "Corredor juvenil"
 photo: "/images/placeholder-testimonial.jpg"
