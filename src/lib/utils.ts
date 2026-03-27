@@ -55,3 +55,65 @@ export function getEventStatusLabel(status: string): string {
   };
   return labels[status] ?? status;
 }
+
+interface CalendarEventParams {
+  title: string;
+  date: Date;
+  location: string;
+  description?: string;
+  duration?: number; // horas, default 4
+}
+
+function toGCalDate(date: Date): string {
+  return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+}
+
+export function generateGoogleCalendarUrl({
+  title,
+  date,
+  location,
+  description = '',
+  duration = 4,
+}: CalendarEventParams): string {
+  const start = toGCalDate(date);
+  const end = toGCalDate(new Date(date.getTime() + duration * 60 * 60 * 1000));
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: title,
+    dates: `${start}/${end}`,
+    location,
+    details: description,
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+export function generateICSContent({
+  title,
+  date,
+  location,
+  description = '',
+  duration = 4,
+}: CalendarEventParams): string {
+  const start = toGCalDate(date);
+  const end = toGCalDate(new Date(date.getTime() + duration * 60 * 60 * 1000));
+  const now = toGCalDate(new Date());
+  const uid = `${start}-${title.toLowerCase().replace(/\s+/g, '-')}@clubtrochayruta`;
+
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Trocha y Ruta//ES',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `UID:${uid}`,
+    `DTSTAMP:${now}`,
+    `DTSTART:${start}`,
+    `DTEND:${end}`,
+    `SUMMARY:${title}`,
+    `LOCATION:${location}`,
+    `DESCRIPTION:${description}`,
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n');
+}

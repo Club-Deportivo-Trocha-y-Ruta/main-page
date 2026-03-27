@@ -1,0 +1,68 @@
+---
+import Button from '@components/common/Button.astro';
+import { CONTACT } from '@lib/constants';
+
+interface Props {
+  variant?: 'banner' | 'inline';
+  heading?: string;
+  description?: string;
+}
+
+const {
+  variant = 'inline',
+  heading = 'Tu hijo puede empezar desde los 4 años',
+  description = 'Primera clase de prueba gratis. Entrenadores certificados, ambiente seguro y divertido.',
+} = Astro.props;
+---
+
+{variant === 'banner' ? (
+  <section class="bg-primary py-16 px-4">
+    <div class="mx-auto max-w-3xl text-center text-white">
+      <h2 class="text-2xl md:text-3xl font-display font-bold">
+        {heading}
+      </h2>
+      <p class="mt-3 text-base md:text-lg text-white/90">
+        {description}
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <Button variant="accent" size="lg" href="/inscripciones">
+          Clase de prueba gratis
+        </Button>
+        <a
+          href={`${CONTACT.whatsapp}?text=Hola%2C%20quiero%20inscribir%20a%20mi%20hijo%20en%20el%20club`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-white px-7 py-3.5 text-lg font-semibold text-white transition-colors duration-200 hover:bg-white hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          Preguntar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+) : (
+  <div class="rounded-2xl border border-primary/20 bg-primary/5 px-6 py-8 md:px-10 md:py-10">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div>
+        <h2 class="text-xl md:text-2xl font-display font-bold text-text-primary">
+          {heading}
+        </h2>
+        <p class="mt-2 text-text-secondary">
+          {description}
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
+        <Button variant="accent" size="md" href="/inscripciones">
+          Clase de prueba gratis
+        </Button>
+        <a
+          href={`${CONTACT.whatsapp}?text=Hola%2C%20quiero%20inscribir%20a%20mi%20hijo%20en%20el%20club`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary px-5 py-2.5 text-base font-semibold text-primary transition-colors duration-200 hover:bg-primary hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Preguntar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+)}

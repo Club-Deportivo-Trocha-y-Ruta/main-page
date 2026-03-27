@@ -5,6 +5,7 @@ import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Card from '@components/common/Card.astro';
 import Badge from '@components/common/Badge.astro';
 import Button from '@components/common/Button.astro';
+import ShareButtons from '@components/common/ShareButtons.astro';
 import { generateCourseJsonLd } from '@lib/seo';
 
 export async function getStaticPaths() {
@@ -161,6 +162,10 @@ const levelLabels: Record<string, string> = {
 
         <div class="prose prose-lg mt-8 max-w-none overflow-x-auto">
           <Content />
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-gray-200">
+          <ShareButtons title={program.data.title} description={program.data.subtitle} />
         </div>
       </div>
     </div>

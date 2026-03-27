@@ -11,6 +11,7 @@ interface Props {
 const { title, date, location, category, status, href } = Astro.props;
 
 import Badge from '@components/common/Badge.astro';
+import AddToCalendar from '@components/common/AddToCalendar.astro';
 import { getCategoryLabel, getEventStatusLabel } from '@lib/utils';
 
 const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
@@ -21,7 +22,7 @@ const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> =
 };
 ---
 
-<a href={href} class="flex items-start gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 transition-colors hover:bg-surface-muted">
+<div class="flex items-start gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 transition-colors hover:bg-surface-muted">
   <div class="min-w-[3.5rem] sm:min-w-[4rem] rounded-lg bg-primary/10 p-2 sm:p-3 text-center shrink-0">
     <span class="block text-xs font-semibold uppercase text-primary">
       {date.toLocaleDateString('es-CO', { month: 'short' })}
@@ -31,11 +32,18 @@ const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> =
     </span>
   </div>
   <div class="flex flex-col gap-1 min-w-0">
-    <h3 class="font-display font-semibold text-text-primary leading-snug">{title}</h3>
+    <h3 class="font-display font-semibold leading-snug">
+      <a href={href} class="text-text-primary hover:text-primary transition-colors">
+        {title}
+      </a>
+    </h3>
     <p class="text-sm text-text-secondary"><span aria-hidden="true">📍</span> {location}</p>
     <div class="mt-1 flex flex-wrap gap-1.5 sm:gap-2">
       <Badge>{getCategoryLabel(category)}</Badge>
       <Badge variant={statusVariant[status] ?? 'neutral'}>{getEventStatusLabel(status)}</Badge>
     </div>
+    {status === 'upcoming' && (
+      <AddToCalendar title={title} date={date} location={location} />
+    )}
   </div>
-</a>
+</div>
