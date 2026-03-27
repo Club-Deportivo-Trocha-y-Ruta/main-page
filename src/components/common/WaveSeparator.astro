@@ -1,0 +1,40 @@
+---
+interface Props {
+  from?: string;
+  to?: string;
+  flip?: boolean;
+  class?: string;
+}
+
+const {
+  from = 'fill-surface-dark',
+  to = 'fill-surface-muted',
+  flip = false,
+  class: className,
+} = Astro.props;
+---
+
+<div
+  class:list={[
+    'relative -mt-px w-full overflow-hidden leading-[0]',
+    flip && 'rotate-180',
+    className,
+  ]}
+  aria-hidden="true"
+>
+  <svg
+    class="relative block w-full h-[40px] md:h-[60px]"
+    viewBox="0 0 1440 60"
+    preserveAspectRatio="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      class={from}
+      d="M0,0 L0,30 Q360,60 720,30 Q1080,0 1440,30 L1440,0 Z"
+    />
+    <path
+      class={to}
+      d="M0,30 Q360,60 720,30 Q1080,0 1440,30 L1440,60 L0,60 Z"
+    />
+  </svg>
+</div>
