@@ -115,9 +115,9 @@ describe('EventCard', () => {
       props: baseProps,
     });
     const doc = parseHtml(html);
-    const anchor = doc.querySelector('a')!;
-    expect(anchor.className).toContain('hover:bg-surface-muted');
-    expect(anchor.className).toContain('transition-colors');
+    const card = doc.querySelector('div')!;
+    expect(card.className).toContain('hover:bg-surface-muted');
+    expect(card.className).toContain('transition-colors');
   });
 
   // ─── Categorías múltiples ─────────────────────────────────
