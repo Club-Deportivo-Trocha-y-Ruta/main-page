@@ -195,6 +195,9 @@ export const programsSchema = z.object({
 
 export const testimonialsSchema = z.object({
   name: z.string(),
+  // type distingue testimonios de familias/corredores vs patrocinadores
+  // Usado para filtrar en páginas de patrocinadores o mostrar secciones separadas
+  type: z.enum(['familia', 'patrocinador']).default('familia'),
   role: z.enum([
     'padre-de-familia',
     'madre-de-familia',

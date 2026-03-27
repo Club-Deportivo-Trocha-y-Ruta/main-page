@@ -8,14 +8,21 @@
 # Cada paso es un gate: si falla, el pipeline se detiene
 # y el deploy NO se ejecuta.
 #
-# Secrets requeridos en GitHub:
-#   FTP_SERVER      → hostname FTP de Hostinger (ej: ftp.clubdeportivotrochayruta.org)
-#   FTP_USERNAME    → usuario FTP (ej: u123456789)
-#   FTP_PASSWORD    → contraseña FTP del dominio principal
+# Environment: QA
+#   Las variables y secrets se configuran en GitHub bajo
+#   Settings → Environments → QA.
+#   El environment determina qué valores se inyectan —
+#   no es necesario usar nombres distintos por entorno.
 #
-# Variables requeridas (Settings → Secrets and variables → Variables):
+# Variables requeridas en Environment develop:
 #   PUBLIC_WEB3FORMS_KEY          → API key de Web3Forms
 #   PUBLIC_CLOUDINARY_CLOUD_NAME  → Cloud name de Cloudinary
+#   PUBLIC_CF_ANALYTICS_TOKEN     → Token CF Analytics QA
+#
+# Secrets requeridos en Environment develop:
+#   FTP_SERVER    → hostname FTP de staging (Hostinger)
+#   FTP_USERNAME  → usuario FTP
+#   FTP_PASSWORD  → contraseña FTP
 # ============================================================
 
 name: CI/CD → Develop
@@ -70,12 +77,17 @@ jobs:
         run: npm test
 
   deploy:
-    name: Build & Deploy a Hostinger
+    name: Build & Deploy a Hostinger (develop)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # El deploy solo se ejecuta si el job de CI pasa completamente.
     # Cualquier fallo en typecheck o tests bloquea este job.
     needs: ci
+    # El environment QA inyecta sus propias variables y secrets en este job.
+    # GitHub descarga los valores configurados bajo Settings → Environments → QA
+    # antes de ejecutar cualquier step. Esto permite usar nombres genéricos
+    # (FTP_SERVER, PUBLIC_CF_ANALYTICS_TOKEN) en ambos workflows sin colisión.
+    environment: develop
 
     steps:
       # ── 1. Checkout ───────────────────────────────────────
@@ -96,14 +108,15 @@ jobs:
       # ── 4. Build Astro ────────────────────────────────────
       # astro check + astro build. Genera el directorio dist/
       # con el sitio estático listo para subir a Hostinger.
-      - name: Build producción Astro
+      - name: Build Astro (QA)
         run: npm run build
         env:
           # Variables públicas incrustadas en el HTML durante el build.
-          # Se configuran como "Variables" (no Secrets) en GitHub Actions
+          # Se configuran como "Variables" (no Secrets) en el Environment develop
           # porque su valor ya es visible en el código fuente del cliente.
           PUBLIC_WEB3FORMS_KEY: ${{ vars.PUBLIC_WEB3FORMS_KEY }}
           PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ vars.PUBLIC_CLOUDINARY_CLOUD_NAME }}
+          PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CF_ANALYTICS_TOKEN }}
 
       # ── 5. Deploy FTPS incremental ────────────────────────
       # Sube solo los archivos modificados comparando hashes
