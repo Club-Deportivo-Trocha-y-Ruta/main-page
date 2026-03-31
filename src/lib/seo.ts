@@ -320,9 +320,7 @@ export function generateArticleJsonLd(article: ArticleInput): JsonLd {
     '@type': 'NewsArticle',
     headline: article.title,
     datePublished: article.date.toISOString(),
-    ...(article.updatedDate
-      ? { dateModified: article.updatedDate.toISOString() }
-      : {}),
+    dateModified: (article.updatedDate ?? article.date).toISOString(),
     author: {
       '@type': 'Organization',
       '@id': `${SITE.url}/#organization`,
@@ -346,6 +344,10 @@ export function generateArticleJsonLd(article: ArticleInput): JsonLd {
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': fullUrl(article.url),
+    },
+    isPartOf: {
+      '@type': 'WebSite',
+      '@id': `${SITE.url}/#website`,
     },
     inLanguage: 'es-CO',
   };
