@@ -166,13 +166,14 @@ describe('SEOHead', () => {
 
   // ─── noindex ──────────────────────────────────────────────
 
-  it('no incluye meta robots por defecto', async () => {
+  it('incluye max-image-preview:large en meta robots por defecto', async () => {
     const html = await container.renderToString(SEOHead, {
       props: { title: 'Test' },
     });
     const doc = parseHtml(html);
     const robots = doc.querySelector('meta[name="robots"]');
-    expect(robots).toBeNull();
+    expect(robots).not.toBeNull();
+    expect(robots?.getAttribute('content')).toBe('max-image-preview:large');
   });
 
   it('incluye meta robots noindex cuando noindex=true', async () => {
