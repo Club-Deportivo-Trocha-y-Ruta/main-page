@@ -341,3 +341,22 @@ export const socialInitiativesSchema = z.object({
   order: z.number().default(0),
   seo: seoSchema,
 });
+
+export const treesSchema = z.object({
+  species: z.string(),
+  scientificName: z.string().optional(),
+  plantedDate: z.coerce.date(),
+  location: z.string().default('Pista de Ciclomontañismo Carlos Castro'),
+  protector: z
+    .enum(['llanta-bicicleta', 'llanta-moto', 'piedras', 'otro'])
+    .default('llanta-bicicleta'),
+  protectorColor: z.string().optional(),
+  image: z.string(),
+  imageAlt: z.string(),
+  status: z.enum(['sembrado', 'creciendo', 'floreciendo']).default('sembrado'),
+  notes: z.string().optional(),
+  featured: z.boolean().default(false),
+  draft: z.boolean().default(false),
+  order: z.number().default(0),
+  seo: seoSchema,
+});
