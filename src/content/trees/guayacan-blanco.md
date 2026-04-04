@@ -1,7 +1,7 @@
 ---
 species: "Guayacán Blanco"
 scientificName: "Tabebuia rosea"
-plantedDate: 2026-03-15
+plantedDate: 2026-04-01
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 protectorColor: "rosada"

@@ -1,7 +1,7 @@
 ---
 species: "Chambimbe"
 scientificName: "Sapindus saponaria"
-plantedDate: 2026-03-15
+plantedDate: 2026-04-01
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 protectorColor: "verde y amarilla"
