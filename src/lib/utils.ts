@@ -6,6 +6,7 @@ export function formatDate(
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    timeZone: 'UTC',
     ...options,
   }).format(date);
 }
@@ -14,6 +15,7 @@ export function formatShortDate(date: Date): string {
   return new Intl.DateTimeFormat('es-CO', {
     month: 'short',
     day: 'numeric',
+    timeZone: 'UTC',
   }).format(date);
 }
 
