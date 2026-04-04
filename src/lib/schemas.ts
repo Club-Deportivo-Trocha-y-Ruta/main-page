@@ -358,5 +358,5 @@ export const treesSchema = z.object({
   featured: z.boolean().default(false),
   draft: z.boolean().default(false),
   order: z.number().default(0),
-  seo: seoSchema,
+  seo: seoSchema.optional(),
 });
