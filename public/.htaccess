@@ -1,0 +1,76 @@
+# ============================================================
+# Cache & Security Headers — Hostinger (Apache)
+# ============================================================
+# Este archivo reemplaza la configuración de netlify.toml
+# (que solo aplica en Netlify) con directivas equivalentes
+# para el servidor Apache de Hostinger.
+# ============================================================
+
+# Habilitar mod_headers si está disponible
+<IfModule mod_headers.c>
+
+  # ── Seguridad ─────────────────────────────────────────────
+  Header always set X-Frame-Options "DENY"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  # ── HTML: nunca cachear ───────────────────────────────────
+  # Los archivos HTML deben revalidarse siempre para que los
+  # cambios de contenido se vean de inmediato tras el deploy.
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # ── Assets con hash (Astro _astro/): caché largo ─────────
+  # Astro genera archivos en /_astro/ con hashes en el nombre
+  # (ej: _astro/index.D4k2x.css). Si el contenido cambia, el
+  # hash cambia → safe to cache forever.
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # ── Fuentes: caché largo ──────────────────────────────────
+  # Las fuentes no cambian entre deploys.
+  <FilesMatch "\.(woff2|woff|ttf|otf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # ── Imágenes: caché corto con revalidación ────────────────
+  # Las imágenes en /images/ no tienen hash en el nombre.
+  # max-age=3600 (1 hora) + must-revalidate asegura que el
+  # navegador compruebe si hay versión nueva tras cada hora.
+  <FilesMatch "\.(jpg|jpeg|png|gif|webp|avif|svg|ico)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+
+  # ── PDFs y documentos ─────────────────────────────────────
+  <FilesMatch "\.(pdf|doc|docx)$">
+    Header set Cache-Control "public, max-age=86400, must-revalidate"
+  </FilesMatch>
+
+  # ── XML/JSON (sitemap, manifest): sin caché ───────────────
+  <FilesMatch "\.(xml|json|webmanifest)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+</IfModule>
+
+# ── Compresión GZIP ───────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ── ETags ─────────────────────────────────────────────────
+# Desactivar ETags basados en inode para evitar inconsistencias
+# entre servidores. La validación se hace por Last-Modified.
+<IfModule mod_headers.c>
+  Header unset ETag
+</IfModule>
+FileETag None
