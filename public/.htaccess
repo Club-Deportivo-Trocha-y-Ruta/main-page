@@ -1,55 +1,108 @@
 # ============================================================
-# Cache & Security Headers — Hostinger (Apache)
+# Cache, Security & Headers — Hostinger (Apache)
 # ============================================================
-# Este archivo reemplaza la configuración de netlify.toml
-# (que solo aplica en Netlify) con directivas equivalentes
-# para el servidor Apache de Hostinger.
+# Configuración equivalente a netlify.toml para Apache.
+# Cubre: caché por tipo de archivo, headers de seguridad,
+# CSP, HSTS, protección de archivos sensibles, y GZIP.
 # ============================================================
 
-# Habilitar mod_headers si está disponible
+# ── Bloquear archivos sensibles ─────────────────────────────
+# Impide acceso directo a archivos de configuración, estado
+# de deploy, y directorios de control de versiones.
+
+# config.yml del CMS (expone estructura del repo y colecciones)
+<Files "config.yml">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</Files>
+
+# Estado de sincronización FTP (expone hashes de archivos)
+<Files ".ftp-deploy-sync-state.json">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</Files>
+
+# Archivos ocultos y de control de versiones (.git, .env, etc.)
+<FilesMatch "^\.">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# Desactivar listado de directorios
+Options -Indexes
+
+# ── Headers de seguridad ────────────────────────────────────
 <IfModule mod_headers.c>
 
-  # ── Seguridad ─────────────────────────────────────────────
   Header always set X-Frame-Options "DENY"
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 
-  # ── HTML: nunca cachear ───────────────────────────────────
-  # Los archivos HTML deben revalidarse siempre para que los
-  # cambios de contenido se vean de inmediato tras el deploy.
+  # HSTS — forzar HTTPS (1 día inicial; subir a 1 año tras verificar)
+  Header always set Strict-Transport-Security "max-age=86400; includeSubDomains"
+
+  # Content-Security-Policy
+  # - 'unsafe-inline' en script-src: requerido por Astro is:inline scripts
+  # - 'unsafe-inline' en style-src: requerido por Tailwind/Astro
+  # - unpkg.com: requerido por Sveltia CMS en /admin/
+  # - frame-src: Google Maps, YouTube embeds, Strava widget
+  Header always set Content-Security-Policy "\
+    default-src 'self'; \
+    script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.youtube.com https://unpkg.com; \
+    style-src 'self' 'unsafe-inline' https://unpkg.com; \
+    img-src 'self' https://res.cloudinary.com data:; \
+    font-src 'self'; \
+    connect-src 'self' https://api.web3forms.com https://static.cloudflareinsights.com https://cloudflareinsights.com; \
+    frame-src https://www.google.com https://www.youtube.com https://www.strava.com; \
+    frame-ancestors 'none'; \
+    base-uri 'self'; \
+    form-action 'self' https://api.web3forms.com; \
+    upgrade-insecure-requests"
+
+  # ── Caché por tipo de archivo ─────────────────────────────
+
+  # HTML: nunca cachear (cambios visibles inmediatamente tras deploy)
   <FilesMatch "\.(html)$">
     Header set Cache-Control "public, max-age=0, must-revalidate"
   </FilesMatch>
 
-  # ── Assets con hash (Astro _astro/): caché largo ─────────
-  # Astro genera archivos en /_astro/ con hashes en el nombre
-  # (ej: _astro/index.D4k2x.css). Si el contenido cambia, el
-  # hash cambia → safe to cache forever.
+  # JS/CSS: caché largo (Astro genera hashes en el nombre)
   <FilesMatch "\.(js|css)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
-  # ── Fuentes: caché largo ──────────────────────────────────
-  # Las fuentes no cambian entre deploys.
+  # Fuentes: caché largo (no cambian entre deploys)
   <FilesMatch "\.(woff2|woff|ttf|otf|eot)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
-  # ── Imágenes: caché corto con revalidación ────────────────
-  # Las imágenes en /images/ no tienen hash en el nombre.
-  # max-age=3600 (1 hora) + must-revalidate asegura que el
-  # navegador compruebe si hay versión nueva tras cada hora.
+  # Imágenes: caché corto con revalidación (sin hash en nombre)
   <FilesMatch "\.(jpg|jpeg|png|gif|webp|avif|svg|ico)$">
     Header set Cache-Control "public, max-age=3600, must-revalidate"
   </FilesMatch>
 
-  # ── PDFs y documentos ─────────────────────────────────────
+  # PDFs y documentos
   <FilesMatch "\.(pdf|doc|docx)$">
     Header set Cache-Control "public, max-age=86400, must-revalidate"
   </FilesMatch>
 
-  # ── XML/JSON (sitemap, manifest): sin caché ───────────────
+  # XML/JSON/manifest: sin caché
   <FilesMatch "\.(xml|json|webmanifest)$">
     Header set Cache-Control "public, max-age=0, must-revalidate"
   </FilesMatch>
