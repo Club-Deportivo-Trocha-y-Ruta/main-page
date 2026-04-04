@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 import Card from '@components/common/Card.astro';
 import SectionTitle from '@components/common/SectionTitle.astro';
 
@@ -33,14 +34,11 @@ const excerpts: Record<string, string> = {
   'alto-rendimiento': 'Programa competitivo de élite con planificación periodizada, preparación física avanzada y participación en circuitos nacionales.',
 };
 
-/* SVG icon paths por programa */
+/* Iconos Phosphor por programa */
 const programIcons: Record<string, string> = {
-  /* Rueditas de entrenamiento — niño aprendiendo */
-  'escuela-de-iniciacion': 'M12 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM5.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm0-3.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm0-3.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM12 6l3 4h-2v2h-2v-2H9l3-4Z',
-  /* Montaña — juvenil en sendero */
-  'formacion-juvenil': 'M13 3L5 14h4l-2 7 10-11h-4l2-7Zm-1 2.5L14.5 12H11l-1.5 3.7L11 12H7.5L12 5.5Z',
-  /* Trofeo — alto rendimiento */
-  'alto-rendimiento': 'M12 2a1 1 0 0 1 1 1v1h3a1 1 0 0 1 1 1v3a4 4 0 0 1-3.13 3.9A5.002 5.002 0 0 1 13 15.92V18h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-2.08a5.002 5.002 0 0 1-.87-3.02A4 4 0 0 1 7 9V5a1 1 0 0 1 1-1h3V3a1 1 0 0 1 1-1ZM9 6v3a2 2 0 0 0 1.02 1.74A5.06 5.06 0 0 1 9 6Zm6 0c0 1.72-.72 3.28-1.87 4.38l-.13.12A2 2 0 0 0 15 9V6Z',
+  'escuela-de-iniciacion': 'ph:bicycle-bold',
+  'formacion-juvenil': 'ph:mountains-bold',
+  'alto-rendimiento': 'ph:trophy-bold',
 };
 ---
 
@@ -59,9 +57,7 @@ const programIcons: Record<string, string> = {
             <div class="p-6 pt-5">
               {/* Icon circle */}
               <div class={`mb-4 flex h-14 w-14 items-center justify-center rounded-xl ${style.iconBg} ${style.iconColor} transition-transform duration-300 group-hover:scale-110`}>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d={iconPath} />
-                </svg>
+                <Icon name={iconPath} class="h-7 w-7" aria-hidden="true" />
               </div>
               <h3 class="font-display text-xl font-bold text-text-primary">
                 {program.data.title}
@@ -72,9 +68,7 @@ const programIcons: Record<string, string> = {
               </p>
               <span class="mt-4 inline-flex items-center gap-1 font-semibold text-primary transition-all duration-200 group-hover:gap-2">
                 Ver programa
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z" clip-rule="evenodd" />
-                </svg>
+                <Icon name="ph:caret-right-bold" class="h-4 w-4" aria-hidden="true" />
               </span>
             </div>
           </Card>

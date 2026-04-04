@@ -11,9 +11,15 @@ interface Props {
   description?: string;
   ogImage?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  ogType?: string;
+  articlePublishedTime?: string;
+  articleModifiedTime?: string;
+  articleAuthor?: string;
+  articleSection?: string;
+  articleTags?: string[];
 }
 
-const { title, description, ogImage, jsonLd } = Astro.props;
+const { title, description, ogImage, jsonLd, ogType, articlePublishedTime, articleModifiedTime, articleAuthor, articleSection, articleTags } = Astro.props;
 ---
 
 <!doctype html>
@@ -35,7 +41,7 @@ const { title, description, ogImage, jsonLd } = Astro.props;
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
     <!-- Theme color -->
     <meta name="theme-color" content="#20b7c9" />
-    <SEOHead title={title} description={description} ogImage={ogImage} jsonLd={jsonLd} />
+    <SEOHead title={title} description={description} ogImage={ogImage} jsonLd={jsonLd} ogType={ogType} articlePublishedTime={articlePublishedTime} articleModifiedTime={articleModifiedTime} articleAuthor={articleAuthor} articleSection={articleSection} articleTags={articleTags} />
     <ClientRouter />
   </head>
   <body class="min-h-screen flex flex-col bg-surface text-text-primary font-sans antialiased">

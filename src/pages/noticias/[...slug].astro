@@ -41,7 +41,18 @@ const jsonLd = generateArticleJsonLd({
 });
 ---
 
-<BaseLayout title={`${title} | Noticias`} description={excerpt} jsonLd={jsonLd}>
+<BaseLayout
+  title={`${title} | Noticias`}
+  description={excerpt}
+  ogImage={image}
+  jsonLd={jsonLd}
+  ogType="article"
+  articlePublishedTime={date.toISOString()}
+  articleModifiedTime={(updatedDate ?? date).toISOString()}
+  articleAuthor={author}
+  articleSection={category}
+  articleTags={tags}
+>
   <article class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
     <Breadcrumb items={[{ label: 'Noticias', href: '/noticias' }, { label: title }]} />
 

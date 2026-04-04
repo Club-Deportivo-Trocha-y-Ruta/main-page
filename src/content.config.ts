@@ -14,6 +14,7 @@ import {
   faqsSchema,
   pagesSchema,
   socialInitiativesSchema,
+  treesSchema,
 } from './lib/schemas';
 
 const riders = defineCollection({
@@ -81,6 +82,11 @@ const socialInitiatives = defineCollection({
   schema: socialInitiativesSchema,
 });
 
+const trees = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: 'src/content/trees' }),
+  schema: treesSchema,
+});
+
 export const collections = {
   riders,
   directivos,
@@ -95,4 +101,5 @@ export const collections = {
   pages,
   faqs,
   socialInitiatives,
+  trees,
 };

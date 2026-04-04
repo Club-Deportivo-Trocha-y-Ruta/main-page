@@ -1,0 +1,278 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import PageLayout from '@layouts/PageLayout.astro';
+import Card from '@components/common/Card.astro';
+import Button from '@components/common/Button.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+import { Icon } from 'astro-icon/components';
+import { CONTACT } from '@lib/constants';
+import { generateBreadcrumbJsonLd, generateSocialInitiativeJsonLd } from '@lib/seo';
+import { formatDate } from '@lib/utils';
+import carretillaAntes from '@assets/images/trocha-verde/carretilla-reciclada.jpg';
+import carretillaDespues from '@assets/images/trocha-verde/carretilla-despues.jpg';
+
+type Tree = CollectionEntry<'trees'>;
+
+const trees = (await getCollection('trees'))
+  .filter((t: Tree) => !t.data.draft)
+  .sort((a: Tree, b: Tree) => a.data.order - b.data.order);
+
+const totalTrees = trees.length;
+const totalRecycled = trees.filter((t: Tree) =>
+  t.data.protector === 'llanta-bicicleta' || t.data.protector === 'llanta-moto'
+).length;
+const uniqueSpecies = new Set(trees.map((t: Tree) => t.data.scientificName)).size;
+
+const breadcrumbs = [
+  { label: 'Trocha Verde' },
+];
+
+const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+  { name: 'Inicio', url: '/' },
+  { name: 'Trocha Verde', url: '/trocha-verde' },
+]);
+
+const initiativeJsonLd = generateSocialInitiativeJsonLd({
+  title: 'Trocha Verde — Programa Ambiental',
+  date: new Date('2026-03-15'),
+  description: 'Iniciativa ambiental del Club Deportivo Trocha y Ruta: siembra de árboles nativos con llantas de bicicleta recicladas en Yumbo, Valle del Cauca.',
+  location: 'Pista de Ciclomontañismo Carlos Castro, Yumbo, Valle del Cauca',
+  url: '/trocha-verde',
+  type: 'ambiental',
+});
+
+const jsonLd = [breadcrumbJsonLd, initiativeJsonLd];
+
+const processSteps = [
+  {
+    number: '01',
+    title: 'Recolectamos',
+    description: 'Recogemos llantas de bicicleta usadas y otros materiales que ya no se utilizan.',
+    icon: 'ph:recycle-bold',
+  },
+  {
+    number: '02',
+    title: 'Pintamos',
+    description: 'Los niños del club pintan las llantas con colores brillantes, dándoles nueva vida.',
+    icon: 'ph:palette-bold',
+  },
+  {
+    number: '03',
+    title: 'Sembramos',
+    description: 'Plantamos árboles nativos dentro de las llantas, que sirven como protectores naturales.',
+    icon: 'ph:plant-bold',
+  },
+  {
+    number: '04',
+    title: 'Cuidamos',
+    description: 'Cada árbol recibe un letrero artesanal pintado a mano y seguimiento constante de los niños.',
+    icon: 'ph:hand-heart-bold',
+  },
+];
+---
+
+<PageLayout
+  title="Trocha Verde"
+  description="Programa ambiental del Club Trocha y Ruta — siembra de árboles nativos con materiales reciclados en Yumbo, Valle del Cauca"
+  breadcrumbs={breadcrumbs}
+  jsonLd={jsonLd}
+>
+  <!-- Hero compacto -->
+  <div class="relative -mt-8 mb-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-emerald-700 to-emerald-500 px-6 py-12 text-white overflow-hidden sm:px-10 sm:py-16">
+    <div class="absolute inset-0 opacity-10">
+      <svg class="h-full w-full" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" fill="currentColor" />
+        <circle cx="350" cy="100" r="60" fill="currentColor" />
+        <circle cx="150" cy="350" r="50" fill="currentColor" />
+        <circle cx="300" cy="300" r="35" fill="currentColor" />
+      </svg>
+    </div>
+    <div class="relative z-10 text-center">
+      <p class="text-sm font-semibold uppercase tracking-widest text-emerald-200">
+        Programa Ambiental
+      </p>
+      <h2 class="mt-2 font-display text-3xl font-bold sm:text-4xl md:text-5xl">
+        Donde cada pedalada deja raíces
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-emerald-100">
+        En Trocha y Ruta no solo formamos ciclistas — cuidamos el terreno donde pedalean.
+        Llantas recicladas se convierten en protectores de árboles nativos, pintadas por las manos de nuestros niños.
+      </p>
+
+      <!-- Contadores -->
+      <div class="mt-8 flex flex-wrap justify-center gap-8">
+        <div class="text-center">
+          <p class="font-display text-4xl font-bold">{totalTrees}</p>
+          <p class="mt-1 text-sm text-emerald-200">Árboles sembrados</p>
+        </div>
+        <div class="text-center">
+          <p class="font-display text-4xl font-bold">{totalRecycled}+</p>
+          <p class="mt-1 text-sm text-emerald-200">Llantas recicladas</p>
+        </div>
+        <div class="text-center">
+          <p class="font-display text-4xl font-bold">{uniqueSpecies}</p>
+          <p class="mt-1 text-sm text-emerald-200">Especies nativas</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Misión -->
+  <section class="mb-16 text-center">
+    <div class="mx-auto max-w-3xl">
+      <p class="text-lg leading-relaxed text-text-secondary sm:text-xl">
+        Nuestros corredores entrenan en senderos naturales. <strong class="text-text-primary">Cuidar esos senderos es cuidar nuestro deporte.</strong>
+        Pero más allá del ciclismo, queremos que cada niño del club crezca con una conciencia ambiental fuerte.
+        Cada objeto reciclado cuenta una historia de transformación.
+      </p>
+    </div>
+  </section>
+
+  <!-- Nuestros Árboles -->
+  <section class="mb-16">
+    <SectionTitle
+      title="Nuestros Árboles"
+      subtitle="Cada árbol fue plantado por las manos de nuestros niños y protegido con llantas recicladas"
+    />
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {trees.map((tree: Tree) => (
+        <Card class="overflow-hidden border border-emerald-100">
+          <div class="aspect-[4/3] overflow-hidden bg-surface-muted">
+            <img
+              src={tree.data.image}
+              alt={tree.data.imageAlt}
+              class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+              loading="lazy"
+            />
+          </div>
+          <div class="p-5">
+            <div class="mb-2 flex items-center gap-2">
+              <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                {tree.data.status === 'sembrado' ? 'Sembrado' : tree.data.status === 'creciendo' ? 'Creciendo' : 'Floreciendo'}
+              </span>
+              {tree.data.protectorColor && (
+                <span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700">
+                  Llanta {tree.data.protectorColor}
+                </span>
+              )}
+            </div>
+            <h3 class="font-display text-lg font-bold text-text-primary">
+              {tree.data.species}
+            </h3>
+            {tree.data.scientificName && (
+              <p class="text-sm italic text-text-secondary">{tree.data.scientificName}</p>
+            )}
+            <p class="mt-1 text-xs text-text-secondary">
+              Sembrado el {formatDate(tree.data.plantedDate)}
+            </p>
+            {tree.data.notes && (
+              <p class="mt-3 text-sm leading-relaxed text-text-secondary">
+                {tree.data.notes}
+              </p>
+            )}
+          </div>
+        </Card>
+      ))}
+    </div>
+  </section>
+
+  <!-- El Proceso -->
+  <section class="mb-16">
+    <SectionTitle
+      title="El Proceso"
+      subtitle="Así transformamos residuos en vida"
+    />
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {processSteps.map((step) => (
+        <div class="relative rounded-xl border border-emerald-100 bg-white p-6 text-center">
+          <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700" role="img" aria-label={`Paso ${step.number}: ${step.title}`}>
+            <Icon name={step.icon} class="h-7 w-7" aria-hidden="true" />
+          </div>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-500">
+            Paso {step.number}
+          </span>
+          <h3 class="mt-1 font-display text-lg font-bold text-text-primary">
+            {step.title}
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-text-secondary">
+            {step.description}
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Antes y Después -->
+  <section class="mb-16">
+    <SectionTitle
+      title="Transformación en acción"
+      subtitle="Una carretilla reciclada que pasó de estar abandonada a ser herramienta clave de nuestras siembras"
+    />
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <!-- Antes -->
+      <figure class="overflow-hidden rounded-xl border border-emerald-100 bg-white">
+        <div class="aspect-[3/4] overflow-hidden">
+          <Image
+            src={carretillaAntes}
+            alt="Carretilla reciclada antes de ser utilizada en las siembras de Trocha Verde"
+            class="h-full w-full object-cover"
+            widths={[400, 600, 800]}
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </div>
+        <figcaption class="p-4 text-center">
+          <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
+            Antes
+          </span>
+          <p class="mt-2 text-sm text-text-secondary">
+            Carretilla recuperada y lista para darle un nuevo propósito
+          </p>
+        </figcaption>
+      </figure>
+
+      <!-- Después -->
+      <figure class="overflow-hidden rounded-xl border border-emerald-100 bg-white">
+        <div class="aspect-[3/4] overflow-hidden">
+          <Image
+            src={carretillaDespues}
+            alt="Carretilla en uso transportando tierra para la siembra de árboles nativos"
+            class="h-full w-full object-cover"
+            widths={[400, 600, 800]}
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </div>
+        <figcaption class="p-4 text-center">
+          <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-800">
+            Después
+          </span>
+          <p class="mt-2 text-sm text-text-secondary">
+            En plena jornada de siembra, transportando tierra para nuestros árboles
+          </p>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100 px-6 py-12 text-center sm:px-10">
+    <h2 class="font-display text-2xl font-bold text-text-primary sm:text-3xl">
+      ¿Quieres sembrar con nosotros?
+    </h2>
+    <p class="mx-auto mt-3 max-w-xl text-text-secondary">
+      Únete a nuestras jornadas de siembra. Familias, empresas y amigos del medio ambiente son bienvenidos.
+      Juntos hacemos de Yumbo un lugar más verde.
+    </p>
+    <div class="mt-6 flex flex-wrap justify-center gap-4">
+      <Button href={CONTACT.whatsapp} variant="accent" size="lg">
+        Escríbenos por WhatsApp
+      </Button>
+      <Button href="/contacto" variant="outline">
+        Contáctanos
+      </Button>
+    </div>
+  </section>
+</PageLayout>
