@@ -32,6 +32,7 @@ test-results/
 
 # Sistema operativo
 .DS_Store
+**/.DS_Store
 Thumbs.db
 
 # Editores

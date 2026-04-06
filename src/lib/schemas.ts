@@ -106,6 +106,7 @@ export const newsSchema = z.object({
   relatedGallery: z.string().optional(),
   galleryFolder: z.string().optional(),
   galleryImages: z.array(z.string()).default([]),
+  imageLayout: z.enum(['cover', 'contain']).optional().default('cover'),
   seo: seoSchema,
 });
 

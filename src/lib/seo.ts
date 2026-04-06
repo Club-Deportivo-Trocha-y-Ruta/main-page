@@ -478,7 +478,7 @@ export function generateSportsClubJsonLd(): JsonLd {
     description: SITE.description,
     sport: 'Mountain Biking',
     foundingDate: '2010-05-01',
-    logo: fullUrl('/favicon-512x512.png'),
+    logo: fullUrl('/favicon-512.png'),
     image: fullUrl('/images/hero-poster.jpg'),
     address: {
       '@type': 'PostalAddress',
