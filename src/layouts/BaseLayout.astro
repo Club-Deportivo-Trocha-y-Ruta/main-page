@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import SEOHead from '@components/common/SEOHead.astro';
+import AnnouncementBar from '@components/common/AnnouncementBar.astro';
 import Header from '@components/common/Header.astro';
 import Footer from '@components/common/Footer.astro';
 import NavigationProgress from '@components/common/NavigationProgress.astro';
@@ -52,6 +53,7 @@ const { title, description, ogImage, jsonLd, ogType, articlePublishedTime, artic
     >
       Saltar al contenido principal
     </a>
+    <AnnouncementBar />
     <Header transition:persist />
     <main id="main-content" class="flex-1" transition:animate="fade">
       <slot />

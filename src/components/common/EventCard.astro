@@ -22,9 +22,9 @@ const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> =
 };
 ---
 
-<div class="flex items-start gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 transition-colors hover:bg-surface-muted">
+<div class="flex items-start gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 transition-colors hover:bg-surface-muted border-l-4 border-primary">
   <div class="min-w-[3.5rem] sm:min-w-[4rem] rounded-lg bg-primary/10 p-2 sm:p-3 text-center shrink-0">
-    <span class="block text-xs font-semibold uppercase text-primary">
+    <span class="block text-xs font-bold uppercase tracking-wide text-primary">
       {date.toLocaleDateString('es-CO', { month: 'short' })}
     </span>
     <span class="block font-display text-xl sm:text-2xl font-bold text-primary">

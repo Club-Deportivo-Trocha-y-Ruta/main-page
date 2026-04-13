@@ -1,10 +1,11 @@
 ---
 species: "Guayacán"
-scientificName: "Tabebuia chrysantha"
+scientificName: "Handroanthus chrysanthus"
 plantedDate: 2026-03-15
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 protectorColor: "rosada"
+category: "nativo"
 image: "/images/trocha-verde/guayacan.jpg"
 imageAlt: "Árbol de Guayacán plantado dentro de una llanta de bicicleta pintada de rosado"
 status: "sembrado"
