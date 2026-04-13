@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import PageLayout from '@layouts/PageLayout.astro';
 import Card from '@components/common/Card.astro';
@@ -18,11 +18,64 @@ const trees = (await getCollection('trees'))
   .filter((t: Tree) => !t.data.draft)
   .sort((a: Tree, b: Tree) => a.data.order - b.data.order);
 
+// Pre-renderizar body markdown de cada árbol
+const renderedTrees = await Promise.all(
+  trees.map(async (tree: Tree) => {
+    const { Content } = await render(tree);
+    return { tree, Content };
+  })
+);
+
 const totalTrees = trees.length;
 const totalRecycled = trees.filter((t: Tree) =>
   t.data.protector === 'llanta-bicicleta' || t.data.protector === 'llanta-moto'
 ).length;
 const uniqueSpecies = new Set(trees.map((t: Tree) => t.data.scientificName)).size;
+const treesGoal = 50;
+const progressPercent = Math.min(Math.round((totalTrees / treesGoal) * 100), 100);
+
+// Agrupar árboles por fecha de siembra (jornadas)
+type RenderedTree = { tree: Tree; Content: any };
+const treesByDate = new Map<string, RenderedTree[]>();
+renderedTrees.forEach(({ tree, Content }) => {
+  const dateKey = tree.data.plantedDate.toISOString().split('T')[0];
+  if (!treesByDate.has(dateKey)) {
+    treesByDate.set(dateKey, []);
+  }
+  treesByDate.get(dateKey)!.push({ tree, Content });
+});
+
+// Ordenar jornadas cronológicamente
+const sortedDates = [...treesByDate.keys()].sort();
+const journeyLabels: Record<number, string> = {
+  0: 'Primera siembra',
+  1: 'Segunda siembra',
+  2: 'Tercera siembra',
+  3: 'Cuarta siembra',
+  4: 'Quinta siembra',
+  5: 'Sexta siembra',
+};
+
+// Labels de categoría
+const categoryLabels: Record<string, string> = {
+  frutal: 'Frutal',
+  ornamental: 'Ornamental',
+  nativo: 'Nativo',
+  maderable: 'Maderable',
+};
+const categoryColors: Record<string, { bg: string; text: string }> = {
+  frutal: { bg: 'bg-amber-100', text: 'text-amber-700' },
+  ornamental: { bg: 'bg-purple-100', text: 'text-purple-900' },
+  nativo: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
+  maderable: { bg: 'bg-orange-100', text: 'text-orange-700' },
+};
+
+// Status labels
+const statusLabels: Record<string, string> = {
+  sembrado: 'Sembrado',
+  creciendo: 'Creciendo',
+  floreciendo: 'Floreciendo',
+};
 
 const breadcrumbs = [
   { label: 'Trocha Verde' },
@@ -36,7 +89,7 @@ const breadcrumbJsonLd = generateBreadcrumbJsonLd([
 const initiativeJsonLd = generateSocialInitiativeJsonLd({
   title: 'Trocha Verde — Programa Ambiental',
   date: new Date('2026-03-15'),
-  description: 'Iniciativa ambiental del Club Deportivo Trocha y Ruta: siembra de árboles nativos con llantas de bicicleta recicladas en Yumbo, Valle del Cauca.',
+  description: `Programa de reforestación del Club Trocha y Ruta: ${totalTrees} árboles nativos sembrados con llantas de bicicleta recicladas en la Pista Carlos Castro, Yumbo, Valle del Cauca.`,
   location: 'Pista de Ciclomontañismo Carlos Castro, Yumbo, Valle del Cauca',
   url: '/trocha-verde',
   type: 'ambiental',
@@ -74,14 +127,14 @@ const processSteps = [
 
 <PageLayout
   title="Trocha Verde"
-  description="Programa ambiental del Club Trocha y Ruta — siembra de árboles nativos con materiales reciclados en Yumbo, Valle del Cauca"
+  description={`Programa de reforestación del Club Trocha y Ruta: ${totalTrees} árboles nativos sembrados con llantas de bicicleta recicladas en Yumbo, Valle del Cauca`}
   breadcrumbs={breadcrumbs}
   jsonLd={jsonLd}
 >
   <!-- Hero compacto -->
   <div class="relative -mt-8 mb-12 rounded-2xl bg-gradient-to-br from-emerald-800 via-emerald-700 to-emerald-500 px-6 py-12 text-white overflow-hidden sm:px-10 sm:py-16">
     <div class="absolute inset-0 opacity-10">
-      <svg class="h-full w-full" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <svg class="h-full w-full" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <circle cx="50" cy="50" r="40" fill="currentColor" />
         <circle cx="350" cy="100" r="60" fill="currentColor" />
         <circle cx="150" cy="350" r="50" fill="currentColor" />
@@ -92,9 +145,9 @@ const processSteps = [
       <p class="text-sm font-semibold uppercase tracking-widest text-emerald-200">
         Programa Ambiental
       </p>
-      <h2 class="mt-2 font-display text-3xl font-bold sm:text-4xl md:text-5xl">
+      <p class="mt-2 font-display text-3xl font-bold sm:text-4xl md:text-5xl">
         Donde cada pedalada deja raíces
-      </h2>
+      </p>
       <p class="mx-auto mt-4 max-w-2xl text-lg text-emerald-100">
         En Trocha y Ruta no solo formamos ciclistas — cuidamos el terreno donde pedalean.
         Llantas recicladas se convierten en protectores de árboles nativos, pintadas por las manos de nuestros niños.
@@ -107,13 +160,28 @@ const processSteps = [
           <p class="mt-1 text-sm text-emerald-200">Árboles sembrados</p>
         </div>
         <div class="text-center">
-          <p class="font-display text-4xl font-bold">{totalRecycled}+</p>
+          <p class="font-display text-4xl font-bold">{totalRecycled}</p>
           <p class="mt-1 text-sm text-emerald-200">Llantas recicladas</p>
         </div>
         <div class="text-center">
           <p class="font-display text-4xl font-bold">{uniqueSpecies}</p>
-          <p class="mt-1 text-sm text-emerald-200">Especies nativas</p>
+          <p class="mt-1 text-sm text-emerald-200">Especies distintas</p>
         </div>
+      </div>
+
+      <!-- Barra de progreso hacia meta -->
+      <div class="mx-auto mt-8 max-w-md">
+        <div class="flex items-center justify-between text-sm text-emerald-200">
+          <span>Meta 2026</span>
+          <span class="font-semibold text-white">{totalTrees} / {treesGoal} árboles</span>
+        </div>
+        <div class="mt-2 h-3 w-full overflow-hidden rounded-full bg-emerald-900/50" role="progressbar" aria-valuenow={totalTrees} aria-valuemin={0} aria-valuemax={treesGoal} aria-label={`Progreso: ${totalTrees} de ${treesGoal} árboles sembrados`} aria-valuetext={`${totalTrees} árboles de ${treesGoal}`}>
+          <div
+            class="h-full rounded-full bg-gradient-to-r from-emerald-300 to-accent transition-all duration-500"
+            style={`width: ${progressPercent}%`}
+          />
+        </div>
+        <p class="mt-1 text-xs text-emerald-300">{progressPercent}% completado</p>
       </div>
     </div>
   </div>
@@ -129,52 +197,93 @@ const processSteps = [
     </div>
   </section>
 
-  <!-- Nuestros Árboles -->
+  <!-- Timeline de Siembras -->
   <section class="mb-16">
     <SectionTitle
       title="Nuestros Árboles"
-      subtitle="Cada árbol fue plantado por las manos de nuestros niños y protegido con llantas recicladas"
+      subtitle="Cada árbol fue plantado por las manos de nuestros niños y protegido con materiales reciclados"
     />
 
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {trees.map((tree: Tree) => (
-        <Card class="overflow-hidden border border-emerald-100">
-          <div class="aspect-[4/3] overflow-hidden bg-surface-muted">
-            <img
-              src={tree.data.image}
-              alt={tree.data.imageAlt}
-              class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-              loading="lazy"
-            />
-          </div>
-          <div class="p-5">
-            <div class="mb-2 flex items-center gap-2">
-              <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
-                {tree.data.status === 'sembrado' ? 'Sembrado' : tree.data.status === 'creciendo' ? 'Creciendo' : 'Floreciendo'}
-              </span>
-              {tree.data.protectorColor && (
-                <span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700">
-                  Llanta {tree.data.protectorColor}
-                </span>
-              )}
+    <div class="space-y-12">
+      {sortedDates.map((dateKey, index) => {
+        const journeyEntries = treesByDate.get(dateKey)!;
+        const date = journeyEntries[0].tree.data.plantedDate;
+        const label = journeyLabels[index] || `Siembra #${index + 1}`;
+
+        return (
+          <div class="relative">
+            {/* Encabezado de jornada */}
+            <div class="mb-6 flex items-center gap-4">
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white" aria-hidden="true">
+                <Icon name="ph:tree-bold" class="h-6 w-6" />
+              </div>
+              <div>
+                <h3 class="font-display text-xl font-bold text-text-primary">
+                  {label}
+                </h3>
+                <p class="text-sm text-text-secondary">
+                  {formatDate(date)} — {journeyEntries.length} {journeyEntries.length === 1 ? 'árbol' : 'árboles'}
+                </p>
+              </div>
             </div>
-            <h3 class="font-display text-lg font-bold text-text-primary">
-              {tree.data.species}
-            </h3>
-            {tree.data.scientificName && (
-              <p class="text-sm italic text-text-secondary">{tree.data.scientificName}</p>
-            )}
-            <p class="mt-1 text-xs text-text-secondary">
-              Sembrado el {formatDate(tree.data.plantedDate)}
-            </p>
-            {tree.data.notes && (
-              <p class="mt-3 text-sm leading-relaxed text-text-secondary">
-                {tree.data.notes}
-              </p>
-            )}
+
+            {/* Grid de árboles de esta jornada */}
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {journeyEntries.map(({ tree, Content }: RenderedTree) => {
+                const catColors = categoryColors[tree.data.category] || categoryColors.nativo;
+                return (
+                  <Card class="overflow-hidden border border-emerald-100">
+                    <div class="aspect-[4/3] overflow-hidden bg-surface-muted">
+                      <img
+                        src={tree.data.image}
+                        alt={tree.data.imageAlt}
+                        class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                        loading="lazy"
+                        width="400"
+                        height="300"
+                      />
+                    </div>
+                    <div class="p-5">
+                      <div class="mb-2 flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                          {statusLabels[tree.data.status] || tree.data.status}
+                        </span>
+                        <span class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${catColors.bg} ${catColors.text}`}>
+                          {categoryLabels[tree.data.category] || tree.data.category}
+                        </span>
+                        {tree.data.protectorColor && (
+                          <span class="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-900">
+                            Llanta {tree.data.protectorColor}
+                          </span>
+                        )}
+                      </div>
+                      <h4 class="font-display text-lg font-bold text-text-primary">
+                        {tree.data.species}
+                      </h4>
+                      {tree.data.scientificName && (
+                        <p class="text-sm italic text-text-secondary">{tree.data.scientificName}</p>
+                      )}
+                      {tree.data.notes && (
+                        <p class="mt-3 text-sm leading-relaxed text-text-secondary">
+                          {tree.data.notes}
+                        </p>
+                      )}
+                      <details class="mt-3 group">
+                        <summary class="cursor-pointer text-xs font-medium text-emerald-600 hover:text-emerald-700">
+                          Conoce su historia
+                        </summary>
+                        <div class="mt-2 text-sm leading-relaxed text-text-secondary prose prose-sm max-w-none">
+                          <Content />
+                        </div>
+                      </details>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
           </div>
-        </Card>
-      ))}
+        );
+      })}
     </div>
   </section>
 

@@ -23,17 +23,17 @@ const currentPath = Astro.url.pathname;
       </a>
 
       <!-- Nav desktop -->
-      <nav class="hidden lg:flex items-center gap-1" aria-label="Navegación principal">
+      <nav class="hidden lg:flex items-center bg-surface-muted/60 backdrop-blur-sm rounded-full px-2 py-1 gap-0.5" aria-label="Navegación principal">
         {NAV_ITEMS.map((item) => {
           const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
           return (
             <a
               href={item.href}
               class:list={[
-                'px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                'px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200',
                 isActive
-                  ? 'text-primary font-semibold'
-                  : 'text-text-secondary hover:text-primary hover:bg-primary/5',
+                  ? 'bg-surface text-primary font-semibold shadow-sm'
+                  : 'text-text-secondary hover:text-primary hover:bg-surface/60',
               ]}
               {...(isActive ? { 'aria-current': 'page' } : {})}
             >
@@ -47,9 +47,10 @@ const currentPath = Astro.url.pathname;
       <div class="flex items-center gap-3">
         <a
           href="/inscripciones"
-          class="hidden sm:inline-flex items-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          class="hidden sm:inline-flex items-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           Inscríbete
+          <svg class="ml-1 w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
         </a>
 
         <!-- Mobile menu (React Island) -->

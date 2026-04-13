@@ -352,6 +352,9 @@ export const treesSchema = z.object({
     .enum(['llanta-bicicleta', 'llanta-moto', 'piedras', 'otro'])
     .default('llanta-bicicleta'),
   protectorColor: z.string().optional(),
+  category: z
+    .enum(['frutal', 'ornamental', 'nativo', 'maderable'])
+    .default('nativo'),
   image: z.string(),
   imageAlt: z.string(),
   status: z.enum(['sembrado', 'creciendo', 'floreciendo']).default('sembrado'),

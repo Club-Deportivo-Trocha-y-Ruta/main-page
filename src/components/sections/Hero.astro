@@ -46,26 +46,39 @@ const VIDEO_END = 25;
     />
   )}
   <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-primary-dark/15 z-[1]"></div>
-  <div class="relative z-10 mx-auto max-w-4xl px-4 text-center text-white">
-    <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+  <div class="relative z-10 mx-auto max-w-5xl px-4 text-center text-white">
+    <!-- Badge de marca -->
+    <div class="inline-flex items-center gap-2 mb-5 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/90 border border-white/20">
+      <span class="w-1.5 h-1.5 rounded-full bg-accent inline-block"></span>
+      Yumbo · Valle del Cauca · Desde 2010
+    </div>
+    <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold leading-[0.95] tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] uppercase">
       {title}
     </h1>
-    <p class="mt-4 text-lg md:text-xl text-white/90 drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]">
+    <p class="mt-5 text-base md:text-xl text-white/85 drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)] max-w-2xl mx-auto">
       {subtitle}
     </p>
-    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
       <Button variant="accent" size="lg" href="/inscripciones">
         Clase de prueba gratis
+        <svg class="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </Button>
       <Button
         variant="outline"
         size="lg"
         href="/quienes-somos"
-        class="border-white text-white hover:bg-white hover:text-surface-dark"
+        class="border-white text-white hover:bg-white hover:text-surface-dark bg-white/10 backdrop-blur-sm"
       >
         Conoce más
       </Button>
     </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 motion-safe:animate-bounce" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-white/70" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
   </div>
 </section>
 

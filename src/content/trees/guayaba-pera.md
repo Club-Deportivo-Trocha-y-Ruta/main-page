@@ -5,6 +5,7 @@ plantedDate: 2026-04-01
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 protectorColor: "morada y naranja"
+category: "frutal"
 image: "/images/trocha-verde/guayaba-pera.jpg"
 imageAlt: "Árbol de Guayaba Pera plantado dentro de una llanta de bicicleta pintada de morado"
 status: "sembrado"

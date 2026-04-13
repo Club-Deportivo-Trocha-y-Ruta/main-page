@@ -5,6 +5,7 @@ plantedDate: 2026-03-15
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 protectorColor: "rosada"
+category: "frutal"
 image: "/images/trocha-verde/mango.jpg"
 imageAlt: "Árbol de Mango plantado dentro de una llanta de bicicleta pintada de rosado"
 status: "sembrado"

@@ -2,16 +2,22 @@
 interface Props {
   title: string;
   subtitle?: string;
+  eyebrow?: string;
   align?: 'left' | 'center';
 }
 
-const { title, subtitle, align = 'center' } = Astro.props;
+const { title, subtitle, eyebrow, align = 'center' } = Astro.props;
 
 const alignClass = align === 'center' ? 'text-center' : 'text-left';
 const lineAlign = align === 'center' ? 'mx-auto' : '';
 ---
 
 <div class={`mb-8 md:mb-10 ${alignClass}`}>
+  {eyebrow && (
+    <p class={`mb-3 text-xs font-semibold uppercase tracking-widest text-primary ${align === 'center' ? 'mx-auto' : ''}`}>
+      {eyebrow}
+    </p>
+  )}
   <h2 class="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-text-primary">
     {title}
   </h2>

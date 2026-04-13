@@ -517,25 +517,44 @@ export function generateSocialInitiativeJsonLd(initiative: {
   url: string;
   type: string;
 }) {
+  const isAmbiental = initiative.type === 'ambiental';
+
   const typeMap: Record<string, string> = {
-    ambiental: 'Event',
+    ambiental: 'Action',
     formacion: 'EducationEvent',
     recreacion: 'SportsEvent',
     educacion: 'EducationEvent',
     alianza: 'Event',
   };
 
-  return {
+  const base = {
     '@context': 'https://schema.org',
     '@type': typeMap[initiative.type] ?? 'Event',
     name: initiative.title,
-    startDate: initiative.date.toISOString(),
     description: initiative.description,
     image: initiative.image,
     url: initiative.url,
     location: initiative.location
       ? { '@type': 'Place', name: initiative.location }
       : undefined,
+  };
+
+  if (isAmbiental) {
+    return {
+      ...base,
+      actionStatus: 'ActiveActionStatus',
+      startTime: initiative.date.toISOString(),
+      agent: {
+        '@type': 'SportsOrganization',
+        name: 'Club Deportivo Trocha y Ruta',
+        url: 'https://clubdeportivotrochayruta.org',
+      },
+    };
+  }
+
+  return {
+    ...base,
+    startDate: initiative.date.toISOString(),
     organizer: {
       '@type': 'SportsOrganization',
       name: 'Club Deportivo Trocha y Ruta',

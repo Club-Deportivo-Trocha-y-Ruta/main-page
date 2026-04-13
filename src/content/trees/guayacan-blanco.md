@@ -1,10 +1,11 @@
 ---
 species: "Guayacán Blanco"
-scientificName: "Tabebuia rosea"
+scientificName: "Handroanthus roseus"
 plantedDate: 2026-04-01
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 protectorColor: "rosada"
+category: "nativo"
 image: "/images/trocha-verde/guayacan-blanco.jpg"
 imageAlt: "Árbol de Guayacán Blanco plantado dentro de una llanta de bicicleta pintada de rosado"
 status: "sembrado"

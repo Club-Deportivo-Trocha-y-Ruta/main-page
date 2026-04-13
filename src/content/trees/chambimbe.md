@@ -5,6 +5,7 @@ plantedDate: 2026-04-01
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 protectorColor: "verde y amarilla"
+category: "nativo"
 image: "/images/trocha-verde/chambimbe.jpg"
 imageAlt: "Árbol de Chambimbe plantado dentro de una llanta de bicicleta pintada de verde y amarillo"
 status: "sembrado"
