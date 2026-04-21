@@ -36,7 +36,7 @@ El circuito de 3.6 km, enclavado entre los pinos del corregimiento, exigió pote
 
 ## Dos podios bajo la lluvia
 
-**Miguel Ángel Anaya** fue el gran protagonista de la jornada para el club. El corredor de Yotoco, que representa los colores de Trocha y Ruta, cruzó la meta en **segundo lugar de Infantil A** con un tiempo de 0:15:48, a tan solo 2:24 del ganador Samuel Barrero. Una actuación contundente que confirma su regreso a la élite de su categoría después de los altibajos de las válidas anteriores.
+**Miguel Ángel Anaya** fue el gran protagonista de la jornada para el club. El corredor de Yotoco, que representa los colores de Trocha y Ruta, cruzó la meta en **segundo lugar de Infantil A** con un tiempo de 0:15:48, a tan solo 2:24 del ganador Samuel Barrero.
 
 **Mariana Coronado Delgado** completó la cosecha doble del club con un **segundo lugar en Prejuvenil A Femenino** (0:32:01), repitiendo el podio que ya había logrado en Ginebra. Mariana sigue siendo uno de los pilares del equipo femenino y acumula impulso de cara a la segunda mitad del campeonato.
 
