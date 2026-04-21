@@ -62,7 +62,7 @@ El circuito de 3.6 km, enclavado entre los pinos del corregimiento, exigió pote
 
 **Samuel Anaya Molano** terminó cuarto en Preinfantil A (0:10:30), sumando 30 puntos que lo consolidan en el cuarto lugar general de su categoría. El joven corredor de Yotoco responde a la exigencia de la pista con madurez en cada válida.
 
-**Juan Diego García** se midió una vez más en la exigente categoría Élite y terminó quinto (2:02:29), cerrando la brecha con el top 4 y manteniéndose entre los mejores seis de la general departamental. Una exhibición de carácter en condiciones difíciles.
+**Juan Diego García** se midió una vez más en la exigente categoría Élite y terminó quinto (2:02:29), y manteniéndose entre los mejores seis de la general departamental. Una exhibición de carácter en condiciones difíciles.
 
 **Sofía Gómez** y **Eileen Sophia Vargas Bonilla** completaron un doblete para el club en Infantil A Femenino al terminar quinta y sexta respectivamente, sumando 52 puntos entre las dos para la causa del equipo.
 
