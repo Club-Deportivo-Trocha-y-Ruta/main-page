@@ -6,11 +6,10 @@ type NewsEntry = CollectionEntry<'news'>;
 
 export async function GET(_context: APIContext) {
   const news = await getCollection('news');
-  const twoDaysAgo = new Date(Date.now() - 48 * 60 * 60 * 1000);
-
   const recentArticles = news
-    .filter((n: NewsEntry) => !n.data.draft && n.data.date >= twoDaysAgo)
-    .sort((a: NewsEntry, b: NewsEntry) => b.data.date.getTime() - a.data.date.getTime());
+    .filter((n: NewsEntry) => !n.data.draft)
+    .sort((a: NewsEntry, b: NewsEntry) => b.data.date.getTime() - a.data.date.getTime())
+    .slice(0, 50);
 
   const escapeXml = (str: string) =>
     str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
