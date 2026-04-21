@@ -3,6 +3,7 @@ import BaseLayout from './BaseLayout.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Badge from '@components/common/Badge.astro';
 import ShareButtons from '@components/common/ShareButtons.astro';
+import { SITE } from '../lib/constants';
 
 interface Props {
   title: string;
@@ -23,9 +24,44 @@ const breadcrumbs = [
   { label: 'Noticias', href: '/noticias' },
   { label: title },
 ];
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site || SITE.url).href;
+const imageUrl = image ? new URL(image, Astro.site || SITE.url).href : undefined;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: title,
+  description: description,
+  image: imageUrl ? [imageUrl] : undefined,
+  datePublished: date ? date.toISOString() : undefined,
+  dateModified: date ? date.toISOString() : undefined,
+  author: [{
+    '@type': 'Organization',
+    name: author || SITE.name,
+    url: SITE.url
+  }],
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.name,
+    logo: {
+      '@type': 'ImageObject',
+      url: new URL('/android-chrome-512x512.png', Astro.site || SITE.url).href
+    }
+  }
+};
 ---
 
-<BaseLayout title={title} description={description} ogImage={image}>
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={image}
+  jsonLd={jsonLd}
+  ogType="article"
+  articlePublishedTime={date ? date.toISOString() : undefined}
+  articleAuthor={author}
+  articleSection={category}
+>
   <article class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
     <Breadcrumb items={breadcrumbs} />
 
