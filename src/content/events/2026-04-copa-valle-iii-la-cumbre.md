@@ -7,9 +7,9 @@ department: "Valle del Cauca"
 category: "xco"
 level: "departamental"
 organizer: "Comisión Vallecaucana de Ciclomontañismo"
-image: "/images/placeholder-event.jpg"
-imageAlt: "Tercera válida Copa Valle XCO en La Cumbre"
-status: "upcoming"
+image: "/images/news/copa-valle-pavas-2026/portada-copa-valle-pavas.webp"
+imageAlt: "III Válida Copa Valle XCO en la Pista Los Pinos, Pavas, La Cumbre"
+status: "past"
 registrationDeadline: 2026-04-16
 featured: true
 draft: false
