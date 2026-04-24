@@ -9,7 +9,9 @@ export default defineConfig({
 
   integrations: [
     react(),
-    sitemap(),
+    sitemap({
+      filter: (page) => !page.includes('/enlaces'),
+    }),
     icon({
       include: {
         ph: ['*'],
