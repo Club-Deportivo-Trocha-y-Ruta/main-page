@@ -1,0 +1,68 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import SEOHead from '@components/common/SEOHead.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description, ogImage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/PlusJakartaSans-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#20b7c9" />
+    <SEOHead title={title} description={description} ogImage={ogImage} noindex={true} />
+    <ClientRouter />
+  </head>
+  <body class="min-h-screen bg-surface-dark text-text-primary font-sans antialiased">
+    <main class="relative min-h-screen overflow-hidden">
+      <div
+        class="pointer-events-none absolute inset-0 bg-gradient-to-b from-surface-dark via-primary-dark to-primary"
+        aria-hidden="true"
+      ></div>
+      <div
+        class="pointer-events-none absolute inset-0 opacity-20"
+        style="background-image: radial-gradient(circle at 20% 10%, rgba(139, 224, 0, 0.35), transparent 45%), radial-gradient(circle at 80% 90%, rgba(32, 183, 201, 0.35), transparent 45%);"
+        aria-hidden="true"
+      ></div>
+      <div class="relative z-10">
+        <slot />
+      </div>
+    </main>
+    <script is:inline>
+      function initReveal() {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          document.querySelectorAll('.reveal:not(.revealed)').forEach(function(el) { observer.observe(el); });
+        } else {
+          document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('revealed'); });
+        }
+      }
+      initReveal();
+      document.addEventListener('astro:page-load', initReveal);
+    </script>
+    {import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN && (
+      <script is:inline defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon={`{"token": "${import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN}"}`}></script>
+    )}
+  </body>
+</html>
