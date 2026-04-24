@@ -114,7 +114,7 @@ Meta: Crónica completa de [nombre evento]. Nuestros ciclistas de Yumbo compitie
 Verificar y optimizar:
 - Nombre: "Club Deportivo Trocha y Ruta"
 - Dirección: CL 8 Norte 2 N° 55, Yumbo, Valle del Cauca
-- Teléfono: 320 856 1053
+- Teléfono: 314 850 5372
 - Categoría: "Club deportivo" + "Escuela de ciclismo"
 - Sitio web: [dominio del club]
 - Horarios de entrenamiento
