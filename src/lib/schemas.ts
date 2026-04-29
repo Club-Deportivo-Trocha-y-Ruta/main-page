@@ -359,6 +359,7 @@ export const treesSchema = z.object({
   imageAlt: z.string(),
   status: z.enum(['sembrado', 'creciendo', 'floreciendo']).default('sembrado'),
   notes: z.string().optional(),
+  donor: z.string().optional(),
   featured: z.boolean().default(false),
   draft: z.boolean().default(false),
   order: z.number().default(0),

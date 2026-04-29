@@ -1,0 +1,130 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import Button from '@components/common/Button.astro';
+import { formatDate } from '@lib/utils';
+
+type Initiative = CollectionEntry<'socialInitiatives'>;
+
+const initiatives = (await getCollection('socialInitiatives'))
+  .filter((i: Initiative) => !i.data.draft && i.data.featured)
+  .sort((a: Initiative, b: Initiative) => b.data.date.getTime() - a.data.date.getTime());
+
+const latest = initiatives[0];
+---
+
+{latest && (
+  <section class="relative overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-500 py-16 sm:py-20">
+    <!-- Decorative leaves SVG -->
+    <div class="pointer-events-none absolute inset-0 opacity-10" aria-hidden="true">
+      <svg class="absolute -left-12 -top-12 h-72 w-72 text-white" viewBox="0 0 200 200" fill="currentColor">
+        <circle cx="100" cy="100" r="80" />
+      </svg>
+      <svg class="absolute -bottom-16 -right-16 h-96 w-96 text-emerald-300" viewBox="0 0 200 200" fill="currentColor">
+        <circle cx="100" cy="100" r="80" />
+      </svg>
+    </div>
+
+    <div class="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+
+        <!-- Imagen del afiche / iniciativa -->
+        <div class="lg:col-span-5">
+          <div class="relative overflow-hidden rounded-2xl bg-emerald-900/30 shadow-2xl ring-1 ring-white/10">
+            <img
+              src={latest.data.image}
+              alt={latest.data.imageAlt || latest.data.title}
+              class="h-full w-full object-cover aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5]"
+              loading="lazy"
+              decoding="async"
+              width="600"
+              height="750"
+            />
+            <!-- Esquina con fecha -->
+            <div class="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-700 shadow">
+              <Icon name="ph:leaf-bold" class="h-3.5 w-3.5" aria-hidden="true" />
+              Día de la Tierra
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="text-white lg:col-span-7">
+          <!-- Pill -->
+          <div class="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/95 backdrop-blur-sm">
+            <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+            Iniciativa reciente · {formatDate(latest.data.date)}
+          </div>
+
+          <h2 class="mt-4 font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+            {latest.data.title}
+          </h2>
+
+          {latest.data.subtitle && (
+            <p class="mt-4 max-w-2xl text-base leading-relaxed text-emerald-50 sm:text-lg">
+              {latest.data.subtitle}
+            </p>
+          )}
+
+          <!-- Stats grid -->
+          {latest.data.impact && (
+            <div class="mt-8 grid grid-cols-3 gap-3 sm:gap-6 max-w-lg">
+              {latest.data.impact.treesPlanted !== undefined && (
+                <div class="rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
+                  <Icon name="ph:tree-bold" class="h-6 w-6 text-accent" aria-hidden="true" />
+                  <p class="mt-2 font-display text-2xl font-bold sm:text-3xl">{latest.data.impact.treesPlanted}</p>
+                  <p class="mt-0.5 text-xs uppercase tracking-wider text-emerald-100">Árboles</p>
+                </div>
+              )}
+              {latest.data.impact.volunteersInvolved !== undefined && (
+                <div class="rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
+                  <Icon name="ph:users-three-bold" class="h-6 w-6 text-accent" aria-hidden="true" />
+                  <p class="mt-2 font-display text-2xl font-bold sm:text-3xl">{latest.data.impact.volunteersInvolved}</p>
+                  <p class="mt-0.5 text-xs uppercase tracking-wider text-emerald-100">Voluntarios</p>
+                </div>
+              )}
+              {latest.data.allies.length > 0 && (
+                <div class="rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
+                  <Icon name="ph:handshake-bold" class="h-6 w-6 text-accent" aria-hidden="true" />
+                  <p class="mt-2 font-display text-2xl font-bold sm:text-3xl">{latest.data.allies.length}</p>
+                  <p class="mt-0.5 text-xs uppercase tracking-wider text-emerald-100">Aliados</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          <!-- Aliados destacados -->
+          {latest.data.allies.length > 0 && (
+            <p class="mt-6 text-sm text-emerald-100">
+              <span class="font-semibold text-white">Con el apoyo de:</span>{' '}
+              {latest.data.allies.slice(0, 3).join(', ')}
+              {latest.data.allies.length > 3 && ` y ${latest.data.allies.length - 3} más`}.
+            </p>
+          )}
+
+          <!-- CTAs -->
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            {latest.data.relatedNews.length > 0 && (
+              <Button
+                href={`/noticias/${latest.data.relatedNews[0]}`}
+                variant="accent"
+                size="lg"
+              >
+                Lee la crónica
+                <svg class="ml-2 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              </Button>
+            )}
+            <Button
+              href="/trocha-verde"
+              variant="outline"
+              size="lg"
+              class="border-white text-white hover:bg-white hover:text-emerald-700 bg-emerald-900/40 backdrop-blur-sm"
+            >
+              Conoce Trocha Verde
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+)}

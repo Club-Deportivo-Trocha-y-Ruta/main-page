@@ -10,6 +10,7 @@ import AboutPreview from '@components/sections/AboutPreview.astro';
 import TestimonialsSlider from '@components/sections/TestimonialsSlider.astro';
 import UpcomingEvents from '@components/sections/UpcomingEvents.astro';
 import NewsPreview from '@components/sections/NewsPreview.astro';
+import LatestInitiative from '@components/sections/LatestInitiative.astro';
 import TrochaVerde from '@components/sections/TrochaVerde.astro';
 import SponsorsBar from '@components/sections/SponsorsBar.astro';
 import SafeClubBadge from '@components/sections/SafeClubBadge.astro';
@@ -75,7 +76,12 @@ const jsonLd = [
     <NewsPreview />
   </div>
 
-  <!-- 9. Valores ambientales -->
+  <!-- 9. Iniciativa social destacada -->
+  <div class="reveal">
+    <LatestInitiative />
+  </div>
+
+  <!-- 10. Valores ambientales -->
   <div class="reveal">
     <TrochaVerde />
   </div>
