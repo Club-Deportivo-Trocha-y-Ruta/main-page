@@ -277,23 +277,41 @@ Secrets de deploy (en cada environment): `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASS
 
 ## Agentes del Proyecto
 
-10 agentes en `.claude/agents/` para trabajo especializado:
+10 agentes en `.claude/agents/` para trabajo especializado. Modelos pinneados a IDs específicos para reproducibilidad.
 
-### Core (siempre disponibles)
-- **`project-pm`**: Coordinación, task management, integración
-- **`astro-dev`**: Componentes, layouts, páginas, React Islands, responsive
-- **`content-manager`**: Content Collections, Sveltia CMS, SEO técnico, JSON-LD
-- **`qa-auditor`**: Lighthouse audit, WCAG 2.1 AA, Core Web Vitals, responsive testing
+| Agente | Modelo | Rol |
+|--------|--------|-----|
+| `project-pm` | `claude-opus-4-7` | Coordinación, task management, integración |
+| `astro-dev` | `claude-sonnet-4-6` | Componentes, layouts, páginas, React Islands, responsive |
+| `content-manager` | `claude-sonnet-4-6` | Content Collections, Sveltia CMS, SEO técnico, JSON-LD |
+| `performance-engineer` | `claude-sonnet-4-6` | Bundle size, LCP/INP/CLS, análisis de cuellos de botella, presupuesto de performance |
+| `seo-specialist` | `claude-sonnet-4-6` | Estrategia keywords, análisis competitivo, roadmap SEO trimestral, rich snippets |
+| `content-marketer` | `claude-sonnet-4-6` | Copies web, redes sociales, email a familias, calendario editorial, comunicación de eventos |
+| `qa-auditor` | `claude-haiku-4-5-20251001` | Lighthouse audit, WCAG 2.1 AA, Core Web Vitals, responsive testing |
+| `seo-auditor` | `claude-haiku-4-5-20251001` | Validación técnica JSON-LD, meta tags, Open Graph, sitemap, SEO local |
+| `accessibility-tester` | `claude-haiku-4-5-20251001` | WCAG 2.1/3.0 profundo, lectores de pantalla, ARIA, accesibilidad cognitiva y móvil |
+| `image-optimizer` | `claude-haiku-4-5-20251001` | WebP/AVIF, srcset responsive, lazy loading, Cloudinary |
 
-### Calidad y Performance
-- **`accessibility-tester`**: WCAG 2.1/3.0 profundo, lectores de pantalla, ARIA, accesibilidad cognitiva y móvil
-- **`performance-engineer`**: Bundle size, LCP/INP/CLS, análisis de cuellos de botella, presupuesto de performance
-- **`image-optimizer`**: WebP/AVIF, srcset responsive, lazy loading, Cloudinary
+**Criterio de asignación**:
+- **Opus 4.7** — orquestación, decisiones arquitectónicas, delegación (project-pm)
+- **Sonnet 4.6** — implementación de features, refactor, redacción creativa, estrategia
+- **Haiku 4.5** — auditorías read-only, validaciones deterministas, tareas mecánicas
 
-### SEO y Contenido
-- **`seo-auditor`**: Validación técnica JSON-LD, meta tags, Open Graph, sitemap, SEO local
-- **`seo-specialist`**: Estrategia keywords, análisis competitivo, roadmap SEO trimestral, rich snippets
-- **`content-marketer`**: Copies web, redes sociales, email a familias, calendario editorial, comunicación de eventos
+## Claude Code — Workflow
+
+El proyecto se desarrolla con asistencia de Claude Code (Opus 4.7 / Sonnet 4.6 / Haiku 4.5).
+
+### Permisos y settings
+- `.claude/settings.json` define el allowlist de comandos del proyecto (`npm run *`, `git status/diff/log`, `astro check/build`) para reducir prompts de permiso.
+- Operaciones destructivas (`rm -rf`, `git push --force`, `git reset --hard`) están en la `deny` list.
+
+### Skills disponibles
+23 skills en `.claude/skills/` cubren auditorías SEO (técnico, contenido, schema, hreflang, GEO, sitemap, imágenes, programmatic, competitor pages, local, page), accesibilidad (WCAG 2.2), performance (Core Web Vitals, INP), best-practices, frontend-design, Astro framework, web-design-guidelines, web-quality-audit y playwright-cli. Invocables como `/skill-name` desde el chat.
+
+### Comandos custom
+- `/brainstorm` — descubrimiento de requisitos vía diálogo socrático y multi-persona
+- `/research` — investigación web profunda con síntesis de evidencia
+- `/workflow` — generación de planes de implementación desde PRDs con dependency mapping
 
 ## Restricciones
 
@@ -311,3 +329,4 @@ Secrets de deploy (en cada environment): `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASS
 - Programa "Recreación" falta en `src/content/programs/`
 - Directorio `src/types/` vacío (tipos definidos inline en componentes)
 - Analytics: Cloudflare Web Analytics activo, token via `PUBLIC_CF_ANALYTICS_TOKEN` (env var por environment)
+- Configuración Claude actualizada a Opus 4.7 con IDs pinneados (2026-04-30)

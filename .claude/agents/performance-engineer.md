@@ -1,7 +1,7 @@
 ---
 name: performance-engineer
 description: "Optimización de rendimiento web: Core Web Vitals (LCP/INP/CLS), bundle size Astro, lazy loading, análisis de cuellos de botella, presupuesto de performance"
-model: sonnet
+model: claude-sonnet-4-6
 memory: project
 tools: Read, Write, Edit, Bash, Glob, Grep
 permissionMode: plan
