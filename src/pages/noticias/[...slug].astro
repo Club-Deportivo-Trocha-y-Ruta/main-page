@@ -57,7 +57,7 @@ const jsonLd = generateArticleJsonLd({
     <Breadcrumb items={[{ label: 'Noticias', href: '/noticias' }, { label: title }]} />
 
     {image && imageLayout === 'contain' ? (
-      <div class="mb-8 overflow-hidden rounded-xl bg-surface-muted flex justify-center">
+      <div class="mb-8 overflow-hidden rounded-xl flex justify-center">
         <img src={image} alt={entry.data.imageAlt ?? title} class="max-h-[32rem] md:max-h-[40rem] w-auto object-contain" loading="eager" decoding="async" fetchpriority="high" />
       </div>
     ) : image ? (
@@ -87,6 +87,7 @@ const jsonLd = generateArticleJsonLd({
         <NewsGallery
           imageFolder={galleryFolder}
           imageFiles={galleryImages}
+          altFallback={title}
           albumSlug={entry.data.relatedGallery}
         />
       </div>

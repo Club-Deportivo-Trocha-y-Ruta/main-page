@@ -45,8 +45,10 @@ renderedTrees.forEach(({ tree, Content }) => {
   treesByDate.get(dateKey)!.push({ tree, Content });
 });
 
-// Ordenar jornadas cronológicamente
-const sortedDates = [...treesByDate.keys()].sort();
+// Ordenar jornadas cronológicamente (excluyendo temporalmente las fotos del Día de la Tierra para no saturar la galería)
+const sortedDates = [...treesByDate.keys()]
+  .sort()
+  .filter(date => date !== '2026-04-22');
 const journeyLabels: Record<number, string> = {
   0: 'Primera siembra',
   1: 'Segunda siembra',
@@ -91,6 +93,7 @@ const initiativeJsonLd = generateSocialInitiativeJsonLd({
   date: new Date('2026-03-15'),
   description: `Programa de reforestación del Club Trocha y Ruta: ${totalTrees} árboles nativos sembrados con llantas de bicicleta recicladas en la Pista Carlos Castro, Yumbo, Valle del Cauca.`,
   location: 'Pista de Ciclomontañismo Carlos Castro, Yumbo, Valle del Cauca',
+  image: '/images/trocha-verde/dia-tierra-2026/afiche.jpg',
   url: '/trocha-verde',
   type: 'ambiental',
 });
@@ -128,6 +131,7 @@ const processSteps = [
 <PageLayout
   title="Trocha Verde"
   description={`Programa de reforestación del Club Trocha y Ruta: ${totalTrees} árboles nativos sembrados con llantas de bicicleta recicladas en Yumbo, Valle del Cauca`}
+  ogImage="/images/trocha-verde/dia-tierra-2026/afiche.jpg"
   breadcrumbs={breadcrumbs}
   jsonLd={jsonLd}
 >
@@ -269,7 +273,7 @@ const processSteps = [
                         </p>
                       )}
                       <details class="mt-3 group">
-                        <summary class="cursor-pointer text-xs font-medium text-emerald-600 hover:text-emerald-700">
+                        <summary class="cursor-pointer rounded text-xs font-medium text-emerald-600 hover:text-emerald-700 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 focus-visible:underline">
                           Conoce su historia
                         </summary>
                         <div class="mt-2 text-sm leading-relaxed text-text-secondary prose prose-sm max-w-none">

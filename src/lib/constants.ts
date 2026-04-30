@@ -10,9 +10,9 @@ export const SITE = {
 
 export const CONTACT = {
   email: 'clubtrochayruta@hotmail.com',
-  phone: '320 856 1053',
-  phoneLink: 'tel:+573208561053',
-  whatsapp: 'https://wa.me/573208561053',
+  phone: '314 850 5372',
+  phoneLink: 'tel:+573148505372',
+  whatsapp: 'https://wa.me/573148505372',
   address: 'CL 8 Norte 2 N° 55, Yumbo, Valle del Cauca',
   mapUrl: 'https://maps.app.goo.gl/PQx1LSLCpunnYCtm6',
   mapEmbed:

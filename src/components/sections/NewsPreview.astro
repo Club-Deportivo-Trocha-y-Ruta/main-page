@@ -27,52 +27,35 @@ const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = 
   <div class="mx-auto max-w-6xl px-4">
     <SectionTitle title="Últimas Noticias" />
 
-    {featuredNews && (
-      <div class="grid gap-8 md:grid-cols-2">
-        {/* Featured news - left column */}
-        <Card href={`/noticias/${featuredNews.id}`}>
-          {featuredNews.data.image ? (
-            <img src={featuredNews.data.image} alt={featuredNews.data.imageAlt ?? featuredNews.data.title} class="aspect-video w-full object-cover rounded-t-xl" loading="lazy" decoding="async" />
-          ) : (
-            <div class="aspect-video rounded-t-xl bg-surface-muted"></div>
-          )}
-          <div class="p-6">
-            <Badge variant={badgeVariant[featuredNews.data.category] ?? 'neutral'}>
-              {featuredNews.data.category}
-            </Badge>
-            <h3 class="mt-3 font-display text-xl font-bold text-text-primary">
-              {featuredNews.data.title}
-            </h3>
-            <p class="mt-2 text-text-secondary">{featuredNews.data.excerpt}</p>
-            <time class="mt-3 block text-sm text-text-secondary" datetime={featuredNews.data.date.toISOString()}>
-              {formatDate(featuredNews.data.date)}
-            </time>
-          </div>
-        </Card>
-
-        {/* Other news - right column */}
-        <div class="flex flex-col gap-8">
-          {otherNews.map((news: NewsEntry) => (
-            <Card href={`/noticias/${news.id}`}>
-              {news.data.image ? (
-                <img src={news.data.image} alt={news.data.imageAlt ?? news.data.title} class="aspect-video w-full object-cover rounded-t-xl" loading="lazy" decoding="async" />
-              ) : (
-                <div class="aspect-video rounded-t-xl bg-surface-muted"></div>
-              )}
-              <div class="p-5">
+    {allNews.length > 0 && (
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {allNews.map((news: NewsEntry) => (
+          <Card href={`/noticias/${news.id}`} class="flex flex-col h-full">
+            {news.data.image ? (
+              <img src={news.data.image} alt={news.data.imageAlt ?? news.data.title} class="aspect-video w-full object-cover rounded-t-xl" loading="lazy" decoding="async" />
+            ) : (
+              <div class="aspect-video rounded-t-xl bg-surface-muted"></div>
+            )}
+            <div class="flex flex-col flex-grow p-6">
+              <div class="mb-3">
                 <Badge variant={badgeVariant[news.data.category] ?? 'neutral'}>
                   {news.data.category}
                 </Badge>
-                <h3 class="mt-2 font-display text-lg font-bold text-text-primary">
-                  {news.data.title}
-                </h3>
-                <time class="mt-2 block text-sm text-text-secondary" datetime={news.data.date.toISOString()}>
+              </div>
+              <h3 class="font-display text-xl font-bold text-text-primary">
+                {news.data.title}
+              </h3>
+              <p class="mt-3 text-text-secondary line-clamp-3 text-sm">
+                {news.data.excerpt}
+              </p>
+              <div class="mt-auto pt-4">
+                <time class="block text-xs font-medium text-text-secondary" datetime={news.data.date.toISOString()}>
                   {formatDate(news.data.date)}
                 </time>
               </div>
-            </Card>
-          ))}
-        </div>
+            </div>
+          </Card>
+        ))}
       </div>
     )}
 
