@@ -6,6 +6,10 @@ interface Props {
   imageFolder: string;
   /** Lista de nombres de archivo */
   imageFiles: string[];
+  /** Alt texts opcionales por imagen, mismo orden que imageFiles */
+  imageAlts?: string[];
+  /** Alt fallback cuando no hay imageAlts. Se usa con índice (1-based). */
+  altFallback?: string;
   /** Máximo de fotos visibles en el grid antes de "ver más" */
   maxVisible?: number;
   /** Slug del album en /galeria/ para enlazar */
@@ -17,15 +21,23 @@ interface Props {
 const {
   imageFolder,
   imageFiles,
+  imageAlts = [],
+  altFallback,
   maxVisible = 9,
   albumSlug,
   title = 'Fotos del evento',
 } = Astro.props;
 
-const allImages = imageFiles.map((file) => ({
-  src: `${imageFolder}/${file}`,
-  alt: file.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
-}));
+const allImages = imageFiles.map((file, index) => {
+  const customAlt = imageAlts[index];
+  const fallback = altFallback
+    ? `${altFallback} — foto ${index + 1} de ${imageFiles.length}`
+    : file.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+  return {
+    src: `${imageFolder}/${file}`,
+    alt: customAlt || fallback,
+  };
+});
 
 const visibleImages = allImages.slice(0, maxVisible);
 const hasMore = allImages.length > maxVisible;

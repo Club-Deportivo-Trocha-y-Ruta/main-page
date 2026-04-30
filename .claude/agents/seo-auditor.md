@@ -64,7 +64,7 @@ El sitio genera structured data en `src/lib/seo.ts`:
 
 ### SEO Local
 - [ ] Dirección física: CL 8 Norte 2 N° 55, Yumbo
-- [ ] Teléfono: 320 856 1053
+- [ ] Teléfono: 314 850 5372
 - [ ] Email: clubtrochayruta@hotmail.com
 - [ ] Horarios de entrenamiento
 - [ ] Área de servicio: Yumbo, Valle del Cauca, Colombia

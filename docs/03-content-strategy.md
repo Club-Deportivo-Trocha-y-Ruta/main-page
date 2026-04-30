@@ -626,7 +626,7 @@ Tags que pueden usarse en noticias, eventos y galería:
 | Testimonios | `/testimonios` | opiniones club ciclismo yumbo | Testimonios - Club Trocha y Ruta | Testimonios de familias y corredores del Club Trocha y Ruta. Descubre cómo el ciclismo transforma vidas. | `WebPage`, `Review` |
 | Patrocinadores | `/patrocinadores` | patrocinadores club ciclismo | Patrocinadores y Aliados - Club Trocha y Ruta | Empresas y aliados que apoyan el ciclomontañismo juvenil en Yumbo a través del Club Trocha y Ruta. | `WebPage` |
 | Transparencia | `/transparencia` | - | Transparencia e Información Pública - Club Trocha y Ruta | Documentos públicos, certificados DIAN y reconocimientos del Club Deportivo Trocha y Ruta. | `WebPage`, `GovernmentService` |
-| Contacto | `/contacto` | contacto club ciclismo yumbo | Contacto - Club Deportivo Trocha y Ruta | Contáctanos: CL 8 Norte 2 N° 55, Yumbo. Tel: 320 856 1053. Escríbenos y conoce el club. | `ContactPage`, `LocalBusiness` |
+| Contacto | `/contacto` | contacto club ciclismo yumbo | Contacto - Club Deportivo Trocha y Ruta | Contáctanos: CL 8 Norte 2 N° 55, Yumbo. Tel: 314 850 5372. Escríbenos y conoce el club. | `ContactPage`, `LocalBusiness` |
 
 ### 4.2 Estrategia de Internal Linking
 
@@ -683,7 +683,7 @@ Implementar en `src/lib/seo.ts`:
     "addressRegion": "Valle del Cauca",
     "addressCountry": "CO"
   },
-  "telephone": "+573208561053",
+  "telephone": "+573148505372",
   "email": "clubtrochayruta@hotmail.com",
   "sameAs": [
     "https://www.facebook.com/ClubDeportivoTrochayRuta",
