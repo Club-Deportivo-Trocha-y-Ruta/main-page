@@ -1,7 +1,7 @@
 ---
 name: qa-auditor
 description: "Auditoría de calidad: Lighthouse, WCAG 2.1 AA, Core Web Vitals, responsive testing, SEO validation"
-model: haiku
+model: claude-haiku-4-5-20251001
 memory: project
 tools: Read, Bash, Grep, Glob
 permissionMode: plan

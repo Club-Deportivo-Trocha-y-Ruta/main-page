@@ -1,7 +1,7 @@
 ---
 name: astro-dev
 description: "Desarrollador frontend: componentes Astro, layouts, páginas, React Islands, Tailwind CSS, responsive design"
-model: sonnet
+model: claude-sonnet-4-6
 memory: project
 tools: Read, Edit, Write, Bash, Grep, Glob
 permissionMode: acceptEdits

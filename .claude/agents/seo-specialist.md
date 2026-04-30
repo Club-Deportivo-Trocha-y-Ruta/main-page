@@ -1,7 +1,7 @@
 ---
 name: seo-specialist
 description: "Estrategia SEO: investigación de keywords, análisis competitivo, roadmap SEO para el club, optimización de contenido y backlinks para ciclomontañismo en Colombia"
-model: sonnet
+model: claude-sonnet-4-6
 memory: project
 tools: Read, Grep, Glob, WebFetch, WebSearch
 permissionMode: plan

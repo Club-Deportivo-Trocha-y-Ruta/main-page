@@ -1,7 +1,7 @@
 ---
 name: content-manager
 description: "Content Collections, Sveltia CMS, SEO técnico, JSON-LD, contenido markdown y datos del sitio"
-model: sonnet
+model: claude-sonnet-4-6
 memory: project
 tools: Read, Edit, Write, Bash, Grep, Glob
 permissionMode: acceptEdits

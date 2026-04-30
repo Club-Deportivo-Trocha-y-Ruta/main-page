@@ -1,7 +1,7 @@
 ---
 name: seo-auditor
 description: "Auditoría SEO técnico: JSON-LD structured data, meta tags, Open Graph, canonical URLs, sitemap, robots.txt, rich snippets"
-model: haiku
+model: claude-haiku-4-5-20251001
 memory: project
 tools: Read, Bash, Grep, Glob, WebFetch
 permissionMode: plan
@@ -60,7 +60,7 @@ El sitio genera structured data en `src/lib/seo.ts`:
 - [ ] No hay páginas con `noindex` accidentalmente
 - [ ] URLs limpias (kebab-case, sin parámetros innecesarios)
 - [ ] Redirects 301 para URLs de WordPress antiguo
-- [ ] Tiempo de respuesta < 200ms (Cloudflare Pages)
+- [ ] Tiempo de respuesta < 200ms (Hostinger via FTPS)
 
 ### SEO Local
 - [ ] Dirección física: CL 8 Norte 2 N° 55, Yumbo

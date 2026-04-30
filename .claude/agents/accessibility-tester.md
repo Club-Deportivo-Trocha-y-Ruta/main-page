@@ -1,7 +1,7 @@
 ---
 name: accessibility-tester
 description: "Pruebas profundas de accesibilidad: WCAG 2.1/3.0 AA, lectores de pantalla (NVDA/VoiceOver), navegación por teclado, ARIA, accesibilidad cognitiva y móvil"
-model: haiku
+model: claude-haiku-4-5-20251001
 memory: project
 tools: Read, Grep, Glob, Bash
 permissionMode: plan
