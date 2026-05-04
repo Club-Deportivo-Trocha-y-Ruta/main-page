@@ -105,7 +105,7 @@ Los **23 árboles** sembrados el 22 de abril fueron:
 | Tipo | Especies |
 |------|----------|
 | **Frutales** | 2 Mango Tommy · 2 Mango Manzana · 1 Pomarrosa · 1 Aguacate |
-| **Nativos / maderables** | 1 Guayacán Amarillo · 1 Guayacán Azul · 1 Abano · 1 Ébano |
+| **Nativos / maderables** | 1 Guayacán Amarillo · 1 Guayacán Azul · 1 Habano · 1 Ébano |
 | **Ornamentales** | 1 Palma Bismarckia · 1 Millonaria · 1 Ramo de Novia · 10 Ixoras |
 
 Todos los árboles fueron sembrados dentro de **llantas de bicicleta recicladas y pintadas a mano** por los niños del club, siguiendo la firma visual de Trocha Verde.
