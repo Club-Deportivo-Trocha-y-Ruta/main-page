@@ -3,9 +3,9 @@ title: "Escuela de Iniciación"
 subtitle: "Los primeros pedalazos hacia la aventura"
 icon: "ph:bicycle"
 image: "/images/placeholder-program.jpg"
-ageRange: "4 a 8 años"
-ageMin: 4
-ageMax: 8
+ageRange: "3 a 5 años"
+ageMin: 3
+ageMax: 5
 targetLevel: "iniciación"
 schedule: "Sábados 7:00 - 9:00 AM"
 duration: "2 horas"
@@ -36,7 +36,7 @@ order: 1
 draft: false
 ---
 
-La Escuela de Iniciación es la puerta de entrada al mundo del ciclomontañismo para los más pequeños. Diseñada para niños entre 4 y 8 años, este programa se enfoca en desarrollar las habilidades fundamentales sobre la bicicleta en un ambiente seguro, divertido y lleno de naturaleza.
+La Escuela de Iniciación es la puerta de entrada al mundo del ciclomontañismo para los más pequeños. Diseñada para niños entre 3 y 5 años, este programa se enfoca en desarrollar las habilidades fundamentales sobre la bicicleta en un ambiente seguro, divertido y lleno de naturaleza.
 
 ## Metodología
 

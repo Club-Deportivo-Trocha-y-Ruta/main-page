@@ -3,9 +3,9 @@ title: "Formación Juvenil"
 subtitle: "Construyendo los campeones del mañana"
 icon: "ph:mountains"
 image: "/images/placeholder-program.jpg"
-ageRange: "9 a 15 años"
-ageMin: 9
-ageMax: 15
+ageRange: "6 a 11 años"
+ageMin: 6
+ageMax: 11
 targetLevel: "formación"
 schedule: "Sábados y domingos 6:30 - 9:30 AM"
 duration: "3 horas"
@@ -41,7 +41,7 @@ order: 2
 draft: false
 ---
 
-El programa de Formación Juvenil está diseñado para jóvenes entre 9 y 15 años que ya dominan las habilidades básicas sobre la bicicleta y quieren dar el siguiente paso. Aquí se construyen las bases técnicas, físicas y mentales para la competencia.
+El programa de Formación Juvenil está diseñado para jóvenes entre 6 y 11 años que ya dominan las habilidades básicas sobre la bicicleta y quieren dar el siguiente paso. Aquí se construyen las bases técnicas, físicas y mentales para la competencia.
 
 ## Estructura del entrenamiento
 

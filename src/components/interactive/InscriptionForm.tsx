@@ -420,7 +420,7 @@ export default function InscriptionForm({ programs }: Props) {
                   className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                 >
                   <option value="">Seleccionar edad</option>
-                  {Array.from({ length: 47 }, (_, i) => i + 4).map((age) => (
+                  {Array.from({ length: 48 }, (_, i) => i + 3).map((age) => (
                     <option key={age} value={String(age)}>
                       {age} años
                     </option>

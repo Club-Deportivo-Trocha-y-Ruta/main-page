@@ -1,7 +1,7 @@
 ---
 name: image-optimizer
 description: "Optimización de imágenes: conversión WebP/AVIF, responsive srcset, lazy loading, Cloudinary, análisis de peso y dimensiones"
-model: haiku
+model: claude-haiku-4-5-20251001
 memory: project
 tools: Read, Bash, Grep, Glob
 permissionMode: plan

@@ -3,13 +3,13 @@ title: "Alto Rendimiento"
 subtitle: "Compitiendo al más alto nivel"
 icon: "ph:trophy"
 image: "/images/placeholder-program.jpg"
-ageRange: "16 años en adelante"
-ageMin: 16
+ageRange: "12 años en adelante"
+ageMin: 12
 ageMax: 99
 targetLevel: "competición"
-schedule: "Martes, jueves 5:30 AM + sábados y domingos 6:00 AM"
-duration: "2-4 horas según sesión"
-location: "Variado según plan de entrenamiento"
+schedule: "Mar/Jue 4-6 PM (salida) · Mié 4-6 PM (gymkanas en pista) · Sáb 7-9 AM (salida) · Dom 7-10 AM (salida, +12 años)"
+duration: "2-3 horas según sesión"
+location: "Variado: pista Yumbo (miércoles) y salidas por fuera (resto de sesiones)"
 maxStudents: 10
 requirements:
   - "Bicicleta de montaña de competición"
@@ -29,12 +29,12 @@ equipmentNeeded:
   - "Monitor de frecuencia cardíaca"
   - "Kit completo de herramientas y repuestos"
 objectives:
-  - "Alcanzar el máximo rendimiento deportivo individual"
-  - "Competir a nivel nacional e internacional"
-  - "Desarrollar planificación deportiva personalizada"
-  - "Dominar aspectos tácticos de competencia"
-  - "Representar al club y al departamento en eventos de élite"
-methodology: "Planificación individualizada con periodización por macrociclos. Entrenamiento basado en zonas de potencia y frecuencia cardíaca. Análisis de datos con software especializado. Preparación mental y táctica para competencias."
+  - "Alcanzar el máximo rendimiento deportivo en la categoría correspondiente"
+  - "Competir a nivel departamental y nacional"
+  - "Desarrollar planificación deportiva con salidas grupales e intensidad individualizada"
+  - "Dominar aspectos tácticos de competencia en ruta y montaña"
+  - "Representar al club y al departamento en eventos de su respectiva categoría"
+methodology: "Salidas grupales con intensidad individualizada mediante ciclocomputador y monitor de frecuencia cardíaca. Periodización por macrociclos adaptada a cada corredor. Sesiones de gimnasia en pista (miércoles), salidas de fondo y velocidad entre semana, y rodadas de mayor distancia los fines de semana. El domingo es salida exclusiva para mayores de 12 años."
 enrollmentOpen: true
 monthlyFee: "Consultar"
 active: true
@@ -42,15 +42,21 @@ order: 3
 draft: false
 ---
 
-El programa de Alto Rendimiento es el nivel más avanzado de Trocha y Ruta, orientado a corredores de 16 años en adelante que buscan competir al más alto nivel en ciclomontañismo. Este programa combina entrenamiento de élite con acompañamiento integral.
+El programa de Alto Rendimiento es el nivel más avanzado de Trocha y Ruta, orientado a corredores de 12 años en adelante que buscan competir a nivel departamental y nacional. Este programa combina entrenamiento estructurado con acompañamiento integral, preparando a cada deportista para rendir al máximo en su categoría.
 
 ## Plan de entrenamiento
 
-Cada corredor cuenta con un plan de entrenamiento personalizado basado en evaluaciones físicas periódicas. Las sesiones entre semana se enfocan en trabajo de intensidad y fuerza, mientras que los fines de semana se dedican a rodadas largas y simulaciones de competencia.
+Las sesiones son grupales pero con intensidad individualizada: cada corredor porta ciclocomputador y monitor de frecuencia cardíaca para trabajar en sus propias zonas de esfuerzo. El programa tiene cinco sesiones semanales distribuidas así:
+
+- **Martes 4-6 PM** — Salida por fuera (velocidad, técnica o intervalos)
+- **Miércoles 4-6 PM** — gymkanas en pista (habilidades, coordinación y fuerza funcional)
+- **Jueves 4-6 PM** — Salida por fuera más trabajo de fortalecimiento
+- **Sábado 7-9 AM** — Salida por fuera grupal
+- **Domingo 7-10 AM** — Salida por fuera de mayor distancia (exclusivo mayores de 12 años)
 
 ## Competencias
 
-Los integrantes de este programa representan al club en las principales competencias del calendario nacional de la Federación Colombiana de Ciclismo. El plan de competencias se diseña estratégicamente para alcanzar los picos de forma en los eventos más importantes del año.
+Los integrantes representan al club y al departamento en las principales competencias del calendario departamental y nacional de la Federación Colombiana de Ciclismo. Cada corredor compite en su categoría correspondiente y el plan de competencias se diseña para alcanzar los picos de forma en los eventos más importantes del año.
 
 ## Soporte técnico
 

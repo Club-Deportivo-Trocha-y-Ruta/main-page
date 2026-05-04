@@ -1,7 +1,7 @@
 ---
 name: content-marketer
 description: "Estrategia editorial y marketing de contenidos: copies web, posts redes sociales, email a familias, calendario editorial, comunicación de eventos y patrocinadores"
-model: haiku
+model: claude-sonnet-4-6
 memory: project
 tools: Read, Write, Edit, Glob, Grep, WebFetch, WebSearch
 permissionMode: acceptEdits
