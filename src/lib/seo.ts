@@ -112,10 +112,14 @@ function fullUrl(path: string): string {
 export function generateOrganizationJsonLd(): JsonLd {
   return {
     '@context': 'https://schema.org',
-    '@type': 'SportsOrganization',
+    '@type': ['SportsOrganization', 'SportsClub', 'EducationalOrganization'],
     '@id': `${SITE.url}/#organization`,
     name: SITE.name,
-    alternateName: SITE.shortName,
+    alternateName: [
+      SITE.shortName,
+      'Escuela de Ciclomontañismo Trocha y Ruta',
+      'Escuela de Ciclismo Yumbo',
+    ],
     url: SITE.url,
     logo: `${SITE.url}/images/logo.png`,
     description: SITE.description,
@@ -136,8 +140,31 @@ export function generateOrganizationJsonLd(): JsonLd {
       latitude: 3.5965919,
       longitude: -76.4855763,
     },
-    sport: 'Mountain Biking',
-    sameAs: [SOCIAL.instagram, SOCIAL.facebook, SOCIAL.youtube],
+    sport: ['Mountain Biking', 'Ciclomontañismo', 'Cycling'],
+    keywords: SITE.keywords.join(', '),
+    knowsAbout: [
+      'Ciclomontañismo',
+      'Mountain Biking',
+      'Iniciación deportiva infantil',
+      'Formación deportiva para niños',
+      'Clases de ciclismo',
+      'Escuela de bicicleta',
+      'XCO',
+      'XCM',
+      'Ciclismo juvenil',
+      'Deporte infantil',
+    ],
+    areaServed: SITE.areaServed.map((name) => ({
+      '@type': name === 'Colombia' ? 'Country' : name === 'Valle del Cauca' ? 'State' : 'City',
+      name,
+    })),
+    audience: {
+      '@type': 'PeopleAudience',
+      audienceType: 'Niños y jóvenes desde 4 años',
+      suggestedMinAge: 4,
+      suggestedMaxAge: 18,
+    },
+    sameAs: [SOCIAL.instagram, SOCIAL.facebook, SOCIAL.youtube, SOCIAL.strava].filter(Boolean),
     memberOf: {
       '@type': 'SportsOrganization',
       name: 'Federación Colombiana de Ciclismo',
@@ -504,7 +531,19 @@ export function generateSportsClubJsonLd(): JsonLd {
     },
     sameAs: [SOCIAL.instagram, SOCIAL.facebook, SOCIAL.youtube, SOCIAL.strava].filter(Boolean),
     slogan: SITE.tagline,
-    knowsAbout: ['Ciclomontañismo', 'Mountain Biking', 'Ciclismo juvenil', 'XCO', 'XCM'],
+    keywords: SITE.keywords.join(', '),
+    knowsAbout: [
+      'Ciclomontañismo',
+      'Mountain Biking',
+      'Iniciación deportiva infantil',
+      'Formación deportiva para niños',
+      'Clases de ciclismo',
+      'Escuela de bicicleta',
+      'Ciclismo juvenil',
+      'XCO',
+      'XCM',
+      'Deporte infantil Valle del Cauca',
+    ],
   };
 }
 
