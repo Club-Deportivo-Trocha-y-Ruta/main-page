@@ -71,7 +71,7 @@ Antes del 22 de abril, el equipo de **[Yumbo Limpio](https://www.servintegrales.
 
 <img src="/images/trocha-verde/dia-tierra-2026/donantes/logo-vivero-guacanda.jpg" alt="Logo Vivero Guacandá" class="h-32 object-contain my-4 rounded-full shadow-sm" />
 
-El **Sr. Néstor Cortez**, dueño del Vivero Guacandá, donó **9 árboles** de gran calidad: una Palma Bismarckia (palma azul), un Ébano, una Millonaria y 6 Ixoras de colores. Su aporte representó casi el 40% del total sembrado.
+El **Sr. Néstor Correa**, dueño del Vivero Guacandá, donó **9 árboles** de gran calidad: una Palma Bismarckia (palma azul), un Ébano, una Millonaria y 6 Ixoras de colores. Su aporte representó casi el 40% del total sembrado.
 
 ### Secretaría de Ambiente y Desarrollo Agropecuario de Yumbo
 
@@ -89,14 +89,11 @@ El **Sr. Servio Luis Reyes**, que tiene un vivero en la parte baja de la carrete
 
 ### Familias del club
 
-Familias y amigos del club donaron árboles a título personal: mangos, guayacanes, pomarrosa, ixoras, ébano y ramo de novia. Una donación colectiva que muestra cómo la red de personas cercanas al club multiplica el impacto.
+**Paula Santamaría y familia**, **Elcy** (mamá del deportista Ihsan) y el **Sr. Vladimir** donaron un Mango Tommy, otro Mango Tommy y una Pomarrosa, respectivamente, a título personal.
 
-- **Ana María Gonzales**
-- **Paula Santamaría**
-- **Isabel Cristina Poso**
-- **Marcelo Delgado**
-- **Vladimir Correa**
-- **Elcy Romero**
+### Amigos de Óscar Eduardo Ortiz
+
+Compañeros de trabajo de Óscar Eduardo Ortiz aportaron especies de buen tamaño: mangos, guayacanes, pomarrosa, ixoras, ébano y ramo de novia. Una donación colectiva que muestra cómo las redes personales de los miembros del club multiplican el impacto.
 
 ## Lo que se sembró
 
@@ -105,7 +102,7 @@ Los **23 árboles** sembrados el 22 de abril fueron:
 | Tipo | Especies |
 |------|----------|
 | **Frutales** | 2 Mango Tommy · 2 Mango Manzana · 1 Pomarrosa · 1 Aguacate |
-| **Nativos / maderables** | 1 Guayacán Amarillo · 1 Guayacán Azul · 1 Habano · 1 Ébano |
+| **Nativos / maderables** | 1 Guayacán Amarillo · 1 Guayacán Azul · 1 Abano · 1 Ébano |
 | **Ornamentales** | 1 Palma Bismarckia · 1 Millonaria · 1 Ramo de Novia · 10 Ixoras |
 
 Todos los árboles fueron sembrados dentro de **llantas de bicicleta recicladas y pintadas a mano** por los niños del club, siguiendo la firma visual de Trocha Verde.
@@ -148,4 +145,4 @@ Quien quiera sumarse a la próxima jornada de siembra puede consultar todos los 
 
 ---
 
-*Esta jornada fue posible gracias a Yumbo Limpio (Servintegrales), Vivero Guacandá, la Secretaría de Ambiente y Desarrollo Agropecuario de Yumbo, la JAC Comuna 4, el Vivero del Sr. Servio Luis Reyes y las familias del club.*
+*Esta jornada fue posible gracias a Yumbo Limpio (Servintegrales), Vivero Guacandá, la Secretaría de Ambiente y Desarrollo Agropecuario de Yumbo, la JAC Comuna 4, el Vivero del Sr. Servio Luis Reyes, las familias del club y los amigos de Óscar Eduardo Ortiz.*

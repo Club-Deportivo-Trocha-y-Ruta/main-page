@@ -5,13 +5,11 @@ plantedDate: 2026-04-22
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "frutal"
-image: "/images/trocha-verde/dia-tierra-2026/arboles/aguacate.jpg"
+image: "/images/trocha-verde/dia-tierra-2026/jornada/07.jpg"
 imageAlt: "Aguacate sembrado durante la Sembratón del Día de la Tierra 2026 en el Pump Track de Yumbo"
 status: "sembrado"
 donor: "Amigos de Óscar Eduardo Ortiz"
 notes: "Frutal emblemático de Colombia. Donado por los amigos de Óscar Eduardo Ortiz para sumar diversidad de frutos a la pista."
-lat: 3.598194
-lng: -76.485000
 featured: true
 draft: false
 order: 29

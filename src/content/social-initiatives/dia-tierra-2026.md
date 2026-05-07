@@ -66,7 +66,7 @@ Días antes del evento, **Yumbo Limpio (Servintegrales)** realizó la limpieza y
 Las 23 especies sembradas fueron:
 
 - **Frutales** (8): 2 Mango Tommy, 2 Mango Manzana, 1 Pomarrosa, 1 Aguacate, 1 Ramo de Novia (ornamental con flores), 1 Millonaria.
-- **Nativos y maderables** (4): 1 Guayacán Amarillo, 1 Guayacán Azul, 1 Habano, 1 Ébano.
+- **Nativos y maderables** (4): 1 Guayacán Amarillo, 1 Guayacán Azul, 1 Abano, 1 Ébano.
 - **Ornamentales** (11): 1 Palma Bismarckia (azul), 10 Ixoras de colores variados.
 
 ## Aliados y donadores
@@ -78,7 +78,7 @@ El éxito de la jornada fue posible gracias a una red diversa de aliados:
 - **Vivero del Sr. Servio Luis Reyes** (carretera abajo) — aportó abono y dejó comprometidas unas papayas para una próxima jornada de siembra.
 - **JAC Comuna 4** (en cabeza de la Sra. Aura María Elena, secretaria) — convocó a los residentes cercanos al corredor del Pump Track para que acompañaran y apadrinaran los árboles.
 - **Familias del club** — Paula Santamaría y familia, Elcy (mamá de Ihsan) y el Sr. Vladimir donaron árboles a título personal.
-- **Amigos de Óscar Eduardo Ortiz** — compañeros de trabajo aportaron especies de buen tamaño como mangos, guayacanes, ramo de novia, habano, aguacate e ixoras.
+- **Amigos de Óscar Eduardo Ortiz** — compañeros de trabajo aportaron especies de buen tamaño como mangos, guayacanes, ramo de novia, abano, aguacate e ixoras.
 
 ## La voz del club
 
