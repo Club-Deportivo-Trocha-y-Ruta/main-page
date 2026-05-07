@@ -1,7 +1,11 @@
 ---
+import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from '@layouts/BaseLayout.astro';
-import { SITE } from '@lib/constants';
-import { generateOrganizationJsonLd, generateWebSiteJsonLd } from '@lib/seo';
+import {
+  generateOrganizationJsonLd,
+  generateWebSiteJsonLd,
+  generateFAQPageJsonLd,
+} from '@lib/seo';
 
 import Hero from '@components/sections/Hero.astro';
 import StatsCounter from '@components/sections/StatsCounter.astro';
@@ -17,13 +21,32 @@ import SafeClubBadge from '@components/sections/SafeClubBadge.astro';
 import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 import WaveSeparator from '@components/common/WaveSeparator.astro';
 
+const featuredFaqCategories = new Set(['general', 'inscripciones']);
+const featuredFaqs = (await getCollection('faqs'))
+  .filter((faq: CollectionEntry<'faqs'>) => !faq.data.draft)
+  .filter((faq: CollectionEntry<'faqs'>) => featuredFaqCategories.has(faq.data.category))
+  .sort(
+    (a: CollectionEntry<'faqs'>, b: CollectionEntry<'faqs'>) =>
+      (a.data.order ?? 99) - (b.data.order ?? 99),
+  )
+  .slice(0, 8)
+  .map((faq: CollectionEntry<'faqs'>) => ({
+    question: faq.data.question,
+    answer: faq.data.answer,
+  }));
+
+const homeTitle = 'Escuela de Ciclomontañismo en Yumbo · Club Trocha y Ruta';
+const homeDescription =
+  'Escuela de ciclomontañismo y club deportivo para niños desde 4 años en Yumbo, Valle del Cauca. Clases de ciclismo, iniciación deportiva infantil y formación competitiva en MTB con 15 años de trayectoria.';
+
 const jsonLd = [
   generateOrganizationJsonLd(),
   generateWebSiteJsonLd(),
+  ...(featuredFaqs.length > 0 ? [generateFAQPageJsonLd(featuredFaqs)] : []),
 ];
 ---
 
-<BaseLayout title={SITE.name} description={SITE.description} jsonLd={jsonLd}>
+<BaseLayout title={homeTitle} description={homeDescription} jsonLd={jsonLd}>
   <!-- 1. Gancho emocional -->
   <Hero />
 
@@ -60,7 +83,7 @@ const jsonLd = [
         <InscriptionCTA
           variant="inline"
           heading="Primera clase de prueba gratis"
-          description="Formamos niños con valores a través del ciclomontañismo. Entrenadores certificados, ambiente seguro y divertido."
+          description="Escuela de Ciclomontañismo Trocha y Ruta · Yumbo, Valle del Cauca. Niños desde 4 años, entrenadores certificados, ambiente seguro y divertido."
         />
       </div>
     </section>

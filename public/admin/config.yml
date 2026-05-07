@@ -740,4 +740,53 @@ collections:
               - { label: "Horario", name: "hours", widget: "string" }
           - { label: "Año de fundación", name: "foundedYear", widget: "number" }
           - { label: "NIT", name: "nit", widget: "string", required: false }
+
+  # ----------------------------------------------------------
+  # TROCHA VERDE — ÁRBOLES
+  # ----------------------------------------------------------
+  - name: "trees"
+    label: "Árboles (Trocha Verde)"
+    label_singular: "Árbol"
+    folder: "src/content/trees"
+    create: true
+    slug: "{{year}}-{{month}}-{{fields.species}}"
+    fields:
+      - { label: "Especie (nombre común)", name: "species", widget: "string" }
+      - { label: "Nombre científico", name: "scientificName", widget: "string", required: false }
+      - { label: "Fecha de siembra", name: "plantedDate", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      - { label: "Ubicación", name: "location", widget: "string", default: "Pista de Ciclomontañismo Carlos Castro" }
+      - { label: "Tipo de protector", name: "protector", widget: "select", options: ["llanta-bicicleta", "llanta-moto", "piedras", "otro"], default: "llanta-bicicleta" }
+      - { label: "Color del protector", name: "protectorColor", widget: "string", required: false }
+      - { label: "Categoría", name: "category", widget: "select", options: ["frutal", "ornamental", "nativo", "maderable"], default: "nativo" }
+      - { label: "Foto del árbol", name: "image", widget: "image" }
+      - { label: "Alt de la foto", name: "imageAlt", widget: "string" }
+      - { label: "Estado", name: "status", widget: "select", options: ["sembrado", "creciendo", "floreciendo"], default: "sembrado" }
+      - { label: "Notas", name: "notes", widget: "string", required: false }
+      - { label: "Donante", name: "donor", widget: "string", required: false }
+      - { label: "Destacado", name: "featured", widget: "boolean", default: false }
+      - { label: "Borrador", name: "draft", widget: "boolean", default: false }
+      - { label: "Orden", name: "order", widget: "number", default: 0 }
+      - { label: "Contenido", name: "body", widget: "markdown", required: false }
+
+  # ----------------------------------------------------------
+  # TROCHA VERDE — CATÁLOGO DE ESPECIES
+  # ----------------------------------------------------------
+  - name: "species"
+    label: "Catálogo de Especies"
+    label_singular: "Especie"
+    folder: "src/content/species"
+    create: true
+    slug: "{{fields.commonName}}"
+    fields:
+      - { label: "Nombre común", name: "commonName", widget: "string" }
+      - { label: "Nombre científico", name: "scientificName", widget: "string", required: false }
+      - { label: "Categoría", name: "category", widget: "select", options: ["frutal", "ornamental", "nativo", "maderable"] }
+      - { label: "Descripción corta", name: "description", widget: "string" }
+      - { label: "¿Sabías que...?", name: "curiosity", widget: "string", required: false }
+      - { label: "Imagen principal", name: "heroImage", widget: "image" }
+      - { label: "Alt de la imagen", name: "heroImageAlt", widget: "string" }
+      - { label: "Origen geográfico", name: "origin", widget: "string", required: false }
+      - { label: "Usos", name: "uses", widget: "list", required: false }
+      - { label: "Borrador", name: "draft", widget: "boolean", default: false }
+      - { label: "Contenido", name: "body", widget: "markdown", required: false }
           - { label: "Google Maps embed URL", name: "mapEmbedUrl", widget: "string", required: false }

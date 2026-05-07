@@ -343,6 +343,22 @@ export const socialInitiativesSchema = z.object({
   seo: seoSchema,
 });
 
+export const speciesSchema = z.object({
+  commonName: z.string(),
+  scientificName: z.string().optional(),
+  category: z.enum(['frutal', 'ornamental', 'nativo', 'maderable']),
+  description: z.string(),
+  curiosity: z.string().optional(),
+  heroImage: z.string(),
+  heroImageAlt: z.string(),
+  origin: z.string().optional(),
+  uses: z.array(z.string()).optional(),
+  draft: z.boolean().default(false),
+  plural: z.string().optional(),
+  feminine: z.boolean().default(false),
+  seo: seoSchema,
+});
+
 export const treesSchema = z.object({
   species: z.string(),
   scientificName: z.string().optional(),
@@ -360,6 +376,10 @@ export const treesSchema = z.object({
   status: z.enum(['sembrado', 'creciendo', 'floreciendo']).default('sembrado'),
   notes: z.string().optional(),
   donor: z.string().optional(),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
+  co2EstimateKg: z.number().optional(),
+  heightEstimateM: z.number().optional(),
   featured: z.boolean().default(false),
   draft: z.boolean().default(false),
   order: z.number().default(0),

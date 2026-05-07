@@ -1,0 +1,189 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+import { Icon } from 'astro-icon/components';
+import { slugify, formatDate } from '@lib/utils';
+import { generateBreadcrumbJsonLd } from '@lib/seo';
+
+type Tree = CollectionEntry<'trees'>;
+type SpeciesEntry = CollectionEntry<'species'>;
+
+export async function getStaticPaths() {
+  const allSpecies = await getCollection('species', (s: SpeciesEntry) => !s.data.draft);
+  return allSpecies.map((sp: SpeciesEntry) => ({
+    params: { species: sp.id },
+    props: { sp },
+  }));
+}
+
+const { sp } = Astro.props as { sp: SpeciesEntry };
+const { Content } = await render(sp);
+
+// Árboles de esta especie (match por commonName slugificado)
+const allTrees = await getCollection('trees', (t: Tree) => !t.data.draft);
+const speciesTrees = allTrees
+  .filter((t: Tree) => slugify(t.data.species) === sp.id)
+  .sort((a: Tree, b: Tree) => a.data.order - b.data.order);
+
+const categoryLabels: Record<string, string> = {
+  frutal: 'Frutal',
+  ornamental: 'Ornamental',
+  nativo: 'Nativo',
+  maderable: 'Maderable',
+};
+const categoryColors: Record<string, { bg: string; text: string }> = {
+  frutal: { bg: 'bg-amber-100', text: 'text-amber-700' },
+  ornamental: { bg: 'bg-purple-100', text: 'text-purple-900' },
+  nativo: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
+  maderable: { bg: 'bg-orange-100', text: 'text-orange-700' },
+};
+const catColors = categoryColors[sp.data.category] || categoryColors.nativo;
+const articlePlural = sp.data.feminine ? 'Nuestras' : 'Nuestros';
+const pluralName = sp.data.plural ?? (sp.data.commonName + 's');
+
+const breadcrumbs = [
+  { label: 'Trocha Verde', href: '/trocha-verde' },
+  { label: sp.data.commonName },
+];
+const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+  { name: 'Inicio', url: '/' },
+  { name: 'Trocha Verde', url: '/trocha-verde' },
+  { name: sp.data.commonName, url: `/trocha-verde/${sp.id}` },
+]);
+---
+
+<PageLayout
+  title={`${sp.data.commonName} — Trocha Verde`}
+  description={sp.data.description}
+  ogImage={sp.data.heroImage}
+  breadcrumbs={breadcrumbs}
+  jsonLd={[breadcrumbJsonLd]}
+>
+  <!-- Hero especie -->
+  <div class="relative -mt-8 mb-12 overflow-hidden rounded-2xl">
+    <img
+      src={sp.data.heroImage}
+      alt={sp.data.heroImageAlt}
+      class="h-64 w-full object-cover sm:h-80"
+      loading="eager"
+      width="1200"
+      height="320"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/80 to-transparent" />
+    <div class="absolute bottom-0 left-0 p-6 sm:p-8">
+      <span class={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${catColors.bg} ${catColors.text}`}>
+        {categoryLabels[sp.data.category]}
+      </span>
+      <h2 class="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
+        {sp.data.commonName}
+      </h2>
+      {sp.data.scientificName && (
+        <p class="mt-1 text-lg italic text-emerald-200">{sp.data.scientificName}</p>
+      )}
+    </div>
+  </div>
+
+  <!-- Stats rápidos -->
+  <div class="mb-12 flex flex-wrap gap-4">
+    <div
+      class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4"
+      role="region"
+      aria-label={`${speciesTrees.length} ${speciesTrees.length === 1 ? 'árbol sembrado' : 'árboles sembrados'}`}
+    >
+      <Icon name="ph:tree-bold" class="h-6 w-6 text-emerald-600" aria-hidden="true" />
+      <div aria-hidden="true">
+        <p class="font-display text-2xl font-bold text-text-primary">{speciesTrees.length}</p>
+        <p class="text-sm text-text-secondary">{speciesTrees.length === 1 ? 'Árbol sembrado' : 'Árboles sembrados'}</p>
+      </div>
+    </div>
+    {sp.data.origin && (
+      <div
+        class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4"
+        role="region"
+        aria-label={`Origen: ${sp.data.origin}`}
+      >
+        <Icon name="ph:globe-hemisphere-west-bold" class="h-6 w-6 text-emerald-600" aria-hidden="true" />
+        <div>
+          <p class="font-display text-sm font-bold text-text-primary">Origen</p>
+          <p class="text-sm text-text-secondary">{sp.data.origin}</p>
+        </div>
+      </div>
+    )}
+    {sp.data.uses && sp.data.uses.length > 0 && (
+      <div
+        class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4"
+        role="region"
+        aria-label={`Usos: ${sp.data.uses.join(', ')}`}
+      >
+        <Icon name="ph:leaf-bold" class="h-6 w-6 text-emerald-600" aria-hidden="true" />
+        <div>
+          <p class="font-display text-sm font-bold text-text-primary">Usos</p>
+          <p class="text-sm text-text-secondary line-clamp-2">{sp.data.uses.join(', ')}</p>
+        </div>
+      </div>
+    )}
+  </div>
+
+  <!-- Descripción + curiosidad -->
+  <section class="mb-12 grid gap-8 md:grid-cols-2">
+    <div class="prose prose-emerald max-w-none">
+      <Content />
+    </div>
+    {sp.data.curiosity && (
+      <aside class="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
+        <div class="flex gap-3">
+          <Icon name="ph:lightbulb-bold" class="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
+          <div>
+            <p class="font-display font-bold text-emerald-800">¿Sabías que...?</p>
+            <p class="mt-1 text-sm leading-relaxed text-emerald-700">{sp.data.curiosity}</p>
+          </div>
+        </div>
+      </aside>
+    )}
+  </section>
+
+  <!-- Galería de árboles de esta especie -->
+  {speciesTrees.length > 0 && (
+    <section class="mb-12">
+      <SectionTitle
+        title={`${articlePlural} ${pluralName}`}
+        subtitle={`${speciesTrees.length} ${speciesTrees.length === 1 ? 'ejemplar' : 'ejemplares'} en la pista Carlos Castro`}
+      />
+      <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {speciesTrees.map((t: Tree) => (
+          <div class="overflow-hidden rounded-xl border border-emerald-100 bg-white">
+            <div class="aspect-square overflow-hidden bg-surface-muted">
+              <img
+                src={t.data.image}
+                alt={t.data.imageAlt}
+                class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                loading="lazy"
+                width="300"
+                height="300"
+              />
+            </div>
+            <div class="p-3">
+              <p class="text-xs text-text-secondary">{formatDate(t.data.plantedDate)}</p>
+              {t.data.donor && (
+                <p class="mt-0.5 text-xs text-text-secondary">Donado por {t.data.donor}</p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Volver -->
+  <div class="text-center">
+    <a
+      href="/trocha-verde#inventario-especies"
+      class="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-white px-5 py-3 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+    >
+      <Icon name="ph:arrow-left-bold" class="h-4 w-4" aria-hidden="true" />
+      Ver todas las especies
+    </a>
+  </div>
+</PageLayout>

@@ -1,0 +1,334 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+import Card from '@components/common/Card.astro';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
+import { generateOrganizationJsonLd, generateBreadcrumbJsonLd } from '@lib/seo';
+
+const orgJsonLd = generateOrganizationJsonLd();
+const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+  { name: 'Inicio', url: '/' },
+  { name: 'Iniciación Deportiva Infantil', url: '/iniciacion-deportiva-ninos' },
+]);
+---
+
+<PageLayout
+  title="Iniciación Deportiva Infantil · Ciclomontañismo desde los 4 años"
+  heading="Iniciación Deportiva Infantil en Ciclomontañismo"
+  description="Iniciación deportiva en ciclomontañismo para niños desde 4 años en Yumbo. Programa lúdico y seguro que desarrolla equilibrio, coordinación y amor por el deporte."
+  breadcrumbs={[{ label: 'Iniciación Deportiva Infantil' }]}
+  jsonLd={[orgJsonLd, breadcrumbJsonLd]}
+>
+
+  <!-- Introducción -->
+  <section class="mb-16">
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
+      <p>
+        La <strong class="text-text-primary">iniciación deportiva infantil</strong> es el proceso
+        mediante el cual un niño tiene su primer contacto estructurado con un deporte: aprende sus
+        fundamentos básicos, descubre si le gusta y construye las bases físicas y emocionales que
+        le permitirán avanzar a etapas más exigentes si así lo desea. En el Club Deportivo Trocha
+        y Ruta llevamos 15 años haciendo exactamente eso, pero en bicicleta de montaña, en los
+        senderos de <strong class="text-text-primary">Yumbo, Valle del Cauca</strong>.
+      </p>
+      <p>
+        Nuestro programa de iniciación deportiva recibe niños <strong class="text-text-primary">desde
+        los 4 años</strong>. No se necesita experiencia previa, no se necesita bicicleta de competencia
+        y no se necesita que el niño sea "deportivo". Lo único que se necesita es ganas de salir,
+        pedalear y descubrir que la montaña es el mejor patio de recreo del mundo.
+      </p>
+    </div>
+  </section>
+
+  <!-- Qué es iniciación deportiva -->
+  <section class="mb-16">
+    <SectionTitle title="¿Qué es la iniciación deportiva y por qué importa?" />
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
+      <p>
+        Según la literatura en ciencias del deporte, la iniciación deportiva correctamente guiada
+        entre los 4 y los 8 años es una de las inversiones más valiosas en el desarrollo integral
+        de un niño. No porque garantice futuros campeones —aunque a veces pase—, sino porque en
+        esa etapa el cuerpo y la mente son extraordinariamente receptivos para construir patrones
+        de movimiento, hábitos saludables y una relación positiva con el esfuerzo físico.
+      </p>
+      <p>
+        Una iniciación bien hecha desarrolla <strong class="text-text-primary">capacidades que
+        trascienden el deporte</strong>: tolerancia a la frustración, capacidad de concentración,
+        trabajo en equipo, respeto por las reglas y orgullo por el logro propio. Una iniciación
+        mal hecha —con presión excesiva, comparaciones negativas o metodologías inadecuadas para
+        la edad— puede generar el rechazo permanente al deporte.
+      </p>
+      <p>
+        En Trocha y Ruta sabemos la diferencia. Por eso nuestro enfoque es 100% lúdico y
+        pedagógico en la etapa de iniciación.
+      </p>
+    </div>
+  </section>
+
+  <!-- Beneficios del ciclismo en niños -->
+  <section class="mb-16">
+    <SectionTitle title="Beneficios del ciclomontañismo en la infancia" />
+    <div class="grid gap-6 sm:grid-cols-2">
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Desarrollo motriz</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Montar en bicicleta en terreno variado exige coordinación bilateral, equilibrio dinámico
+          y propiocepción. Los niños que practican ciclomontañismo desde pequeños desarrollan una
+          motricidad gruesa mucho más completa que con actividades en superficies planas.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Autoconfianza y autonomía</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Cada bajada superada, cada curva bien tomada y cada obstáculo sorteado le dice al niño:
+          "puedo". Esa acumulación de pequeños logros construye una autoestima sólida que se
+          proyecta en el colegio, en casa y en la vida social.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Beneficios cognitivos</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Rodar por sendero técnico exige atención sostenida, toma de decisiones rápida y
+          planificación visual del camino. Los niños que practican deportes de montaña mejoran
+          su capacidad de concentración y su velocidad de respuesta, habilidades clave para
+          el aprendizaje escolar.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Socialización y valores</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Las clases de ciclomontañismo son un espacio de encuentro. Los niños aprenden a esperar
+          su turno, a animar al compañero que va despacio y a pedir ayuda cuando la necesitan.
+          Esos aprendizajes sociales son tan importantes como los técnicos.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Contacto con la naturaleza</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          En un mundo donde los niños pasan cada vez más tiempo en interiores y frente a pantallas,
+          el ciclomontañismo ofrece algo invaluable: tiempo de calidad al aire libre, en contacto
+          con la tierra, los árboles y el esfuerzo físico real. Eso tiene efectos positivos
+          demostrados en el bienestar emocional.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Hábitos de vida saludable</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Un niño que aprende a disfrutar del deporte desde pequeño tiene muchas más probabilidades
+          de mantener hábitos activos en la adolescencia y la adultez. La iniciación deportiva
+          temprana es la mejor vacuna contra el sedentarismo.
+        </p>
+      </Card>
+    </div>
+  </section>
+
+  <!-- Cómo abordamos la iniciación -->
+  <section class="mb-16">
+    <SectionTitle title="Cómo trabajamos la iniciación en Trocha y Ruta" />
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
+      <p>
+        Nuestro programa de iniciación deportiva en ciclomontañismo tiene tres pilares que lo
+        diferencian:
+      </p>
+      <div class="space-y-4">
+        <div class="flex items-start gap-4">
+          <div class="shrink-0 mt-1 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <span class="text-primary font-bold text-sm">1</span>
+          </div>
+          <div>
+            <h3 class="font-semibold text-text-primary mb-1">100% lúdico en las primeras etapas</h3>
+            <p class="text-sm leading-relaxed">
+              No hay cronómetros, no hay clasificaciones, no hay presión por el resultado.
+              Cada ejercicio está disfrazado de juego: circuitos de slalom con conos de colores,
+              juegos de equilibrio estático, pequeñas competencias cooperativas donde todos ganan.
+              El niño aprende sin darse cuenta de que está aprendiendo.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="shrink-0 mt-1 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <span class="text-primary font-bold text-sm">2</span>
+          </div>
+          <div>
+            <h3 class="font-semibold text-text-primary mb-1">Progresión gradual y personalizada</h3>
+            <p class="text-sm leading-relaxed">
+              Cada niño avanza a su ritmo. Nuestros entrenadores identifican qué habilidades
+              están consolidadas y cuáles necesitan más trabajo, y ajustan el nivel de dificultad
+              de forma individual. Nunca se empuja a un niño a hacer algo para lo que aún no
+              está listo.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="shrink-0 mt-1 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <span class="text-primary font-bold text-sm">3</span>
+          </div>
+          <div>
+            <h3 class="font-semibold text-text-primary mb-1">Entorno seguro y supervisado</h3>
+            <p class="text-sm leading-relaxed">
+              Máximo 10 niños por entrenador. Uso obligatorio de casco, rodilleras y coderas.
+              Los circuitos de iniciación están diseñados para minimizar riesgos mientras se
+              trabaja la confianza. Los padres pueden observar las sesiones y están siempre
+              informados de los avances de su hijo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Edad mínima y señales de preparación -->
+  <section class="mb-16">
+    <SectionTitle title="Edad mínima: 4 años. ¿Cómo saber si tu hijo está listo?" />
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
+      <p>
+        Recibimos niños desde los 4 años, que es cuando la mayoría tiene la madurez motriz
+        suficiente para aprender a manejar el equilibrio en bicicleta de manera sistemática.
+        Sin embargo, cada niño es diferente. Algunas señales de que tu hijo puede estar listo:
+      </p>
+      <ul class="space-y-2 pl-4">
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent"></span>
+          <span>Puede correr y saltar sin dificultad</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent"></span>
+          <span>Puede seguir instrucciones sencillas de dos pasos</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent"></span>
+          <span>Muestra interés por la bicicleta, aunque sea la de sus hermanos o primos</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent"></span>
+          <span>Tolera la frustración el tiempo suficiente para intentar algo varias veces</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent"></span>
+          <span>Le gusta jugar con otros niños y puede compartir espacio en grupo</span>
+        </li>
+      </ul>
+      <p>
+        Si tienes dudas sobre si tu hijo está listo, la mejor manera de saberlo es traerlo a
+        la <strong class="text-text-primary">clase de prueba gratuita</strong>. Nuestros
+        entrenadores sabrán leer su nivel en los primeros minutos y te darán una orientación
+        honesta.
+      </p>
+    </div>
+  </section>
+
+  <!-- Equipamiento básico -->
+  <section class="mb-16">
+    <SectionTitle title="Equipamiento básico para empezar" />
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
+      <p>
+        Para la etapa de iniciación deportiva no se necesita equipamiento costoso. Aquí está
+        lo esencial para el primer día:
+      </p>
+      <div class="rounded-xl border border-surface-muted p-5 space-y-3">
+        <div class="flex items-start gap-3">
+          <span class="text-primary font-bold shrink-0">1.</span>
+          <p class="text-sm"><strong class="text-text-primary">Bicicleta acorde a su estatura.</strong> Para niños de 4 a 5 años recomendamos bicicletas de equilibrio (sin pedales) o bicicletas con ruedines. A partir de los 5-6 años, una bicicleta de montaña pequeña (rueda 16" o 20") es lo ideal.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-primary font-bold shrink-0">2.</span>
+          <p class="text-sm"><strong class="text-text-primary">Casco homologado y bien ajustado.</strong> Es el elemento de seguridad más importante. El casco debe quedar nivelado, dos dedos sobre las cejas, sin moverse cuando el niño mueve la cabeza.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-primary font-bold shrink-0">3.</span>
+          <p class="text-sm"><strong class="text-text-primary">Rodilleras y coderas.</strong> Imprescindibles en la etapa de iniciación. Los niños se caen —es parte del proceso— y deben caerse bien protegidos para que la caída no genere miedo.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-primary font-bold shrink-0">4.</span>
+          <p class="text-sm"><strong class="text-text-primary">Ropa cómoda y zapatos cerrados.</strong> No se necesita lycra ni ropa técnica. Un pantalón deportivo y unos tenis cerrados con suela firme están perfectos.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-primary font-bold shrink-0">5.</span>
+          <p class="text-sm"><strong class="text-text-primary">Agua en botella o caramañola.</strong> La hidratación es fundamental, especialmente en el clima cálido del Valle del Cauca.</p>
+        </div>
+      </div>
+      <p class="text-sm">
+        Si tienes preguntas sobre qué bicicleta comprar o dónde conseguir los implementos,
+        escríbenos. Con gusto te orientamos sin ningún compromiso.
+      </p>
+    </div>
+  </section>
+
+  <!-- Cómo inscribir -->
+  <section class="mb-16">
+    <SectionTitle title="¿Cómo inscribir a tu hijo?" />
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
+      <p>
+        El proceso de inscripción en el programa de iniciación deportiva de Trocha y Ruta es
+        sencillo:
+      </p>
+      <ol class="space-y-3 pl-4 list-decimal">
+        <li class="leading-relaxed">
+          <strong class="text-text-primary">Clase de prueba gratuita:</strong> trae a tu hijo
+          una clase para que conozca la dinámica, los entrenadores y el grupo. Sin costo, sin
+          compromiso.
+        </li>
+        <li class="leading-relaxed">
+          <strong class="text-text-primary">Inscripción formal:</strong> si la experiencia les
+          gustó, completamos el formulario de inscripción con los datos del deportista y del
+          acudiente.
+        </li>
+        <li class="leading-relaxed">
+          <strong class="text-text-primary">Póliza de seguro deportivo:</strong> gestionamos
+          la póliza de accidentes personales con Aseguradora Solidaria de Colombia (valor:
+          $60.000/año).
+        </li>
+        <li class="leading-relaxed">
+          <strong class="text-text-primary">A pedalear:</strong> tu hijo queda listo para
+          sumarse al grupo de iniciación y empezar su aventura en la Escuela de Ciclomontañismo
+          Trocha y Ruta.
+        </li>
+      </ol>
+      <div class="mt-6 text-center">
+        <a
+          href="/inscripciones"
+          class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90"
+        >
+          Iniciar inscripción
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Links internos -->
+  <section class="mb-16">
+    <div class="mx-auto max-w-3xl grid gap-4 sm:grid-cols-3">
+      <a
+        href="/escuela-de-ciclomontanismo"
+        class="rounded-xl border border-primary/30 bg-surface p-4 hover:border-primary hover:shadow-md transition-all text-center"
+      >
+        <p class="font-display font-semibold text-primary text-sm mb-1">Escuela de ciclomontañismo</p>
+        <p class="text-xs text-text-secondary">Conócenos como escuela</p>
+      </a>
+      <a
+        href="/clases-de-ciclismo-para-ninos"
+        class="rounded-xl border border-primary/30 bg-surface p-4 hover:border-primary hover:shadow-md transition-all text-center"
+      >
+        <p class="font-display font-semibold text-primary text-sm mb-1">Clases de ciclismo</p>
+        <p class="text-xs text-text-secondary">Estructura de cada sesión y horarios</p>
+      </a>
+      <a
+        href="/quienes-somos"
+        class="rounded-xl border border-primary/30 bg-surface p-4 hover:border-primary hover:shadow-md transition-all text-center"
+      >
+        <p class="font-display font-semibold text-primary text-sm mb-1">Quiénes somos</p>
+        <p class="text-xs text-text-secondary">Historia y valores del club</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="mt-4">
+    <InscriptionCTA
+      variant="inline"
+      heading="El primer pedaleo de tu hijo puede ser este fin de semana"
+      description="Trae a tu hijo a la clase de prueba gratuita en la Escuela de Ciclomontañismo Trocha y Ruta, Yumbo. Iniciación deportiva segura, lúdica y con entrenadores certificados."
+    />
+  </section>
+
+</PageLayout>

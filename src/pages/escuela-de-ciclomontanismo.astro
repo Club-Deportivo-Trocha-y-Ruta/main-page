@@ -1,0 +1,264 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import SectionTitle from '@components/common/SectionTitle.astro';
+import Card from '@components/common/Card.astro';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
+import { SITE } from '@lib/constants';
+import { generateOrganizationJsonLd, generateBreadcrumbJsonLd } from '@lib/seo';
+
+const orgJsonLd = generateOrganizationJsonLd();
+const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+  { name: 'Inicio', url: '/' },
+  { name: 'Escuela de Ciclomontañismo', url: '/escuela-de-ciclomontanismo' },
+]);
+---
+
+<PageLayout
+  title="Escuela de Ciclomontañismo en Yumbo · Trocha y Ruta"
+  heading="Escuela de Ciclomontañismo Trocha y Ruta"
+  description="Escuela de ciclomontañismo para niños desde 4 años en Yumbo, Valle del Cauca. Clases lúdicas, entrenadores certificados y formación deportiva integral con 15 años de trayectoria."
+  breadcrumbs={[{ label: 'Escuela de Ciclomontañismo' }]}
+  jsonLd={[orgJsonLd, breadcrumbJsonLd]}
+>
+
+  <!-- Introducción -->
+  <section class="mb-16">
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
+      <p>
+        En Yumbo, Valle del Cauca, existe un lugar donde los niños aprenden que la bicicleta es
+        mucho más que un juguete: es una herramienta de formación, libertad y carácter. Bienvenidos
+        a la <strong class="text-text-primary">Escuela de Ciclomontañismo Trocha y Ruta</strong>,
+        un proyecto nacido el 1 de mayo de {SITE.founded} con una sola convicción: que el deporte
+        bien enseñado transforma vidas.
+      </p>
+      <p>
+        Recibimos niños <strong class="text-text-primary">desde los 4 años</strong>, sin importar
+        si nunca han pedaleado. Nuestras clases combinan metodología pedagógica, ambientes seguros
+        y una dosis enorme de diversión. Porque el primer contacto con el ciclomontañismo debe
+        dejar una sonrisa, no un susto.
+      </p>
+      <p>
+        Somos, al mismo tiempo, escuela de iniciación y club competitivo: un solo espacio donde
+        tu hijo puede dar sus primeras pedaladas hoy y, si lo desea, llegar algún día al podio
+        departamental sin cambiar de entrenadores ni de familia.
+      </p>
+    </div>
+  </section>
+
+  <!-- Diferenciadores -->
+  <section class="mb-16">
+    <SectionTitle title="Por qué elegirnos como tu escuela de ciclomontañismo" />
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">15 años de trayectoria</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Fundados el 1 de mayo de 2010, somos la escuela de ciclomontañismo con más historia
+          en Yumbo. Más de 200 niños han pasado por nuestros programas y hoy pedalean por todo
+          el Valle del Cauca.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Entrenadores certificados</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Todo nuestro equipo técnico cuenta con certificaciones en iniciación deportiva infantil
+          y formación en ciclomontañismo. Máximo 10 niños por instructor para garantizar atención
+          personalizada.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Póliza de seguro deportivo</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Cada niño inscrito cuenta con póliza de accidentes personales con Aseguradora Solidaria
+          de Colombia. Los padres saben que sus hijos están protegidos desde el primer día.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Primera clase gratis</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Ofrecemos una clase de prueba sin costo ni compromiso para que el niño y la familia
+          conozcan la escuela, los entrenadores y la dinámica antes de inscribirse formalmente.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Enfoque lúdico y pedagógico</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          No somos una academia de competencia: somos una escuela de formación integral. Cada
+          sesión incluye juegos de habilidad, circuitos de equilibrio y actividades en la
+          naturaleza que los niños esperan con ansias cada semana.
+        </p>
+      </Card>
+      <Card class="p-6">
+        <h3 class="text-lg font-display font-bold text-primary mb-2">Comunidad de familias</h3>
+        <p class="text-text-secondary text-sm leading-relaxed">
+          Trocha y Ruta es también una comunidad. Los padres son parte activa: se conocen,
+          comparten experiencias y acompañan a sus hijos en un ambiente sano, inclusivo y
+          lleno de valores.
+        </p>
+      </Card>
+    </div>
+  </section>
+
+  <!-- Programas formativos -->
+  <section class="mb-16">
+    <SectionTitle title="Nuestros programas de formación" />
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-6">
+      <p>
+        La escuela de ciclomontañismo está estructurada en etapas progresivas para que cada niño
+        avance a su propio ritmo, sin presiones y con objetivos claros en cada nivel.
+      </p>
+      <div class="space-y-4">
+        <div class="rounded-xl border border-primary/20 bg-primary/5 p-5">
+          <h3 class="font-display font-bold text-text-primary mb-1">
+            <a href="/programas/escuela-de-iniciacion" class="hover:text-primary hover:underline">
+              Escuela de Iniciación — 4 a 6 años
+            </a>
+          </h3>
+          <p class="text-sm leading-relaxed">
+            El primer paso. Aquí los más pequeños aprenden equilibrio, dirección y frenado a través
+            de juegos y circuitos diseñados especialmente para su desarrollo motriz. El objetivo
+            no es ir rápido: es enamorarse de la bicicleta.
+          </p>
+        </div>
+        <div class="rounded-xl border border-primary/20 bg-primary/5 p-5">
+          <h3 class="font-display font-bold text-text-primary mb-1">
+            <a href="/programas/formacion-juvenil" class="hover:text-primary hover:underline">
+              Formación Juvenil — 6 a 11 años
+            </a>
+          </h3>
+          <p class="text-sm leading-relaxed">
+            Aquí se consolidan las habilidades técnicas, se introducen los primeros senderos y
+            se empieza a trabajar en resistencia y toma de decisiones en la pista. La competencia
+            aparece como herramienta de superación personal, nunca como presión.
+          </p>
+        </div>
+        <div class="rounded-xl border border-primary/20 bg-primary/5 p-5">
+          <h3 class="font-display font-bold text-text-primary mb-1">
+            Alto Rendimiento — 12 años en adelante
+          </h3>
+          <p class="text-sm leading-relaxed">
+            Para quienes quieren competir con seriedad. Periodización, planificación por macrociclos
+            y participación en la Copa Valle y competencias nacionales XCO. Los corredores del club
+            han sumado más de 100 medallas en torneos departamentales y nacionales.
+          </p>
+        </div>
+      </div>
+      <p>
+        Un niño puede empezar en la escuela de iniciación a los 4 años y llegar al alto
+        rendimiento sin cambiar de club ni de entrenadores. Un solo camino, construido con
+        paciencia y pasión.
+        <a href="/programas" class="ml-1 text-primary font-medium hover:underline">Ver todos los programas.</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Escuela vs club genérico -->
+  <section class="mb-16">
+    <SectionTitle title="Escuela especializada, no simplemente un club deportivo" />
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
+      <p>
+        Muchos clubes deportivos reciben niños y los ponen a entrenar junto a adultos o juveniles
+        avanzados. En Trocha y Ruta funcionamos de manera diferente: somos ante todo una escuela
+        de ciclomontañismo con metodología pedagógica estructurada para cada etapa del desarrollo
+        infantil.
+      </p>
+      <p>
+        Nuestras sesiones están diseñadas por entrenadores que conocen cómo aprenden los niños:
+        con juego, repetición positiva, desafíos graduales y mucho estímulo. No exigimos
+        resultados desde el primer día. Exigimos que cada niño disfrute, mejore y vuelva con
+        ganas la semana siguiente.
+      </p>
+      <p>
+        Además, la especialización en bicicleta de montaña implica conocer los riesgos del
+        terreno y cómo manejarlos con seguridad. Nuestros entrenadores saben cuándo un niño
+        está listo para enfrentar una bajada técnica y cuándo necesita más tiempo en el circuito
+        plano. Ese criterio pedagógico no lo improvisa cualquier monitor deportivo.
+      </p>
+      <p>
+        Eso es lo que hace diferente a una escuela deportiva especializada: el proceso importa
+        tanto como el resultado. Y en Trocha y Ruta llevamos 15 años demostrándolo.
+        <a href="/quienes-somos" class="ml-1 text-primary font-medium hover:underline">Conoce nuestra historia.</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Ubicación -->
+  <section class="mb-16">
+    <SectionTitle title="Dónde entrenamos en Yumbo" />
+    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
+      <p>
+        Los entrenamientos de la escuela de ciclomontañismo se realizan en dos escenarios
+        principales de <strong class="text-text-primary">Yumbo, Valle del Cauca</strong>:
+      </p>
+      <ul class="space-y-3">
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary"></span>
+          <span>
+            <strong class="text-text-primary">Pista de Ciclomontañismo "Carlos Castro"</strong>
+            — pista XCO oficial del municipio, con circuitos técnicos para trabajo de habilidad
+            y preparación competitiva.
+          </span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary"></span>
+          <span>
+            <strong class="text-text-primary">Parque Belalcázar, Yumbo</strong>
+            — escenario ideal para las clases de iniciación: espacio amplio, seguro y en contacto
+            con la naturaleza donde los más pequeños dan sus primeros pedalazos.
+          </span>
+        </li>
+      </ul>
+      <p class="text-sm">
+        Sede: CL 8 Norte 2 N° 55, Yumbo, Valle del Cauca.
+        <a href="/contacto" class="text-primary hover:underline font-medium">Contáctanos</a>
+        para horarios actualizados.
+      </p>
+    </div>
+  </section>
+
+  <!-- Links internos a otras landings -->
+  <section class="mb-16">
+    <SectionTitle title="Continúa explorando" />
+    <div class="mx-auto max-w-3xl grid gap-4 sm:grid-cols-2">
+      <a
+        href="/clases-de-ciclismo-para-ninos"
+        class="rounded-xl border border-primary/30 bg-surface p-5 hover:border-primary hover:shadow-md transition-all"
+      >
+        <h3 class="font-display font-bold text-primary mb-1">Clases de ciclismo para niños</h3>
+        <p class="text-sm text-text-secondary">
+          Qué incluye una clase típica, horarios, niveles por edad y qué necesita tu hijo para
+          empezar.
+        </p>
+      </a>
+      <a
+        href="/iniciacion-deportiva-ninos"
+        class="rounded-xl border border-primary/30 bg-surface p-5 hover:border-primary hover:shadow-md transition-all"
+      >
+        <h3 class="font-display font-bold text-primary mb-1">Iniciación deportiva infantil</h3>
+        <p class="text-sm text-text-secondary">
+          Por qué el ciclomontañismo es ideal para el desarrollo de niños desde los 4 años.
+        </p>
+      </a>
+    </div>
+    <div class="mx-auto max-w-3xl mt-4">
+      <a
+        href="/inscripciones"
+        class="block rounded-xl border border-accent/40 bg-accent/5 p-5 hover:border-accent hover:shadow-md transition-all text-center"
+      >
+        <h3 class="font-display font-bold text-accent-dark mb-1">Inscribir a mi hijo</h3>
+        <p class="text-sm text-text-secondary">
+          Proceso paso a paso para inscribirse en la escuela de ciclomontañismo.
+        </p>
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="mt-4">
+    <InscriptionCTA
+      variant="inline"
+      heading="¿Listo para que tu hijo empiece a pedalear?"
+      description="Primera clase de prueba gratis en la Escuela de Ciclomontañismo Trocha y Ruta, Yumbo. Entrenadores certificados y comunidad que te va a enamorar."
+    />
+  </section>
+
+</PageLayout>
