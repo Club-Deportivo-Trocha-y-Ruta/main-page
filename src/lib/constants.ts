@@ -1,24 +1,11 @@
 export const SITE = {
   name: 'Club Deportivo Trocha y Ruta',
   shortName: 'Trocha y Ruta',
-  tagline: 'Escuela de ciclomontañismo y club deportivo · Yumbo, Valle del Cauca',
+  tagline: 'Deporte, formación y contacto con la naturaleza',
   url: 'https://clubdeportivotrochayruta.org',
   founded: 2010,
   description:
-    'Escuela de ciclomontañismo y club deportivo para niños desde 4 años en Yumbo, Valle del Cauca. Clases de ciclismo, iniciación deportiva infantil y formación competitiva en MTB con 15 años de experiencia.',
-  keywords: [
-    'escuela de ciclomontañismo',
-    'escuela de ciclismo Yumbo',
-    'clases de ciclismo para niños',
-    'ciclismo infantil Valle del Cauca',
-    'iniciación deportiva infantil',
-    'MTB niños Yumbo',
-    'mountain bike para niños',
-    'club deportivo ciclismo Yumbo',
-    'escuela MTB Cali',
-    'ciclomontañismo Colombia',
-  ],
-  areaServed: ['Yumbo', 'Cali', 'Valle del Cauca', 'Colombia'],
+    'Club de ciclomontañismo para niños desde 4 años en Yumbo, Valle del Cauca, Colombia.',
 } as const;
 
 export const CONTACT = {

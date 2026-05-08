@@ -26,18 +26,12 @@ const programStyles: Record<string, { barColor: string; iconBg: string; iconColo
     iconBg: 'bg-primary-light/15',
     iconColor: 'text-primary-dark',
   },
-  'recreacion': {
-    barColor: 'bg-accent-light',
-    iconBg: 'bg-accent-light/15',
-    iconColor: 'text-accent-dark',
-  },
 };
 
 const excerpts: Record<string, string> = {
   'escuela-de-iniciacion': 'Primeros pasos en el ciclomontañismo. Desarrollo de habilidades motrices básicas y amor por la bicicleta en un ambiente seguro y divertido.',
   'formacion-juvenil': 'Perfeccionamiento técnico y preparación para competencias departamentales. Entrenamiento estructurado con enfoque en disciplina deportiva.',
   'alto-rendimiento': 'Programa competitivo con planificación periodizada, preparación física avanzada y participación en competencias departamentales y nacionales en su respectiva categoría.',
-  'recreacion': 'Ciclismo familiar sin presión competitiva. Salidas grupales por los senderos del Valle del Cauca abiertas a padres, madres e hijos de todas las edades.',
 };
 
 /* Iconos Phosphor por programa */
@@ -45,16 +39,12 @@ const programIcons: Record<string, string> = {
   'escuela-de-iniciacion': 'ph:bicycle-bold',
   'formacion-juvenil': 'ph:mountains-bold',
   'alto-rendimiento': 'ph:trophy-bold',
-  'recreacion': 'ph:person-simple-bike-bold',
 };
 ---
 
 <section class="py-20 bg-gray-50">
   <div class="mx-auto max-w-6xl px-4">
-    <SectionTitle
-      title="De la Escuela de Iniciación al Alto Rendimiento"
-      subtitle="Cuatro programas para todas las edades: clases de iniciación desde los 4 años, formación juvenil, alto rendimiento competitivo y recreación familiar"
-    />
+    <SectionTitle title="Nuestros Programas" subtitle="Formación integral para cada etapa" />
 
     <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
       {programs.map((program: Program) => {

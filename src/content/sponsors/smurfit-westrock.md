@@ -1,8 +1,8 @@
 ---
 name: "Smurfit Westrock"
-logo: "/images/sponsors/smurfit-westrock.png"
+logo: "/images/sponsors/smurfitkappa.svg"
 level: "principal"
-url: "https://www.smurfitwestrock.co"
+url: "https://www.smurfitkappa.com/co"
 description: "Líder mundial en soluciones de empaques de papel y cartón corrugado con presencia en Yumbo."
 startDate: 2020-01-01
 active: true

@@ -9,14 +9,13 @@ interface BreadcrumbItem {
 
 interface Props {
   title: string;
-  heading?: string;
   description?: string;
   ogImage?: string;
   breadcrumbs?: BreadcrumbItem[];
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, heading, description, ogImage, breadcrumbs, jsonLd } = Astro.props;
+const { title, description, ogImage, breadcrumbs, jsonLd } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} ogImage={ogImage} jsonLd={jsonLd}>
@@ -24,7 +23,7 @@ const { title, heading, description, ogImage, breadcrumbs, jsonLd } = Astro.prop
     {breadcrumbs && <Breadcrumb items={breadcrumbs} />}
     <div class="mb-8 md:mb-10 text-center">
       <h1 transition:animate="slide" class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-text-primary">
-        {heading ?? title}
+        {title}
       </h1>
       {description && (
         <p class="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">
