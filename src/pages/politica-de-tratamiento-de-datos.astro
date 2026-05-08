@@ -1,0 +1,45 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/common/Button.astro';
+
+const PDF_URL = '/documentos/politica-de-tratamiento-de-datos.pdf';
+---
+
+<BaseLayout
+  title="Política de Tratamiento de Datos Personales"
+  description="Descarga la Política de Tratamiento de Datos Personales del Club Deportivo Trocha y Ruta."
+>
+  <section class="flex min-h-[50vh] items-center justify-center py-20">
+    <div class="mx-auto max-w-lg px-4 text-center">
+      <span class="text-6xl" aria-hidden="true">📄</span>
+      <h1 class="mt-6 text-3xl md:text-4xl font-display font-bold text-text-primary">
+        Descargando la Política de Tratamiento de Datos…
+      </h1>
+      <p class="mt-4 text-lg text-text-secondary">
+        Si la descarga no inicia automáticamente, usa el botón a continuación.
+      </p>
+      <div class="mt-8">
+        <Button href={PDF_URL} download>
+          Descargar PDF
+        </Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline define:vars={{ PDF_URL }}>
+  const trigger = () => {
+    const a = document.createElement('a');
+    a.href = PDF_URL;
+    a.download = 'politica-de-tratamiento-de-datos.pdf';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', trigger, { once: true });
+  } else {
+    trigger();
+  }
+</script>
