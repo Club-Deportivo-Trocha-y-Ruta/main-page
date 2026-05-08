@@ -3,10 +3,15 @@ import { Image } from 'astro:assets';
 import logo from '@assets/images/logo.webp';
 import { SITE, CONTACT, SOCIAL, SECONDARY_NAV, CHILD_SAFETY } from '../../lib/constants';
 
-const footerLinks = [
+const footerLinks: Array<{ label: string; href: string; download?: boolean }> = [
   ...SECONDARY_NAV.filter(i => i.href !== '/contacto'),
   { label: 'Inscripciones', href: '/inscripciones' },
   { label: 'Contacto', href: '/contacto' },
+  {
+    label: 'Política de Tratamiento de Datos',
+    href: '/documentos/politica-de-tratamiento-de-datos.pdf',
+    download: true,
+  },
 ];
 
 const year = new Date().getFullYear();
@@ -40,7 +45,11 @@ const year = new Date().getFullYear();
         <ul class="mt-4 space-y-2">
           {footerLinks.map((item) => (
             <li>
-              <a href={item.href} class="block py-1.5 text-sm text-gray-300 transition-colors hover:text-primary-light">
+              <a
+                href={item.href}
+                class="block py-1.5 text-sm text-gray-300 transition-colors hover:text-primary-light"
+                {...(item.download ? { download: true, rel: 'noopener', type: 'application/pdf' } : {})}
+              >
                 {item.label}
               </a>
             </li>
