@@ -21,10 +21,10 @@ describe('generateOrganizationJsonLd', () => {
   it('genera JSON-LD de tipo SportsOrganization', () => {
     const result = generateOrganizationJsonLd();
     expect(result['@context']).toBe('https://schema.org');
-    expect(result['@type']).toContain('SportsOrganization');
+    expect(result['@type']).toBe('SportsOrganization');
     expect(result.name).toBe(SITE.name);
     expect(result.url).toBe(SITE.url);
-    expect(result.sport).toContain('Mountain Biking');
+    expect(result.sport).toBe('Mountain Biking');
   });
 
   it('incluye dirección postal completa', () => {
