@@ -7,8 +7,8 @@ ageRange: "3 a 5 años"
 ageMin: 3
 ageMax: 5
 targetLevel: "iniciación"
-schedule: "Sábados 7:00 - 9:00 AM"
-duration: "2 horas"
+schedule: "Martes y viernes 4:30 - 6:00 PM"
+duration: "1 hora 30 minutos"
 location: "Parque Belalcázar, Yumbo"
 maxStudents: 20
 requirements:
