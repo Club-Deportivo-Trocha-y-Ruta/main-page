@@ -19,7 +19,11 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: NewsEntry };
 const { Content } = await render(entry);
 
-const { title, date, updatedDate, author, category, excerpt, image, imageLayout, tags, galleryFolder, galleryImages } = entry.data;
+const { title, date, updatedDate, author, category, excerpt, image, imageLayout, tags, galleryFolder, galleryImages, seo } = entry.data;
+const hasDedicatedOg = Boolean(seo?.ogImage);
+const ogImage = (seo?.ogImage || image) as string;
+const ogImageWidth = hasDedicatedOg ? 1200 : undefined;
+const ogImageHeight = hasDedicatedOg ? 630 : undefined;
 
 const badgeVariant: Record<string, 'primary' | 'accent' | 'neutral'> = {
   competencias: 'primary',
@@ -44,7 +48,9 @@ const jsonLd = generateArticleJsonLd({
 <BaseLayout
   title={`${title} | Noticias`}
   description={excerpt}
-  ogImage={image}
+  ogImage={ogImage}
+  ogImageWidth={ogImageWidth}
+  ogImageHeight={ogImageHeight}
   jsonLd={jsonLd}
   ogType="article"
   articlePublishedTime={date.toISOString()}

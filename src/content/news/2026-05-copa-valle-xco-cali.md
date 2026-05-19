@@ -18,6 +18,7 @@ galleryImages:
 seo:
   metaTitle: "Trocha y Ruta en la cuarta válida Copa Valle XCO Cali 2026"
   metaDescription: "Resultados del Club Trocha y Ruta en la cuarta válida Copa Valle 2026 en Cali, selectivo nacional para Selección Colombia con élite y junior del país."
+  ogImage: "/images/news/copa-valle-cali-2026/og-copa-valle-cali.webp"
 ---
 
 Cali fue la sede el 17 de mayo de la **cuarta válida de la Copa Valle Paraíso de Todos GW Shimano 2026**, disputada en el **Club del Departamento, sector La Voragine**. La noche anterior había lloviznado y la nubosidad del día de carrera impidió que la pista terminara de secar: las piedras y los tramos rocosos amanecieron lisos y resbalosos, convirtiendo cada curva, cada frenada y cada paso técnico en una prueba extra de control.
