@@ -7,8 +7,8 @@ ageRange: "6 a 11 años"
 ageMin: 6
 ageMax: 11
 targetLevel: "formación"
-schedule: "Sábados y domingos 6:30 - 9:30 AM"
-duration: "3 horas"
+schedule: "Lunes a viernes 4:00 - 6:00 PM"
+duration: "2 horas"
 location: "Punto de encuentro: Parque Belalcázar, Yumbo"
 maxStudents: 25
 requirements:
@@ -45,7 +45,7 @@ El programa de Formación Juvenil está diseñado para jóvenes entre 6 y 11 añ
 
 ## Estructura del entrenamiento
 
-Las sesiones de fin de semana combinan trabajo técnico en circuitos cerrados con salidas a senderos de dificultad progresiva en los alrededores de Yumbo y el Valle del Cauca. Los sábados se enfocan en técnica y habilidades, mientras que los domingos se dedican a rodadas de mayor distancia.
+Las sesiones de lunes a viernes combinan trabajo técnico en circuitos cerrados con salidas a senderos de dificultad progresiva en los alrededores de Yumbo y el Valle del Cauca. Los días entre semana se alternan técnica y habilidades con rodadas de mayor distancia.
 
 ## Preparación competitiva
 
