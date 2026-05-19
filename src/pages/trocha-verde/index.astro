@@ -7,8 +7,9 @@ import Button from '@components/common/Button.astro';
 import SectionTitle from '@components/common/SectionTitle.astro';
 import TrochaVerdeStats from '@components/sections/TrochaVerdeStats.astro';
 import TrochaVerdeGrid from '@components/sections/TrochaVerdeGrid.astro';
-import TrochaVerdeMap from '@components/interactive/TrochaVerdeMap';
-import type { TreeMarker } from '@components/interactive/TrochaVerdeMap';
+// Mapa oculto temporalmente — ver sección comentada más abajo
+// import TrochaVerdeMap from '@components/interactive/TrochaVerdeMap';
+// import type { TreeMarker } from '@components/interactive/TrochaVerdeMap';
 import { Icon } from 'astro-icon/components';
 import { CONTACT } from '@lib/constants';
 import { generateBreadcrumbJsonLd, generateSocialInitiativeJsonLd } from '@lib/seo';
@@ -107,20 +108,20 @@ const statusLabels: Record<string, string> = {
   floreciendo: 'Floreciendo',
 };
 
-// Construir array de marcadores para el mapa (solo árboles con lat/lng)
-const treeMarkers: TreeMarker[] = trees
-  .filter((t: Tree) => t.data.lat !== undefined && t.data.lng !== undefined)
-  .map((t: Tree) => ({
-    slug: t.id,
-    species: t.data.species,
-    category: t.data.category as 'frutal' | 'ornamental' | 'nativo' | 'maderable',
-    lat: t.data.lat!,
-    lng: t.data.lng!,
-    donor: t.data.donor,
-    image: t.data.image,
-    imageAlt: t.data.imageAlt,
-    plantedDate: formatDate(t.data.plantedDate),
-  }));
+// Construir array de marcadores para el mapa (oculto temporalmente)
+// const treeMarkers: TreeMarker[] = trees
+//   .filter((t: Tree) => t.data.lat !== undefined && t.data.lng !== undefined)
+//   .map((t: Tree) => ({
+//     slug: t.id,
+//     species: t.data.species,
+//     category: t.data.category as 'frutal' | 'ornamental' | 'nativo' | 'maderable',
+//     lat: t.data.lat!,
+//     lng: t.data.lng!,
+//     donor: t.data.donor,
+//     image: t.data.image,
+//     imageAlt: t.data.imageAlt,
+//     plantedDate: formatDate(t.data.plantedDate),
+//   }));
 
 // Datos para el grid filtrable (sin Content renderizado)
 const treeGridData = trees.map((t: Tree) => ({
@@ -285,7 +286,7 @@ const processSteps = [
     </div>
   </section>
 
-  <!-- Mapa Interactivo -->
+  {/* Mapa Interactivo — oculto temporalmente
   <section class="mb-16" aria-labelledby="mapa-title">
     <SectionTitle
       title="Mapa del Inventario"
@@ -307,6 +308,7 @@ const processSteps = [
       </div>
     </noscript>
   </section>
+  */}
 
   <!-- Timeline de Siembras -->
   <section class="mb-16">

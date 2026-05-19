@@ -286,7 +286,7 @@ Secrets de deploy (en cada environment): `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASS
 | `content-manager` | `claude-sonnet-4-6` | Content Collections, Sveltia CMS, SEO técnico, JSON-LD |
 | `performance-engineer` | `claude-sonnet-4-6` | Bundle size, LCP/INP/CLS, análisis de cuellos de botella, presupuesto de performance |
 | `seo-specialist` | `claude-sonnet-4-6` | Estrategia keywords, análisis competitivo, roadmap SEO trimestral, rich snippets |
-| `content-marketer` | `claude-sonnet-4-6` | Copies web, redes sociales, email a familias, calendario editorial, comunicación de eventos |
+| `content-marketer` | `claude-opus-4-7` | Cronista deportivo especializado en crónicas Copa Valle XCO (protocolo de 7 bloques, ética cobertura menores, sistema puntos top-5). También copies web, redes sociales, email a familias y comunicación de patrocinadores |
 | `qa-auditor` | `claude-haiku-4-5-20251001` | Lighthouse audit, WCAG 2.1 AA, Core Web Vitals, responsive testing |
 | `seo-auditor` | `claude-haiku-4-5-20251001` | Validación técnica JSON-LD, meta tags, Open Graph, sitemap, SEO local |
 | `accessibility-tester` | `claude-haiku-4-5-20251001` | WCAG 2.1/3.0 profundo, lectores de pantalla, ARIA, accesibilidad cognitiva y móvil |
