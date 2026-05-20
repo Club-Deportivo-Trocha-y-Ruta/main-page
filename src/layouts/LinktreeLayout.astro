@@ -1,6 +1,8 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import SEOHead from '@components/common/SEOHead.astro';
+import Analytics from '@components/common/Analytics.astro';
+import ConsentBanner from '@components/common/ConsentBanner.astro';
 
 interface Props {
   title: string;
@@ -60,9 +62,7 @@ const { title, description, ogImage } = Astro.props;
       initReveal();
       document.addEventListener('astro:page-load', initReveal);
     </script>
-    {import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN && (
-      <script is:inline defer src='https://static.cloudflareinsights.com/beacon.min.js'
-        data-cf-beacon={`{"token": "${import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN}"}`}></script>
-    )}
+    <Analytics />
+    <ConsentBanner />
   </body>
 </html>

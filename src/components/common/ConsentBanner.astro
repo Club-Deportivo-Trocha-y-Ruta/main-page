@@ -1,0 +1,105 @@
+---
+const ga4Id = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID as string | undefined
+const showBanner = Boolean(ga4Id)
+---
+
+{showBanner && (
+  <div
+    id="consent-banner"
+    role="dialog"
+    aria-labelledby="consent-banner-title"
+    aria-describedby="consent-banner-desc"
+    aria-hidden="true"
+    class="fixed inset-x-0 bottom-0 z-[60] hidden translate-y-full transition-transform duration-300 ease-out data-[visible=true]:flex data-[visible=true]:translate-y-0"
+  >
+    <div class="mx-auto w-full max-w-5xl m-3 sm:m-4">
+      <div class="rounded-2xl bg-surface-dark text-white shadow-2xl ring-1 ring-white/10 px-4 py-4 sm:px-6 sm:py-5">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+          <div class="min-w-0 flex-1">
+            <p id="consent-banner-title" class="font-display text-sm font-semibold sm:text-base">
+              Tu privacidad nos importa
+            </p>
+            <p id="consent-banner-desc" class="mt-1 text-xs leading-relaxed text-white/80 sm:text-sm">
+              Usamos cookies de analítica para entender cómo navegan las familias y mejorar el sitio.
+              Nunca rastreamos datos personales de menores.
+            </p>
+          </div>
+          <div class="flex shrink-0 flex-col gap-2 sm:flex-row">
+            <button
+              type="button"
+              data-consent-action="reject"
+              class="inline-flex items-center justify-center rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Rechazar
+            </button>
+            <button
+              type="button"
+              data-consent-action="accept"
+              class="inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      var STORAGE_KEY = 'trocha-analytics-consent';
+      var banner = document.getElementById('consent-banner');
+      if (!banner) return;
+
+      function reveal() {
+        banner.setAttribute('data-visible', 'true');
+        banner.setAttribute('aria-hidden', 'false');
+      }
+      function hide() {
+        banner.removeAttribute('data-visible');
+        banner.setAttribute('aria-hidden', 'true');
+      }
+      function persist(value) {
+        try { localStorage.setItem(STORAGE_KEY, value); } catch (e) {}
+      }
+      function read() {
+        try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
+      }
+      function pushConsent(status) {
+        if (typeof window.gtag === 'function') {
+          window.gtag('consent', 'update', { analytics_storage: status });
+        } else if (Array.isArray(window.dataLayer)) {
+          window.dataLayer.push(['consent', 'update', { analytics_storage: status }]);
+        }
+        var state = window.__trochaAnalytics;
+        if (state && state.providers) {
+          for (var i = 0; i < state.providers.length; i++) {
+            try { state.providers[i].setConsent(status); } catch (e) {}
+          }
+        }
+      }
+
+      var stored = read();
+      if (stored === 'granted' || stored === 'denied') {
+        return;
+      }
+      reveal();
+
+      banner.addEventListener('click', function (ev) {
+        var target = ev.target;
+        if (!(target instanceof Element)) return;
+        var btn = target.closest('[data-consent-action]');
+        if (!btn) return;
+        var action = btn.getAttribute('data-consent-action');
+        if (action === 'accept') {
+          persist('granted');
+          pushConsent('granted');
+        } else if (action === 'reject') {
+          persist('denied');
+          pushConsent('denied');
+        }
+        hide();
+      });
+    })();
+  </script>
+)}

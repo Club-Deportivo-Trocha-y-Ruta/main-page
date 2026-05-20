@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useRef } from 'react';
+import { trackEvent } from '@lib/analytics';
 
 const subjects = [
   { value: '', label: 'Selecciona un asunto' },
@@ -88,6 +89,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
       if (result.success) {
         setStatus('success');
         reset();
+        trackEvent({ name: 'contact_submit' });
       } else {
         setStatus('error');
         setErrorMessage(result.message || 'Hubo un error al enviar el formulario. Intenta de nuevo.');

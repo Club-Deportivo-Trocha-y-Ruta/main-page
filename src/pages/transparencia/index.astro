@@ -47,6 +47,8 @@ const documentosPorCategoria = categorias.map((cat) => ({
                 <a
                   href={doc.archivo}
                   download
+                  data-analytics-event="transparencia_pdf_download"
+                  data-analytics-pdf-name={doc.nombre}
                   class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary self-start sm:self-auto"
                   aria-label={`Descargar ${doc.nombre} (PDF)`}
                 >

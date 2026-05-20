@@ -240,7 +240,7 @@ Gestionadas via **GitHub Environments** (Settings → Environments). Cada enviro
 |----------|-------------|:-----------------:|
 | `PUBLIC_WEB3FORMS_KEY` | API key de Web3Forms (ContactForm, InscriptionForm) | No |
 | `PUBLIC_CLOUDINARY_CLOUD_NAME` | Cloud name de Cloudinary | No |
-| `PUBLIC_CF_ANALYTICS_TOKEN` | Token de Cloudflare Web Analytics | Sí (develop ≠ production) |
+| `PUBLIC_GA4_MEASUREMENT_ID` | Measurement ID de GA4 formato `G-XXXXXXXXXX` (carga vía Partytown) | Recomendado (develop ≠ production) |
 
 Secrets de deploy (en cada environment): `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`
 
@@ -328,5 +328,5 @@ El proyecto se desarrolla con asistencia de Claude Code (Opus 4.7 / Sonnet 4.6 /
 - Colecciones sin contenido: `directivos`, `results`, `rutas`, `pages`
 - Programa "Recreación" falta en `src/content/programs/`
 - Directorio `src/types/` vacío (tipos definidos inline en componentes)
-- Analytics: Cloudflare Web Analytics activo, token via `PUBLIC_CF_ANALYTICS_TOKEN` (env var por environment)
+- Analytics: GA4 vía `@astrojs/partytown` con Consent Mode v2 (banner custom). Measurement ID via `PUBLIC_GA4_MEASUREMENT_ID`
 - Configuración Claude actualizada a Opus 4.7 con IDs pinneados (2026-04-30)

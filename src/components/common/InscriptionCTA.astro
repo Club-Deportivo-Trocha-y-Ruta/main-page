@@ -25,13 +25,14 @@ const {
         {description}
       </p>
       <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <Button variant="accent" size="lg" href="/inscripciones">
+        <Button variant="accent" size="lg" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
           Clase de prueba gratis
         </Button>
         <a
           href={`${CONTACT.whatsapp}?text=Hola%2C%20quiero%20inscribir%20a%20mi%20hijo%20en%20el%20club`}
           target="_blank"
           rel="noopener noreferrer"
+          data-analytics-event="whatsapp_click"
           class="inline-flex items-center gap-2 rounded-lg border-2 border-white px-7 py-3.5 text-lg font-semibold text-white transition-colors duration-200 hover:bg-white hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           Preguntar por WhatsApp
@@ -51,13 +52,14 @@ const {
         </p>
       </div>
       <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
-        <Button variant="accent" size="md" href="/inscripciones">
+        <Button variant="accent" size="md" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
           Clase de prueba gratis
         </Button>
         <a
           href={`${CONTACT.whatsapp}?text=Hola%2C%20quiero%20inscribir%20a%20mi%20hijo%20en%20el%20club`}
           target="_blank"
           rel="noopener noreferrer"
+          data-analytics-event="whatsapp_click"
           class="inline-flex items-center gap-2 rounded-lg border-2 border-primary px-5 py-2.5 text-base font-semibold text-primary transition-colors duration-200 hover:bg-primary hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           Preguntar por WhatsApp
