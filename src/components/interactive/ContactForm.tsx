@@ -298,7 +298,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="inline-flex w-full items-center justify-center rounded-lg bg-primary px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60 disabled:cursor-not-allowed"
+        className="inline-flex w-full items-center justify-center rounded-lg bg-surface-dark px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-surface-dark/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {status === 'submitting' ? (
           <>

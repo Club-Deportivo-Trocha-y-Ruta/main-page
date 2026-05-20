@@ -56,7 +56,7 @@ const currentPath = Astro.url.pathname;
         <!-- Mobile menu (React Island) -->
         <div class="lg:hidden">
           <MobileMenu
-            client:load
+            client:visible
             navItems={NAV_ITEMS.map(i => ({ label: i.label, href: i.href }))}
             secondaryNavItems={SECONDARY_NAV.map(i => ({ label: i.label, href: i.href }))}
             currentPath={currentPath}

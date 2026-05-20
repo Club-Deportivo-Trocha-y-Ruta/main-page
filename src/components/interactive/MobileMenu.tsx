@@ -176,7 +176,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
                 <a
                   href="/inscripciones"
                   onClick={close}
-                  className="flex w-full items-center justify-center rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  className="flex w-full items-center justify-center rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                   Inscríbete
                 </a>
