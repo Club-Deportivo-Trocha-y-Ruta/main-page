@@ -4,6 +4,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Badge from '@components/common/Badge.astro';
 import NewsGallery from '@components/sections/NewsGallery.astro';
+import RaceLineup from '@components/sections/RaceLineup.astro';
 import { formatDate } from '@lib/utils';
 import { generateArticleJsonLd } from '@lib/seo';
 
@@ -19,7 +20,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: NewsEntry };
 const { Content } = await render(entry);
 
-const { title, date, updatedDate, author, category, excerpt, image, imageLayout, tags, galleryFolder, galleryImages, seo } = entry.data;
+const { title, date, updatedDate, author, category, excerpt, image, imageLayout, tags, galleryFolder, galleryImages, lineup, seo } = entry.data;
 const hasDedicatedOg = Boolean(seo?.ogImage);
 const ogImage = (seo?.ogImage || image) as string;
 const ogImageWidth = hasDedicatedOg ? 1200 : undefined;
@@ -83,6 +84,12 @@ const jsonLd = generateArticleJsonLd({
         <span>{author}</span>
       </div>
     </header>
+
+    {lineup && lineup.length > 0 && (
+      <div class="mx-auto max-w-3xl mb-12">
+        <RaceLineup athletes={lineup} />
+      </div>
+    )}
 
     <div class="prose prose-lg mx-auto max-w-3xl">
       <Content />

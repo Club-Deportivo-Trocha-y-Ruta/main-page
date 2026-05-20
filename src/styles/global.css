@@ -102,3 +102,140 @@
     display: none;
   }
 }
+
+/* === Race lineup === */
+.race-lineup__track {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* Permite que el peek del siguiente poster respire */
+  padding-block: 0.25rem;
+}
+.race-lineup__track::-webkit-scrollbar {
+  display: none;
+}
+
+.race-lineup__card {
+  flex: 0 0 calc(75vw - 1rem);
+  max-width: 320px;
+  scroll-snap-align: start;
+  /* Stagger reveal: aprovecha .reveal/.revealed global */
+  transition-delay: var(--stagger, 0ms);
+}
+
+.race-lineup__figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.race-lineup__poster-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: var(--color-surface-muted);
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease-out;
+  will-change: transform;
+}
+
+.race-lineup__poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.race-lineup__glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--gx, 50%) var(--gy, 50%),
+    rgba(255, 255, 255, 0.35),
+    rgba(255, 255, 255, 0) 55%
+  );
+  mix-blend-mode: screen;
+  transition: opacity 0.25s ease-out;
+}
+
+.race-lineup__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.125rem;
+  padding-inline: 0.25rem;
+}
+
+.race-lineup__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+.race-lineup__category {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Hover (solo dispositivos con puntero fino) */
+@media (hover: hover) and (pointer: fine) {
+  .race-lineup__poster-wrap {
+    transform: perspective(800px)
+      rotateX(var(--rx, 0deg))
+      rotateY(var(--ry, 0deg));
+  }
+  .race-lineup__card:hover .race-lineup__glare {
+    opacity: 1;
+  }
+}
+
+/* Tablet: grid 3 columnas, sin carrusel */
+@media (min-width: 768px) {
+  .race-lineup__track {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    overflow: visible;
+    scroll-snap-type: none;
+    padding-block: 0;
+  }
+  .race-lineup__card {
+    flex: initial;
+    max-width: none;
+    scroll-snap-align: none;
+  }
+}
+
+/* Container ≤768px (max-w-3xl): mantener 3 cols en desktop para legibilidad */
+
+@media (prefers-reduced-motion: reduce) {
+  .race-lineup__poster-wrap {
+    transform: none;
+    transition: none;
+  }
+  .race-lineup__glare {
+    display: none;
+  }
+  .race-lineup__card {
+    transition-delay: 0ms;
+  }
+}

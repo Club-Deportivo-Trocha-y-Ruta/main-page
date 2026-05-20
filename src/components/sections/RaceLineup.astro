@@ -1,0 +1,109 @@
+---
+interface Athlete {
+  name: string;
+  category: string;
+  slug: string;
+  image: string;
+}
+
+interface Props {
+  athletes: Athlete[];
+  eventName?: string;
+  heading?: string;
+  intro?: string;
+}
+
+const {
+  athletes,
+  heading = 'El equipo en pista',
+  intro = '10 corredores representaron a Yumbo y al Club Trocha y Ruta en el selectivo nacional.',
+} = Astro.props;
+---
+
+{athletes && athletes.length > 0 && (
+  <section
+    aria-labelledby="lineup-heading"
+    class="not-prose race-lineup mt-12 pt-8 border-t border-surface-muted"
+  >
+    <header class="race-lineup__header mb-6">
+      <h2
+        id="lineup-heading"
+        class="text-2xl md:text-3xl font-display font-bold text-text-primary"
+      >
+        {heading}
+      </h2>
+      {intro && (
+        <p class="mt-2 text-text-secondary max-w-2xl">
+          {intro}
+        </p>
+      )}
+    </header>
+
+    <ol role="list" class="race-lineup__track">
+      {athletes.map((athlete, i) => (
+        <li
+          class="race-lineup__card reveal"
+          style={`--stagger:${i * 50}ms`}
+        >
+          <figure class="race-lineup__figure">
+            <div class="race-lineup__poster-wrap">
+              <img
+                src={athlete.image}
+                alt=""
+                width="600"
+                height="800"
+                loading={i === 0 ? 'eager' : 'lazy'}
+                fetchpriority={i === 0 ? 'high' : undefined}
+                decoding="async"
+                class="race-lineup__poster"
+              />
+              <span class="race-lineup__glare" aria-hidden="true"></span>
+            </div>
+            <figcaption class="race-lineup__caption">
+              <strong class="race-lineup__name">{athlete.name}</strong>
+              <span class="race-lineup__category">{athlete.category}</span>
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ol>
+  </section>
+)}
+
+<script is:inline>
+  (function () {
+    var mqHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+    var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!mqHover.matches || mqReduce.matches) return;
+
+    function bindTilt(card) {
+      if (card.dataset.tiltBound) return;
+      card.dataset.tiltBound = '1';
+      var wrap = card.querySelector('.race-lineup__poster-wrap');
+      if (!wrap) return;
+      wrap.addEventListener('pointermove', function (e) {
+        var r = wrap.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width;
+        var y = (e.clientY - r.top) / r.height;
+        var rx = (0.5 - y) * 8;
+        var ry = (x - 0.5) * 8;
+        wrap.style.setProperty('--rx', rx + 'deg');
+        wrap.style.setProperty('--ry', ry + 'deg');
+        wrap.style.setProperty('--gx', (x * 100) + '%');
+        wrap.style.setProperty('--gy', (y * 100) + '%');
+      });
+      wrap.addEventListener('pointerleave', function () {
+        wrap.style.setProperty('--rx', '0deg');
+        wrap.style.setProperty('--ry', '0deg');
+      });
+    }
+
+    function init() {
+      document
+        .querySelectorAll('.race-lineup .race-lineup__card')
+        .forEach(bindTilt);
+    }
+    init();
+    document.addEventListener('astro:page-load', init);
+  })();
+</script>

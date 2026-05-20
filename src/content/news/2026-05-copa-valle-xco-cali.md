@@ -15,6 +15,52 @@ galleryFolder: "/images/news/copa-valle-cali-2026"
 galleryImages:
   - accion-pista-cali-01.webp
   - accion-pista-cali-02.webp
+  - accion-pista-cali-03.webp
+  - accion-pista-cali-04.webp
+  - accion-pista-cali-05.webp
+  - accion-pista-cali-06.webp
+  - accion-pista-cali-07.webp
+lineup:
+  - name: "Isabel Cristhina Quiñones Batero"
+    category: "Prejuvenil A Femenina"
+    slug: "isabel-quinones"
+    image: "/images/news/copa-valle-cali-2026/lineup/isabel-quinones.webp"
+  - name: "Thiago Duque Cardona"
+    category: "Teteros Con Pedales"
+    slug: "thiago-duque"
+    image: "/images/news/copa-valle-cali-2026/lineup/thiago-duque.webp"
+  - name: "Mariana Coronado Delgado"
+    category: "Prejuvenil A Femenina"
+    slug: "mariana-coronado"
+    image: "/images/news/copa-valle-cali-2026/lineup/mariana-coronado.webp"
+  - name: "Miguel Ángel Anaya Molano"
+    category: "Infantil A"
+    slug: "miguel-angel-anaya"
+    image: "/images/news/copa-valle-cali-2026/lineup/miguel-angel-anaya.webp"
+  - name: "Sofía Gómez Gómez"
+    category: "Infantil A Femenina"
+    slug: "sofia-gomez"
+    image: "/images/news/copa-valle-cali-2026/lineup/sofia-gomez.webp"
+  - name: "Eileen Sophia Vargas Bonilla"
+    category: "Infantil A Femenina"
+    slug: "eileen-sophia-vargas"
+    image: "/images/news/copa-valle-cali-2026/lineup/eileen-sophia-vargas.webp"
+  - name: "Jostin Villamizar García"
+    category: "Infantil B"
+    slug: "jostin-villamizar"
+    image: "/images/news/copa-valle-cali-2026/lineup/jostin-villamizar.webp"
+  - name: "Juan Diego García Bohórquez"
+    category: "Élite"
+    slug: "juan-diego-garcia"
+    image: "/images/news/copa-valle-cali-2026/lineup/juan-diego-garcia.webp"
+  - name: "Juan David Giraldo Ortiz"
+    category: "Preinfantil B"
+    slug: "juan-david-giraldo"
+    image: "/images/news/copa-valle-cali-2026/lineup/juan-david-giraldo.webp"
+  - name: "Matías Montoya Gómez"
+    category: "Infantil A"
+    slug: "matias-montoya"
+    image: "/images/news/copa-valle-cali-2026/lineup/matias-montoya.webp"
 seo:
   metaTitle: "Trocha y Ruta en la cuarta válida Copa Valle XCO Cali 2026"
   metaDescription: "Resultados del Club Trocha y Ruta en la cuarta válida Copa Valle 2026 en Cali, selectivo nacional para Selección Colombia con élite y junior del país."
@@ -48,13 +94,13 @@ En la general acumulada se mantiene **3ª con 123 puntos**, a solo 4 puntos de l
 | **Isabel Cristhina Quiñones Batero** | Prejuvenil A Fem. | **3°** | 0:59:05 | 33 |
 | Thiago Duque Cardona | Teteros Con Pedales | 4° | 0:04:49 | 30 |
 | Mariana Coronado Delgado | Prejuvenil A Fem. | 4° | 1:01:41 | 30 |
-| Miguel Ángel Anaya | Infantil A | 5° | 0:37:43 | 27 |
-| Sofía Gómez | Infantil A Fem. | 6° | 1:03:15 | 25 |
+| Miguel Ángel Anaya Molano | Infantil A | 5° | 0:37:43 | 27 |
+| Sofía Gómez Gómez | Infantil A Fem. | 6° | 1:03:15 | 25 |
 | Eileen Sophia Vargas Bonilla | Infantil A Fem. | 7° | 1:13:52 | 23 |
 | Jostin Villamizar García | Infantil B | 11° | 0:43:51 | 15 |
-| Juan Diego García | Élite | 14° | -1 vuelta | 9 |
+| Juan Diego García Bohórquez | Élite | 14° | -1 vuelta | 9 |
 | Juan David Giraldo Ortiz | Preinfantil B | 15° | 0:18:37 | 7 |
-| Matías Montoya | Infantil A | DNF | — | 1 |
+| Matías Montoya Gómez | Infantil A | DNF | — | 1 |
 
 ## Más allá del podio
 
@@ -62,19 +108,19 @@ En la general acumulada se mantiene **3ª con 123 puntos**, a solo 4 puntos de l
 
 Cuarta en Prejuvenil A Femenina quedó **Mariana Coronado Delgado**, con 1:01:41, a 2:36 del tercer puesto. Junto con Isabel completó un **doblete del club en el podio** de la categoría —tercera y cuarta—, una postal que se repite válida tras válida en Prejuvenil A Femenina. El último ciclo de entrenamiento, entre la tercera y la cuarta válida, no le permitió afrontar la fase de mayor carga del bloque con plena regularidad. En ese contexto, sostener su lugar en el podio es un resultado de mérito: confirma el nivel base que ya tiene la corredora y la mantiene como una pieza clave del equipo femenino.
 
-**Miguel Ángel Anaya** firmó un top-5 en Infantil A (5° con 0:37:43) en una franja con 24 inscritos. Recupera ritmo competitivo después del podio en Pavas y se consolida entre los mejores de la categoría a nivel departamental.
+**Miguel Ángel Anaya Molano** firmó un top-5 en Infantil A (5° con 0:37:43) en una franja con 24 inscritos. Recupera ritmo competitivo después del podio en Pavas y se consolida entre los mejores de la categoría a nivel departamental.
 
-**Sofía Gómez** y **Eileen Sophia Vargas Bonilla** completaron un nuevo doblete en Infantil A Femenina (6° y 7°, respectivamente) y aportaron 48 puntos entre las dos a la causa del equipo. Su consistencia fecha tras fecha es una de las marcas más claras del trabajo formativo de Trocha y Ruta.
+**Sofía Gómez Gómez** y **Eileen Sophia Vargas Bonilla** completaron un nuevo doblete en Infantil A Femenina (6° y 7°, respectivamente) y aportaron 48 puntos entre las dos a la causa del equipo. Su consistencia fecha tras fecha es una de las marcas más claras del trabajo formativo de Trocha y Ruta.
 
 Capítulo aparte merece **Eileen Sophia**, cuyo gran logro del domingo fue, sencillamente, **terminar la carrera**. Tras varias fechas en las que no había podido cruzar la meta, llegar al final en **1:13:52** y sumar **23 puntos** en Infantil A Femenina se siente, en su caso, como una victoria personal. Más que un puesto, este resultado marca un reencuentro con la competencia que vale tanto como cualquier número en la tabla.
 
-**Juan Diego García** se midió ante una Élite con varios aspirantes a Selección Colombia en la parrilla. Reconoce que no se sintió cómodo con el terreno mojado: leer las piedras lisas y administrar adherencia se le hizo cuesta arriba. Optó por **apretar en los ascensos y en las zonas planas**, donde sí pudo dosificar mejor la potencia. Cerró **14°, doblado en una vuelta**, pero cruzó la meta. En una jornada con varios abandonos y rivales de talla nacional, llegar al final en ese contexto es un resultado de carácter.
+**Juan Diego García Bohórquez** se midió ante una Élite con varios aspirantes a Selección Colombia en la parrilla. Reconoce que no se sintió cómodo con el terreno mojado: leer las piedras lisas y administrar adherencia se le hizo cuesta arriba. Optó por **apretar en los ascensos y en las zonas planas**, donde sí pudo dosificar mejor la potencia. Cerró **14°, doblado en una vuelta**, pero cruzó la meta. En una jornada con varios abandonos y rivales de talla nacional, llegar al final en ese contexto es un resultado de carácter.
 
 En Infantil B, **Jostin Villamizar García** repitió la cosecha que ya había firmado en la primera y segunda válida —**11° puesto (0:43:51)** y 15 puntos—, pero la historia del domingo no estuvo en la cifra final sino en el camino. La organización ajusta el recorrido a la edad y cada vuelta cubre aproximadamente el **70%** del circuito completo; en los entrenamientos del club, sin embargo, Jostin ya resuelve el **100% del trazado**, el mismo que afrontan las categorías mayores. Es decir, ya tiene la capacidad para ir más allá de lo que su división le exige hoy. En carrera lo confirmó: **arrancó de antepenúltimo** y **escaló hasta el puesto 11**. Esa remontada es la mejor noticia del día en Infantil B y deja claro que su techo competitivo está bastante más arriba de lo que marca hoy la tabla.
 
 **Juan David Giraldo Ortiz** sigue creciendo en Preinfantil B (15° con 0:18:37), aportando puntos y kilómetros de experiencia en una categoría base que se construye válida a válida.
 
-Mención respetuosa para **Matías Montoya**, que abandonó (DNF) en Infantil A. Los retiros también son parte del proceso formativo: aprender a leer la pista, saber cuándo seguir y cuándo parar, y volver al entrenamiento con la lección hecha.
+Mención respetuosa para **Matías Montoya Gómez**, que abandonó (DNF) en Infantil A. Los retiros también son parte del proceso formativo: aprender a leer la pista, saber cuándo seguir y cuándo parar, y volver al entrenamiento con la lección hecha.
 
 ## Datos al servicio del proceso
 
@@ -90,9 +136,9 @@ Con cuatro de siete válidas disputadas, así queda la posición de los corredor
 |----------|-----------|:------------:|:---------:|:---:|:----:|:-----:|:-----:|:-----:|
 | Isabel Cristhina Quiñones Batero | Prejuvenil A Fem. | **3°** | <span class="text-gray-400">— Estable</span> | 30 | 30 | 30 | 33 | **123** |
 | Mariana Coronado Delgado | Prejuvenil A Fem. | **5°** | <span class="text-gray-400">— Estable</span> | 1 | 36 | 36 | 30 | **103** |
-| Miguel Ángel Anaya | Infantil A | **6°** | <span class="text-gray-400">— Estable</span> | 36 | 1 | 36 | 27 | **100** |
-| Sofía Gómez | Infantil A Fem. | **5°** | <span class="text-red-500 font-semibold">▼ -1</span> | 21 | 23 | 27 | 25 | **96** |
-| Juan Diego García | Élite | **5°** | <span class="text-green-600 font-semibold">▲ +1</span> | 21 | 21 | 27 | 9 | **78** |
+| Miguel Ángel Anaya Molano | Infantil A | **6°** | <span class="text-gray-400">— Estable</span> | 36 | 1 | 36 | 27 | **100** |
+| Sofía Gómez Gómez | Infantil A Fem. | **5°** | <span class="text-red-500 font-semibold">▼ -1</span> | 21 | 23 | 27 | 25 | **96** |
+| Juan Diego García Bohórquez | Élite | **5°** | <span class="text-green-600 font-semibold">▲ +1</span> | 21 | 21 | 27 | 9 | **78** |
 | Samuel Anaya Molano | Preinfantil A | **6°** | <span class="text-red-500 font-semibold">▼ -2</span> | 27 | 19 | 30 | 0 | **76** |
 | Eileen Sophia Vargas Bonilla | Infantil A Fem. | **7°** | <span class="text-green-600 font-semibold">▲ +1</span> | 25 | 1 | 25 | 23 | **74** |
 | Samuel Ortiz Valencia | Prejuvenil A | **9°** | <span class="text-red-500 font-semibold">▼ -1</span> | 25 | 33 | 0 | 0 | **58** |
@@ -102,7 +148,7 @@ Con cuatro de siete válidas disputadas, así queda la posición de los corredor
 | Juan David Giraldo Ortiz | Preinfantil B | **17°** | <span class="text-gray-400">— Estable</span> | 11 | 7 | 0 | 7 | **25** |
 | Mathiw Bohorquez | Teteros Sin Pedales | **16°** | <span class="text-gray-400">— Estable</span> | 0 | 0 | 15 | 0 | **15** |
 | Ihsan Garces Romero | Teteros Sin Pedales | **18°** | <span class="text-gray-400">— Estable</span> | 0 | 0 | 13 | 0 | **13** |
-| Matías Montoya | Infantil A | **26°** | <span class="text-red-500 font-semibold">▼ -1</span> | 1 | 1 | 0 | 1 | **3** |
+| Matías Montoya Gómez | Infantil A | **26°** | <span class="text-red-500 font-semibold">▼ -1</span> | 1 | 1 | 0 | 1 | **3** |
 
 **Isabel Quiñones** sigue siendo la mejor posicionada del club, **3ª en Prejuvenil A Femenina con 123 puntos**. Está a solo 4 puntos del segundo lugar y a 37 del liderato. Con tres fechas restantes (quinta en Palmira, sexta en Roldanillo y séptima en Yumbo), el podio final del campeonato está plenamente al alcance.
 
