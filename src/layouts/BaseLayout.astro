@@ -11,6 +11,8 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   ogType?: string;
   articlePublishedTime?: string;
@@ -20,7 +22,7 @@ interface Props {
   articleTags?: string[];
 }
 
-const { title, description, ogImage, jsonLd, ogType, articlePublishedTime, articleModifiedTime, articleAuthor, articleSection, articleTags } = Astro.props;
+const { title, description, ogImage, ogImageWidth, ogImageHeight, jsonLd, ogType, articlePublishedTime, articleModifiedTime, articleAuthor, articleSection, articleTags } = Astro.props;
 ---
 
 <!doctype html>
@@ -35,6 +37,8 @@ const { title, description, ogImage, jsonLd, ogType, articlePublishedTime, artic
     <!-- Font preloading -->
     <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/PlusJakartaSans-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Hero poster preload (LCP candidate on homepage) -->
+    <link rel="preload" as="image" href="/images/hero-poster.jpg" fetchpriority="high" />
     <!-- Preconnect / DNS prefetch -->
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />
@@ -42,7 +46,7 @@ const { title, description, ogImage, jsonLd, ogType, articlePublishedTime, artic
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
     <!-- Theme color -->
     <meta name="theme-color" content="#20b7c9" />
-    <SEOHead title={title} description={description} ogImage={ogImage} jsonLd={jsonLd} ogType={ogType} articlePublishedTime={articlePublishedTime} articleModifiedTime={articleModifiedTime} articleAuthor={articleAuthor} articleSection={articleSection} articleTags={articleTags} />
+    <SEOHead title={title} description={description} ogImage={ogImage} ogImageWidth={ogImageWidth} ogImageHeight={ogImageHeight} jsonLd={jsonLd} ogType={ogType} articlePublishedTime={articlePublishedTime} articleModifiedTime={articleModifiedTime} articleAuthor={articleAuthor} articleSection={articleSection} articleTags={articleTags} />
     <ClientRouter />
   </head>
   <body class="min-h-screen flex flex-col bg-surface text-text-primary font-sans antialiased">

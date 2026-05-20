@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 import PageLayout from '@layouts/PageLayout.astro';
 import Card from '@components/common/Card.astro';
 import Badge from '@components/common/Badge.astro';
@@ -27,7 +28,7 @@ const levelLabels: Record<string, string> = {
       <Card class="p-0 overflow-hidden">
         <div class="flex flex-col md:flex-row gap-6">
           <div class="aspect-video md:aspect-auto md:w-1/3 md:min-h-[14rem] bg-surface-muted rounded-t-xl md:rounded-t-none md:rounded-l-xl flex items-center justify-center shrink-0">
-            <span class="text-4xl text-text-secondary/30" aria-hidden="true">🚴</span>
+            <Icon name="ph:bicycle" class="text-primary size-24" aria-hidden="true" />
           </div>
           <div class="flex-1 p-6 md:py-6 md:pr-6 md:pl-0">
             <div class="flex flex-wrap items-center gap-2 mb-3">

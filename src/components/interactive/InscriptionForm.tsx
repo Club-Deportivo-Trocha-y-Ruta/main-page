@@ -136,6 +136,7 @@ export default function InscriptionForm({ programs }: Props) {
     watch,
     reset,
     getValues,
+    setFocus,
     formState: { errors },
   } = useForm<InscriptionData>({
     resolver: zodResolver(inscriptionSchema),
@@ -190,11 +191,41 @@ export default function InscriptionForm({ programs }: Props) {
     const valid = await trigger(fields as unknown as (keyof InscriptionData)[]);
     if (valid) {
       setCurrentStep((s) => Math.min(s + 1, 3));
+    } else {
+      // Mover foco al primer campo con error de este paso
+      const firstErrorField = (fields as readonly string[]).find(
+        (f) => (errors as Record<string, unknown>)[f],
+      );
+      if (firstErrorField) {
+        try {
+          setFocus(firstErrorField as keyof InscriptionData);
+        } catch {
+          // Algunos campos (radios/checkboxes) pueden no ser focuseables vía setFocus
+        }
+      }
     }
   };
 
   const handleBack = () => {
     setCurrentStep((s) => Math.max(s - 1, 0));
+  };
+
+  const onInvalidSubmit = (formErrors: Record<string, unknown>) => {
+    // Mover foco al primer campo con error
+    const orderedFields = [
+      ...step1Fields,
+      ...step2Fields,
+      ...step3Fields,
+      ...step4Fields,
+    ] as readonly string[];
+    const firstErrorField = orderedFields.find((f) => formErrors[f]);
+    if (firstErrorField) {
+      try {
+        setFocus(firstErrorField as keyof InscriptionData);
+      } catch {
+        // Ignorar si el campo no es focuseable
+      }
+    }
   };
 
   const onSubmit: SubmitHandler<InscriptionData> = async (data) => {
@@ -314,6 +345,11 @@ export default function InscriptionForm({ programs }: Props) {
 
   return (
     <div className="mx-auto max-w-2xl">
+      {/* Anuncio de paso para lectores de pantalla */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {`Paso ${currentStep + 1} de ${STEPS.length}: ${STEPS[currentStep].label}`}
+      </div>
+
       {/* Progress Bar */}
       <nav aria-label="Progreso de inscripcion" className="mb-8">
         <ol className="flex items-center">
@@ -365,7 +401,7 @@ export default function InscriptionForm({ programs }: Props) {
 
       <form
         ref={formRef}
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
         noValidate
         className="rounded-2xl bg-white p-6 shadow-lg sm:p-8"
       >
@@ -397,7 +433,7 @@ export default function InscriptionForm({ programs }: Props) {
                       type="radio"
                       value={program.id}
                       {...register('programId')}
-                      className="h-4 w-4 border-gray-300 text-primary focus:ring-primary"
+                      className="h-11 w-11 shrink-0 border-gray-300 text-primary focus:ring-primary"
                     />
                     <div>
                       <span className="font-semibold text-text-primary">{program.title}</span>
@@ -580,7 +616,7 @@ export default function InscriptionForm({ programs }: Props) {
                           type="radio"
                           value={level.value}
                           {...register('experience')}
-                          className="h-4 w-4 border-gray-300 text-primary focus:ring-primary"
+                          className="h-11 w-11 shrink-0 border-gray-300 text-primary focus:ring-primary"
                         />
                         <span className="text-sm text-text-primary">{level.label}</span>
                       </label>
@@ -755,11 +791,11 @@ export default function InscriptionForm({ programs }: Props) {
 
               {/* Checkboxes */}
               <div className="mt-6 space-y-4">
-                <label className="flex items-start gap-3">
+                <label className="flex items-center gap-3 py-1">
                   <input
                     type="checkbox"
                     {...register('acceptTerms')}
-                    className="mt-0.5 h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
+                    className="h-11 w-11 shrink-0 rounded border-gray-300 text-primary focus:ring-primary"
                   />
                   <span className="text-sm text-text-secondary">
                     Acepto los terminos y condiciones del Club Deportivo Trocha y Ruta <span className="text-red-500">*</span>
@@ -769,11 +805,11 @@ export default function InscriptionForm({ programs }: Props) {
                   <p className="text-sm text-red-600" role="alert">{errors.acceptTerms.message}</p>
                 )}
 
-                <label className="flex items-start gap-3">
+                <label className="flex items-center gap-3 py-1">
                   <input
                     type="checkbox"
                     {...register('acceptDataPolicy')}
-                    className="mt-0.5 h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
+                    className="h-11 w-11 shrink-0 rounded border-gray-300 text-primary focus:ring-primary"
                   />
                   <span className="text-sm text-text-secondary">
                     Autorizo el tratamiento de datos personales segun la Ley 1581 de 2012 <span className="text-red-500">*</span>

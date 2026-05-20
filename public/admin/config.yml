@@ -81,6 +81,17 @@ collections:
       - { label: "Borrador", name: "draft", widget: "boolean", default: true }
       - { label: "Evento relacionado (slug)", name: "relatedEvent", widget: "string", required: false }
       - { label: "Galería relacionada (slug)", name: "relatedGallery", widget: "string", required: false }
+      - label: "Lineup de corredores"
+        name: "lineup"
+        widget: "list"
+        required: false
+        collapsed: true
+        hint: "Lista ordenada de corredores destacados en la noticia (mejor a peor resultado)"
+        fields:
+          - { label: "Nombre", name: "name", widget: "string" }
+          - { label: "Categoría", name: "category", widget: "string", hint: "Ej: Pre Juvenil A Femenina, Élite, Infantil A" }
+          - { label: "Slug del corredor", name: "slug", widget: "string", hint: "Identificador en kebab-case, ej: isabel-quinones" }
+          - { label: "Foto", name: "image", widget: "image", hint: "Ruta a la imagen del corredor (recomendado WebP)" }
       - label: "SEO"
         name: "seo"
         widget: "object"

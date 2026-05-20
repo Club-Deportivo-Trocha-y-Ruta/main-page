@@ -102,11 +102,11 @@ describe('RiderCard', () => {
 
   // ─── Placeholder de imagen ────────────────────────────────
 
-  it('incluye el atributo aria-label con el nombre del corredor', async () => {
+  it('incluye el atributo alt con el nombre del corredor', async () => {
     const html = await container.renderToString(RiderCard, {
       props: baseProps,
     });
-    expect(html).toContain('aria-label="Foto de Santiago García"');
+    expect(html).toContain('alt="Foto de Santiago García"');
   });
 
   // ─── Clases de animación ──────────────────────────────────

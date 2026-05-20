@@ -10,6 +10,7 @@ interface Props {
 
 const { title, date, location, category, status, href } = Astro.props;
 
+import { Icon } from 'astro-icon/components';
 import Badge from '@components/common/Badge.astro';
 import AddToCalendar from '@components/common/AddToCalendar.astro';
 import { getCategoryLabel, getEventStatusLabel } from '@lib/utils';
@@ -37,7 +38,7 @@ const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> =
         {title}
       </a>
     </h3>
-    <p class="text-sm text-text-secondary"><span aria-hidden="true">📍</span> {location}</p>
+    <p class="text-sm text-text-secondary flex items-center gap-1"><Icon name="ph:map-pin" class="size-4" aria-hidden="true" /> {location}</p>
     <div class="mt-1 flex flex-wrap gap-1.5 sm:gap-2">
       <Badge>{getCategoryLabel(category)}</Badge>
       <Badge variant={statusVariant[status] ?? 'neutral'}>{getEventStatusLabel(status)}</Badge>
