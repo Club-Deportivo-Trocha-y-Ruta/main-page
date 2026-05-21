@@ -42,6 +42,7 @@ export const SECONDARY_NAV = [
   { label: 'Preguntas Frecuentes', href: '/preguntas-frecuentes' },
   { label: 'Patrocinadores', href: '/patrocinadores' },
   { label: 'Transparencia', href: '/transparencia' },
+  { label: 'Política Editorial', href: '/politica-editorial' },
   { label: 'Contacto', href: '/contacto' },
 ] as const;
 

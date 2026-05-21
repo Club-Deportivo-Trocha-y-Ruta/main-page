@@ -315,21 +315,25 @@ export function generatePersonJsonLd(person: PersonInput): JsonLd {
  * https://schema.org/NewsArticle
  */
 export function generateArticleJsonLd(article: ArticleInput): JsonLd {
+  const authorNode: JsonLd = {
+    '@type': 'Organization',
+    '@id': `${SITE.url}/#organization`,
+    name: SITE.name,
+    url: SITE.url,
+  };
+
+  const imageArray = article.image ? [fullUrl(article.image)] : undefined;
+
   return {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     headline: article.title,
     datePublished: article.date.toISOString(),
     dateModified: (article.updatedDate ?? article.date).toISOString(),
-    author: {
-      '@type': 'Organization',
-      '@id': `${SITE.url}/#organization`,
-      name: SITE.name,
-      url: SITE.url,
-    },
+    author: authorNode,
     description: article.excerpt,
     url: fullUrl(article.url),
-    ...(article.image ? { image: fullUrl(article.image) } : {}),
+    ...(imageArray ? { image: imageArray } : {}),
     ...(article.category ? { articleSection: article.category } : {}),
     ...(article.tags && article.tags.length > 0 ? { keywords: article.tags.join(', ') } : {}),
     publisher: {
