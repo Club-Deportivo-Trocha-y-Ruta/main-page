@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { PUBLIC_WEB3FORMS_KEY } from 'astro:env/client';
 import { CONTACT } from '@lib/constants';
 import { trackEvent, ageBucket } from '@lib/analytics';
 
@@ -237,7 +238,7 @@ export default function InscriptionForm({ programs }: Props) {
     const selectedProgram = programs.find((p) => p.id === data.programId);
 
     const formData = new FormData();
-    formData.append('access_key', import.meta.env.PUBLIC_WEB3FORMS_KEY);
+    formData.append('access_key', PUBLIC_WEB3FORMS_KEY ?? '');
     formData.append('subject', `Nueva inscripcion - ${data.riderName}`);
     formData.append('from_name', data.guardianName);
 

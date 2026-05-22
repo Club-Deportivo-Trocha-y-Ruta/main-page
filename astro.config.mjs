@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import partytown from '@astrojs/partytown';
@@ -31,6 +31,28 @@ export default defineConfig({
 
   image: {
     domains: ['res.cloudinary.com'],
+    layout: 'constrained',
+    responsiveStyles: true,
+  },
+
+  env: {
+    schema: {
+      PUBLIC_WEB3FORMS_KEY: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
+      }),
+      PUBLIC_GA4_MEASUREMENT_ID: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
+      }),
+      PUBLIC_CLOUDINARY_CLOUD_NAME: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
+      }),
+    },
   },
 
   output: 'static',

@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useRef } from 'react';
+import { PUBLIC_WEB3FORMS_KEY } from 'astro:env/client';
 import { trackEvent } from '@lib/analytics';
 
 const subjects = [
@@ -74,7 +75,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          access_key: import.meta.env.PUBLIC_WEB3FORMS_KEY,
+          access_key: PUBLIC_WEB3FORMS_KEY,
           name: data.name,
           email: data.email,
           phone: data.phone || undefined,

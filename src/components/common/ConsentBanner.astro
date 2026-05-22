@@ -1,6 +1,7 @@
 ---
-const ga4Id = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID as string | undefined
-const showBanner = Boolean(ga4Id)
+import { PUBLIC_GA4_MEASUREMENT_ID } from 'astro:env/client';
+const ga4Id = PUBLIC_GA4_MEASUREMENT_ID;
+const showBanner = Boolean(ga4Id);
 ---
 
 {showBanner && (
