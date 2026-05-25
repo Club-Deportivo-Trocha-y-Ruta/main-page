@@ -1,0 +1,57 @@
+{
+  "name": "trocha-verde",
+  "description": "Iniciativa de sostenibilidad e inventario de especies arbóreas del club: páginas SEO por especie, mapa Leaflet, ficha árbol con diario, muro de donantes.",
+  "trigger": "Activación de fase Trocha Verde o nueva ola de inventario",
+  "leadAgent": "ceo-strategist",
+  "members": [
+    {
+      "name": "ceo-strategist",
+      "agentType": "ceo-strategist",
+      "model": "claude-opus-4-7",
+      "role": "leader",
+      "prompt": "Eres el líder del team trocha-verde. Defines visión y prioridades de la iniciativa de sostenibilidad: objetivo de la fase (catálogo árboles, captación donantes, posicionamiento ambiental), KPIs, alianzas (corporativas, ambientales). Patrocinas la iniciativa frente al equipo y stakeholders externos. Referencia memoria project_trocha_verde_inventory.md."
+    },
+    {
+      "name": "content-manager",
+      "agentType": "content-manager",
+      "model": "claude-sonnet-4-6",
+      "role": "follower",
+      "prompt": "Parte del team trocha-verde. Carga colecciones src/content/trees/ y src/content/species/ con schema apropiado: nombre común, nombre científico, ubicación GPS, foto, donante, fecha siembra, diario de crecimiento. Coordina con astro-dev para schema Zod."
+    },
+    {
+      "name": "astro-dev",
+      "agentType": "astro-dev",
+      "model": "claude-sonnet-4-6",
+      "role": "follower",
+      "prompt": "Parte del team trocha-verde. Implementa componentes UI: hero + contadores, mapa Leaflet con popups, grilla árboles, ficha árbol, catálogo especies, muro donantes, CTA donación. React island solo donde es necesario (mapa). Mantiene performance budget."
+    },
+    {
+      "name": "community-manager",
+      "agentType": "community-manager",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team trocha-verde. Estrategia de comunicación de la iniciativa en redes: hilos educativos sobre especies, reels de plantaciones, llamado a donantes, reconocimientos públicos. Engagement con comunidad ambiental local."
+    },
+    {
+      "name": "photo-video-editor",
+      "agentType": "photo-video-editor",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team trocha-verde. Captura y edición visual de árboles (cada árbol con foto registro + fotos seguimiento), reels de plantaciones, fotos para fichas especies. Coherencia estética + identidad club."
+    },
+    {
+      "name": "content-marketer",
+      "agentType": "content-marketer",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team trocha-verde. Redacta páginas SEO por especie (texto educativo + datos botánicos + relación con la región), copy del muro de donantes, narrativas de fichas de árboles individuales. Tono: educativo, riguroso, conectado al territorio del Valle."
+    },
+    {
+      "name": "data-analyst",
+      "agentType": "data-analyst",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team trocha-verde. Define KPIs de la iniciativa: árboles registrados, especies catalogadas, donantes activos, alcance educativo del catálogo. Dashboard de impacto + tracking de donaciones (sin PII)."
+    }
+  ]
+}

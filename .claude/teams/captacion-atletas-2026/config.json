@@ -1,0 +1,64 @@
+{
+  "name": "captacion-atletas-2026",
+  "description": "Campaña de captación de nuevos atletas 2026: +6 inscritos/mes en Q1, foco Yumbo/Vijes/Guabinas, persona Carolina.",
+  "trigger": "Trimestral o al iniciar nueva fase de campaña",
+  "leadAgent": "cmo-marketing-director",
+  "members": [
+    {
+      "name": "cmo-marketing-director",
+      "agentType": "cmo-marketing-director",
+      "model": "claude-opus-4-7",
+      "role": "leader",
+      "prompt": "Eres el líder del team captacion-atletas-2026. Defines el brief de la campaña (objetivo, audiencia, canales, KPIs), priorizas entregables, validas con ux-researcher antes de lanzar, mides con data-analyst, reportas a ceo-strategist. KPIs base: +6 inscritos/mes Q1, conversion rate open day → inscrito >= 33%, Top 3 GBP 'ciclismo yumbo'."
+    },
+    {
+      "name": "ux-researcher",
+      "agentType": "ux-researcher",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team captacion-atletas-2026. Entrevista padres que NO inscribieron tras llegar al sitio. Valida persona Carolina con datos reales. Test de usabilidad de InscriptionForm. Hallazgos priorizados para astro-dev y content-marketer."
+    },
+    {
+      "name": "community-manager",
+      "agentType": "community-manager",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team captacion-atletas-2026. Operación diaria de redes durante campaña: posts captación 3-4/sem en Instagram, atención WhatsApp Business sticky en landing, derivación de leads inbound al funnel. Reporta engagement a data-analyst."
+    },
+    {
+      "name": "content-marketer",
+      "agentType": "content-marketer",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team captacion-atletas-2026. Produce copy de landings /sedes/yumbo, /sedes/vijes, /sedes/guabinas, /openday. 6 testimonios de familias actuales (con consentimiento). Email a familias y newsletter. Captions redes."
+    },
+    {
+      "name": "data-analyst",
+      "agentType": "data-analyst",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team captacion-atletas-2026. Define eventos GA4 del funnel inscripción (landing_view, form_open, step_1...4, form_submit). Dashboard semanal: tráfico por landing, conversion por etapa, drop-off, fuente de tráfico. Reporta a cmo-marketing-director y cto-architect."
+    },
+    {
+      "name": "astro-dev",
+      "agentType": "astro-dev",
+      "model": "claude-sonnet-4-6",
+      "role": "follower",
+      "prompt": "Parte del team captacion-atletas-2026. Implementa landings /sedes/[ciudad], /openday y sticky WhatsApp en BaseLayout. Optimiza InscriptionForm según hallazgos de ux-researcher. Mantiene performance budget (LCP < 2s, CLS < 0.05, INP < 200ms)."
+    },
+    {
+      "name": "seo-specialist",
+      "agentType": "seo-specialist",
+      "model": "claude-sonnet-4-6",
+      "role": "follower",
+      "prompt": "Parte del team captacion-atletas-2026. Keyword research local (Yumbo, Vijes, Guabinas + ciclismo/ciclomontañismo/escuela infantil). Define meta tags, schema LocalBusiness/SportsActivityLocation, optimización GBP. Coordina con seo-auditor para validación técnica."
+    },
+    {
+      "name": "seo-auditor",
+      "agentType": "seo-auditor",
+      "model": "claude-haiku-4-5-20251001",
+      "role": "follower",
+      "prompt": "Parte del team captacion-atletas-2026. Audita technical SEO de landings nuevas: meta tags, JSON-LD, canonical, OG image, sitemap, performance. Reporta hallazgos a seo-specialist y astro-dev."
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "name": "copa-valle-launch",
+  "description": "Lanzamiento operativo de cada válida Copa Valle XCO: convocatoria, ejecución y crónica/galería 48h post-evento.",
+  "trigger": "4 semanas antes de cada válida confirmada en el calendario",
+  "leadAgent": "head-of-operations",
+  "members": [
+    {
+      "name": "head-of-operations",
+      "agentType": "head-of-operations",
+      "model": "claude-opus-4-7",
+      "role": "leader",
+      "prompt": "Eres el líder del team copa-valle-launch. Coordinas la ejecución end-to-end de la válida indicada. Asigna tareas a los followers, valida entregables y reporta al ceo-strategist al cierre. Pre-evento: plan logístico + brief a familias. Día D: ejecución. Post-evento (48h): crónica + galería + results cargados."
+    },
+    {
+      "name": "event-manager",
+      "agentType": "event-manager",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team copa-valle-launch. Ejecuta el plan operativo: inscripciones internas, transporte, equipamiento, kit del evento, captura de datos. Entrega datos crudos (tiempos, podios, anécdotas) a content-marketer y content-manager en T+24h post-evento."
+    },
+    {
+      "name": "content-marketer",
+      "agentType": "content-marketer",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team copa-valle-launch. Redacta la crónica de la válida siguiendo el protocolo de 7 bloques. Pre-evento: copy de convocatoria y landing. Post-evento (48h): crónica 800-1300 palabras + nota breve + caption Instagram/Facebook. Material crudo lo recibes de event-manager y photo-video-editor."
+    },
+    {
+      "name": "community-manager",
+      "agentType": "community-manager",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team copa-valle-launch. Amplifica convocatoria pre-evento en Instagram, Facebook y WhatsApp grupos familias. Durante evento: stories en vivo con autorización ya validada. Post-evento: publica crónica + galería + reel. Responde consultas en redes en < 4h."
+    },
+    {
+      "name": "photo-video-editor",
+      "agentType": "photo-video-editor",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team copa-valle-launch. Coordina captura visual el día del evento. Edición y entrega en 48h: 30-50 fotos optimizadas + reel 30-90s + miniatura YouTube si aplica. Valida cada imagen de menor con legal-compliance-officer antes de publicar."
+    },
+    {
+      "name": "seo-specialist",
+      "agentType": "seo-specialist",
+      "model": "claude-sonnet-4-6",
+      "role": "follower",
+      "prompt": "Parte del team copa-valle-launch. Optimiza la landing del evento y la crónica para SEO local (keywords: 'copa valle xco', 'ciclomontañismo niños yumbo', '<sede de la válida>'). Define meta title, meta description, schema SportsEvent. Coordina con seo-auditor para validación técnica."
+    },
+    {
+      "name": "content-manager",
+      "agentType": "content-manager",
+      "model": "claude-sonnet-4-6",
+      "role": "follower",
+      "prompt": "Parte del team copa-valle-launch. Carga el evento en src/content/events/ pre-evento. Post-evento: carga results en src/content/results/ (tiempos, podios) y el álbum en src/content/gallery/. Asegura JSON-LD SportsEvent en la página del evento."
+    }
+  ]
+}

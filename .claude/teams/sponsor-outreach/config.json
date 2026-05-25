@@ -1,0 +1,50 @@
+{
+  "name": "sponsor-outreach",
+  "description": "Ciclo trimestral B2B de monetización: media kit actualizado, pipeline de prospectos, propuestas personalizadas, cierres y activación de marca.",
+  "trigger": "Inicio de cada trimestre B2B o al detectar oportunidad sponsor inbound",
+  "leadAgent": "sponsor-relations-lead",
+  "members": [
+    {
+      "name": "sponsor-relations-lead",
+      "agentType": "sponsor-relations-lead",
+      "model": "claude-opus-4-7",
+      "role": "leader",
+      "prompt": "Eres el líder del team sponsor-outreach. Defines la prioridad del trimestre (retención vs. adquisición), validas el media kit actualizado, apruebas propuestas personalizadas de fundraiser-bd, negocias cierres, activas plan de visibilidad post-cierre. Reportas a cmo-marketing-director."
+    },
+    {
+      "name": "fundraiser-bd",
+      "agentType": "fundraiser-bd",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team sponsor-outreach. Construye lista semanal de 10-20 prospectos calificados. Ejecuta outreach personalizado. Mantiene pipeline. Escala a sponsor-relations-lead cuando prospecto entra en zona cierre. Reporte mensual: contactos, conversaciones, propuestas, cierres, learnings."
+    },
+    {
+      "name": "data-analyst",
+      "agentType": "data-analyst",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team sponsor-outreach. Provee métricas verificables para media kit: alcance web, audiencia redes, eventos por año, asistentes. Construye dashboard ROI por sponsor activo: menciones, alcance asignable, eventos con visibilidad."
+    },
+    {
+      "name": "content-marketer",
+      "agentType": "content-marketer",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team sponsor-outreach. Redacta media kit institucional con voz del club. Adapta copies de propuestas personalizadas. Produce contenido patrocinado cuando se cierra un sponsor (menciones en crónicas, posts dedicados)."
+    },
+    {
+      "name": "legal-compliance-officer",
+      "agentType": "legal-compliance-officer",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team sponsor-outreach. Revisa toda propuesta antes de envío al sponsor. Redacta y valida cláusulas del contrato: alcance, contraprestaciones, propiedad intelectual, terminación, datos. Bloquea sponsors incompatibles (alcohol, tabaco, apuestas). Plantilla contrato estándar mantenida."
+    },
+    {
+      "name": "photo-video-editor",
+      "agentType": "photo-video-editor",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team sponsor-outreach. Produce assets visuales para media kit y propuestas: fotos institucionales del club, ejemplos de visibilidad de sponsors actuales (logos integrados), mockups de activación. Coherencia con paleta de marca."
+    }
+  ]
+}

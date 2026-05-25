@@ -275,27 +275,68 @@ Secrets de deploy (en cada environment): `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASS
 | `docs/03-content-strategy.md` | Schemas Zod completos, taxonomía, CMS config.yml — al crear collections |
 | `docs/04-implementation-workflow.md` | Fases, tareas, dependencias — al planificar trabajo |
 
-## Agentes del Proyecto
+## Agentes del Proyecto — Compañía Digital (22 agentes)
 
-10 agentes en `.claude/agents/` para trabajo especializado. Modelos pinneados a IDs específicos para reproducibilidad.
+22 agentes en `.claude/agents/` organizados como una compañía digital con jerarquía de 5 tiers. Modelos pinneados a IDs específicos para reproducibilidad.
 
-| Agente | Modelo | Rol |
-|--------|--------|-----|
-| `project-pm` | `claude-opus-4-7` | Coordinación, task management, integración |
-| `astro-dev` | `claude-sonnet-4-6` | Componentes, layouts, páginas, React Islands, responsive |
-| `content-manager` | `claude-sonnet-4-6` | Content Collections, Sveltia CMS, SEO técnico, JSON-LD |
-| `performance-engineer` | `claude-sonnet-4-6` | Bundle size, LCP/INP/CLS, análisis de cuellos de botella, presupuesto de performance |
-| `seo-specialist` | `claude-sonnet-4-6` | Estrategia keywords, análisis competitivo, roadmap SEO trimestral, rich snippets |
-| `content-marketer` | `claude-opus-4-7` | Cronista deportivo especializado en crónicas Copa Valle XCO (protocolo de 7 bloques, ética cobertura menores, sistema puntos top-5). También copies web, redes sociales, email a familias y comunicación de patrocinadores |
-| `qa-auditor` | `claude-haiku-4-5-20251001` | Lighthouse audit, WCAG 2.1 AA, Core Web Vitals, responsive testing |
-| `seo-auditor` | `claude-haiku-4-5-20251001` | Validación técnica JSON-LD, meta tags, Open Graph, sitemap, SEO local |
-| `accessibility-tester` | `claude-haiku-4-5-20251001` | WCAG 2.1/3.0 profundo, lectores de pantalla, ARIA, accesibilidad cognitiva y móvil |
-| `image-optimizer` | `claude-haiku-4-5-20251001` | WebP/AVIF, srcset responsive, lazy loading, Cloudinary |
+### Tier 1 — C-Suite (Opus 4.7)
+| Agente | Rol | Reporta a | Lidera |
+|--------|-----|-----------|--------|
+| `ceo-strategist` | CEO — visión, OKRs trimestrales, decisiones cross-departamento, alineación misión club | — | cto-architect, cmo-marketing-director, head-of-operations, sponsor-relations-lead, legal-compliance-officer, project-pm |
+| `cto-architect` | CTO — decisiones técnicas, performance/a11y budget, stack roadmap, arquitectura | ceo-strategist | astro-dev, content-manager, performance-engineer, qa-auditor, accessibility-tester, image-optimizer |
+| `cmo-marketing-director` | CMO — estrategia digital integral (web + redes + email + B2B), brand voice, captación | ceo-strategist | content-marketer, seo-specialist, community-manager, photo-video-editor, ux-researcher, seo-auditor |
+
+### Tier 2 — Directors / Department Heads (Opus 4.7)
+| Agente | Rol | Reporta a | Lidera |
+|--------|-----|-----------|--------|
+| `head-of-operations` | Calendario deportivo, logística Copa Valle XCO, alianzas operativas | ceo-strategist | event-manager |
+| `sponsor-relations-lead` | Monetización B2B, media kit, negociación, retención, activación marca | cmo-marketing-director | fundraiser-bd |
+| `legal-compliance-officer` | Ley 1581, Ley 1098 (menores), DIAN, transparencia, consentimientos | ceo-strategist | — (rol transversal) |
+| `project-pm` | COO — coordinación ejecución diaria, task management | ceo-strategist | — (orquesta a todos los demás) |
+
+### Tier 3 — Specialists / Senior ICs (Opus 4.7)
+| Agente | Rol | Reporta a |
+|--------|-----|-----------|
+| `content-marketer` | Senior Editor — crónicas Copa Valle XCO (protocolo 7 bloques), copies multi-canal, comunicación a familias y sponsors | cmo-marketing-director |
+| `event-manager` | Logística operativa de eventos: kit, transporte, inscripciones, captura datos | head-of-operations |
+| `community-manager` | Operación diaria redes (Instagram, Facebook, YouTube), WhatsApp familias, atención < 4h | cmo-marketing-director |
+| `data-analyst` | GA4 + Cloudflare Analytics, funnels inscripción, KPIs marketing, ROI sponsor | cto-architect + cmo-marketing-director |
+| `ux-researcher` | Entrevistas familias, usability testing, validación personas (Carolina/Mateo/Luis Fernando) | cmo-marketing-director |
+| `photo-video-editor` | Producción visual post-evento (48h): fotos, reels, álbumes galería, miniaturas YouTube | cmo-marketing-director |
+| `fundraiser-bd` | Outreach B2B cold, propuestas personalizadas, pipeline, follow-up | sponsor-relations-lead |
+
+### Tier 4 — Engineers (Sonnet 4.6)
+| Agente | Rol | Reporta a |
+|--------|-----|-----------|
+| `astro-dev` | Senior Frontend Engineer — componentes, layouts, páginas, React Islands, responsive | cto-architect |
+| `content-manager` | Content Engineer — Content Collections, Sveltia CMS, JSON-LD, schemas Zod | cto-architect |
+| `performance-engineer` | Bundle size, LCP/INP/CLS, análisis de cuellos de botella, performance budget | cto-architect |
+| `seo-specialist` | SEO Strategist — keywords, análisis competitivo, roadmap SEO, rich snippets | cmo-marketing-director |
+
+### Tier 5 — Inspectors / Quality Gate (Haiku 4.5)
+| Agente | Rol | Reporta a |
+|--------|-----|-----------|
+| `qa-auditor` | Lighthouse audit, WCAG 2.1 AA, Core Web Vitals, responsive testing | cto-architect |
+| `seo-auditor` | Validación técnica JSON-LD, meta tags, Open Graph, sitemap, SEO local | cmo-marketing-director |
+| `accessibility-tester` | WCAG 2.1/3.0 profundo, lectores de pantalla, ARIA, a11y cognitiva y móvil | cto-architect |
+| `image-optimizer` | WebP/AVIF, srcset responsive, lazy loading, Cloudinary | cto-architect |
 
 **Criterio de asignación**:
-- **Opus 4.7** — orquestación, decisiones arquitectónicas, delegación (project-pm)
-- **Sonnet 4.6** — implementación de features, refactor, redacción creativa, estrategia
-- **Haiku 4.5** — auditorías read-only, validaciones deterministas, tareas mecánicas
+- **Opus 4.7** — liderazgo (C-Suite + Directors) y especialistas con razonamiento estratégico (Tier 3)
+- **Sonnet 4.6** — implementación de features y estrategia técnica (Engineers)
+- **Haiku 4.5** — auditorías read-only, validaciones deterministas, tareas mecánicas (Inspectors)
+
+## Teams Formales (`.claude/teams/`)
+
+5 teams declarativos que orquestan workflows multi-departamento con leader + followers. Cada team tiene su `config.json` con el organigrama del equipo, prompts por miembro y trigger de activación.
+
+| Team | Leader | Followers (resumen) | Trigger |
+|------|--------|--------------------|---------|
+| `copa-valle-launch` | head-of-operations | event-manager, content-marketer, community-manager, photo-video-editor, seo-specialist, content-manager | 4 semanas antes de cada válida Copa Valle XCO |
+| `captacion-atletas-2026` | cmo-marketing-director | ux-researcher, community-manager, content-marketer, data-analyst, astro-dev, seo-specialist, seo-auditor | Trimestral o inicio de nueva campaña |
+| `sponsor-outreach` | sponsor-relations-lead | fundraiser-bd, data-analyst, content-marketer, legal-compliance-officer, photo-video-editor | Inicio de trimestre B2B |
+| `trocha-verde` | ceo-strategist | content-manager, astro-dev, community-manager, photo-video-editor, content-marketer, data-analyst | Activación de fase de la iniciativa |
+| `compliance-anual` | legal-compliance-officer | content-manager, data-analyst, project-pm | Anual o nuevo formulario/colección |
 
 ## Claude Code — Workflow
 
