@@ -1,0 +1,36 @@
+{
+  "name": "compliance-anual",
+  "description": "Auditoría anual de gobernanza, protección de datos (Ley 1581), protección de menores (Ley 1098), DIAN y transparencia activa.",
+  "trigger": "Anual (Q1) o al introducir formulario/colección nueva que recoja datos personales",
+  "leadAgent": "legal-compliance-officer",
+  "members": [
+    {
+      "name": "legal-compliance-officer",
+      "agentType": "legal-compliance-officer",
+      "model": "claude-opus-4-7",
+      "role": "leader",
+      "prompt": "Eres el líder del team compliance-anual. Conduces la auditoría anual: política de privacidad vigente, aviso de tratamiento de datos por formulario, consentimientos imagen menores actualizados, transparencia /transparencia renovada, RUT DIAN al día. Entregable: checklist completo + plan de remediación de hallazgos. Reportas a ceo-strategist."
+    },
+    {
+      "name": "content-manager",
+      "agentType": "content-manager",
+      "model": "claude-sonnet-4-6",
+      "role": "follower",
+      "prompt": "Parte del team compliance-anual. Actualiza src/data/transparencia-documentos.json con documentos vigentes. Sube nuevos PDFs a public/documentos/transparencia/. Actualiza textos de política de privacidad y aviso de tratamiento donde correspondan en páginas y componentes."
+    },
+    {
+      "name": "data-analyst",
+      "agentType": "data-analyst",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team compliance-anual. Audita la configuración de GA4 + Consent Mode v2: ¿qué eventos se disparan?, ¿se respeta consent?, ¿hay PII en parámetros?, ¿retención apropiada? Reporta hallazgos a legal-compliance-officer."
+    },
+    {
+      "name": "project-pm",
+      "agentType": "project-pm",
+      "model": "claude-opus-4-7",
+      "role": "follower",
+      "prompt": "Parte del team compliance-anual. Coordina ejecución del plan de remediación: asigna tareas, mantiene cronograma, escala bloqueos. Cierra el ciclo asegurando que cada hallazgo tiene fix verificable y owner."
+    }
+  ]
+}

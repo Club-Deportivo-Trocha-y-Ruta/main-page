@@ -106,4 +106,48 @@ const jsonLd = generateArticleJsonLd({
       </div>
     )}
   </article>
+
+  <script is:inline>
+    (function () {
+      function initScrollDepth() {
+        const article = document.querySelector('article');
+        if (!article) return;
+        const fired = new Set();
+        const depths = [25, 50, 75, 100];
+
+        function check() {
+          const rect = article.getBoundingClientRect();
+          const total = rect.height;
+          if (total <= 0) return;
+          const scrolled = Math.min(Math.max(-rect.top + window.innerHeight, 0), total);
+          const pct = Math.round((scrolled / total) * 100);
+          for (const d of depths) {
+            if (pct >= d && !fired.has(d)) {
+              fired.add(d);
+              if (typeof window.__trochaEmit === 'function') {
+                window.__trochaEmit('scroll_depth', { depth: d });
+              }
+            }
+          }
+          if (fired.size === depths.length) {
+            window.removeEventListener('scroll', onScroll);
+          }
+        }
+
+        let ticking = false;
+        function onScroll() {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(function () {
+            check();
+            ticking = false;
+          });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        check();
+      }
+      initScrollDepth();
+      document.addEventListener('astro:page-load', initScrollDepth);
+    })();
+  </script>
 </BaseLayout>

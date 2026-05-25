@@ -17,7 +17,7 @@
 # Variables requeridas en Environment develop:
 #   PUBLIC_WEB3FORMS_KEY          → API key de Web3Forms
 #   PUBLIC_CLOUDINARY_CLOUD_NAME  → Cloud name de Cloudinary
-#   PUBLIC_CF_ANALYTICS_TOKEN     → Token CF Analytics QA
+#   PUBLIC_GA4_MEASUREMENT_ID     → Measurement ID GA4 (G-XXXXXXXXXX)
 #
 # Secrets requeridos en Environment develop:
 #   FTP_SERVER    → hostname FTP de staging (Hostinger)
@@ -86,7 +86,7 @@ jobs:
     # El environment QA inyecta sus propias variables y secrets en este job.
     # GitHub descarga los valores configurados bajo Settings → Environments → QA
     # antes de ejecutar cualquier step. Esto permite usar nombres genéricos
-    # (FTP_SERVER, PUBLIC_CF_ANALYTICS_TOKEN) en ambos workflows sin colisión.
+    # (FTP_SERVER, PUBLIC_GA4_MEASUREMENT_ID) en ambos workflows sin colisión.
     environment: develop
 
     steps:
@@ -116,7 +116,7 @@ jobs:
           # porque su valor ya es visible en el código fuente del cliente.
           PUBLIC_WEB3FORMS_KEY: ${{ vars.PUBLIC_WEB3FORMS_KEY }}
           PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ vars.PUBLIC_CLOUDINARY_CLOUD_NAME }}
-          PUBLIC_CF_ANALYTICS_TOKEN: ${{ vars.PUBLIC_CF_ANALYTICS_TOKEN }}
+          PUBLIC_GA4_MEASUREMENT_ID: ${{ vars.PUBLIC_GA4_MEASUREMENT_ID }}
 
       # ── 5. Deploy FTPS incremental ────────────────────────
       # Sube solo los archivos modificados comparando hashes

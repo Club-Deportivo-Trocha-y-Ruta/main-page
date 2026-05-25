@@ -22,6 +22,8 @@ const sponsors = (await getCollection('sponsors'))
               href={s.data.url || '#'}
               target={s.data.url ? '_blank' : undefined}
               rel={s.data.url ? 'noopener noreferrer' : undefined}
+              data-analytics-event={s.data.url ? 'sponsor_click' : undefined}
+              data-analytics-sponsor-id={s.data.url ? s.id : undefined}
               class="shrink-0"
             >
               <img

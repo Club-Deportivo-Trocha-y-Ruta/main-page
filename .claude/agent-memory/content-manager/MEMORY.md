@@ -1,0 +1,1 @@
+- [Sprint 1 Google News (mayo 2026)](project_google_news_sprint1.md) — news sitemap con ventana 48h y página de política editorial linkeada en footer

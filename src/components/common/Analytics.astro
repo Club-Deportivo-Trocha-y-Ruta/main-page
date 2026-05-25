@@ -1,0 +1,156 @@
+---
+import { PUBLIC_GA4_MEASUREMENT_ID } from 'astro:env/client';
+const ga4Id = PUBLIC_GA4_MEASUREMENT_ID;
+const enableGA4 = Boolean(ga4Id);
+---
+
+{enableGA4 && (
+  <>
+    <script
+      type="text/partytown"
+      is:inline
+      src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}
+      async
+    ></script>
+    <script type="text/partytown" is:inline define:vars={{ ga4Id }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        wait_for_update: 500,
+      });
+      try {
+        var stored = localStorage.getItem('trocha-analytics-consent');
+        if (stored === 'granted') {
+          gtag('consent', 'update', { analytics_storage: 'granted' });
+        }
+      } catch (e) {}
+      gtag('js', new Date());
+      gtag('config', ga4Id, { anonymize_ip: true, send_page_view: true });
+    </script>
+
+    <script is:inline define:vars={{ ga4Id }}>
+      (function () {
+        if (window.__trochaAnalyticsBootstrapped) return;
+        window.__trochaAnalyticsBootstrapped = true;
+
+        const state = (window.__trochaAnalytics = window.__trochaAnalytics || {
+          providers: [],
+          queue: [],
+          ready: false,
+        });
+
+        function dispatch(item) {
+          for (const p of state.providers) {
+            try {
+              if (item.kind === 'pageview') p.trackPageview(item.path, item.title);
+              else if (item.kind === 'event') p.trackEvent(item.event);
+              else if (item.kind === 'consent') p.setConsent(item.status);
+            } catch (e) {}
+          }
+        }
+
+        function registerProvider(p) {
+          if (state.providers.some((x) => x.id === p.id)) return;
+          state.providers.push(p);
+          try { p.init(); } catch (e) {}
+          state.ready = true;
+          while (state.queue.length > 0) {
+            const item = state.queue.shift();
+            dispatch(item);
+          }
+        }
+
+        registerProvider({
+          id: 'ga4',
+          init() {},
+          trackPageview(path, title) {
+            if (typeof window.gtag !== 'function') return;
+            window.gtag('event', 'page_view', {
+              page_path: path,
+              page_title: title,
+              send_to: ga4Id,
+            });
+          },
+          trackEvent(event) {
+            if (typeof window.gtag !== 'function') return;
+            window.gtag('event', event.name, event.params || {});
+          },
+          setConsent(status) {
+            if (typeof window.gtag !== 'function') return;
+            window.gtag('consent', 'update', { analytics_storage: status });
+          },
+        });
+
+        const ALLOWED_EVENTS = [
+          'contact_submit',
+          'inscription_step_view',
+          'inscription_complete',
+          'whatsapp_click',
+          'cta_inscripcion_click',
+          'sponsor_click',
+          'transparencia_pdf_download',
+          'scroll_depth',
+        ];
+        const ALLOWED_PARAMS = ['program_id', 'age_bucket', 'step', 'depth', 'pdf_name', 'sponsor_id'];
+
+        function sanitize(params) {
+          const out = {};
+          if (!params) return out;
+          for (const k of ALLOWED_PARAMS) {
+            const v = params[k];
+            if (v === undefined || v === null) continue;
+            if (typeof v === 'string') out[k] = v.slice(0, 100);
+            else if (typeof v === 'number' || typeof v === 'boolean') out[k] = v;
+          }
+          return out;
+        }
+
+        function emit(name, params) {
+          if (ALLOWED_EVENTS.indexOf(name) === -1) return;
+          const item = { kind: 'event', event: { name: name, params: sanitize(params) } };
+          if (state.providers.length === 0) state.queue.push(item);
+          else dispatch(item);
+        }
+        window.__trochaEmit = emit;
+
+        function handleDelegatedClick(ev) {
+          const target = ev.target;
+          if (!(target instanceof Element)) return;
+          const el = target.closest('[data-analytics-event]');
+          if (!el) return;
+          const name = el.getAttribute('data-analytics-event');
+          if (!name) return;
+          const params = {};
+          const pdf = el.getAttribute('data-analytics-pdf-name');
+          const sponsor = el.getAttribute('data-analytics-sponsor-id');
+          const programId = el.getAttribute('data-analytics-program-id');
+          if (pdf) params.pdf_name = pdf;
+          if (sponsor) params.sponsor_id = sponsor;
+          if (programId) params.program_id = programId;
+          emit(name, params);
+        }
+        document.addEventListener('click', handleDelegatedClick);
+
+        // Primer page_load lo manda GA4 con send_page_view: true.
+        // Solo emitimos pageviews posteriores tras navegación SPA.
+        let initialLoadHandled = false;
+        document.addEventListener('astro:page-load', function () {
+          if (!initialLoadHandled) {
+            initialLoadHandled = true;
+            return;
+          }
+          const path = window.location.pathname + window.location.search;
+          const title = document.title;
+          const queueItem = { kind: 'pageview', path: path, title: title };
+          if (state.providers.length === 0) state.queue.push(queueItem);
+          else dispatch(queueItem);
+        });
+      })();
+    </script>
+  </>
+)}

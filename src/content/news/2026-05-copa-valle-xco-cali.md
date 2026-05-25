@@ -1,5 +1,5 @@
 ---
-title: "Podio para Isabel Quiñones en la cuarta válida Copa Valle Cali"
+title: "Doblete del club en el podio Prejuvenil A Femenina en Cali"
 date: 2026-05-17
 author: "Club Trocha y Ruta"
 category: "competencias"
@@ -7,7 +7,7 @@ tags: ["copa-valle", "xco", "cali", "seleccion-colombia", "resultados", "podio"]
 image: "/images/news/copa-valle-cali-2026/portada-copa-valle-cali.webp"
 imageAlt: "Afiche oficial de la cuarta válida Copa Valle XCO en Pance Bikepark, La Voragine, Cali"
 imageLayout: contain
-excerpt: "Selectivo nacional para Selección Colombia con élite y junior del país, pista mojada y piedras lisas: así corrió Trocha y Ruta la IV Válida Copa Valle en Cali."
+excerpt: "Doblete del club en Prejuvenil A Femenina, debut de Thiago Duque y selectivo nacional Selección Colombia bajo pista mojada: así corrió Trocha y Ruta la cuarta válida Copa Valle en Cali."
 featured: true
 draft: false
 relatedEvent: "2026-05-copa-valle-iv-cali"
@@ -63,13 +63,13 @@ lineup:
     image: "/images/news/copa-valle-cali-2026/lineup/matias-montoya.webp"
 seo:
   metaTitle: "Trocha y Ruta en la cuarta válida Copa Valle XCO Cali 2026"
-  metaDescription: "Resultados del Club Trocha y Ruta en la cuarta válida Copa Valle 2026 en Cali, selectivo nacional para Selección Colombia con élite y junior del país."
+  metaDescription: "Doblete femenino en el podio y selectivo nacional Selección Colombia: resultados del Club Trocha y Ruta en la cuarta válida Copa Valle XCO 2026 en Cali."
   ogImage: "/images/news/copa-valle-cali-2026/og-copa-valle-cali.webp"
 ---
 
 Cali fue la sede el 17 de mayo de la **cuarta válida de la Copa Valle Paraíso de Todos GW Shimano 2026**, disputada en el **Club del Departamento, sector La Voragine**. La noche anterior había lloviznado y la nubosidad del día de carrera impidió que la pista terminara de secar: las piedras y los tramos rocosos amanecieron lisos y resbalosos, convirtiendo cada curva, cada frenada y cada paso técnico en una prueba extra de control.
 
-A la exigencia del recorrido se sumó un factor decisivo: la fecha funcionaba como **selectivo nacional para Selección Colombia**, así que se reunió buena parte de la élite y la junior nacional, con delegaciones de Soacha, Ubaté, Mosquera, Pereira y Bucaramanga. El listón competitivo fue prácticamente el de una fecha nacional. En ese escenario, el Club Trocha y Ruta firmó un podio (Isabel Quiñones, 3°) y celebró el debut de un nuevo corredor en Teteros con Pedales.
+A la exigencia del recorrido se sumó un factor decisivo: la fecha funcionaba como **selectivo nacional para Selección Colombia**, así que se reunió buena parte de la élite y la junior nacional, con delegaciones de Soacha, Ubaté, Mosquera, Pereira y Bucaramanga. El listón competitivo fue prácticamente el de una fecha nacional. En ese escenario, el Club Trocha y Ruta firmó un doblete en el podio de Prejuvenil A Femenina con Isabel Quiñones (3ª) y Mariana Coronado (4ª), y celebró el debut de un nuevo corredor en Teteros con Pedales.
 
 ## Pista mojada y nivel nacional
 
@@ -79,11 +79,11 @@ En **Élite Masculino**, la victoria fue para **Iván López** (Soacha) con **1:
 
 La parrilla incluyó nombres de talla nacional como Cantor, Malaver, Pabón, Víctor Ortega y Antonio Gómez (Bucaramanga). Para los chicos del club, el reto fue doble: medirse en condiciones extremas y, al mismo tiempo, hacerlo entre la élite del país.
 
-## Isabel Quiñones, el podio del día
+## Doblete en Prejuvenil A Femenina: Isabel y Mariana en el podio
 
-**Isabel Cristhina Quiñones Batero** firmó la mejor actuación del club con un **tercer lugar en Prejuvenil A Femenina** y un tiempo de **0:59:05**. En la Copa Valle el podio premia hasta el quinto puesto, así que Isabel ya venía subiendo fecha tras fecha: cuarta en la primera válida, cuarta en la segunda y cuarta en la tercera. Lo que cambió en Cali fue la **escalada**: por primera vez en la temporada se sube al **tercer puesto**, recompensa concreta a una temporada de regularidad.
+**Isabel Cristhina Quiñones Batero** firmó un **tercer lugar en Prejuvenil A Femenina** con un tiempo de **0:59:05**, y a su lado **Mariana Coronado Delgado** completó el podio del club con un **cuarto puesto** y **1:01:41**. En la Copa Valle el podio premia hasta el quinto puesto, así que ambas entran al cajón premiable de la categoría. Isabel suma cuatro válidas consecutivas en zona de podio (cuarta en las tres primeras y tercera en Cali), una temporada de regularidad que el domingo se tradujo en una nueva posición dentro del mismo cajón.
 
-La clave del día estuvo en la cabeza fría: reguló muy bien la prueba de inicio a fin, sin quemar cartuchos en los primeros minutos. En un terreno donde la sobre-exigencia se pagaba con caídas, supo administrar el esfuerzo y dosificar el riesgo. Esa madurez táctica fue, en buena medida, lo que le permitió dar el salto del cuarto al tercer puesto.
+La clave del día estuvo en la cabeza fría: reguló muy bien la prueba de inicio a fin, sin quemar cartuchos en los primeros minutos. En un terreno donde la sobre-exigencia se pagaba con caídas, supo administrar el esfuerzo y dosificar el riesgo. Esa madurez táctica se reflejó en su mejor cronómetro de la temporada en la categoría.
 
 En la general acumulada se mantiene **3ª con 123 puntos**, a solo 4 puntos de la segunda posición y a 37 del liderato. Con tres válidas por disputar, la pelea por el podio final del campeonato departamental sigue abierta de par en par.
 
@@ -106,7 +106,7 @@ En la general acumulada se mantiene **3ª con 123 puntos**, a solo 4 puntos de l
 
 **Thiago Duque Cardona** debutó en Copa Valle por todo lo alto: un sólido **4° puesto en Teteros con Pedales** (0:04:49) en su primera salida con la camiseta del club. Una bienvenida competitiva que estrena su cuenta personal en la temporada y suma una nueva ilusión al equipo de los más pequeños.
 
-Cuarta en Prejuvenil A Femenina quedó **Mariana Coronado Delgado**, con 1:01:41, a 2:36 del tercer puesto. Junto con Isabel completó un **doblete del club en el podio** de la categoría —tercera y cuarta—, una postal que se repite válida tras válida en Prejuvenil A Femenina. El último ciclo de entrenamiento, entre la tercera y la cuarta válida, no le permitió afrontar la fase de mayor carga del bloque con plena regularidad. En ese contexto, sostener su lugar en el podio es un resultado de mérito: confirma el nivel base que ya tiene la corredora y la mantiene como una pieza clave del equipo femenino.
+**Mariana Coronado Delgado** cerró la jornada con 1:01:41 en Prejuvenil A Femenina, una marca que la mantiene dentro del cajón premiable de la Copa Valle y consolida una temporada de plena regularidad: cuatro válidas, cuatro veces en el top-5 de la categoría. El último ciclo de entrenamiento incluyó una fase de carga alta que la corredora afrontó sin poder completarla con la regularidad habitual; sostener el nivel competitivo en ese contexto habla del piso técnico ya construido y la confirma como una pieza clave del equipo femenino.
 
 **Miguel Ángel Anaya Molano** firmó un top-5 en Infantil A (5° con 0:37:43) en una franja con 24 inscritos. Recupera ritmo competitivo después del podio en Pavas y se consolida entre los mejores de la categoría a nivel departamental.
 
@@ -150,7 +150,7 @@ Con cuatro de siete válidas disputadas, así queda la posición de los corredor
 | Ihsan Garces Romero | Teteros Sin Pedales | **18°** | <span class="text-gray-400">— Estable</span> | 0 | 0 | 13 | 0 | **13** |
 | Matías Montoya Gómez | Infantil A | **26°** | <span class="text-red-500 font-semibold">▼ -1</span> | 1 | 1 | 0 | 1 | **3** |
 
-**Isabel Quiñones** sigue siendo la mejor posicionada del club, **3ª en Prejuvenil A Femenina con 123 puntos**. Está a solo 4 puntos del segundo lugar y a 37 del liderato. Con tres fechas restantes (quinta en Palmira, sexta en Roldanillo y séptima en Yumbo), el podio final del campeonato está plenamente al alcance.
+**Isabel Quiñones (3ª, 123 pts) y Mariana Coronado (5ª, 103 pts)** sostienen la dupla del club en Prejuvenil A Femenina, ambas con tres válidas restantes (quinta en Palmira, sexta en Roldanillo y séptima en Yumbo) para definir su lugar en la general. Isabel está a solo 4 puntos del segundo lugar y a 37 del liderato: el podio final del campeonato está plenamente al alcance.
 
 **Miguel Ángel Anaya** alcanza los **100 puntos acumulados** en Infantil A, una regularidad notable en una categoría que mueve 24 inscritos por fecha. **Mariana Coronado** se mantiene a tiro de podio en Prejuvenil A Femenina (5ª con 103 puntos) y sostiene su lugar entre las cartas más fuertes del equipo femenino.
 

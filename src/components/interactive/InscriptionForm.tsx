@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { PUBLIC_WEB3FORMS_KEY } from 'astro:env/client';
 import { CONTACT } from '@lib/constants';
+import { trackEvent, ageBucket } from '@lib/analytics';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -182,6 +184,7 @@ export default function InscriptionForm({ programs }: Props) {
   // Focus management on step change
   useEffect(() => {
     stepRef.current?.focus();
+    trackEvent({ name: 'inscription_step_view', params: { step: currentStep + 1 } });
   }, [currentStep]);
 
   const goToStep = (step: number) => setCurrentStep(step);
@@ -235,7 +238,7 @@ export default function InscriptionForm({ programs }: Props) {
     const selectedProgram = programs.find((p) => p.id === data.programId);
 
     const formData = new FormData();
-    formData.append('access_key', import.meta.env.PUBLIC_WEB3FORMS_KEY);
+    formData.append('access_key', PUBLIC_WEB3FORMS_KEY ?? '');
     formData.append('subject', `Nueva inscripcion - ${data.riderName}`);
     formData.append('from_name', data.guardianName);
 
@@ -266,6 +269,13 @@ export default function InscriptionForm({ programs }: Props) {
       if (result.success) {
         setSubmitStatus('success');
         clearSavedData();
+        trackEvent({
+          name: 'inscription_complete',
+          params: {
+            program_id: data.programId,
+            age_bucket: ageBucket(data.riderAge),
+          },
+        });
       } else {
         setSubmitStatus('error');
         setErrorMessage('Error al enviar. Intenta de nuevo.');
