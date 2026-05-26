@@ -1,0 +1,88 @@
+---
+/**
+ * TrochaVerdeSponsors — bloque B2B de apadrinamiento corporativo.
+ * Placeholder hasta que exista media kit PDF en public/documentos/.
+ * id="sponsors" para el sticky nav.
+ */
+import { Icon } from 'astro-icon/components';
+import { CONTACT } from '@lib/constants';
+
+const whatsappMsg = encodeURIComponent('Quiero info del programa corporativo Trocha Verde');
+const whatsappUrl = `${CONTACT.whatsapp}?text=${whatsappMsg}`;
+const emailUrl = `mailto:${CONTACT.email}?subject=Programa%20corporativo%20Trocha%20Verde`;
+---
+
+<section
+  id="sponsors"
+  class="mb-16 scroll-mt-28"
+  aria-labelledby="sponsors-title"
+>
+  <div class="rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white px-6 py-12 text-center sm:px-10">
+    {/* Ícono */}
+    <div
+      class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
+      aria-hidden="true"
+    >
+      <Icon name="ph:handshake-bold" class="h-8 w-8" />
+    </div>
+
+    <h2
+      id="sponsors-title"
+      class="font-display text-2xl font-bold text-text-primary sm:text-3xl"
+    >
+      Empresas que siembran con nosotros
+    </h2>
+
+    <p class="mx-auto mt-4 max-w-xl text-text-secondary">
+      Próximamente: programa corporativo de apadrinamiento de árboles.
+      Tu empresa puede plantar, nombrar y seguir el crecimiento de un árbol nativo en la Pista Carlos Castro de Yumbo.
+    </p>
+
+    <p class="mx-auto mt-2 max-w-xl text-sm text-text-secondary">
+      Para alianzas estratégicas, escríbenos directo. Te respondemos en menos de 24 horas.
+    </p>
+
+    <div class="mt-8 flex flex-wrap justify-center gap-4">
+      {/* CTA primario: WhatsApp con mensaje precargado */}
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+        data-whatsapp-cta
+        data-source="trocha-verde"
+        data-location="sponsors"
+        aria-label="Escríbenos por WhatsApp sobre el programa corporativo Trocha Verde"
+      >
+        <Icon name="ph:whatsapp-logo-bold" class="h-5 w-5" aria-hidden="true" />
+        WhatsApp
+      </a>
+
+      {/* CTA secundario: email */}
+      <a
+        href={emailUrl}
+        class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-6 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+        aria-label={`Enviar email a ${CONTACT.email} sobre programa corporativo`}
+      >
+        <Icon name="ph:envelope-bold" class="h-5 w-5" aria-hidden="true" />
+        {CONTACT.email}
+      </a>
+    </div>
+
+    {/* Indicador de impacto corporativo */}
+    <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div class="rounded-xl border border-emerald-100 bg-white p-4">
+        <p class="font-display text-2xl font-bold text-emerald-700">1 árbol</p>
+        <p class="mt-1 text-xs text-text-secondary">Impacto mínimo por empresa patrocinadora</p>
+      </div>
+      <div class="rounded-xl border border-emerald-100 bg-white p-4">
+        <p class="font-display text-2xl font-bold text-emerald-700">Placa propia</p>
+        <p class="mt-1 text-xs text-text-secondary">Tu marca en el árbol, visible en la pista</p>
+      </div>
+      <div class="rounded-xl border border-emerald-100 bg-white p-4">
+        <p class="font-display text-2xl font-bold text-emerald-700">Reporte anual</p>
+        <p class="mt-1 text-xs text-text-secondary">Fotos de seguimiento y datos de crecimiento</p>
+      </div>
+    </div>
+  </div>
+</section>

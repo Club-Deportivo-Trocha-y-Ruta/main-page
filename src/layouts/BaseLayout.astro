@@ -67,7 +67,30 @@ const { title, description, ogImage, ogImageWidth, ogImageHeight, jsonLd, ogType
     <Footer />
     <WhatsAppButton />
     <!-- Scroll-reveal observer (compatible with View Transitions) -->
+    <!-- Header height tracker: sets --header-h so sticky sub-navs (e.g. TrochaVerdeNav)
+         can use top-[var(--header-h)] regardless of whether AnnouncementBar is visible. -->
     <script is:inline>
+      function syncHeaderHeight() {
+        var h = document.querySelector('header');
+        if (!h) return;
+        // header.bottom in viewport already accounts for any sticky AnnouncementBar
+        // stacked above it (its visible height includes the stack).
+        var bottom = h.getBoundingClientRect().bottom;
+        document.documentElement.style.setProperty('--header-h', bottom + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight, { passive: true });
+      document.addEventListener('astro:page-load', syncHeaderHeight);
+
+      // Re-sync when AnnouncementBar is dismissed (bar.remove() fires no event,
+      // so we piggyback on the close button click via event delegation).
+      document.addEventListener('click', function(e) {
+        if (e.target && e.target.closest('#close-announcement')) {
+          // rAF ensures the element is removed before we measure
+          requestAnimationFrame(syncHeaderHeight);
+        }
+      }, { capture: true });
+
       function initReveal() {
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           var observer = new IntersectionObserver(function(entries) {

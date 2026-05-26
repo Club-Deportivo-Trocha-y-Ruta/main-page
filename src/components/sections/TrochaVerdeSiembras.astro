@@ -1,0 +1,188 @@
+---
+/**
+ * TrochaVerdeSiembras — timeline de jornadas de siembra agrupadas por fecha.
+ * - Última jornada: <details open> (visible por defecto)
+ * - Jornadas anteriores: <details> colapsadas
+ * - Tarjetas SIN <details> interno ni <Content /> — solo datos y microcopy CTA
+ * - Zero-JS: accordion nativo <details>/<summary>
+ * - Re-init handler en astro:page-load (solo para aria-expanded sync si se necesita)
+ */
+import { Icon } from 'astro-icon/components';
+import { categoryLabels, categoryColors, statusLabels } from '@lib/tree-utils';
+import { formatDate } from '@lib/utils';
+
+interface TreeItem {
+  id: string;
+  species: string;
+  scientificName?: string;
+  category: string;
+  status: string;
+  plantedDate: Date;
+  image: string;
+  imageAlt: string;
+  protectorColor?: string;
+  notes?: string;
+}
+
+interface JourneyGroup {
+  dateKey: string;
+  date: Date;
+  label: string;
+  trees: TreeItem[];
+}
+
+interface Props {
+  journeys: JourneyGroup[];
+}
+
+const { journeys } = Astro.props;
+const lastIndex = journeys.length - 1;
+---
+
+<section id="siembras" class="mb-16 scroll-mt-28" aria-labelledby="siembras-title">
+  <div class="mb-8 text-center">
+    <h2 id="siembras-title" class="font-display text-3xl font-bold text-text-primary sm:text-4xl">
+      Nuestras Siembras
+    </h2>
+    <p class="mx-auto mt-3 max-w-2xl text-text-secondary">
+      Cada árbol fue plantado por las manos de nuestros niños y protegido con materiales reciclados.
+    </p>
+  </div>
+
+  <div class="space-y-6">
+    {journeys.map((journey, index) => {
+      const isLast = index === lastIndex;
+      const summaryId = `journey-summary-${journey.dateKey}`;
+      const panelId = `journey-panel-${journey.dateKey}`;
+      return (
+        <details
+          open={isLast ? true : undefined}
+          class="group rounded-2xl border border-emerald-100 bg-white shadow-sm"
+          data-journey-accordion
+        >
+          <summary
+            id={summaryId}
+            aria-controls={panelId}
+            aria-expanded={isLast ? 'true' : 'false'}
+            class="flex cursor-pointer list-none items-center gap-4 px-5 py-4 focus:outline-none focus-visible:rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+          >
+            <div
+              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white"
+              aria-hidden="true"
+            >
+              <Icon name="ph:tree-bold" class="h-6 w-6" />
+            </div>
+            <div class="flex-1">
+              <h3 class="font-display text-lg font-bold text-text-primary">
+                {journey.label}
+              </h3>
+              <p class="text-sm text-text-secondary">
+                {formatDate(journey.date)} &mdash; {journey.trees.length}
+                {journey.trees.length === 1 ? ' árbol' : ' árboles'}
+              </p>
+            </div>
+            {/* Chevron indicator */}
+            <span
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-emerald-600 transition-transform duration-200 group-open:rotate-180"
+              aria-hidden="true"
+            >
+              <Icon name="ph:caret-down-bold" class="h-5 w-5" />
+            </span>
+          </summary>
+
+          <div id={panelId} class="px-5 pb-6">
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {journey.trees.map((tree) => {
+                const catColors = categoryColors[tree.category] ?? categoryColors.nativo;
+                return (
+                  <article class="overflow-hidden rounded-xl border border-emerald-100 bg-surface transition-shadow hover:shadow-md">
+                    <a
+                      href={`/trocha-verde/arboles/${tree.id}`}
+                      class="block focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+                      aria-label={`Ver ficha de ${tree.species}`}
+                      data-tree-card
+                      data-species={tree.species}
+                      data-tree-id={tree.id}
+                    >
+                      <div class="aspect-[4/3] overflow-hidden bg-surface-muted">
+                        <img
+                          src={tree.image}
+                          alt={tree.imageAlt}
+                          class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                          loading="lazy"
+                          width="400"
+                          height="300"
+                        />
+                      </div>
+                    </a>
+                    <div class="p-4">
+                      <div class="mb-2 flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                          {statusLabels[tree.status] ?? tree.status}
+                        </span>
+                        <span class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${catColors.bg} ${catColors.text}`}>
+                          {categoryLabels[tree.category] ?? tree.category}
+                        </span>
+                        {tree.protectorColor && (
+                          <span class="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-900">
+                            Llanta {tree.protectorColor}
+                          </span>
+                        )}
+                      </div>
+                      <h4 class="font-display text-base font-bold leading-snug text-text-primary">
+                        {tree.species}
+                      </h4>
+                      {tree.scientificName && (
+                        <p class="text-xs italic text-text-secondary">{tree.scientificName}</p>
+                      )}
+                      {tree.notes && (
+                        <p class="mt-2 text-sm leading-relaxed text-text-secondary">
+                          {tree.notes}
+                        </p>
+                      )}
+                      <a
+                        href={`/trocha-verde/arboles/${tree.id}`}
+                        class="mt-3 inline-flex items-center gap-1 text-xs font-medium text-emerald-600 hover:text-emerald-700 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+                        data-tree-card
+                        data-species={tree.species}
+                        data-tree-id={tree.id}
+                      >
+                        Conoce su historia <span aria-hidden="true">&rarr;</span>
+                      </a>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </details>
+      );
+    })}
+  </div>
+</section>
+
+<script>
+  /**
+   * Sync aria-expanded on <summary> when <details> open state changes.
+   * <details> nativo no actualiza aria-expanded automáticamente.
+   * Compatible con View Transitions: re-inicia en astro:page-load.
+   */
+  function initJourneyAccordions() {
+    const accordions = document.querySelectorAll<HTMLDetailsElement>('[data-journey-accordion]');
+    accordions.forEach((details) => {
+      const summary = details.querySelector('summary');
+      if (!summary) return;
+
+      // Sync inicial
+      summary.setAttribute('aria-expanded', details.open ? 'true' : 'false');
+
+      // Sync en toggle
+      details.addEventListener('toggle', () => {
+        summary.setAttribute('aria-expanded', details.open ? 'true' : 'false');
+      });
+    });
+  }
+
+  initJourneyAccordions();
+  document.addEventListener('astro:page-load', initJourneyAccordions);
+</script>

@@ -1,5 +1,6 @@
 ---
 import { formatDate } from '@lib/utils';
+import { categoryLabels, categoryColors, statusLabels, statusColors } from '@lib/tree-utils';
 
 interface TreeItem {
   id: string;
@@ -21,32 +22,6 @@ interface Props {
 }
 
 const { trees } = Astro.props;
-
-const categoryLabels: Record<string, string> = {
-  frutal: 'Frutal',
-  ornamental: 'Ornamental',
-  nativo: 'Nativo',
-  maderable: 'Maderable',
-};
-
-const categoryColors: Record<string, { bg: string; text: string }> = {
-  frutal: { bg: 'bg-amber-100', text: 'text-amber-700' },
-  ornamental: { bg: 'bg-purple-100', text: 'text-purple-900' },
-  nativo: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
-  maderable: { bg: 'bg-orange-100', text: 'text-orange-700' },
-};
-
-const statusLabels: Record<string, string> = {
-  sembrado: 'Sembrado',
-  creciendo: 'Creciendo',
-  floreciendo: 'Floreciendo',
-};
-
-const statusColors: Record<string, { bg: string; text: string }> = {
-  sembrado: { bg: 'bg-sky-100', text: 'text-sky-700' },
-  creciendo: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
-  floreciendo: { bg: 'bg-pink-100', text: 'text-pink-700' },
-};
 ---
 
 <div id="trocha-verde-grid-wrapper">
