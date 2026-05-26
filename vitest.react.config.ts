@@ -11,6 +11,8 @@ export default defineConfig({
       '@lib': resolve(__dirname, 'src/lib'),
       '@assets': resolve(__dirname, 'src/assets'),
       '@types': resolve(__dirname, 'src/types'),
+      // Stub del virtual module astro:env/client — no disponible en Vite puro (jsdom)
+      'astro:env/client': resolve(__dirname, 'src/test/__mocks__/astro-env-client.ts'),
     },
   },
   test: {
