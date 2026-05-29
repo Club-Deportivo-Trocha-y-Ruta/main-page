@@ -13,8 +13,6 @@ notes: "Quinta palma Areca de la jornada. Refuerza la presencia ornamental de la
 featured: false
 draft: false
 order: 54
-lat: 3.5986
-lng: -76.4855
 ---
 
 Quinta Palma Areca sembrada el 3 de mayo de 2026. La especie destaca por su capacidad purificadora del aire y su porte multitroncal de gran efecto visual.

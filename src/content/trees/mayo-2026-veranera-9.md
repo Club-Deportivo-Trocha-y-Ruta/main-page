@@ -14,8 +14,6 @@ notes: "Novena veranera de la jornada. Cierra el grupo de veraneras sembradas en
 featured: false
 draft: false
 order: 66
-lat: 3.5995
-lng: -76.4864
 ---
 
 Novena Veranera sembrada el 3 de mayo de 2026. Cierra el grupo de nueve veraneras de la jornada, completando el corredor floral planeado para realzar el recorrido de los ciclistas con color y vida durante todo el año.

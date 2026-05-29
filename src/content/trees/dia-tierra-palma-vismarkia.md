@@ -10,8 +10,6 @@ imageAlt: "Palma Bismarckia azul donada por Vivero Guacandá, sembrada durante l
 status: "sembrado"
 donor: "Vivero Guacandá (Sr. Néstor Correa)"
 notes: "Donada por el Vivero Guacandá. La Palma Bismarckia destaca por sus hojas de color azul-plateado en abanico, una de las palmas ornamentales más imponentes."
-lat: 3.598194
-lng: -76.485000
 featured: true
 draft: false
 order: 27

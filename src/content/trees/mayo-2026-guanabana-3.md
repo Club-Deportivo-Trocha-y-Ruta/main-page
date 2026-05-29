@@ -13,8 +13,6 @@ notes: "Tercera guanábana de la jornada. El trío de guanábanas representa la 
 featured: false
 draft: false
 order: 49
-lat: 3.5983
-lng: -76.4848
 ---
 
 Tercera y última guanábana de la jornada del 3 de mayo de 2026. Este trío de árboles es un regalo del Presidente Helmut Ortiz al programa Trocha Verde: tres árboles que con el tiempo darán frutos y sombra a los niños que entrenan en la pista.

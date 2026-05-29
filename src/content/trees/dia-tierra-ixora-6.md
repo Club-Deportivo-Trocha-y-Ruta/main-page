@@ -10,8 +10,6 @@ imageAlt: "Sexta Ixora donada por Vivero Guacandá durante la Sembratón del Dí
 status: "sembrado"
 donor: "Vivero Guacandá (Sr. Néstor Correa)"
 notes: "Sexta y última Ixora donada por el Vivero Guacandá."
-lat: 3.598194
-lng: -76.485000
 featured: false
 draft: false
 order: 35

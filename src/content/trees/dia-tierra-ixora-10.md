@@ -10,8 +10,6 @@ imageAlt: "Décima y última Ixora sembrada en la Sembratón del Día de la Tier
 status: "sembrado"
 donor: "Amigos de Óscar Eduardo Ortiz"
 notes: "Décima y última Ixora del lote del Día de la Tierra. Cierra el cordón floral aportado por las familias y amigos del club."
-lat: 3.598194
-lng: -76.485000
 featured: false
 draft: false
 order: 39

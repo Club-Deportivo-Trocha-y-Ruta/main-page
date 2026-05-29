@@ -13,8 +13,6 @@ notes: "Árbol nativo del Valle del Cauca, primo del jacarandá. Sus flores mora
 featured: true
 draft: false
 order: 46
-lat: 3.598056
-lng: -76.484944
 ---
 
 Sembrado el 3 de mayo de 2026. El gualanday es uno de los árboles más emblemáticos del Valle del Cauca. Endémico de la región, sus flores moradas tiñen los paisajes de la cordillera y el valle. Tenerlo en nuestra pista es un acto de identidad regional.

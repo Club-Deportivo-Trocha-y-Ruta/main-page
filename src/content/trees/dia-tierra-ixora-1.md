@@ -10,8 +10,6 @@ imageAlt: "Ixora donada por Vivero Guacandá, sembrada durante la Sembratón del
 status: "sembrado"
 donor: "Vivero Guacandá (Sr. Néstor Correa)"
 notes: "Primera de seis Ixoras donadas por el Vivero Guacandá. Arbusto tropical de flores rojas, naranjas o amarillas en racimos vistosos durante todo el año."
-lat: 3.598194
-lng: -76.485000
 featured: true
 draft: false
 order: 30

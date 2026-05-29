@@ -10,8 +10,6 @@ imageAlt: "Aguacate sembrado durante la Sembratón del Día de la Tierra 2026 en
 status: "sembrado"
 donor: "Amigos de Óscar Eduardo Ortiz"
 notes: "Frutal emblemático de Colombia. Donado por los amigos de Óscar Eduardo Ortiz para sumar diversidad de frutos a la pista."
-lat: 3.598194
-lng: -76.485000
 featured: true
 draft: false
 order: 29

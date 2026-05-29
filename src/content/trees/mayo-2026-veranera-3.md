@@ -14,8 +14,6 @@ notes: "Tercera veranera de la jornada. Las brácteas, que muchos confunden con 
 featured: false
 draft: false
 order: 60
-lat: 3.5983
-lng: -76.4852
 ---
 
 Tercera Veranera sembrada el 3 de mayo de 2026. Lo que parece una flor en la veranera son en realidad brácteas, hojas modificadas de colores intensos que envuelven a las flores verdaderas, pequeñas y blancas, en el centro.

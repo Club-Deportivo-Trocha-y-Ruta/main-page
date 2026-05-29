@@ -14,8 +14,6 @@ notes: "Séptima veranera de la jornada. Atrae mariposas y abejas, contribuyendo
 featured: false
 draft: false
 order: 64
-lat: 3.5991
-lng: -76.4860
 ---
 
 Séptima Veranera sembrada el 3 de mayo de 2026. Además de su valor ornamental, la veranera ofrece néctar a polinizadores como abejas y mariposas, reforzando la biodiversidad alrededor de la pista de ciclomontañismo.

@@ -1,7 +1,7 @@
 ---
 /**
  * TrochaVerdeNav — sticky in-page nav for /trocha-verde
- * 4 anchors: #especies #siembras #proceso #sponsors
+ * 5 anchors: #especies #mapa #siembras #proceso #sponsors
  * CSS-only sticky, zero-JS. Mobile-first.
  * Uses --header-h CSS custom property set by BaseLayout's inline script,
  * which measures header + AnnouncementBar (if visible) on load, resize, and
@@ -22,6 +22,15 @@
       >
         <span aria-hidden="true">🌿</span>
         Especies
+      </a>
+    </li>
+    <li>
+      <a
+        href="#mapa"
+        class="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 sm:px-4"
+      >
+        <span aria-hidden="true">📍</span>
+        Mapa
       </a>
     </li>
     <li>
