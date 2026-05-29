@@ -13,8 +13,6 @@ notes: "Árbol tropical de gran porte con hojas que se tornan rojas antes de cae
 featured: false
 draft: false
 order: 45
-lat: 3.5982
-lng: -76.4847
 ---
 
 Sembrado el 3 de mayo de 2026. El almendro tropical es uno de los árboles de sombra más apreciados en Colombia por su copa amplia y su follaje denso. Sus hojas adquieren tonos rojos y anaranjados antes de caer, creando un espectáculo de color en la pista.

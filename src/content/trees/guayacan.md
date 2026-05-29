@@ -10,6 +10,8 @@ image: "/images/trocha-verde/guayacan.jpg"
 imageAlt: "Árbol de Guayacán plantado dentro de una llanta de bicicleta pintada de rosado"
 status: "sembrado"
 notes: "El Guayacán Amarillo es el árbol nacional de Colombia. Cuando florece, se cubre completamente de flores amarillas, un espectáculo natural único."
+lat: 3.59567
+lng: -76.486661
 featured: true
 draft: false
 order: 5

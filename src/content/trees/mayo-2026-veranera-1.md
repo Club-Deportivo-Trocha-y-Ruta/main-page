@@ -14,8 +14,6 @@ notes: "Primera de nueve veraneras sembradas en la jornada. Sus brácteas colori
 featured: false
 draft: false
 order: 58
-lat: 3.5979
-lng: -76.4848
 ---
 
 Primera Veranera sembrada el 3 de mayo de 2026. Especie ornamental de gran resistencia que florece con mayor intensidad en temporada seca, justo cuando otras plantas pierden su esplendor. Sus brácteas de colores vivos atraen polinizadores y embellecen el paisaje de la pista.

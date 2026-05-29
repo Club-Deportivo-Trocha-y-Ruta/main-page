@@ -13,8 +13,6 @@ notes: "Tercera palma Areca de la jornada. Refuerza el corredor ornamental tropi
 featured: false
 draft: false
 order: 52
-lat: 3.5982
-lng: -76.4851
 ---
 
 Tercera Palma Areca sembrada el 3 de mayo de 2026. Forma parte del grupo de palmas plantadas en conjunto para crear un corredor visual tropical que embellece la pista y aporta sombra a los ciclistas.

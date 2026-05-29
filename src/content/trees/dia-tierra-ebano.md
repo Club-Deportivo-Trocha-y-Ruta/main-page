@@ -10,8 +10,6 @@ imageAlt: "Ébano donado por Vivero Guacandá, sembrado durante la Sembratón de
 status: "sembrado"
 donor: "Vivero Guacandá (Sr. Néstor Correa)"
 notes: "Donado por el Vivero Guacandá. El Ébano es una especie maderable nativa con corazón oscuro extremadamente duro, valorada por su belleza y resistencia."
-lat: 3.598194
-lng: -76.485000
 featured: true
 draft: false
 order: 26

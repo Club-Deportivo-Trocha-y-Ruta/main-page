@@ -13,8 +13,6 @@ notes: "Sexta palma Areca de la jornada. Continúa el corredor tropical de la pi
 featured: false
 draft: false
 order: 55
-lat: 3.5988
-lng: -76.4857
 ---
 
 Sexta Palma Areca sembrada el 3 de mayo de 2026. Plantada junto a sus compañeras, esta palma contribuye al efecto de conjunto tropical que caracteriza el paisajismo del club.

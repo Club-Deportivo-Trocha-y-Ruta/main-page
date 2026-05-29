@@ -13,8 +13,6 @@ notes: "Palma ornamental tropical de tallos dorados y follaje plumoso. Purifica 
 featured: false
 draft: false
 order: 43
-lat: 3.5978
-lng: -76.4849
 ---
 
 Sembrada el 3 de mayo de 2026 por el Presidente del Club. La Palma Areca es una de las plantas purificadoras de aire más eficaces según estudios de la NASA. Sus tallos amarillos y su follaje denso transforman visualmente los espacios donde crece.

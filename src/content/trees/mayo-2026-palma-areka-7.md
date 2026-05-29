@@ -13,8 +13,6 @@ notes: "Séptima palma Areca de la jornada. Su follaje plumoso y tallos dorados 
 featured: false
 draft: false
 order: 56
-lat: 3.5990
-lng: -76.4859
 ---
 
 Séptima Palma Areca sembrada el 3 de mayo de 2026. Originaria de Madagascar, esta palma se adapta muy bien al clima del Valle del Cauca y forma grupos multitroncales de gran impacto visual.

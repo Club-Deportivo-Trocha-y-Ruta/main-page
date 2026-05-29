@@ -14,8 +14,6 @@ notes: "Sexta veranera de la jornada. Continúa el corredor floral previsto para
 featured: false
 draft: false
 order: 63
-lat: 3.5989
-lng: -76.4858
 ---
 
 Sexta Veranera sembrada el 3 de mayo de 2026. Las nueve veraneras de esta jornada conforman un corredor floral que en pocos meses transformará visualmente el perímetro de la pista con explosiones de color.

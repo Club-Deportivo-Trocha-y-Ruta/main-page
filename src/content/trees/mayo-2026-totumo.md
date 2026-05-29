@@ -13,8 +13,6 @@ notes: "Árbol nativo colombiano conocido por su fruto en forma de calabaza. El 
 featured: false
 draft: false
 order: 40
-lat: 3.5985
-lng: -76.4850
 ---
 
 Sembrado el 3 de mayo de 2026 por el Presidente del Club, Helmut Ortiz. El totumo es uno de los árboles más representativos de la cultura colombiana: su fruto se usa para hacer artesanías, instrumentos musicales y utensilios. Un árbol con historia que ahora forma parte de la pista.

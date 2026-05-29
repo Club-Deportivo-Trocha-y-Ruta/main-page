@@ -1,11 +1,12 @@
 /**
  * TrochaVerdeMap — React island para el mapa interactivo del inventario de árboles.
  *
- * IMPORTANTE: El padre Astro que monte este island debe incluir el CSS de Leaflet:
- *   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+ * El CSS de Leaflet se importa aquí mismo para que Vite lo empaquete con el sitio
+ * estático — así el mapa se ve correctamente en el hosting sin depender de un CDN.
  *
  * Usar con directiva client:visible, nunca client:load.
  */
+import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef, useState } from 'react';
 import type { Map, LayerGroup } from 'leaflet';
 

@@ -13,8 +13,6 @@ notes: "Árbol nativo andino de corteza rojiza y textura lisa característica. A
 featured: false
 draft: false
 order: 41
-lat: 3.5979
-lng: -76.4851
 ---
 
 Sembrado el 3 de mayo de 2026 por el Presidente del Club. El arrayán es un árbol emblema de los bosques andinos colombianos, reconocible por su hermosa corteza color canela que se desprende en láminas. Sus frutos pequeños son alimento para aves silvestres.

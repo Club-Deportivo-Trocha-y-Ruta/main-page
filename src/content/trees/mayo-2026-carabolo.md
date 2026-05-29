@@ -13,8 +13,6 @@ notes: "Árbol maderable nativo del Valle del Cauca, apreciado por su madera fin
 featured: true
 draft: false
 order: 50
-lat: 3.5977
-lng: -76.4845
 ---
 
 Sembrado el 3 de mayo de 2026. El carabolo es uno de los árboles maderables más valiosos del Valle del Cauca. Su madera de alta calidad y sus racimos de flores amarillas lo hacen tanto un recurso ecológico como un árbol de gran belleza. Sembrarlo es un acto de conservación.

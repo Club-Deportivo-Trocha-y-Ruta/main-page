@@ -13,8 +13,6 @@ notes: "Cuarta palma Areca de la jornada. Aporta carácter tropical al recorrido
 featured: false
 draft: false
 order: 53
-lat: 3.5984
-lng: -76.4853
 ---
 
 Cuarta Palma Areca sembrada el 3 de mayo de 2026. Sus tallos amarillos y follaje plumoso transforman visualmente el entorno y purifican el aire del espacio de entrenamiento.

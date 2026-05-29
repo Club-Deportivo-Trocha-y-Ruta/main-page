@@ -9,8 +9,6 @@ imageAlt: "Ramo de Novia sembrado durante la Sembratón del Día de la Tierra 20
 status: "sembrado"
 donor: "Amigos de Óscar Eduardo Ortiz"
 notes: "Arbusto ornamental de flores blancas en racimos abundantes que parecen un ramo nupcial. Aporta belleza visual al entorno deportivo."
-lat: 3.598194
-lng: -76.485000
 featured: false
 draft: false
 order: 24
