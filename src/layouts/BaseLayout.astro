@@ -73,10 +73,13 @@ const { title, description, ogImage, ogImageWidth, ogImageHeight, jsonLd, ogType
       function syncHeaderHeight() {
         var h = document.querySelector('header');
         if (!h) return;
-        // header.bottom in viewport already accounts for any sticky AnnouncementBar
-        // stacked above it (its visible height includes the stack).
-        var bottom = h.getBoundingClientRect().bottom;
-        document.documentElement.style.setProperty('--header-h', bottom + 'px');
+        // The header is `sticky top-0`; the AnnouncementBar above it is `relative`
+        // and scrolls away. Once the page is scrolled, the header pins at the top of
+        // the viewport occupying only its own height, so sticky sub-navs must offset
+        // by that height — not by header.bottom (which, at scroll 0, also includes
+        // the still-visible AnnouncementBar and would leave a gap below the header).
+        var height = h.getBoundingClientRect().height;
+        document.documentElement.style.setProperty('--header-h', height + 'px');
       }
       syncHeaderHeight();
       window.addEventListener('resize', syncHeaderHeight, { passive: true });
