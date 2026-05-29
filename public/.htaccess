@@ -61,12 +61,13 @@ Options -Indexes
   # - 'unsafe-inline' en script-src: requerido por Astro is:inline scripts
   # - 'unsafe-inline' en style-src: requerido por Tailwind/Astro
   # - unpkg.com: requerido por Sveltia CMS en /admin/
+  # - img-src *.tile.openstreetmap.org: teselas del mapa Leaflet (Trocha Verde)
   # - frame-src: Google Maps, YouTube embeds, Strava widget
   Header always set Content-Security-Policy "\
     default-src 'self'; \
     script-src 'self' 'unsafe-inline' https://www.youtube.com https://unpkg.com https://www.googletagmanager.com https://www.google-analytics.com https://*.analytics.google.com; \
     style-src 'self' 'unsafe-inline' https://unpkg.com; \
-    img-src 'self' https://res.cloudinary.com https://www.google-analytics.com https://*.analytics.google.com data:; \
+    img-src 'self' https://res.cloudinary.com https://*.tile.openstreetmap.org https://www.google-analytics.com https://*.analytics.google.com data:; \
     font-src 'self'; \
     connect-src 'self' https://api.web3forms.com https://www.google-analytics.com https://*.analytics.google.com https://*.google-analytics.com https://www.googletagmanager.com; \
     frame-src 'self' https://www.google.com https://www.youtube.com https://www.strava.com; \
