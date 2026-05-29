@@ -10,8 +10,6 @@ imageAlt: "Octava Ixora sembrada en la Sembratón del Día de la Tierra 2026"
 status: "sembrado"
 donor: "Amigos de Óscar Eduardo Ortiz"
 notes: "Octava Ixora, donada por los amigos de Óscar Eduardo Ortiz."
-lat: 3.598194
-lng: -76.485000
 featured: false
 draft: false
 order: 37

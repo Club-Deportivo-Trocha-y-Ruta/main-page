@@ -8,12 +8,14 @@ import TrochaVerdeStats from '@components/sections/TrochaVerdeStats.astro';
 import TrochaVerdeNav from '@components/sections/TrochaVerdeNav.astro';
 import TrochaVerdeSiembras from '@components/sections/TrochaVerdeSiembras.astro';
 import TrochaVerdeSponsors from '@components/sections/TrochaVerdeSponsors.astro';
+import TrochaVerdeMap from '@components/interactive/TrochaVerdeMap';
+import type { TreeMarker } from '@components/interactive/TrochaVerdeMap';
 // TrochaVerdeGrid en reserva — reintroducir como /trocha-verde/arboles cuando >40 árboles
 // import TrochaVerdeGrid from '@components/sections/TrochaVerdeGrid.astro';
 import { Icon } from 'astro-icon/components';
 import { CONTACT } from '@lib/constants';
 import { generateBreadcrumbJsonLd, generateSocialInitiativeJsonLd } from '@lib/seo';
-import { slugify } from '@lib/utils';
+import { formatDate, slugify } from '@lib/utils';
 import { categoryLabels, categoryColors, journeyLabels } from '@lib/tree-utils';
 import carretillaAntes from '@assets/images/trocha-verde/carretilla-reciclada.jpg';
 import carretillaDespues from '@assets/images/trocha-verde/carretilla-despues.jpg';
@@ -102,6 +104,21 @@ const journeys = sortedDates.map((dateKey, index) => ({
   label: journeyLabels[index] ?? `Siembra #${index + 1}`,
   trees: treesByDate.get(dateKey)!.trees,
 }));
+
+// Marcadores para el mapa interactivo — solo árboles geolocalizados
+const treeMarkers: TreeMarker[] = trees
+  .filter((t: Tree) => t.data.lat !== undefined && t.data.lng !== undefined)
+  .map((t: Tree) => ({
+    slug: t.id,
+    species: t.data.species,
+    category: t.data.category as 'frutal' | 'ornamental' | 'nativo' | 'maderable',
+    lat: t.data.lat!,
+    lng: t.data.lng!,
+    donor: t.data.donor,
+    image: t.data.image,
+    imageAlt: t.data.imageAlt,
+    plantedDate: formatDate(t.data.plantedDate),
+  }));
 
 // WhatsApp URLs
 const whatsappFamilias = `${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, quiero unirme a la próxima siembra de Trocha Verde')}`;
@@ -275,13 +292,41 @@ const processSteps = [
     </div>
   </section>
 
-  <!-- 4. Timeline de Siembras -->
+  <!-- 4. Mapa Interactivo -->
+  <section id="mapa" class="mb-16 scroll-mt-28" aria-labelledby="mapa-title">
+    <SectionTitle
+      title="Mapa del Inventario"
+      subtitle="Árboles geolocalizados en la Pista Carlos Castro"
+    />
+
+    {treeMarkers.length > 0 ? (
+      <>
+        <TrochaVerdeMap client:visible trees={treeMarkers} />
+
+        <noscript>
+          <div class="mt-3 rounded-xl border border-emerald-100 bg-emerald-50 p-6">
+            <p class="text-sm text-emerald-800">
+              El mapa interactivo requiere JavaScript. Consulta el inventario completo en las secciones de especies y siembras de esta página.
+            </p>
+          </div>
+        </noscript>
+      </>
+    ) : (
+      <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-6 text-center">
+        <p class="text-sm text-emerald-800">
+          Pronto geolocalizaremos cada árbol del inventario en este mapa.
+        </p>
+      </div>
+    )}
+  </section>
+
+  <!-- 5. Timeline de Siembras -->
   <TrochaVerdeSiembras journeys={journeys} />
 
-  <!-- 5. Sponsors block -->
+  <!-- 6. Sponsors block -->
   <TrochaVerdeSponsors />
 
-  <!-- 6. El Proceso -->
+  <!-- 7. El Proceso -->
   <section id="proceso" class="mb-16 scroll-mt-28" aria-labelledby="proceso-title">
     <SectionTitle
       title="El Proceso"
@@ -312,7 +357,7 @@ const processSteps = [
     </div>
   </section>
 
-  <!-- 7. Antes y Después -->
+  <!-- 8. Antes y Después -->
   <section class="mb-16" aria-labelledby="transformacion-title">
     <SectionTitle
       title="Transformación en acción"
@@ -358,7 +403,7 @@ const processSteps = [
     </div>
   </section>
 
-  <!-- 8. CTA final -->
+  <!-- 9. CTA final -->
   <section
     class="rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100 px-6 py-12 text-center sm:px-10"
     aria-labelledby="cta-final-title"

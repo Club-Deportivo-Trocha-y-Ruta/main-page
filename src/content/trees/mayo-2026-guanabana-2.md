@@ -13,8 +13,6 @@ notes: "Segunda guanábana de la jornada. Junto con sus compañeras formarán un
 featured: false
 draft: false
 order: 48
-lat: 3.5975
-lng: -76.4852
 ---
 
 Segunda guanábana sembrada el 3 de mayo de 2026. Las tres guanábanas fueron plantadas en conjunto para que se acompañen en su crecimiento y multipliquen la producción de frutos para toda la comunidad del club.

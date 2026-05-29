@@ -10,8 +10,6 @@ imageAlt: "Cuarta Ixora donada por Vivero Guacandá durante la Sembratón del D�
 status: "sembrado"
 donor: "Vivero Guacandá (Sr. Néstor Correa)"
 notes: "Cuarta de seis Ixoras donadas por el Vivero Guacandá."
-lat: 3.598194
-lng: -76.485000
 featured: false
 draft: false
 order: 33

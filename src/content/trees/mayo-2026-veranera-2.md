@@ -14,8 +14,6 @@ notes: "Segunda veranera de la jornada. Planta resistente y de crecimiento vigor
 featured: false
 draft: false
 order: 59
-lat: 3.5981
-lng: -76.4850
 ---
 
 Segunda Veranera sembrada el 3 de mayo de 2026. La especie es conocida por su tolerancia a la sequía y por florecer prácticamente todo el año en climas cálidos como el de Yumbo. Aporta color al perímetro de la pista con sus brácteas vibrantes.

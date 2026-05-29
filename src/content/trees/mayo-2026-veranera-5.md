@@ -14,8 +14,6 @@ notes: "Quinta veranera de la jornada. Especie originaria de Sudamérica, muy pr
 featured: false
 draft: false
 order: 62
-lat: 3.5987
-lng: -76.4856
 ---
 
 Quinta Veranera sembrada el 3 de mayo de 2026. Originaria de Sudamérica, fue documentada por el naturalista francés Philibert Commerson en el siglo XVIII durante su expedición con Louis Antoine de Bougainville, de quien tomó su nombre científico.

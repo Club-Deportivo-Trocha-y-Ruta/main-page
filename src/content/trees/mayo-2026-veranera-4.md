@@ -14,8 +14,6 @@ notes: "Cuarta veranera de la jornada. Su floración intensa en temporada seca l
 featured: false
 draft: false
 order: 61
-lat: 3.5985
-lng: -76.4854
 ---
 
 Cuarta Veranera sembrada el 3 de mayo de 2026. El nombre veranera viene del español de Colombia y hace referencia a su floración exuberante durante el verano, justo cuando otras especies pierden hojas y color.

@@ -10,6 +10,8 @@ image: "/images/trocha-verde/mango.jpg"
 imageAlt: "Árbol de Mango plantado dentro de una llanta de bicicleta pintada de rosado"
 status: "sembrado"
 notes: "El Mango es uno de los frutales más queridos en Colombia. Un solo árbol puede producir hasta 200 frutos por temporada y dar sombra por más de 100 años."
+lat: 3.595378
+lng: -76.486639
 featured: true
 draft: false
 order: 4
