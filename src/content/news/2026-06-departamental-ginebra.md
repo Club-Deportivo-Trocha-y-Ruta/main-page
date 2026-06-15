@@ -182,6 +182,42 @@ La pelea por el primer puesto de **Isabel Quiñones** en Prejuvenil A fue de las
 
 **Jostin Villamizar** completó la jornada con un **tercer lugar** muy meritorio: viene entrenando juicioso y motivado, y aunque la logística del calentamiento le jugó en contra, sacó la cara para subirse al podio. Y **Andrés Felipe Polanco** se topó con la mala fortuna: una falla en el shifter de cambios no lo dejó rendir al máximo y terminó alcanzado por el grupo de punta. La bici a veces cobra; el carácter para seguir pedaleando, no se negocia.
 
+<div class="figure-grid">
+  <figure>
+    <img
+      src="/images/news/departamental-ginebra-2026/podio-infantil-a-fem-dia-2.webp"
+      alt="Sophia Vargas y Sofía Gómez en el podio de XCO Infantil A Femenino del segundo día"
+      width="1200"
+      height="1600"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Doblete del club en XCO Infantil A Femenino: Sophia Vargas (1ª) y Sofía Gómez (2ª).</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/departamental-ginebra-2026/isabel-podio-dia-2.webp"
+      alt="Isabel Quiñones en el podio de XCO Prejuvenil A Femenino del segundo día, en el segundo lugar"
+      width="1200"
+      height="1600"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Isabel Quiñones, 2ª en XCO Prejuvenil A Femenino.</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/departamental-ginebra-2026/jostin-podio-dia-2.webp"
+      alt="Jostin Villamizar en el podio de XCO Infantil B del segundo día, en el tercer lugar"
+      width="1200"
+      height="1600"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Jostin Villamizar, 3° en XCO Infantil B.</figcaption>
+  </figure>
+</div>
+
 ## Resultados del club
 
 ### Gymkanas
