@@ -40,7 +40,7 @@ export async function GET(_context: APIContext) {
   const urlEntries = recentArticles
     .map(
       (n: NewsEntry) => `  <url>
-    <loc>${SITE.url}/noticias/${n.id}</loc>
+    <loc>${SITE.url}/noticias/${n.id}/</loc>
     <news:news>
       <news:publication>
         <news:name>${escapeXml(SITE.name)}</news:name>
