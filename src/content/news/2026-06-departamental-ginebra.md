@@ -45,6 +45,7 @@ lineup:
 seo:
   metaTitle: "Trocha y Ruta en el Departamental de MTB 2026 (Ginebra)"
   metaDescription: "Resultados de Trocha y Ruta en el Departamental de MTB 2026 en Ginebra: primeros lugares y podios en gymkanas y XCO, con Sophia Vargas e Isabel al frente."
+  ogImage: "/images/news/departamental-ginebra-2026/og-departamental-ginebra.webp"
 ---
 
 Del 12 al 14 de junio, Ginebra fue el escenario del **Campeonato Departamental de MTB del Valle del Cauca**. Y aunque esta carrera **no reparte puntos para la tabla general de la Copa Valle**, nuestros muchachos la corrieron con la garra de siempre: primeros lugares y podios en casi todas las categorías donde estuvieron.
