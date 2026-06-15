@@ -101,6 +101,30 @@ La habilidad mandó en la primera jornada. **Sophia Vargas** se subió a lo más
   <figcaption>Miguel Ángel Anaya (segundo lugar, a la izquierda) en el podio de Gymkanas Infantil A del primer día.</figcaption>
 </figure>
 
+<figure>
+  <img
+    src="/images/news/departamental-ginebra-2026/isabel-podio-dia-1.webp"
+    alt="Isabel Quiñones en lo más alto del podio de Gymkanas Prejuvenil A Femenino del primer día"
+    width="1600"
+    height="1563"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Isabel Quiñones, primera en el podio de Gymkanas Prejuvenil A Femenino del Día 1.</figcaption>
+</figure>
+
+<figure>
+  <img
+    src="/images/news/departamental-ginebra-2026/jostin-podio-dia-1.webp"
+    alt="Jostin Villamizar en el podio de Gymkanas Infantil B del primer día, en el segundo lugar"
+    width="1600"
+    height="1619"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Jostin Villamizar (segundo lugar, a la izquierda) en el podio de Gymkanas Infantil B del Día 1.</figcaption>
+</figure>
+
 ## Día 2 — XCO (sábado): fondo, constancia y carácter
 
 En el cross country, **Sophia Vargas** volvió a brillar y repitió el **primer lugar**, premio a la constancia de cada entrenamiento. En su misma categoría, **Sofía Gómez** firmó el **segundo puesto**, en un regreso valiente a la competencia tras un tiempo de entrenamientos intermitentes: bienvenida de vuelta.
