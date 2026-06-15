@@ -9,7 +9,7 @@ imageAlt: "Afiche oficial del Campeonato Departamental de MTB 2026 en Ginebra, V
 imageLayout: contain
 excerpt: "Primeros lugares y podios en gymkanas y XCO: así corrió Trocha y Ruta el Departamental de MTB 2026 en Ginebra, una fecha sin puntos pero con mucha actitud."
 featured: true
-draft: true
+draft: false
 relatedEvent: "2026-06-campeonato-departamental"
 galleryFolder: "/images/news/departamental-ginebra-2026"
 galleryImages: []
@@ -51,7 +51,55 @@ Del 12 al 14 de junio, Ginebra fue el escenario del **Campeonato Departamental d
 
 ## Día 1 — Gymkanas (viernes): precisión y cabeza fría
 
+<figure>
+  <img
+    src="/images/news/departamental-ginebra-2026/grupal-dia-1.webp"
+    alt="El equipo de Trocha y Ruta en la zona de meta, listo para el primer día de competencia en Ginebra"
+    width="1600"
+    height="1199"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>El equipo de Trocha y Ruta en la zona de meta, listo para el primer día de competencia en Ginebra.</figcaption>
+</figure>
+
 La habilidad mandó en la primera jornada. **Sophia Vargas** se subió a lo más alto y firmó el **primer lugar** de su categoría. **Isabel Quiñones** hizo lo propio y completó el circuito con la menor cantidad de errores: pura concentración para quedarse con el **primer puesto**. Muy sólidos también **Miguel Ángel Anaya** y **Jostin Villamizar**, ambos en el **segundo lugar** de sus categorías. Y **Andrés Felipe Polanco** vivió su debut en este tipo de pruebas: el primer paso de un camino que apenas empieza.
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/departamental-ginebra-2026/sophia-jersey-campeona.webp"
+    alt="Sophia Vargas luce su jersey de Campeona Departamental Infantil A Femenino en Gymkanas"
+    width="1200"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Sophia Vargas luce su jersey de Campeona Departamental Infantil A Femenino en Gymkanas.</figcaption>
+</figure>
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/departamental-ginebra-2026/jostin-circuito-dia-1.webp"
+    alt="Jostin Villamizar reconoce y practica el circuito de gymkanas del primer día"
+    width="1200"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Jostin Villamizar reconoce y practica el circuito de gymkanas del primer día.</figcaption>
+</figure>
+
+<figure>
+  <img
+    src="/images/news/departamental-ginebra-2026/miguel-podio-dia-1.webp"
+    alt="Miguel Ángel Anaya en el podio de Gymkanas Infantil A del primer día, en el segundo lugar"
+    width="1600"
+    height="1418"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Miguel Ángel Anaya (segundo lugar, a la izquierda) en el podio de Gymkanas Infantil A del primer día.</figcaption>
+</figure>
 
 ## Día 2 — XCO (sábado): fondo, constancia y carácter
 
