@@ -10,9 +10,9 @@ level: "departamental"
 organizer: "Comisión Vallecaucana de Ciclomontañismo"
 image: "/images/placeholder-event.jpg"
 imageAlt: "Campeonato Departamental de MTB 2026 en Ginebra, Valle del Cauca"
-status: "upcoming"
+status: "past"
 registrationDeadline: 2026-06-10
-featured: true
+featured: false
 draft: false
 ---
 
@@ -67,5 +67,3 @@ Campeonato Departamental de MTB 2026, el evento más importante del calendario v
 ## Premiación
 
 Medallas y premiación para los primeros lugares de cada categoría y prueba. Trofeo para los primeros municipios del medallero general.
-</content>
-</invoke>
