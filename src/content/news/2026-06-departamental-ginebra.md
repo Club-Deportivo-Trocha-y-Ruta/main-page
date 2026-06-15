@@ -13,38 +13,9 @@ draft: false
 relatedEvent: "2026-06-campeonato-departamental"
 galleryFolder: "/images/news/departamental-ginebra-2026"
 galleryImages: []
-lineup:
-  - name: "Eileen Sophia Vargas Bonilla"
-    category: "Infantil A Femenina"
-    slug: "eileen-sophia-vargas"
-    image: "/images/news/departamental-ginebra-2026/lineup/eileen-sophia-vargas.webp"
-  - name: "Sofía Gómez Gómez"
-    category: "Infantil A Femenina"
-    slug: "sofia-gomez"
-    image: "/images/news/departamental-ginebra-2026/lineup/sofia-gomez.webp"
-  - name: "Miguel Ángel Anaya Molano"
-    category: "Infantil A"
-    slug: "miguel-angel-anaya"
-    image: "/images/news/departamental-ginebra-2026/lineup/miguel-angel-anaya.webp"
-  - name: "Jostin Villamizar García"
-    category: "Infantil B"
-    slug: "jostin-villamizar"
-    image: "/images/news/departamental-ginebra-2026/lineup/jostin-villamizar.webp"
-  - name: "Isabel Cristhina Quiñones Batero"
-    category: "Prejuvenil A Femenina"
-    slug: "isabel-quinones"
-    image: "/images/news/departamental-ginebra-2026/lineup/isabel-quinones.webp"
-  - name: "Mariana Coronado Delgado"
-    category: "Prejuvenil A Femenina"
-    slug: "mariana-coronado"
-    image: "/images/news/departamental-ginebra-2026/lineup/mariana-coronado.webp"
-  - name: "Andrés Felipe Polanco Muñoz"
-    category: "Prejuvenil A"
-    slug: "andres-felipe-polanco"
-    image: "/images/news/departamental-ginebra-2026/lineup/andres-felipe-polanco.webp"
 seo:
   metaTitle: "Trocha y Ruta en el Departamental de MTB 2026 (Ginebra)"
-  metaDescription: "Resultados de Trocha y Ruta en el Departamental de MTB 2026 en Ginebra: primeros lugares y podios en gymkanas y XCO, con Sophia Vargas e Isabel al frente."
+  metaDescription: "Resultados de Trocha y Ruta en el Departamental de MTB 2026 en Ginebra: títulos y podios en gymkanas y XCO con Sophia Vargas e Isabel Quiñones."
   ogImage: "/images/news/departamental-ginebra-2026/og-departamental-ginebra.webp"
 ---
 
@@ -69,13 +40,13 @@ La habilidad mandó en la primera jornada. **Sophia Vargas** se subió a lo más
 <figure class="figure--portrait">
   <img
     src="/images/news/departamental-ginebra-2026/sophia-jersey-campeona.webp"
-    alt="Sophia Vargas luce su jersey de Campeona Departamental Infantil A Femenino en Gymkanas"
+    alt="Sophia Vargas luce su jersey de Campeona Departamental Infantil A Femenina en Gymkanas"
     width="1200"
     height="1600"
     loading="lazy"
     decoding="async"
   />
-  <figcaption>Sophia Vargas luce su jersey de Campeona Departamental Infantil A Femenino en Gymkanas.</figcaption>
+  <figcaption>Sophia Vargas luce su jersey de Campeona Departamental Infantil A Femenina en Gymkanas.</figcaption>
 </figure>
 
 <figure class="figure--portrait">
@@ -94,13 +65,13 @@ La habilidad mandó en la primera jornada. **Sophia Vargas** se subió a lo más
   <figure>
     <img
       src="/images/news/departamental-ginebra-2026/isabel-podio-dia-1.webp"
-      alt="Isabel Quiñones en lo más alto del podio de Gymkanas Prejuvenil A Femenino del primer día"
+      alt="Isabel Quiñones en lo más alto del podio de Gymkanas Prejuvenil A Femenina del primer día"
       width="1600"
       height="1563"
       loading="lazy"
       decoding="async"
     />
-    <figcaption>Isabel Quiñones, 1ª en Gymkanas Prejuvenil A Femenino.</figcaption>
+    <figcaption>Isabel Quiñones, 1ª en Gymkanas Prejuvenil A Femenina.</figcaption>
   </figure>
   <figure>
     <img
@@ -128,9 +99,9 @@ La habilidad mandó en la primera jornada. **Sophia Vargas** se subió a lo más
 
 ## Día 2 — XCO (sábado): fondo, constancia y carácter
 
-En el cross country, **Sophia Vargas** volvió a brillar y se coronó **Campeona Departamental** también en su categoría, premio a la constancia de cada entrenamiento. En su misma categoría, **Sofía Gómez** firmó el **segundo puesto**, en un regreso valiente a la competencia tras un tiempo de entrenamientos intermitentes: bienvenida de vuelta.
+En el cross country, **Sophia Vargas** volvió a brillar y se coronó **Campeona Departamental** también en su categoría, premio a la constancia de cada entrenamiento. En esa misma división, su compañera de club **Sofía Gómez** —que no hay que confundir con Sophia— firmó el **segundo puesto**, en un regreso valiente a la competencia tras un tiempo de entrenamientos intermitentes: bienvenida de vuelta.
 
-<div class="figure-carousel" role="group" aria-label="Fotos de acción del cross country, Día 2">
+<div class="figure-carousel" role="group" aria-label="Fotos de acción del cross country, Día 2" tabindex="0">
   <figure>
     <img
       src="/images/news/departamental-ginebra-2026/xco-peloton-dia-2.webp"
@@ -187,24 +158,24 @@ La pelea por el primer puesto de **Isabel Quiñones** en Prejuvenil A fue de las
   <figure>
     <img
       src="/images/news/departamental-ginebra-2026/podio-infantil-a-fem-dia-2.webp"
-      alt="Sophia Vargas y Sofía Gómez en el podio de XCO Infantil A Femenino del segundo día"
+      alt="Sophia Vargas y Sofía Gómez en el podio de XCO Infantil A Femenina del segundo día"
       width="1200"
       height="1600"
       loading="lazy"
       decoding="async"
     />
-    <figcaption>Doblete del club en XCO Infantil A Femenino: Sophia Vargas (1ª) y Sofía Gómez (2ª).</figcaption>
+    <figcaption>Doblete del club en XCO Infantil A Femenina: Sophia Vargas (1ª) y Sofía Gómez (2ª).</figcaption>
   </figure>
   <figure>
     <img
       src="/images/news/departamental-ginebra-2026/isabel-podio-dia-2.webp"
-      alt="Isabel Quiñones en el podio de XCO Prejuvenil A Femenino del segundo día, en el segundo lugar"
+      alt="Isabel Quiñones en el podio de XCO Prejuvenil A Femenina del segundo día, en el segundo lugar"
       width="1200"
       height="1600"
       loading="lazy"
       decoding="async"
     />
-    <figcaption>Isabel Quiñones, 2ª en XCO Prejuvenil A Femenino.</figcaption>
+    <figcaption>Isabel Quiñones, 2ª en XCO Prejuvenil A Femenina.</figcaption>
   </figure>
   <figure>
     <img
@@ -245,7 +216,7 @@ La pelea por el primer puesto de **Isabel Quiñones** en Prejuvenil A fue de las
 
 ## En el medallero oficial
 
-En la tabla de medallería general del departamental, **Yumbo cerró en el 8° puesto con 6 medallas: 1 oro, 4 platas y 1 bronce**. Conviene aclarar que el reglamento solo entrega medalla oficial en las categorías que reúnen un mínimo de cinco corredores de tres municipios; varias de las divisiones donde nuestros chicos terminaron primeros o en el podio no alcanzaron ese cupo, así que no todas sus posiciones en pista se tradujeron en medalla para la tabla. Por eso celebramos, sobre todo, los **puestos conseguidos categoría por categoría**: ahí está el verdadero termómetro del trabajo del club.
+En la tabla de medallería general del departamental, **Yumbo cerró en el 8° puesto con 6 medallas: 1 oro, 4 platas y 1 bronce**. Conviene aclarar que el reglamento solo entrega medalla oficial en las categorías que reúnen un mínimo de cinco corredores de tres municipios; varias de las divisiones donde nuestros chicos terminaron primeros o en el podio no alcanzaron ese cupo, así que no todas sus posiciones en pista se tradujeron en medalla para la tabla. Sophia e Isabel, por ejemplo, sí recibieron oficialmente su jersey y su título de **Campeonas Departamentales** de categoría, aunque en el conteo municipal solo entran las divisiones que cumplieron el cupo reglamentario. Por eso celebramos, sobre todo, los **puestos conseguidos categoría por categoría**: ahí está el verdadero termómetro del trabajo del club.
 
 Más allá de las medallas, lo que nos llena de orgullo es ver a cada uno dándolo todo, creciendo y disfrutando la bici.
 
