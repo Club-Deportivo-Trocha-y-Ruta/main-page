@@ -63,7 +63,7 @@ Del 12 al 14 de junio, Ginebra fue el escenario del **Campeonato Departamental d
   <figcaption>El equipo de Trocha y Ruta en la zona de meta, listo para el primer día de competencia en Ginebra.</figcaption>
 </figure>
 
-La habilidad mandó en la primera jornada. **Sophia Vargas** se subió a lo más alto y firmó el **primer lugar** de su categoría. **Isabel Quiñones** hizo lo propio y completó el circuito con la menor cantidad de errores: pura concentración para quedarse con el **primer puesto**. Muy sólidos también **Miguel Ángel Anaya** y **Jostin Villamizar**, ambos en el **segundo lugar** de sus categorías. Y **Andrés Felipe Polanco** vivió su debut en este tipo de pruebas: el primer paso de un camino que apenas empieza.
+La habilidad mandó en la primera jornada. **Sophia Vargas** se subió a lo más alto y se consagró **Campeona Departamental** de su categoría. **Isabel Quiñones** hizo lo propio y completó el circuito con la menor cantidad de errores: pura concentración para colgarse también el título de **Campeona Departamental**. Muy sólidos también **Miguel Ángel Anaya** y **Jostin Villamizar**, ambos en el **segundo lugar** de sus categorías. Y **Andrés Felipe Polanco** vivió su debut en este tipo de pruebas: el primer paso de un camino que apenas empieza.
 
 <figure class="figure--portrait">
   <img
@@ -127,7 +127,54 @@ La habilidad mandó en la primera jornada. **Sophia Vargas** se subió a lo más
 
 ## Día 2 — XCO (sábado): fondo, constancia y carácter
 
-En el cross country, **Sophia Vargas** volvió a brillar y repitió el **primer lugar**, premio a la constancia de cada entrenamiento. En su misma categoría, **Sofía Gómez** firmó el **segundo puesto**, en un regreso valiente a la competencia tras un tiempo de entrenamientos intermitentes: bienvenida de vuelta.
+En el cross country, **Sophia Vargas** volvió a brillar y se coronó **Campeona Departamental** también en su categoría, premio a la constancia de cada entrenamiento. En su misma categoría, **Sofía Gómez** firmó el **segundo puesto**, en un regreso valiente a la competencia tras un tiempo de entrenamientos intermitentes: bienvenida de vuelta.
+
+<div class="figure-carousel" role="group" aria-label="Fotos de acción del cross country, Día 2">
+  <figure>
+    <img
+      src="/images/news/departamental-ginebra-2026/xco-peloton-dia-2.webp"
+      alt="Grupo de corredores afronta una bajada técnica en el circuito de XCO del segundo día"
+      width="1200"
+      height="1600"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>El circuito de XCO puso a prueba a todos en el segundo día.</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/departamental-ginebra-2026/miguel-xco-dia-2.webp"
+      alt="Miguel Ángel Anaya con el dorsal 407 en plena carrera de cross country"
+      width="1200"
+      height="1600"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Miguel Ángel Anaya (407) sobre el trazado de XCO.</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/departamental-ginebra-2026/jostin-xco-dia-2.webp"
+      alt="Jostin Villamizar con el dorsal 362 en plena carrera de cross country"
+      width="1200"
+      height="1600"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Jostin Villamizar (362) atacando el circuito.</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/departamental-ginebra-2026/jostin-xco-meta-dia-2.webp"
+      alt="Jostin Villamizar con el dorsal 362 rueda hacia la zona de meta"
+      width="1200"
+      height="1600"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Jostin Villamizar (362) enfila hacia la meta.</figcaption>
+  </figure>
+</div>
 
 Capítulo aparte para **Miguel Ángel Anaya**: habitante de Yotoco, entrena por su cuenta y aun así es un tremendo deportista. Peleando toda la carrera con sus pedales de chocle, que le estuvieron fallando, sacó la casta para remontar y quedarse con el **segundo lugar**. Talento y corazón puro.
 
