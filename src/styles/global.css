@@ -90,6 +90,27 @@
   overflow-x: auto;
 }
 
+/* Prose inline figures — imágenes con caption dentro del cuerpo de noticias */
+.prose :where(figure) {
+  text-align: center;
+}
+.prose :where(figure img) {
+  border-radius: 0.75rem;
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+}
+/* Portrait: limitar ancho para no romper el flujo de lectura */
+.prose :where(figure.figure--portrait) {
+  max-width: 26rem;
+  margin-inline: auto;
+}
+.prose :where(figcaption) {
+  text-align: center;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .reveal {
