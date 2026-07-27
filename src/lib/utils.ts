@@ -61,24 +61,44 @@ export function getEventStatusLabel(status: string): string {
 interface CalendarEventParams {
   title: string;
   date: Date;
+  endDate?: Date;
   location: string;
   description?: string;
-  duration?: number; // horas, default 4
 }
 
-function toGCalDate(date: Date): string {
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** YYYYMMDD en UTC — formato de fecha para eventos de día completo. */
+function toAllDayDate(date: Date): string {
+  return date.toISOString().slice(0, 10).replace(/-/g, '');
+}
+
+/** YYYYMMDDTHHMMSSZ — usado solo para DTSTAMP. */
+function toUtcTimestamp(date: Date): string {
   return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+}
+
+/**
+ * Los eventos del calendario solo tienen fecha (sin hora), así que se exportan
+ * como eventos de día completo. El fin es exclusivo: un evento del 1 al 2 de
+ * agosto termina el 3.
+ */
+function allDayRange(date: Date, endDate?: Date) {
+  const last = endDate ?? date;
+  return {
+    start: toAllDayDate(date),
+    end: toAllDayDate(new Date(last.getTime() + DAY_MS)),
+  };
 }
 
 export function generateGoogleCalendarUrl({
   title,
   date,
+  endDate,
   location,
   description = '',
-  duration = 4,
 }: CalendarEventParams): string {
-  const start = toGCalDate(date);
-  const end = toGCalDate(new Date(date.getTime() + duration * 60 * 60 * 1000));
+  const { start, end } = allDayRange(date, endDate);
   const params = new URLSearchParams({
     action: 'TEMPLATE',
     text: title,
@@ -92,13 +112,12 @@ export function generateGoogleCalendarUrl({
 export function generateICSContent({
   title,
   date,
+  endDate,
   location,
   description = '',
-  duration = 4,
 }: CalendarEventParams): string {
-  const start = toGCalDate(date);
-  const end = toGCalDate(new Date(date.getTime() + duration * 60 * 60 * 1000));
-  const now = toGCalDate(new Date());
+  const { start, end } = allDayRange(date, endDate);
+  const now = toUtcTimestamp(new Date());
   const uid = `${start}-${title.toLowerCase().replace(/\s+/g, '-')}@clubtrochayruta`;
 
   return [
@@ -110,8 +129,8 @@ export function generateICSContent({
     'BEGIN:VEVENT',
     `UID:${uid}`,
     `DTSTAMP:${now}`,
-    `DTSTART:${start}`,
-    `DTEND:${end}`,
+    `DTSTART;VALUE=DATE:${start}`,
+    `DTEND;VALUE=DATE:${end}`,
     `SUMMARY:${title}`,
     `LOCATION:${location}`,
     `DESCRIPTION:${description}`,

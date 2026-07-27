@@ -1,7 +1,7 @@
 ---
 title: "Trocha y Ruta deja el corazón en Ginebra: cosecha de podios en el Departamental de MTB 2026"
 date: 2026-06-14
-author: "Club Trocha y Ruta"
+author: "Juan Diego García"
 category: "competencias"
 tags: ["departamental", "mtb", "ginebra", "xco", "gymkanas", "resultados", "podio"]
 image: "/images/news/departamental-ginebra-2026/portada-departamental-ginebra.webp"

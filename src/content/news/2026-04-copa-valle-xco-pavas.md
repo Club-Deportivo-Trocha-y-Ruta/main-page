@@ -1,7 +1,7 @@
 ---
 title: "Barro, lluvia y dos podios: Trocha y Ruta brilló en La Cumbre"
 date: 2026-04-19
-author: "Club Trocha y Ruta"
+author: "Juan Diego García"
 category: "competencias"
 tags: ["copa-valle", "xco", "la-cumbre", "pavas", "resultados", "podio"]
 image: "/images/news/copa-valle-pavas-2026/portada-copa-valle-pavas.webp"

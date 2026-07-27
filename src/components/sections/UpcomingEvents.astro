@@ -19,10 +19,11 @@ const upcomingEvents = (await getCollection('events'))
           <EventCard
             title={event.data.title}
             date={event.data.date}
+            endDate={event.data.endDate}
             location={event.data.location}
             category={event.data.category}
             status={event.data.status}
-            href={`/calendario/${event.id}`}
+            href="/calendario"
           />
         ))}
       </div>

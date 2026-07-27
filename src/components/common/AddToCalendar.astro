@@ -4,15 +4,15 @@ import { generateGoogleCalendarUrl, generateICSContent, slugify } from '@lib/uti
 interface Props {
   title: string;
   date: Date;
+  endDate?: Date;
   location: string;
   description?: string;
-  duration?: number;
 }
 
-const { title, date, location, description = '', duration = 4 } = Astro.props;
+const { title, date, endDate, location, description = '' } = Astro.props;
 
-const googleUrl = generateGoogleCalendarUrl({ title, date, location, description, duration });
-const icsContent = generateICSContent({ title, date, location, description, duration });
+const googleUrl = generateGoogleCalendarUrl({ title, date, endDate, location, description });
+const icsContent = generateICSContent({ title, date, endDate, location, description });
 const icsEncoded = encodeURIComponent(icsContent);
 const icsFilename = `${slugify(title)}.ics`;
 ---

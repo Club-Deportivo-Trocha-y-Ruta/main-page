@@ -9,8 +9,8 @@ function parseHtml(html: string) {
 
 const baseProps = {
   title: 'Copa Valle XCO 2026',
-  // Fecha local explícita (new Date('YYYY-MM-DD') parsea como UTC y puede desfasarse en Node.js)
-  date: new Date(2026, 3, 15), // abril = mes 3 (0-indexed)
+  // Igual que en el frontmatter: medianoche UTC, formateada en UTC por el componente
+  date: new Date('2026-04-15'),
   location: 'Ginebra, Valle del Cauca',
   category: 'xco',
   status: 'upcoming',
@@ -53,13 +53,34 @@ describe('EventCard', () => {
   // ─── Renderizado de fecha ─────────────────────────────────
 
   it('muestra el día del mes de la fecha', async () => {
-    // Usa fecha local explícita para evitar desfases UTC en Node.js
-    const localDate = new Date(2026, 3, 15); // mes 3 = abril (0-indexed)
     const html = await container.renderToString(EventCard, {
-      props: { ...baseProps, date: localDate },
+      props: baseProps,
     });
-    // date.getDate() → 15 en zona horaria local
     expect(html).toContain('15');
+  });
+
+  it('formatea la fecha en UTC sin corrimiento de día', async () => {
+    // Las fechas del frontmatter llegan como medianoche UTC; en zonas horarias
+    // negativas (Colombia, UTC-5) formatear en local mostraría el día anterior.
+    const html = await container.renderToString(EventCard, {
+      props: { ...baseProps, date: new Date('2026-08-01') },
+    });
+    const doc = parseHtml(html);
+    const daySpan = doc.querySelector('.font-display.text-xl');
+    expect(daySpan?.textContent?.trim()).toBe('1');
+  });
+
+  it('muestra el rango de días en eventos de varias jornadas', async () => {
+    const html = await container.renderToString(EventCard, {
+      props: {
+        ...baseProps,
+        date: new Date('2026-08-01'),
+        endDate: new Date('2026-08-02'),
+      },
+    });
+    const doc = parseHtml(html);
+    const daySpan = doc.querySelector('.font-display.text-xl');
+    expect(daySpan?.textContent?.trim()).toBe('1-2');
   });
 
   it('muestra el mes abreviado en español', async () => {

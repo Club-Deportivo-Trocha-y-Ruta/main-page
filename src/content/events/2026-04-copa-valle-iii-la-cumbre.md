@@ -11,7 +11,7 @@ image: "/images/news/copa-valle-pavas-2026/portada-copa-valle-pavas.webp"
 imageAlt: "III Válida Copa Valle XCO en la Pista Los Pinos, Pavas, La Cumbre"
 status: "past"
 registrationDeadline: 2026-04-16
-featured: true
+featured: false
 draft: false
 ---
 

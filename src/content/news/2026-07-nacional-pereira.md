@@ -1,7 +1,7 @@
 ---
 title: "Dos días en Pereira: Isabel Quiñónez y Miguel Ángel Anaya en los Nacionales MTB 2026"
 date: 2026-07-18
-author: "Club Trocha y Ruta"
+author: "Juan Diego García"
 category: "competencias"
 tags: ["nacional", "mtb", "pereira", "xco", "gymkanas", "seleccion-valle", "resultados"]
 image: "/images/news/nacional-pereira-2026/portada-nacional-pereira.webp"
@@ -9,7 +9,7 @@ imageAlt: "Afiche oficial de los Campeonatos Nacionales MTB 2026 en el Parque Me
 imageLayout: contain
 excerpt: "Convocados por mérito a la Selección Valle, Isabel Quiñónez y Miguel Ángel Anaya corrieron gymkanas y XCO en el Nacional de Pereira. Terminaron las cuatro carreras."
 featured: true
-draft: true
+draft: false
 relatedEvent: "2026-07-nacional-pereira"
 galleryFolder: "/images/news/nacional-pereira-2026"
 galleryImages: []
@@ -45,7 +45,31 @@ Con Miguel, el mismo camino. Segundo en Pavas con **0:15:48**, quinto en Cali en
 
 En gymkanas mandan primero los recorridos limpios, por tiempo; de ahí hacia abajo, el número de estaciones falladas. En Prejuvenil A Damas, cinco hicieron pleno y el oro quedó para **Heilyn Dayanna Aguirre**, del Valle, con **0:01:41**. Isabel falló una sola estación —la de la bandera— y entró en el grupo inmediatamente siguiente: **7ª de 13 clasificadas**. Ella no lo lee como un cierre: espera subirse al podio.
 
+<figure>
+  <img
+    src="/images/news/nacional-pereira-2026/isabel-estacion-llanta-gymkanas.webp"
+    alt="Isabel Quiñónez, con el uniforme de la Selección Valle, rueda hacia la estación de la llanta en el circuito de gymkanas"
+    width="900"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Isabel en el circuito de gymkanas, camino a la estación de la llanta.</figcaption>
+</figure>
+
 Mismo formato, otra categoría, otro desenlace. En Infantil A, Miguel también falló una sola y quedó **4° de 13**, a un puesto del bronce de **Samuel Barrero**, del Valle (0:01:47). Tres vallecaucanos entre los seis primeros: Miguel estuvo donde se peleaba la categoría.
+
+<figure>
+  <img
+    src="/images/news/nacional-pereira-2026/miguel-espera-turno-gymkanas.webp"
+    alt="Miguel Ángel Anaya, con casco y uniforme de la Selección Valle, espera su turno para tomar la partida en gymkanas junto a su bicicleta, bajo un guadual"
+    width="900"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Miguel espera su turno en gymkanas, en la línea de salida bajo el guadual del Parque Metropolitano del Café.</figcaption>
+</figure>
 
 ## Sábado 18 — XCO: la línea perdida y recuperada
 
@@ -54,6 +78,18 @@ La pista no se parecía a la del circuito departamental: saltos, bajadas con tro
 Lo que vino después es lo que merece contarse: Isabel volvió a encontrar "su ritmo y su línea" y terminó toda la carrera. **0:56:33**, **11ª de 13**, a 14:50 de la campeona Asly Mariana Fernández (Cundinamarca), que cerró en **0:41:43** con sus tres vueltas casi calcadas. Las de Isabel fueron subiendo —18:14, 18:46 y 19:32—. Esa es la distancia real hasta la punta del país y hay que mirarla de frente: no se cierra con ganas, se cierra con fondo y con kilómetros en pistas así.
 
 Hay otra cara del resultado. Las 13 corredoras terminaron: no hubo puestos regalados. Isabel completó las tres vueltas sin quedar doblada y cruzó a **38 segundos** de Aguirre, campeona nacional de gymkanas un día antes.
+
+<figure>
+  <img
+    src="/images/news/nacional-pereira-2026/isabel-llegada-xco.webp"
+    alt="Isabel Quiñónez llega en su bicicleta bajo el pórtico de meta del Nacional MTB 2026, con la pancarta de la Secretaría de Deporte y Recreación de Pereira de fondo"
+    width="900"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Isabel cruza la meta del XCO, con las tres vueltas completas.</figcaption>
+</figure>
 
 Capítulo aparte para Miguel, que firmó el mejor registro del club en el cross country: **6° de 13** en Infantil A con **0:23:26**, a **2:51** del campeón José Daniel Tibaquicha y a 2:22 del podio. Rodó un 13,9 % por encima del tiempo del ganador, entre los nueve que terminaron en la misma vuelta. Cuarto fue Samuel Barrero, el mismo que en abril le sacó 2:24 en Pavas: Miguel se mide, fecha tras fecha, con corredores que pelean medallas de nacional.
 

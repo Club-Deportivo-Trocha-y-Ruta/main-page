@@ -18,6 +18,7 @@ const eventDate = new Date(nextEvent.data.date);
 const dateStr = eventDate.toLocaleDateString('es-CO', {
   day: 'numeric',
   month: 'long',
+  timeZone: 'UTC',
 });
 ---
 
