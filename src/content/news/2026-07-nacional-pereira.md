@@ -73,6 +73,18 @@ Mismo formato, otra categoría, otro desenlace. En Infantil A, Miguel también f
 
 ## Sábado 18 — XCO: la línea perdida y recuperada
 
+<figure>
+  <img
+    src="/images/news/nacional-pereira-2026/isabel-previa-xco.webp"
+    alt="Isabel Quiñónez, sobre su bicicleta y con casco puesto, se concentra antes de la salida del XCO en el Parque Metropolitano del Café"
+    width="900"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Isabel, concentrada, minutos antes de la salida del XCO.</figcaption>
+</figure>
+
 La pista no se parecía a la del circuito departamental: saltos, bajadas con troncos, curvas más exigentes. El *cross country* iba a ser duro, y en la primera vuelta se puso peor: en el descenso más pronunciado, otra corredora le bloqueó la línea a Isabel. No abandonó; hubo desconcentración, y manejar esa frustración en plena carrera es un aprendizaje que no se entrena en ningún rodillo.
 
 Lo que vino después es lo que merece contarse: Isabel volvió a encontrar "su ritmo y su línea" y terminó toda la carrera. **0:56:33**, **11ª de 13**, a 14:50 de la campeona Asly Mariana Fernández (Cundinamarca), que cerró en **0:41:43** con sus tres vueltas casi calcadas. Las de Isabel fueron subiendo —18:14, 18:46 y 19:32—. Esa es la distancia real hasta la punta del país y hay que mirarla de frente: no se cierra con ganas, se cierra con fondo y con kilómetros en pistas así.
