@@ -58,8 +58,6 @@ Capítulo aparte para Miguel, que firmó el mejor registro del club en el cross 
 
 Un puesto 11 puede ser una buena noticia sin que eso sea una excusa. Las cifras del fin de semana son 7ª, 11ª, 4° y 6°: no hay medalla y no hace falta disimularlo. Lo que sí hay es verificable: dos convocatorias por mérito a la Selección Valle, cuatro carreras empezadas y cuatro terminadas, y la medida exacta de dónde están. Lo primero se celebra, y con razón; lo segundo no se maquilla, se entrena.
 
-Según el balance del certamen, el Valle del Cauca terminó primero en el medallero de las categorías competitivas, sobre Cundinamarca y Antioquia. Isabel y Miguel entraron a esa delegación corriendo, no por cupo.
-
 Volvieron de Pereira con la pista del país medida y con ganas de más. Para un club de formación, eso es exactamente lo que se puede trabajar en las tres válidas que quedan.
 
 ## Próxima cita: Palmira
