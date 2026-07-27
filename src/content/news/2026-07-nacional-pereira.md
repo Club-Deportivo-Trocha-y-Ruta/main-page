@@ -23,6 +23,18 @@ Del 15 al 19 de julio, el Parque Metropolitano del Café de Pereira fue la sede 
 
 En la Copa Valle y en el departamental uno se mide con los de casa; en un nacional la vara la ponen los mejores del país. Esta no era una carrera que estuviera en el plan físico del año: el club la tomó como experiencia y aprendizaje, y para el próximo año sí está previsto asistir a nacionales. Nadie viajó a Pereira a buscar medalla. Fueron a medirse.
 
+<figure>
+  <img
+    src="/images/news/nacional-pereira-2026/grupal-seleccion-valle.webp"
+    alt="La delegación de la Selección Valle del Cauca de ciclomontañismo, con corredores y cuerpo técnico, posa frente a la carpa de Indervalle en el Parque Metropolitano del Café"
+    width="1600"
+    height="900"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>La delegación de la Selección Valle del Cauca en Pereira. Isabel y Miguel corrieron el Nacional con esta camiseta.</figcaption>
+</figure>
+
 ## De dónde viene esta convocatoria
 
 El llamado no nació en Pereira. Nació en [el Campeonato Departamental de Ginebra](/noticias/2026-06-departamental-ginebra), donde Isabel se colgó el título de gymkanas y fue segunda en XCO a **41 segundos** de la ganadora. Esa curva de menos a más, que arrancó en Pavas y pasó por su primer top-3 de la temporada en Cali, es la que la puso en el equipo del departamento.
