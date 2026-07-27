@@ -1,7 +1,7 @@
 ---
 title: "Sembratón en el Pump Track: Trocha y Ruta celebra el Día de la Tierra con 23 árboles"
 date: 2026-04-22
-author: "Club Trocha y Ruta"
+author: "Juan Diego García"
 category: "comunidad"
 tags: ["dia-tierra", "trocha-verde", "siembra", "yumbo", "comunidad", "medio-ambiente", "pump-track"]
 image: "/images/trocha-verde/dia-tierra-2026/afiche.jpg"

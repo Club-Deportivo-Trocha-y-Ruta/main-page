@@ -2,18 +2,39 @@
 interface Props {
   title: string;
   date: Date;
+  endDate?: Date;
   location: string;
   category: string;
   status: string;
   href: string;
 }
 
-const { title, date, location, category, status, href } = Astro.props;
+const { title, date, endDate, location, category, status, href } = Astro.props;
 
 import { Icon } from 'astro-icon/components';
 import Badge from '@components/common/Badge.astro';
 import AddToCalendar from '@components/common/AddToCalendar.astro';
 import { getCategoryLabel, getEventStatusLabel } from '@lib/utils';
+
+// Las fechas del frontmatter (YYYY-MM-DD) se parsean como medianoche UTC;
+// formatear en UTC evita que se corran un día en zonas horarias negativas.
+const monthLabel = new Intl.DateTimeFormat('es-CO', {
+  month: 'short',
+  timeZone: 'UTC',
+}).format(date);
+const dayFormatter = new Intl.DateTimeFormat('es-CO', {
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+// Eventos de varios días muestran el rango (ej. "1-2") si caen en el mismo mes.
+const sameMonth =
+  endDate &&
+  endDate.getUTCFullYear() === date.getUTCFullYear() &&
+  endDate.getUTCMonth() === date.getUTCMonth();
+const dayLabel =
+  endDate && sameMonth
+    ? `${dayFormatter.format(date)}-${dayFormatter.format(endDate)}`
+    : dayFormatter.format(date);
 
 const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
   upcoming: 'primary',
@@ -26,10 +47,10 @@ const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> =
 <div class="flex items-start gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 transition-colors hover:bg-surface-muted border-l-4 border-primary">
   <div class="min-w-[3.5rem] sm:min-w-[4rem] rounded-lg bg-primary/10 p-2 sm:p-3 text-center shrink-0">
     <span class="block text-xs font-bold uppercase tracking-wide text-primary">
-      {date.toLocaleDateString('es-CO', { month: 'short' })}
+      {monthLabel}
     </span>
     <span class="block font-display text-xl sm:text-2xl font-bold text-primary">
-      {date.getDate()}
+      {dayLabel}
     </span>
   </div>
   <div class="flex flex-col gap-1 min-w-0">
@@ -44,7 +65,7 @@ const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> =
       <Badge variant={statusVariant[status] ?? 'neutral'}>{getEventStatusLabel(status)}</Badge>
     </div>
     {status === 'upcoming' && (
-      <AddToCalendar title={title} date={date} location={location} />
+      <AddToCalendar title={title} date={date} endDate={endDate} location={location} />
     )}
   </div>
 </div>

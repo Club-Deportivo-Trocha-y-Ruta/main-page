@@ -1,7 +1,7 @@
 ---
 title: "Trocha y Ruta deja huella en la II Válida de la Copa Valle en Ginebra"
 date: 2026-03-01
-author: "Club Trocha y Ruta"
+author: "Juan Diego García"
 category: "competencias"
 tags: ["copa-valle", "xco", "ginebra", "resultados", "gymkanas"]
 image: "/images/news/copa-valle-ginebra-2026/portada-copa-valle-ginebra.jpg"

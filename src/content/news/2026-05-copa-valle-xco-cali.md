@@ -1,7 +1,7 @@
 ---
 title: "Doblete del club en el podio Prejuvenil A Femenina en Cali"
 date: 2026-05-17
-author: "Club Trocha y Ruta"
+author: "Juan Diego García"
 category: "competencias"
 tags: ["copa-valle", "xco", "cali", "seleccion-colombia", "resultados", "podio"]
 image: "/images/news/copa-valle-cali-2026/portada-copa-valle-cali.webp"
