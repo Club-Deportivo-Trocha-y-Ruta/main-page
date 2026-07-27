@@ -1,5 +1,5 @@
 ---
-title: "Dos días en Pereira: Isabel Quiñónez y Miguel Ángel Anaya en los Nacionales MTB 2026"
+title: "Dos días en Pereira: Isabel Quiñones y Miguel Ángel Anaya en los Nacionales MTB 2026"
 date: 2026-07-18
 author: "Juan Diego García"
 category: "competencias"
@@ -7,7 +7,7 @@ tags: ["nacional", "mtb", "pereira", "xco", "gymkanas", "seleccion-valle", "resu
 image: "/images/news/nacional-pereira-2026/portada-nacional-pereira.webp"
 imageAlt: "Afiche oficial de los Campeonatos Nacionales MTB 2026 en el Parque Metropolitano del Café, Pereira"
 imageLayout: contain
-excerpt: "Convocados por mérito a la Selección Valle, Isabel Quiñónez y Miguel Ángel Anaya corrieron gymkanas y XCO en el Nacional de Pereira. Terminaron las cuatro carreras."
+excerpt: "Convocados por mérito a la Selección Valle, Isabel Quiñones y Miguel Ángel Anaya corrieron gymkanas y XCO en el Nacional de Pereira. Terminaron las cuatro carreras."
 featured: true
 draft: false
 relatedEvent: "2026-07-nacional-pereira"
@@ -15,11 +15,11 @@ galleryFolder: "/images/news/nacional-pereira-2026"
 galleryImages: []
 seo:
   metaTitle: "Trocha y Ruta en los Nacionales MTB 2026 (Pereira)"
-  metaDescription: "Isabel Quiñónez y Miguel Ángel Anaya corrieron los Nacionales MTB 2026 de Pereira con la Selección Valle: resultados de gymkanas y XCO, y balance del club."
+  metaDescription: "Isabel Quiñones y Miguel Ángel Anaya corrieron los Nacionales MTB 2026 de Pereira con la Selección Valle: resultados de gymkanas y XCO, y balance del club."
   ogImage: "/images/news/nacional-pereira-2026/og-nacional-pereira.webp"
 ---
 
-Del 15 al 19 de julio, el Parque Metropolitano del Café de Pereira fue la sede principal de los **Campeonatos Nacionales MTB 2026**, con más de 400 deportistas de ligas de todo el país. Y aunque Trocha y Ruta no viajó como club, dos de los nuestros estuvieron en la partida: **Isabel Cristhina Quiñónez Batero** y **Miguel Ángel Anaya Molano**, convocados por mérito a la **Selección Valle del Cauca**.
+Del 15 al 19 de julio, el Parque Metropolitano del Café de Pereira fue la sede principal de los **Campeonatos Nacionales MTB 2026**, con más de 400 deportistas de ligas de todo el país. Y aunque Trocha y Ruta no viajó como club, dos de los nuestros estuvieron en la partida: **Isabel Cristhina Quiñones Batero** y **Miguel Ángel Anaya Molano**, convocados por mérito a la **Selección Valle del Cauca**.
 
 En la Copa Valle y en el departamental uno se mide con los de casa; en un nacional la vara la ponen los mejores del país. Esta no era una carrera que estuviera en el plan físico del año: el club la tomó como experiencia y aprendizaje, y para el próximo año sí está previsto asistir a nacionales. Nadie viajó a Pereira a buscar medalla. Fueron a medirse.
 
@@ -48,7 +48,7 @@ En gymkanas mandan primero los recorridos limpios, por tiempo; de ahí hacia aba
 <figure class="figure--portrait">
   <img
     src="/images/news/nacional-pereira-2026/isabel-estacion-llanta-gymkanas.webp"
-    alt="Isabel Quiñónez, con el uniforme de la Selección Valle, rueda hacia la estación de la llanta en el circuito de gymkanas"
+    alt="Isabel Quiñones, con el uniforme de la Selección Valle, rueda hacia la estación de la llanta en el circuito de gymkanas"
     width="900"
     height="1600"
     loading="lazy"
@@ -76,7 +76,7 @@ Mismo formato, otra categoría, otro desenlace. En Infantil A, Miguel también f
 <figure class="figure--portrait">
   <img
     src="/images/news/nacional-pereira-2026/isabel-previa-xco.webp"
-    alt="Isabel Quiñónez, sobre su bicicleta y con casco puesto, se concentra antes de la salida del XCO en el Parque Metropolitano del Café"
+    alt="Isabel Quiñones, sobre su bicicleta y con casco puesto, se concentra antes de la salida del XCO en el Parque Metropolitano del Café"
     width="900"
     height="1600"
     loading="lazy"
@@ -94,7 +94,7 @@ Hay otra cara del resultado. Las 13 corredoras terminaron: no hubo puestos regal
 <figure class="figure--portrait">
   <img
     src="/images/news/nacional-pereira-2026/isabel-llegada-xco.webp"
-    alt="Isabel Quiñónez llega en su bicicleta bajo el pórtico de meta del Nacional MTB 2026, con la pancarta de la Secretaría de Deporte y Recreación de Pereira de fondo"
+    alt="Isabel Quiñones llega en su bicicleta bajo el pórtico de meta del Nacional MTB 2026, con la pancarta de la Secretaría de Deporte y Recreación de Pereira de fondo"
     width="900"
     height="1600"
     loading="lazy"
@@ -109,8 +109,8 @@ Capítulo aparte para Miguel, que firmó el mejor registro del club en el cross 
 
 | Deportista | Modalidad | Categoría | Pos. | Tiempo / Dato |
 |------------|-----------|-----------|:----:|---------------|
-| **Isabel Cristhina Quiñónez Batero** | Gymkanas | Prejuvenil A Damas | 7ª de 13 | −1 estación |
-| **Isabel Cristhina Quiñónez Batero** | XCO | Prejuvenil A Damas | 11ª de 13 | 0:56:33 |
+| **Isabel Cristhina Quiñones Batero** | Gymkanas | Prejuvenil A Damas | 7ª de 13 | −1 estación |
+| **Isabel Cristhina Quiñones Batero** | XCO | Prejuvenil A Damas | 11ª de 13 | 0:56:33 |
 | **Miguel Ángel Anaya Molano** | Gymkanas | Infantil A | 4° de 13 | −1 estación |
 | **Miguel Ángel Anaya Molano** | XCO | Infantil A | 6° de 13 | 0:23:26 |
 

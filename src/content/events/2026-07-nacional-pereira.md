@@ -21,7 +21,7 @@ seo:
 
 Los Campeonatos Nacionales de MTB 2026 se disputaron del 15 al 19 de julio en Pereira, con el **Parque Metropolitano del Café** como escenario principal. Organizados por la Federación Colombiana de Ciclismo con el apoyo de la Liga de Ciclomontañismo de Risaralda, reunieron a más de 400 deportistas de ligas de todo el país.
 
-El Club Trocha y Ruta estuvo representado por **Isabel Cristhina Quiñónez Batero** y **Miguel Ángel Anaya Molano**, ambos convocados por la Selección Valle del Cauca.
+El Club Trocha y Ruta estuvo representado por **Isabel Cristhina Quiñones Batero** y **Miguel Ángel Anaya Molano**, ambos convocados por la Selección Valle del Cauca.
 
 ## Información general
 
@@ -40,5 +40,5 @@ El Club Trocha y Ruta estuvo representado por **Isabel Cristhina Quiñónez Bate
 
 | Deportista | Categoría | Liga |
 |------------|-----------|------|
-| Isabel Cristhina Quiñónez Batero | Prejuvenil A Damas | Valle del Cauca |
+| Isabel Cristhina Quiñones Batero | Prejuvenil A Damas | Valle del Cauca |
 | Miguel Ángel Anaya Molano | Infantil A Masculino | Valle del Cauca |
