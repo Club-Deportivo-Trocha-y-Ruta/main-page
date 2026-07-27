@@ -45,7 +45,7 @@ Con Miguel, el mismo camino. Segundo en Pavas con **0:15:48**, quinto en Cali en
 
 En gymkanas mandan primero los recorridos limpios, por tiempo; de ahí hacia abajo, el número de estaciones falladas. En Prejuvenil A Damas, cinco hicieron pleno y el oro quedó para **Heilyn Dayanna Aguirre**, del Valle, con **0:01:41**. Isabel falló una sola estación —la de la bandera— y entró en el grupo inmediatamente siguiente: **7ª de 13 clasificadas**. Ella no lo lee como un cierre: espera subirse al podio.
 
-<figure>
+<figure class="figure--portrait">
   <img
     src="/images/news/nacional-pereira-2026/isabel-estacion-llanta-gymkanas.webp"
     alt="Isabel Quiñónez, con el uniforme de la Selección Valle, rueda hacia la estación de la llanta en el circuito de gymkanas"
@@ -59,7 +59,7 @@ En gymkanas mandan primero los recorridos limpios, por tiempo; de ahí hacia aba
 
 Mismo formato, otra categoría, otro desenlace. En Infantil A, Miguel también falló una sola y quedó **4° de 13**, a un puesto del bronce de **Samuel Barrero**, del Valle (0:01:47). Tres vallecaucanos entre los seis primeros: Miguel estuvo donde se peleaba la categoría.
 
-<figure>
+<figure class="figure--portrait">
   <img
     src="/images/news/nacional-pereira-2026/miguel-espera-turno-gymkanas.webp"
     alt="Miguel Ángel Anaya, con casco y uniforme de la Selección Valle, espera su turno para tomar la partida en gymkanas junto a su bicicleta, bajo un guadual"
@@ -73,7 +73,7 @@ Mismo formato, otra categoría, otro desenlace. En Infantil A, Miguel también f
 
 ## Sábado 18 — XCO: la línea perdida y recuperada
 
-<figure>
+<figure class="figure--portrait">
   <img
     src="/images/news/nacional-pereira-2026/isabel-previa-xco.webp"
     alt="Isabel Quiñónez, sobre su bicicleta y con casco puesto, se concentra antes de la salida del XCO en el Parque Metropolitano del Café"
@@ -91,7 +91,7 @@ Lo que vino después es lo que merece contarse: Isabel volvió a encontrar "su r
 
 Hay otra cara del resultado. Las 13 corredoras terminaron: no hubo puestos regalados. Isabel completó las tres vueltas sin quedar doblada y cruzó a **38 segundos** de Aguirre, campeona nacional de gymkanas un día antes.
 
-<figure>
+<figure class="figure--portrait">
   <img
     src="/images/news/nacional-pereira-2026/isabel-llegada-xco.webp"
     alt="Isabel Quiñónez llega en su bicicleta bajo el pórtico de meta del Nacional MTB 2026, con la pancarta de la Secretaría de Deporte y Recreación de Pereira de fondo"
