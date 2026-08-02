@@ -47,8 +47,8 @@ const jsonLd = generateArticleJsonLd({
 ---
 
 <BaseLayout
-  title={`${title} | Noticias`}
-  description={excerpt}
+  title={seo?.metaTitle ?? `${title} | Noticias`}
+  description={seo?.metaDescription ?? excerpt}
   ogImage={ogImage}
   ogImageWidth={ogImageWidth}
   ogImageHeight={ogImageHeight}
