@@ -75,7 +75,7 @@ El detalle que le da tamaño al resultado: tercera quedó **Heilyn Dayanna Aguir
   <figcaption>Sophia Vargas (1259), concentrada en el circuito del Bosque Municipal.</figcaption>
 </figure>
 
-**Eileen Sophia Vargas Bonilla** fue **segunda**, y la categoría se decidió exactamente por lo que se explicaba arriba. Ganó Sheila Isabela Ruiz Sánchez con recorrido limpio; Sophia falló cuatro estaciones y aun así se quedó con la plata, porque las dos corredoras que rodaron más rápido que ella —Emma Mejía y Nazly Sofía González— fallaron cinco. Un podio ganado exactamente por lo que se explicaba arriba: en gymkanas la precisión pesa más que el crono.
+**Eileen Sophia Vargas Bonilla** fue **segunda**. Ganó Sheila Isabela Ruiz Sánchez con recorrido limpio; Sophia falló cuatro estaciones y aun así se quedó con la plata, porque las dos corredoras que rodaron más rápido que ella —Emma Mejía y Nazly Sofía González— fallaron cinco. Un podio ganado exactamente por lo que se explicaba arriba: en gymkanas la precisión pesa más que el crono.
 
 <figure>
   <img
