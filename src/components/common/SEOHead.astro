@@ -37,7 +37,12 @@ const {
 } = Astro.props;
 
 const isHome = Astro.url.pathname === '/';
-const pageTitle = isHome ? title : `${title} | ${SITE.name}`;
+// El nombre del club solo se agrega si el título completo se sigue viendo en
+// resultados de búsqueda (~60 caracteres). Los títulos ya redactados para SEO
+// —las noticias, por ejemplo— se usan tal cual y no se truncan con la marca.
+const TITLE_MAX_LENGTH = 60;
+const brandedTitle = `${title} | ${SITE.name}`;
+const pageTitle = isHome || brandedTitle.length > TITLE_MAX_LENGTH ? title : brandedTitle;
 const canonical = canonicalUrl || new URL(Astro.url.pathname, SITE.url).href;
 const ogImageUrl = ogImage
   ? ogImage.startsWith('http') ? ogImage : new URL(ogImage, SITE.url).href
