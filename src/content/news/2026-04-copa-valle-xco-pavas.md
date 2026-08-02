@@ -26,7 +26,7 @@ galleryImages:
   - accion-pista-pavas-58.webp
   - accion-pista-pavas-60.webp
 seo:
-  metaTitle: "Trocha y Ruta: 2 podios en la III Válida Copa Valle XCO Pavas 2026"
+  metaTitle: "Trocha y Ruta: dos podios en la Copa Valle XCO de Pavas 2026"
   metaDescription: "Resultados del Club Trocha y Ruta en la tercera válida de la Copa Valle de Ciclomontañismo 2026 en la Pista XCO Los Pinos del corregimiento de Pavas, La Cumbre."
 ---
 
