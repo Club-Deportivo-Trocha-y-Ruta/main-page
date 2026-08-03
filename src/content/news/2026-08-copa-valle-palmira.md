@@ -19,6 +19,8 @@ galleryImages:
   - podio-prejuvenil-a-dia-1.webp
   - sophia-vargas-circuito-dia-1.webp
   - miguel-anaya-circuito-dia-1.webp
+  - juan-diego-garcia-xco-dia-2.webp
+  - podio-elite-dia-2.webp
 seo:
   metaTitle: "Trocha y Ruta en las gymkanas de Palmira (Copa Valle 2026)"
   metaDescription: "Resultados de Trocha y Ruta en las gymkanas de la Copa Valle 2026 en el Bosque Municipal de Palmira: oro de Isabel Quiñones y plata de Sophia Vargas."
@@ -27,11 +29,13 @@ seo:
 
 El sábado 1 de agosto la Copa Valle llegó al **Bosque Municipal de Palmira**, 16,5 hectáreas de parque urbano que los palmiranos llaman "el pulmón de la ciudad". Fue el primero de dos días: el sábado, las **gymkanas**; el domingo, el **XCO**. El club se llevó del sábado un primer puesto, un segundo y tres puestos en la pelea.
 
-## Cómo se gana una gymkana
+## Día 1 — Gymkanas
+
+### Cómo se gana una gymkana
 
 Conviene explicarlo antes de los resultados, porque el orden de llegada no lo decide el cronómetro. Primero mandan los **recorridos limpios**: quien pasa las estaciones sin fallar queda por encima de quien falla, sin importar cuánto tardó. Entre los que empatan en faltas, ahí sí se mira el tiempo. Por eso una pasada rápida y sucia pierde contra una lenta y perfecta.
 
-## Isabel Quiñones, primera: lo hizo de las dos formas
+### Isabel Quiñones, primera: lo hizo de las dos formas
 
 <figure class="figure--portrait">
   <img
@@ -61,7 +65,7 @@ El detalle que le da tamaño al resultado: tercera quedó **Heilyn Dayanna Aguir
   <figcaption>Isabel, en lo más alto del podio de Prejuvenil A Femenina.</figcaption>
 </figure>
 
-## Sophia Vargas, segunda en Infantil A Femenina
+### Sophia Vargas, segunda en Infantil A Femenina
 
 <figure>
   <img
@@ -89,7 +93,7 @@ El detalle que le da tamaño al resultado: tercera quedó **Heilyn Dayanna Aguir
   <figcaption>Sophia Vargas, segunda en Infantil A Femenina.</figcaption>
 </figure>
 
-## Miguel Ángel Anaya: una pelotica entre él y el segundo puesto
+### Miguel Ángel Anaya: una pelotica entre él y el segundo puesto
 
 <figure>
   <img
@@ -107,13 +111,13 @@ Infantil A fue la categoría más numerosa del día con **once inscritos**, y la
 
 La cuenta es corta: con recorrido limpio, su tiempo de 0:01:34.553 lo dejaba **segundo**, solo detrás del ganador Thiago Manzano. El domingo el terreno es más suyo.
 
-## Jostin Villamizar: recorrido perfecto, una vuelta de más
+### Jostin Villamizar: recorrido perfecto, una vuelta de más
 
 **Jostin Villamizar García** hizo lo más difícil —**cero faltas**, uno de los seis recorridos limpios de Infantil B— y lo perdió en lo más simple. Había que darle **dos vueltas** a una palmera y a un árbol grande del circuito. Él dio **tres**. No fue falta ni descalificación: fue tiempo, y el tiempo en una gymkana se cobra entero. Cerró en 0:01:53.078 y quedó **sexto**, a 27 segundos del tercer lugar, más o menos lo que cuesta la vuelta que le sobró.
 
 Es de los errores que menos cuesta corregir: no se arregla con piernas, se arregla con reconocimiento de circuito.
 
-## Samuel Ortiz, cuarto y con sinsabor
+### Samuel Ortiz, cuarto y con sinsabor
 
 <figure>
   <img
@@ -131,7 +135,7 @@ Es de los errores que menos cuesta corregir: no se arregla con piernas, se arreg
 
 Samuel se fracturó una mano, paró el ciclomontañismo y usó el reposo para meterse en el ciclismo de ruta: en julio [debutó en la Clásica de Santa Rosa de Tapias](/noticias/2026-07-clasica-santa-rosa-tapias) con un tercer puesto en la crono escalada y un cuarto en la etapa en línea. Está retomando y afinando. Este cuarto lugar es parte de ese camino de vuelta.
 
-## Resultados del club — Gymkanas
+### Resultados del club — Gymkanas
 
 | Deportista | Categoría | Pos. | Faltas | Tiempo | Puntos |
 |------------|-----------|:----:|:------:|--------|:------:|
@@ -141,12 +145,46 @@ Samuel se fracturó una mano, paró el ciclomontañismo y usó el reposo para me
 | Miguel Ángel Anaya Molano | Infantil A | 5° | 1 | 0:01:34.553 | 27 |
 | Jostin Villamizar García | Infantil B | 6° | 0 | 0:01:53.078 | 25 |
 
-## Lo que deja el sábado
+### Lo que deja el sábado
 
 Cinco corredores, **158 puntos** sumados y un sábado que dejó lo típico de una gymkana: gana el que no se equivoca, no el más rápido. El domingo el Bosque Municipal cambia de idioma — llega el XCO, y ahí manda el fondo.
 
-<!-- DÍA 2 — XCO (domingo 2 de agosto), pendiente:
-     resultados oficiales, fotos, y el cierre con la general de la Copa Valle.
-     Antes de publicar: draft -> false, revisar título y excerpt si el domingo
-     cambia el eje de la nota, y pasar el evento 2026-08-copa-valle-v-palmira
+## Día 2 — XCO
+
+### Juan Diego García: la última vuelta más rápida de su carrera
+
+<figure>
+  <img
+    src="/images/news/copa-valle-palmira-2026/juan-diego-garcia-xco-dia-2.webp"
+    alt="Juan Diego García rueda sobre su bicicleta blanca por el circuito de XCO, entre los árboles del Bosque Municipal, con otro corredor de fondo"
+    width="1600"
+    height="1200"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Juan Diego García en el circuito del Bosque Municipal, en la carrera más larga del fin de semana.</figcaption>
+</figure>
+
+Mientras las categorías formativas resolvían entre veinte y cuarenta minutos, la **Élite** estuvo más de hora y cuarto sobre el circuito. **Juan Diego García** la corrió a fondo de principio a fin y guardó lo mejor para el final: en la **última vuelta le recortó 30 segundos al cuarto de la categoría** y terminó a solo **28 segundos** de él. Cerró **quinto en 1:23:48**, en una carrera aguerrida donde el fondo se le vio hasta el último metro.
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-palmira-2026/podio-elite-dia-2.webp"
+    alt="Premiación de la categoría Élite bajo el pórtico de meta, con los cinco primeros levantando los brazos y sus medallas"
+    width="1200"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>La premiación de Élite: Juan Diego García (a la derecha), quinto de la categoría.</figcaption>
+</figure>
+
+<!-- DÍA 2 — XCO (domingo 2 de agosto), EN CURSO.
+     Faltan los relatos y fotos de: Samuel Ortiz (2°), Mariana Coronado (2ª),
+     Miguel Ángel Anaya (3°), Isabel Quiñones (5ª), Sofía Gómez (7ª),
+     Sophia Vargas (8ª), Jostin Villamizar (13°), Juan David Giraldo (15°),
+     Liam Fernando Guevara y Celeste Muriel (teteros).
+     Falta también: tabla de resultados del XCO y cierre con la general.
+     Antes de publicar: draft -> false, reescribir título y excerpt para que
+     cubran los dos días, y pasar el evento 2026-08-copa-valle-v-palmira
      a status: "past". -->
