@@ -17,7 +17,7 @@ seo:
   ogImage: "/images/news/copa-valle-palmira-2026/og-copa-valle-palmira.webp"
 ---
 
-Un día después de que Isabel Quiñones firmara el pleno en las [gymkanas del sábado](/noticias/2026-08-copa-valle-palmira-gymkanas), el **Bosque Municipal de Palmira** cambió de idioma. El domingo 2 de agosto se corrió el **XCO** de la quinta válida sobre el circuito de 3,4 kilómetros del parque, y el club puso once corredores en la parrilla. Volvió con dos platas —**Mariana Coronado** y **Samuel Ortiz**, cada uno por razones que venían de lejos—, el bronce de **Miguel Ángel Anaya** y una tabla general que se aprieta a dos fechas del final.
+Un día después de que Isabel Quiñones firmara el pleno en las [gymkanas del sábado](/noticias/2026-08-copa-valle-palmira-gymkanas), el **Bosque Municipal de Palmira** cambió de idioma. El domingo 2 de agosto se corrió el **XCO** de la quinta válida sobre el circuito de 3,4 kilómetros del parque, y el club puso once corredores en la parrilla. Volvió con dos platas —**Mariana Coronado** y **Samuel Ortiz**, cada uno con su historia de atrás—, el bronce de **Miguel Ángel Anaya** y una tabla general que se aprieta a dos fechas del final.
 
 <!-- PENDIENTE (contexto técnico de pista): faltan desnivel del circuito, estado
      del terreno y clima del domingo. Con eso este párrafo se convierte en el
@@ -51,7 +51,7 @@ Un día después de que Isabel Quiñones firmara el pleno en las [gymkanas del s
 
 **Mariana Coronado Delgado** fue **segunda** en 0:33:23, a 42 segundos de la ganadora Luciana Ríos Peña (0:32:41) y con 48 segundos de ventaja sobre la tercera. **Isabel Cristhina Quiñones Batero** cerró **quinta** en 0:35:30.
 
-El resultado vale más de lo que dice el papel. Mariana venía de un tramo largo de altibajos físicos y de carreras que se le complicaron por fuera de lo deportivo, y en Palmira volvió a correr como ella sabe: un circuito de fondo, sin trampas técnicas, del tipo que premia justamente sus condiciones. No fue un golpe de suerte ni una carrera rara — fue Mariana reencontrándose consigo misma en el terreno que mejor le queda. Los 36 puntos igualan su mejor registro de la temporada.
+El resultado vale más de lo que dice el papel. Mariana venía de un tramo largo de altibajos físicos y de carreras que se le complicaron por fuera de lo deportivo, y en Palmira volvió a correr como ella sabe: un circuito de fondo, sin trampas técnicas, del tipo que premia justamente sus condiciones. No fue chiripa ni carrera rara — fue Mariana volviendo a ser Mariana, en el terreno que mejor le queda. Los 36 puntos igualan su mejor registro de la temporada.
 
 ## Samuel Ortiz: segundo podio consecutivo
 
@@ -81,7 +81,7 @@ El resultado vale más de lo que dice el papel. Mariana venía de un tramo largo
 
 **Samuel Ortiz Valencia** fue **segundo** en Prejuvenil A con 0:41:53, a 39 segundos del ganador y con 22 segundos de ventaja sobre el tercero.
 
-Es **su mejor posición del año en la categoría**, y llega al final de un camino largo. Samuel se fracturó una mano, pasó semanas fuera de la bicicleta de montaña y volvió por la ruta, sumando fondo mientras la categoría seguía corriendo sin él. Dos válidas en blanco después, en Palmira volvió a la parrilla del XCO y se fue directo a pelear adelante. No es un regreso: es la confirmación de que ya está de vuelta al nivel que tenía antes de la lesión.
+Es **su mejor posición del año en la categoría**, y llega al final de un camino largo. Samuel se fracturó una mano, pasó semanas fuera de la bicicleta de montaña y volvió por la ruta, sumando fondo mientras la categoría seguía corriendo sin él. Dos válidas en blanco después, en Palmira volvió a la parrilla del XCO y se fue derechito a pelear adelante. No hay mal que dure cien años: esto no es un regreso, es la confirmación de que ya está de vuelta al nivel que tenía antes de la lesión.
 
 ## Miguel Ángel Anaya: podio en el terreno que dijo suyo
 
@@ -141,7 +141,7 @@ Es **su mejor posición del año en la categoría**, y llega al final de un cami
 
 La octava posición de Sophia no cuenta la carrera que hizo. Estuvo peleando los primeros puestos buena parte de la prueba, hasta que se topó con una corredora que le cerró el paso en los tramos angostos y no logró resolver el adelantamiento. La frustración le ganó el pulso a la carrera y terminó cediendo terreno que ya tenía en la mano.
 
-Vale la pena decirlo con claridad, porque es exactamente el tipo de cosa que se entrena: en XCO, quedar trancado detrás de alguien es parte del juego, no una injusticia. Se resuelve leyendo el circuito —esperar el tramo ancho, el frenado de una curva, la subida donde el otro se apaga— y sosteniendo la cabeza fría los treinta segundos que dura la incomodidad. Sophia tiene las piernas para estar arriba; el sábado, en las gymkanas, ya había demostrado que también tiene la precisión. Lo que queda por sumar es el oficio de resolver el tráfico sin perder la carrera, y eso se aprende justamente así: pasándolo una vez.
+Hay que decirlo con cariño pero claro, porque es exactamente el tipo de cosa que se entrena: en XCO, quedar trancado detrás de alguien es parte del juego, no una injusticia. Se resuelve leyendo el circuito —esperar el tramo ancho, el frenado de una curva, la subida donde el otro se apaga— y sosteniendo la cabeza fría los treinta segundos que dura la incomodidad. La rabia no adelanta a nadie. Sophia tiene las piernas para estar arriba; el sábado, en las gymkanas, ya había demostrado que también tiene la precisión. Lo que queda por sumar es el oficio de resolver el tráfico sin perder la carrera, y eso se aprende de una sola manera: pasándolo una vez.
 
 ## Jostin Villamizar: por 21 segundos
 
@@ -245,7 +245,7 @@ Cuando los formativos ya habían resuelto lo suyo entre veinte y cuarenta minuto
 
 ## Clasificación general tras cinco válidas
 
-Con la quinta de siete disputadas, así queda Trocha y Ruta en la tabla general del **XCO** de la Copa Valle. Es una general aparte: las gymkanas del sábado tienen su propio acumulado y no suman aquí.
+Con la quinta de siete disputadas, así queda Trocha y Ruta en la tabla general del **XCO** de la Copa Valle. Cuentas claras: es una general aparte, las gymkanas del sábado tienen su propio acumulado y no suman aquí.
 
 | Deportista | Categoría | Pos. | Tendencia | I | II | III | IV | V | Total | Al podio |
 |------------|-----------|:----:|:---------:|:--:|:--:|:--:|:--:|:--:|:-----:|:--------:|

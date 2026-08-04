@@ -17,13 +17,13 @@ seo:
   ogImage: "/images/news/copa-valle-palmira-2026/og-copa-valle-palmira.webp"
 ---
 
-El sábado 1 de agosto la Copa Valle llegó al **Bosque Municipal de Palmira**, 16,5 hectáreas de parque urbano que los palmiranos llaman "el pulmón de la ciudad". Fue el primero de dos días: el sábado, las **gymkanas**; el domingo, el **XCO**. El club se llevó del sábado un primer puesto, un segundo y tres puestos en la pelea.
+El sábado 1 de agosto la Copa Valle llegó al **Bosque Municipal de Palmira**, 16,5 hectáreas de parque urbano que los palmiranos llaman "el pulmón de la ciudad". Dos días de fiesta: el sábado, las **gymkanas**; el domingo, el **XCO**. Del sábado el club se trajo un primer puesto, un segundo y tres puestos peleando de tú a tú.
 
 ## Cómo se gana una gymkana
 
-Conviene explicarlo antes de los resultados, porque el orden de llegada no lo decide el cronómetro. Primero mandan los **recorridos limpios**: quien pasa las estaciones sin fallar queda por encima de quien falla, sin importar cuánto tardó. Entre los que empatan en faltas, ahí sí se mira el tiempo. Por eso una pasada rápida y sucia pierde contra una lenta y perfecta.
+Conviene explicarlo antes de los resultados, porque el orden de llegada no lo decide el cronómetro. Primero mandan los **recorridos limpios**: quien pasa las estaciones sin fallar queda por encima de quien falla, sin importar cuánto tardó. Entre los que empatan en faltas, ahí sí se mira el tiempo. Por eso una pasada rápida y sucia pierde contra una lenta y perfecta: más vale paso que dure y no trote que canse.
 
-## Isabel Quiñones, primera: lo hizo de las dos formas
+## Isabel Quiñones: chocolate espeso y cuentas claras
 
 <figure class="figure--portrait">
   <img
@@ -93,7 +93,7 @@ El detalle que le da tamaño al resultado: tercera quedó **Heilyn Dayanna Aguir
   <figcaption>Sophia Vargas, segunda en Infantil A Femenina.</figcaption>
 </figure>
 
-## Miguel Ángel Anaya: una pelotica entre él y el segundo puesto
+## Miguel Ángel Anaya: por una pelotica se le fue el segundo
 
 <figure>
   <img
@@ -107,7 +107,7 @@ El detalle que le da tamaño al resultado: tercera quedó **Heilyn Dayanna Aguir
   <figcaption>Miguel Ángel Anaya (407) sobre el paso de troncos.</figcaption>
 </figure>
 
-Infantil A fue la categoría más numerosa del día con **once inscritos**, y la más apretada: seis corredores terminaron con cero o una falta. **Miguel Ángel Anaya Molano** —el de Yotoco, que entrena por su cuenta y sostiene el nivel a punta de constancia— se llevó la única falta del día en la **estación de la pelotica**, y esa sola estación lo dejó **quinto**.
+Infantil A fue la categoría más numerosa del día con **once inscritos**, y la más apretada: seis corredores terminaron con cero o una falta. **Miguel Ángel Anaya Molano** —el de Yotoco, que entrena por su cuenta y sostiene el nivel a punta de pura constancia— se llevó la única falta del día en la **estación de la pelotica**, y esa sola estación lo dejó **quinto**.
 
 La cuenta es corta: con recorrido limpio, su tiempo de 0:01:34.553 lo dejaba **segundo**, solo detrás del ganador Thiago Manzano. El domingo el terreno es más suyo.
 
@@ -125,7 +125,7 @@ La cuenta es corta: con recorrido limpio, su tiempo de 0:01:34.553 lo dejaba **s
 
 ## Jostin Villamizar: recorrido perfecto, una vuelta de más
 
-**Jostin Villamizar García** hizo lo más difícil —**cero faltas**, uno de los seis recorridos limpios de Infantil B— y lo perdió en lo más simple. Había que darle **dos vueltas** a una palmera y a un árbol grande del circuito. Él dio **tres**. No fue falta ni descalificación: fue tiempo, y el tiempo en una gymkana se cobra entero. Cerró en 0:01:53.078 y quedó **sexto**, a 27 segundos del tercer lugar, más o menos lo que cuesta la vuelta que le sobró.
+**Jostin Villamizar García** hizo lo más difícil —**cero faltas**, uno de los seis recorridos limpios de Infantil B— y lo perdió en lo más simple. Había que darle **dos vueltas** a una palmera y a un árbol grande del circuito. Él dio **tres**. Ni falta ni descalificación: pura ñapa que nadie le pidió, y en una gymkana el tiempo se cobra entero. Cerró en 0:01:53.078 y quedó **sexto**, a 27 segundos del tercer lugar, más o menos lo que cuesta la vuelta que le sobró.
 
 Es de los errores que menos cuesta corregir: no se arregla con piernas, se arregla con reconocimiento de circuito.
 
@@ -153,7 +153,7 @@ Es de los errores que menos cuesta corregir: no se arregla con piernas, se arreg
   <figcaption>Jostin Villamizar en el circuito del Bosque Municipal.</figcaption>
 </figure>
 
-## Samuel Ortiz, cuarto y con sinsabor
+## Samuel Ortiz, cuarto y con la espina clavada
 
 <figure>
   <img
@@ -167,7 +167,7 @@ Es de los errores que menos cuesta corregir: no se arregla con piernas, se arreg
   <figcaption>Premiación de Prejuvenil A: Samuel Ortiz (izquierda), cuarto lugar.</figcaption>
 </figure>
 
-**Samuel Ortiz Valencia** volvió a la planilla de la Copa Valle con un **cuarto puesto**. Venía haciendo una gran pasada y se confió justo en la pelotica: se le soltó. Una falta, 0:01:40.901, y el podio a 17 segundos de crono.
+**Samuel Ortiz Valencia** volvió a la planilla de la Copa Valle con un **cuarto puesto**. Venía haciendo una gran pasada y se confió justo en la pelotica: se le soltó. Confianza mata carrera. Una falta, 0:01:40.901, y el podio a 17 segundos de crono.
 
 Samuel se fracturó una mano, paró el ciclomontañismo y usó el reposo para meterse en el ciclismo de ruta: en julio [debutó en la Clásica de Santa Rosa de Tapias](/noticias/2026-07-clasica-santa-rosa-tapias) con un tercer puesto en la crono escalada y un cuarto en la etapa en línea. Está retomando y afinando. Este cuarto lugar es parte de ese camino de vuelta.
 
