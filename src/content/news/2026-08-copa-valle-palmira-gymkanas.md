@@ -1,7 +1,7 @@
 ---
 title: "Isabel Quiñones gana en Palmira: cero errores y el mejor tiempo en las gymkanas"
 date: 2026-08-01
-author: "Club Trocha y Ruta"
+author: "Juan Diego García"
 category: "competencias"
 tags: ["copa-valle", "copa-valle-2026", "gymkanas", "palmira", "bosque-municipal", "resultados", "podio", "isabel-quinones", "sophia-vargas"]
 image: "/images/news/copa-valle-palmira-2026/afiche-copa-valle-palmira.webp"
@@ -185,10 +185,4 @@ Las gymkanas llevan su propio acumulado dentro de la Copa Valle: estos puntos no
 
 ## Lo que deja el sábado
 
-Cinco corredores y un sábado que dejó lo típico de una gymkana: gana el que no se equivoca, no el más rápido. El domingo el Bosque Municipal cambia de idioma — llega el XCO, y ahí manda el fondo, con once corredores del club en la parrilla. La crónica del domingo llega en los próximos días.
-
-<!-- PENDIENTE: cuando se publique la crónica del XCO
-     (src/content/news/2026-08-copa-valle-palmira-xco.md, hoy en draft),
-     cambiar la última frase por un enlace:
-     [Así corrió el club el XCO del domingo](/noticias/2026-08-copa-valle-palmira-xco).
-     No enlazar antes: las noticias en draft no generan página y el enlace daría 404. -->
+Cinco corredores y un sábado que dejó lo típico de una gymkana: gana el que no se equivoca, no el más rápido. El domingo el Bosque Municipal cambia de idioma — llega el XCO, y ahí manda el fondo, con once corredores del club en la parrilla. [Así corrió el club el XCO del domingo](/noticias/2026-08-copa-valle-palmira-xco).

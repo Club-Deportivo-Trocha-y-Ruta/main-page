@@ -1,57 +1,41 @@
 ---
-title: "Dos podios y un tercero en el XCO de Palmira"
+title: "Mariana Coronado y Samuel Ortiz, plata doble en el XCO de Palmira"
 date: 2026-08-02
-author: "Club Trocha y Ruta"
+author: "Juan Diego García"
 category: "competencias"
-tags: ["copa-valle", "copa-valle-2026", "xco", "palmira", "bosque-municipal", "resultados", "podio", "clasificacion-general", "mariana-coronado", "samuel-ortiz", "miguel-anaya", "juan-diego-garcia"]
+tags: ["copa-valle", "copa-valle-2026", "xco", "palmira", "bosque-municipal", "resultados", "podio", "clasificacion-general", "mariana-coronado", "samuel-ortiz", "miguel-anaya", "juan-diego-garcia", "sophia-vargas", "sofia-gomez"]
 image: "/images/news/copa-valle-palmira-2026/afiche-copa-valle-palmira.webp"
 imageAlt: "Afiche de la Copa Valle 2026 en el Bosque Municipal de Palmira, 1 y 2 de agosto"
 imageLayout: contain
-excerpt: "Mariana Coronado y Samuel Ortiz fueron segundos y Miguel Ángel Anaya tercero en el XCO de la quinta válida. Así queda la clasificación general de la Copa Valle 2026."
-featured: false
-draft: true
+excerpt: "Mariana Coronado volvió a su mejor versión y Samuel Ortiz firmó su mejor posición del año: los dos fueron segundos en el XCO de Palmira, con Miguel Ángel Anaya tercero."
+featured: true
+draft: false
 relatedEvent: "2026-08-copa-valle-v-palmira"
 seo:
-  metaTitle: "Trocha y Ruta en el XCO de Palmira (Copa Valle 2026)"
+  metaTitle: "Mariana Coronado y Samuel Ortiz, plata en el XCO de Palmira"
   metaDescription: "Resultados del club en el XCO de la quinta válida de la Copa Valle 2026 en el Bosque Municipal de Palmira, con la clasificación general tras cinco fechas."
   ogImage: "/images/news/copa-valle-palmira-2026/og-copa-valle-palmira.webp"
 ---
 
-Un día después de que Isabel Quiñones firmara el pleno en las [gymkanas del sábado](/noticias/2026-08-copa-valle-palmira-gymkanas), el **Bosque Municipal de Palmira** cambió de idioma. El domingo 2 de agosto se corrió el **XCO** de la quinta válida sobre el circuito de 3,4 kilómetros del parque, y el club puso once corredores en la parrilla. Volvió con dos segundos puestos, un tercero y una tabla general que se aprieta a dos fechas del final.
+Un día después de que Isabel Quiñones firmara el pleno en las [gymkanas del sábado](/noticias/2026-08-copa-valle-palmira-gymkanas), el **Bosque Municipal de Palmira** cambió de idioma. El domingo 2 de agosto se corrió el **XCO** de la quinta válida sobre el circuito de 3,4 kilómetros del parque, y el club puso once corredores en la parrilla. Volvió con dos platas —**Mariana Coronado** y **Samuel Ortiz**, cada uno por razones que venían de lejos—, el bronce de **Miguel Ángel Anaya** y una tabla general que se aprieta a dos fechas del final.
 
 <!-- PENDIENTE (contexto técnico de pista): faltan desnivel del circuito, estado
      del terreno y clima del domingo. Con eso este párrafo se convierte en el
      bloque de contexto de 60-120 palabras del protocolo de crónicas. -->
 
-## Juan Diego García: la última vuelta más rápida
-
-<figure class="figure--portrait">
-  <img
-    src="/images/news/copa-valle-palmira-2026/juan-diego-garcia-xco-dia-2.webp"
-    alt="Juan Diego García inclinado sobre su bicicleta blanca Specialized, tomando una curva del circuito de XCO entre los árboles del Bosque Municipal"
-    width="1200"
-    height="1600"
-    loading="lazy"
-    decoding="async"
-  />
-  <figcaption>Juan Diego García en el circuito del Bosque Municipal, en la carrera más larga del fin de semana.</figcaption>
-</figure>
-
-Mientras las categorías formativas resolvían entre veinte y cuarenta minutos, la **Élite** estuvo más de hora y cuarto sobre el circuito. **Juan Diego García** la corrió a fondo de principio a fin y guardó lo mejor para el final. Cerró **quinto en 1:23:48**, en una carrera aguerrida donde el fondo se le vio hasta el último metro.
-
-<figure class="figure--portrait">
-  <img
-    src="/images/news/copa-valle-palmira-2026/podio-elite-dia-2.webp"
-    alt="Premiación de la categoría Élite bajo el pórtico de meta, con los cinco primeros levantando los brazos y sus medallas"
-    width="1200"
-    height="1600"
-    loading="lazy"
-    decoding="async"
-  />
-  <figcaption>La premiación de Élite: Juan Diego García (a la derecha), quinto de la categoría.</figcaption>
-</figure>
-
 ## Mariana Coronado e Isabel Quiñones: podio compartido en Prejuvenil A Femenina
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-palmira-2026/mariana-coronado-obstaculo-dia-2.webp"
+    alt="Mariana Coronado (904) baja el obstáculo de tablones del circuito de XCO en el Bosque Municipal de Palmira, levantando polvo"
+    width="1200"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Mariana Coronado (904), atacando el paso de tablones del circuito.</figcaption>
+</figure>
 
 <figure>
   <img
@@ -67,7 +51,21 @@ Mientras las categorías formativas resolvían entre veinte y cuarenta minutos, 
 
 **Mariana Coronado Delgado** fue **segunda** en 0:33:23, a 42 segundos de la ganadora Luciana Ríos Peña (0:32:41) y con 48 segundos de ventaja sobre la tercera. **Isabel Cristhina Quiñones Batero** cerró **quinta** en 0:35:30.
 
+El resultado vale más de lo que dice el papel. Mariana venía de un tramo largo de altibajos físicos y de carreras que se le complicaron por fuera de lo deportivo, y en Palmira volvió a correr como ella sabe: un circuito de fondo, sin trampas técnicas, del tipo que premia justamente sus condiciones. No fue un golpe de suerte ni una carrera rara — fue Mariana reencontrándose consigo misma en el terreno que mejor le queda. Los 36 puntos igualan su mejor registro de la temporada.
+
 ## Samuel Ortiz: segundo podio consecutivo
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-palmira-2026/samuel-ortiz-circuito-dia-2.webp"
+    alt="Samuel Ortiz (609) rueda inclinado sobre su bicicleta por un tramo adoquinado del circuito de XCO en el Bosque Municipal de Palmira"
+    width="1200"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Samuel Ortiz (609), en el tramo adoquinado del circuito.</figcaption>
+</figure>
 
 <figure>
   <img
@@ -82,6 +80,8 @@ Mientras las categorías formativas resolvían entre veinte y cuarenta minutos, 
 </figure>
 
 **Samuel Ortiz Valencia** fue **segundo** en Prejuvenil A con 0:41:53, a 39 segundos del ganador y con 22 segundos de ventaja sobre el tercero.
+
+Es **su mejor posición del año en la categoría**, y llega al final de un camino largo. Samuel se fracturó una mano, pasó semanas fuera de la bicicleta de montaña y volvió por la ruta, sumando fondo mientras la categoría seguía corriendo sin él. Dos válidas en blanco después, en Palmira volvió a la parrilla del XCO y se fue directo a pelear adelante. No es un regreso: es la confirmación de que ya está de vuelta al nivel que tenía antes de la lesión.
 
 ## Miguel Ángel Anaya: podio en el terreno que dijo suyo
 
@@ -103,38 +103,14 @@ Mientras las categorías formativas resolvían entre veinte y cuarenta minutos, 
 
 <figure class="figure--portrait">
   <img
-    src="/images/news/copa-valle-palmira-2026/sofia-gomez-calentamiento-dia-2.webp"
-    alt="Sofía Gómez calienta sobre rodillo antes de la carrera de XCO en el Bosque Municipal de Palmira"
-    width="900"
-    height="1600"
-    loading="lazy"
-    decoding="async"
-  />
-  <figcaption>Sofía Gómez, calentando antes de la salida.</figcaption>
-</figure>
-
-<figure class="figure--portrait">
-  <img
-    src="/images/news/copa-valle-palmira-2026/sofia-gomez-circuito-dia-2.webp"
-    alt="Sofía Gómez rueda por el circuito de bambú del XCO en el Bosque Municipal de Palmira"
+    src="/images/news/copa-valle-palmira-2026/sofia-gomez-curva-dia-2.webp"
+    alt="Sofía Gómez (1257) toma una curva de tierra del circuito de XCO en el Bosque Municipal de Palmira"
     width="1200"
     height="1600"
     loading="lazy"
     decoding="async"
   />
-  <figcaption>Sofía Gómez en el circuito de bambú.</figcaption>
-</figure>
-
-<figure class="figure--portrait">
-  <img
-    src="/images/news/copa-valle-palmira-2026/sophia-vargas-familia-dia-2.webp"
-    alt="Sophia Vargas calienta sobre rodillo acompañada de su familia antes de la carrera de XCO en Palmira"
-    width="900"
-    height="1600"
-    loading="lazy"
-    decoding="async"
-  />
-  <figcaption>Sophia Vargas, calentando junto a su familia.</figcaption>
+  <figcaption>Sofía Gómez (1257), trazando una de las curvas de tierra del circuito.</figcaption>
 </figure>
 
 <figure class="figure--portrait">
@@ -163,9 +139,9 @@ Mientras las categorías formativas resolvían entre veinte y cuarenta minutos, 
 
 **Sofía Gómez Gómez** fue **séptima** en 0:31:31. **Eileen Sophia Vargas Bonilla** cerró **octava**, 59 segundos detrás de su compañera, en 0:32:30.
 
-<!-- PENDIENTE (fotos): este bloque tiene 5 imágenes para dos corredoras. Si el
-     relato dictado no abre una micro-escena del rodillo, bajar a 3 y retirar
-     sofia-gomez-calentamiento-dia-2.webp y sophia-vargas-familia-dia-2.webp. -->
+La octava posición de Sophia no cuenta la carrera que hizo. Estuvo peleando los primeros puestos buena parte de la prueba, hasta que se topó con una corredora que le cerró el paso en los tramos angostos y no logró resolver el adelantamiento. La frustración le ganó el pulso a la carrera y terminó cediendo terreno que ya tenía en la mano.
+
+Vale la pena decirlo con claridad, porque es exactamente el tipo de cosa que se entrena: en XCO, quedar trancado detrás de alguien es parte del juego, no una injusticia. Se resuelve leyendo el circuito —esperar el tramo ancho, el frenado de una curva, la subida donde el otro se apaga— y sosteniendo la cabeza fría los treinta segundos que dura la incomodidad. Sophia tiene las piernas para estar arriba; el sábado, en las gymkanas, ya había demostrado que también tiene la precisión. Lo que queda por sumar es el oficio de resolver el tráfico sin perder la carrera, y eso se aprende justamente así: pasándolo una vez.
 
 ## Jostin Villamizar: por 21 segundos
 
@@ -179,6 +155,18 @@ Mientras las categorías formativas resolvían entre veinte y cuarenta minutos, 
     decoding="async"
   />
   <figcaption>Jostin Villamizar, previo a la salida del domingo.</figcaption>
+</figure>
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-palmira-2026/jostin-villamizar-circuito-dia-2.webp"
+    alt="Jostin Villamizar (362) rueda por un tramo de tierra del circuito de XCO en el Bosque Municipal de Palmira"
+    width="1200"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Jostin Villamizar (362), en el circuito del domingo.</figcaption>
 </figure>
 
 **Jostin Villamizar García** fue **13°** en Infantil B con 0:35:11, 21 segundos por delante del 14°.
@@ -209,16 +197,32 @@ Mientras las categorías formativas resolvían entre veinte y cuarenta minutos, 
 
 **Liam Fernando Guevara** fue **13°** en Teteros Sin Pedales con 0:07:06. **Celeste Muriel** cerró **14ª**, 5 segundos después, en 0:07:11.
 
-<figure>
+## Juan Diego García: la más larga del fin de semana
+
+<figure class="figure--portrait">
   <img
-    src="/images/news/copa-valle-palmira-2026/equipo-grupal-dia-2.webp"
-    alt="Equipo del Club Trocha y Ruta reunido en el Bosque Municipal de Palmira durante la Copa Valle 2026"
-    width="1600"
-    height="900"
+    src="/images/news/copa-valle-palmira-2026/juan-diego-garcia-xco-dia-2.webp"
+    alt="Juan Diego García inclinado sobre su bicicleta blanca Specialized, tomando una curva del circuito de XCO entre los árboles del Bosque Municipal"
+    width="1200"
+    height="1600"
     loading="lazy"
     decoding="async"
   />
-  <figcaption>El equipo Trocha y Ruta en Palmira.</figcaption>
+  <figcaption>Juan Diego García en el circuito del Bosque Municipal, en la carrera más larga del fin de semana.</figcaption>
+</figure>
+
+Cuando los formativos ya habían resuelto lo suyo entre veinte y cuarenta minutos, la **Élite** todavía tenía más de hora y cuarto de circuito por delante. **Juan Diego García** la corrió a fondo de principio a fin y guardó lo mejor para el final. Cerró **quinto en 1:23:48**, en una carrera aguerrida donde el fondo se le vio hasta el último metro.
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-palmira-2026/podio-elite-dia-2.webp"
+    alt="Premiación de la categoría Élite bajo el pórtico de meta, con los cinco primeros levantando los brazos y sus medallas"
+    width="1200"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>La premiación de Élite: Juan Diego García (a la derecha), quinto de la categoría.</figcaption>
 </figure>
 
 ## Resultados del club — XCO
@@ -279,6 +283,18 @@ Con la quinta de siete disputadas, así queda Trocha y Ruta en la tabla general 
 **Thiago Duque** es el caso más engañoso de la tabla: cae dos puestos en Teteros Con Pedales **sin haber corrido**, porque dos rivales entraron en Palmira y lo pasaron. Sus 30 puntos de una sola válida lo dejan igual a **6 del podio** — la distancia más corta de todo el club.
 
 Y hay tabla nueva: **Liam Fernando Guevara** (11 puntos) y **Celeste Muriel** (9) debutan en Teteros Sin Pedales. Con ellos, el club llega a **cuatro corredores** en la categoría de los más pequeños.
+
+<figure>
+  <img
+    src="/images/news/copa-valle-palmira-2026/equipo-grupal-dia-2.webp"
+    alt="Equipo del Club Trocha y Ruta reunido en el Bosque Municipal de Palmira durante la Copa Valle 2026"
+    width="1600"
+    height="900"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>El equipo Trocha y Ruta en Palmira.</figcaption>
+</figure>
 
 ### Lo que queda
 
