@@ -1,6 +1,6 @@
 ---
 title: "VI Válida Copa Valle 2026 - Roldanillo"
-date: 2026-09-12
+date: 2026-09-26
 location: "Sendero Eco-parque"
 city: "Roldanillo"
 department: "Valle del Cauca"
