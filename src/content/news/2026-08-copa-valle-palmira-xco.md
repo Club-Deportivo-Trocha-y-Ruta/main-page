@@ -187,6 +187,8 @@ Vale la pena decirlo con claridad, porque es exactamente el tipo de cosa que se 
 
 **Juan David Giraldo Ortiz** fue **15°** en Preinfantil B, a una vuelta del líder.
 
+Juan David llegó a Palmira con una decisión tomada: entrenar más seguido. Corrió la válida como un diagnóstico —medir dónde está parado, qué le falta de fondo, dónde se le va el tiempo en el circuito— más que como una carrera por el resultado. Esa forma de leer la competencia es la que le viene sirviendo: cada fecha le deja algo que lleva al entrenamiento y devuelve en la siguiente. A dos válidas del final, es exactamente el enfoque que hay que tener a su edad.
+
 <!-- CORREGIDO: el título anterior decía "primeras vueltas en Copa Valle", pero
      la tabla general muestra que ya puntuó en las válidas I, II, IV y V
      (11-7-0-7-7). Confirmar con el club si lo que debuta es la categoría
