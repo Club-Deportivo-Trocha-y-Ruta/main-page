@@ -145,12 +145,13 @@ jobs:
             set net:reconnect-interval-max 60;
             set net:timeout 30;
             set net:persist-retries 5;
-            set mirror:parallel-transfer-count 2;
+            set mirror:parallel-transfer-count 4;
             set xfer:clobber on;
             open -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_SERVER\";
             mirror --reverse \
+                   --only-newer \
                    --verbose \
-                   --parallel=2 \
+                   --parallel=4 \
                    --exclude-glob .git*/ \
                    --exclude-glob node_modules/ \
                    --exclude-glob .ftp-deploy-sync-state.json \
