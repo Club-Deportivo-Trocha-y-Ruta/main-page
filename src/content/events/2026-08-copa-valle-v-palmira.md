@@ -10,8 +10,9 @@ level: "departamental"
 organizer: "Club de Ciclomontañismo Caña y Trapiche Palmira"
 image: "/images/news/copa-valle-palmira-2026/afiche-copa-valle-palmira.webp"
 imageAlt: "Afiche de la V válida Copa Valle 2026 en el Bosque Municipal de Palmira, 1 y 2 de agosto"
-status: "upcoming"
+status: "past"
 registrationDeadline: 2026-07-30
+relatedNews: ["2026-08-copa-valle-palmira-gymkanas"]
 featured: true
 draft: false
 seo:
