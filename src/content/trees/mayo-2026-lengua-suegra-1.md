@@ -5,7 +5,7 @@ plantedDate: 2026-05-18
 location: "Vivero del club Trocha y Ruta — pendiente siembra"
 protector: "otro"
 category: "ornamental"
-image: "/images/trocha-verde/mayo-2026/donacion-olga-hernandez.jpg"
+image: "/images/trocha-verde/mayo-2026/donacion-olga-hernandez.webp"
 imageAlt: "Hoja de Lengua de suegra donada por la Sra. Olga Hernández, lista para propagación"
 status: "sembrado"
 donor: "Sra. Olga Hernández (abuela de Kevin Parea)"

@@ -4,7 +4,7 @@ scientificName: "Handroanthus chrysanthus"
 category: "nativo"
 description: "Árbol nativo del Valle del Cauca, protagonista del famoso florecimiento que tiñe de amarillo los bosques secos cada enero."
 curiosity: "El florecimiento de los guayacanes en El Dovio (Valle del Cauca) y Pijao (Quindío) es uno de los eventos ecoturísticos más reconocidos de Colombia."
-heroImage: "/images/trocha-verde/guayacan.jpg"
+heroImage: "/images/trocha-verde/guayacan.webp"
 heroImageAlt: "Guayacán amarillo sembrado en la pista Carlos Castro de Yumbo"
 origin: "Colombia y América tropical"
 uses: ["ornamental", "maderable", "reforestación", "sombrío"]

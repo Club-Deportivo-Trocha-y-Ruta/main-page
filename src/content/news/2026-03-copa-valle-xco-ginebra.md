@@ -4,59 +4,60 @@ date: 2026-03-01
 author: "Juan Diego García"
 category: "competencias"
 tags: ["copa-valle", "xco", "ginebra", "resultados", "gymkanas"]
-image: "/images/news/copa-valle-ginebra-2026/portada-copa-valle-ginebra.jpg"
+image: "/images/news/copa-valle-ginebra-2026/portada-copa-valle-ginebra.webp"
 imageAlt: "Afiche oficial de la II Válida Copa Valle de Ciclomontañismo en Pista La Floresta, Ginebra"
 imageLayout: contain
 excerpt: "Con 10 corredores en pista, el club sumó 2 podios y valiosos puntos en la segunda válida de la Copa Valle disputada en Ginebra."
 featured: true
 draft: false
 relatedEvent: "2026-copa-valle-ginebra"
+relatedGallery: "copa-valle-ginebra-2026"
 galleryFolder: "/images/news/copa-valle-ginebra-2026"
 galleryImages:
-  - DSC_7957.jpg
-  - DSC_8012.jpg
-  - DSC_9006.jpg
-  - DSC_7391.jpg
-  - DSC_0130.jpg
-  - DSC_8377.jpg
-  - DSC_0891.jpg
-  - DSC_0353.jpg
-  - DSC_8254.jpg
-  - DSC_0228-2.jpg
-  - DSC_0710-2.jpg
-  - DSC_7882.jpg
-  - DSC_0592-2.jpg
-  - DSC_8199.jpg
-  - DSC_0781.jpg
-  - DSC_0725.jpg
-  - DSC_0865.jpg
-  - DSC_0867.jpg
-  - DSC_8684.jpg
-  - DSC_0666.jpg
-  - DSC_0668.jpg
-  - DSC_7799.jpg
-  - DSC_7807.jpg
-  - DSC_7874.jpg
-  - DSC_7877.jpg
-  - DSC_8233.jpg
-  - DSC_8253.jpg
-  - DSC_8374.jpg
-  - DSC_8378.jpg
-  - DSC_8379.jpg
-  - DSC_0124.jpg
-  - DSC_0128.jpg
-  - DSC_0229-2.jpg
-  - DSC_0567.jpg
-  - DSC_0703-2.jpg
-  - DSC_0709.jpg
-  - DSC_0715.jpg
-  - DSC_0719-2.jpg
-  - DSC_0722-2.jpg
-  - DSC_0792.jpg
-  - DSC_7736.jpg
-  - DSC_7738.jpg
-  - DSC_7741.jpg
-  - DSC_9010.jpg
+  - DSC_7957.webp
+  - DSC_8012.webp
+  - DSC_9006.webp
+  - DSC_7391.webp
+  - DSC_0130.webp
+  - DSC_8377.webp
+  - DSC_0891.webp
+  - DSC_0353.webp
+  - DSC_8254.webp
+  - DSC_0228-2.webp
+  - DSC_0710-2.webp
+  - DSC_7882.webp
+  - DSC_0592-2.webp
+  - DSC_8199.webp
+  - DSC_0781.webp
+  - DSC_0725.webp
+  - DSC_0865.webp
+  - DSC_0867.webp
+  - DSC_8684.webp
+  - DSC_0666.webp
+  - DSC_0668.webp
+  - DSC_7799.webp
+  - DSC_7807.webp
+  - DSC_7874.webp
+  - DSC_7877.webp
+  - DSC_8233.webp
+  - DSC_8253.webp
+  - DSC_8374.webp
+  - DSC_8378.webp
+  - DSC_8379.webp
+  - DSC_0124.webp
+  - DSC_0128.webp
+  - DSC_0229-2.webp
+  - DSC_0567.webp
+  - DSC_0703-2.webp
+  - DSC_0709.webp
+  - DSC_0715.webp
+  - DSC_0719-2.webp
+  - DSC_0722-2.webp
+  - DSC_0792.webp
+  - DSC_7736.webp
+  - DSC_7738.webp
+  - DSC_7741.webp
+  - DSC_9010.webp
 seo:
   metaTitle: "Trocha y Ruta en la II Válida Copa Valle XCO Ginebra 2026"
   metaDescription: "Resultados del Club Trocha y Ruta en la segunda válida de la Copa Valle de Ciclomontañismo 2026 en la Pista La Floresta de Ginebra, Valle del Cauca."

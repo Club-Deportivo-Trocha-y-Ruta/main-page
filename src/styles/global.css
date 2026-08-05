@@ -6,10 +6,15 @@
   --color-primary: #20b7c9;
   --color-primary-dark: #1a96a4;
   --color-primary-light: #4dc9d7;
+  /* Teal accesible: 5.9:1 sobre blanco. Úsalo para TEXTO teal sobre fondos
+     claros — #20b7c9 solo llega a 2.4:1 y no cumple WCAG AA. */
+  --color-primary-deep: #0f6f79;
 
   --color-accent: #8be000;
   --color-accent-dark: #6fb300;
   --color-accent-light: #a3e63d;
+  /* Lima accesible: 5.7:1 sobre blanco. Para TEXTO lima sobre fondos claros. */
+  --color-accent-deep: #456f00;
 
   --color-surface: #ffffff;
   --color-surface-dark: #2f2f2f;

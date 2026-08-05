@@ -5,7 +5,7 @@ plantedDate: 2026-04-22
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "maderable"
-image: "/images/trocha-verde/dia-tierra-2026/arboles/ebano.jpg"
+image: "/images/trocha-verde/dia-tierra-2026/arboles/ebano.webp"
 imageAlt: "Ébano donado por Vivero Guacandá, sembrado durante la Sembratón del Día de la Tierra 2026"
 status: "sembrado"
 donor: "Vivero Guacandá (Sr. Néstor Correa)"

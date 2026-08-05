@@ -24,7 +24,8 @@ program: "alto-rendimiento"
 active: true
 featured: true
 order: 5
-draft: false
+# Ficha de demostración: perfil ficticio con foto placeholder. No publicar (T3.2 espera autorizaciones firmadas).
+draft: true
 ---
 
 Andrés Felipe es el corredor más experimentado de Trocha y Ruta y un referente para las nuevas generaciones. Ingresó al club a los 10 años y ha recorrido todas las etapas de formación hasta llegar al programa de alto rendimiento.

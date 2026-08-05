@@ -9,11 +9,13 @@ interface Props {
 
 const { variant = 'primary', size = 'md', href, class: className, ...rest } = Astro.props;
 
+// El teal de marca solo da 2.4:1 contra blanco: sobre el teal vivo va texto
+// grafito (5.5:1) y como texto/borde sobre fondo claro va el tono -deep.
 const variants: Record<string, string> = {
-  primary: 'bg-primary text-white hover:bg-primary-dark',
+  primary: 'bg-primary text-surface-dark hover:bg-primary-deep hover:text-white',
   secondary: 'bg-surface-muted text-text-primary hover:bg-gray-200',
   accent: 'bg-accent text-surface-dark hover:bg-accent-dark',
-  outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
+  outline: 'border-2 border-primary-deep text-primary-deep hover:bg-primary-deep hover:text-white',
 };
 
 const sizes: Record<string, string> = {

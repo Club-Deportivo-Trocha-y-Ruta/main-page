@@ -4,7 +4,7 @@ scientificName: "Platymiscium pinnatum"
 category: "maderable"
 description: "Árbol maderable nativo de los bosques secos tropicales colombianos, valorado por su madera dura de color rojizo y sus flores amarillas."
 curiosity: "El carabolo produce flores amarillas en racimos llamativos antes de que broten las hojas, siendo un espectáculo visual en época seca."
-heroImage: "/images/trocha-verde/mayo-2026/carabolo.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/carabolo.webp"
 heroImageAlt: "Carabolo sembrado en la pista Carlos Castro de Yumbo"
 origin: "Colombia, Venezuela y América Central"
 uses: ["maderable", "reforestación", "ornamental"]

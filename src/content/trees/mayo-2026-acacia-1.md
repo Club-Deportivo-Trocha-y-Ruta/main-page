@@ -5,7 +5,7 @@ plantedDate: 2026-05-18
 location: "Vivero del club Trocha y Ruta — pendiente siembra"
 protector: "llanta-bicicleta"
 category: "ornamental"
-image: "/images/trocha-verde/mayo-2026/donacion-olga-hernandez.jpg"
+image: "/images/trocha-verde/mayo-2026/donacion-olga-hernandez.webp"
 imageAlt: "Plantón de Acacia donado por la Sra. Olga Hernández al Club Trocha y Ruta, con follaje plumoso característico"
 status: "sembrado"
 donor: "Sra. Olga Hernández (abuela de Kevin Parea)"

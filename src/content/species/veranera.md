@@ -4,7 +4,7 @@ scientificName: "Bougainvillea spectabilis"
 category: "ornamental"
 description: "Arbusto trepador de flores coloridas y resistencia excepcional, muy común en jardines tropicales colombianos. Sus brácteas vivas tiñen paredes y cercas durante la temporada seca."
 curiosity: "Lo que parece la flor de la veranera son en realidad brácteas, hojas modificadas de colores intensos que envuelven a las flores verdaderas, pequeñas y blancas, en el centro."
-heroImage: "/images/trocha-verde/mayo-2026/veranera.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/veranera.webp"
 heroImageAlt: "Veranera de brácteas fucsia recién sembrada en la pista Carlos Castro, dentro de una llanta de bicicleta pintada en rosa y verde como protector"
 origin: "Sudamérica (Brasil, Perú)"
 uses: ["ornamental", "cercos vivos", "atracción de polinizadores"]

@@ -4,7 +4,7 @@ scientificName: "Guaiacum officinale"
 category: "ornamental"
 description: "Árbol nativo amenazado de flores azul-violáceas, productor de la madera más densa del mundo y símbolo de resistencia en ecosistemas secos."
 curiosity: "La madera del guayacán azul (*Lignum vitae*) es tan densa que se hunde en el agua; fue usada durante siglos en los cojinetes de los ejes de los barcos."
-heroImage: "/images/trocha-verde/dia-tierra-2026/jornada/04.jpg"
+heroImage: "/images/trocha-verde/dia-tierra-2026/jornada/04.webp"
 heroImageAlt: "Guayacán azul recién sembrado durante la jornada del Día de la Tierra 2026 en la pista Carlos Castro"
 origin: "Caribe colombiano, Venezuela, Centroamérica y Antillas"
 uses: ["maderable", "medicinal", "ornamental", "conservación"]

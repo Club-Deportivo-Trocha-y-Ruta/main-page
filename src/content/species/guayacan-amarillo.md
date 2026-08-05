@@ -4,7 +4,7 @@ scientificName: "Handroanthus chrysanthus"
 category: "nativo"
 description: "Variedad de guayacán de flores amarillas brillantes, símbolo del Valle del Cauca y protagonista del espectacular florecimiento anual."
 curiosity: "Su florecimiento masivo entre enero y febrero es el evento ecoturístico más reconocido del departamento."
-heroImage: "/images/trocha-verde/guayacan.jpg"
+heroImage: "/images/trocha-verde/guayacan.webp"
 heroImageAlt: "Guayacán amarillo en flor en la pista Carlos Castro"
 origin: "Colombia y América tropical"
 uses: ["ornamental", "reforestación", "sombrío"]

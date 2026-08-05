@@ -69,7 +69,7 @@ const jsonLd = generateArticleJsonLd({
       </div>
     ) : image ? (
       <div class="mb-8 overflow-hidden rounded-xl">
-        <img src={image} alt={entry.data.imageAlt ?? title} class="w-full h-64 md:h-96 object-cover" loading="eager" decoding="async" fetchpriority="high" />
+        <img src={image} alt={entry.data.imageAlt ?? title} width="1200" height="675" class="w-full h-64 md:h-96 object-cover" loading="eager" decoding="async" fetchpriority="high" />
       </div>
     ) : null}
 

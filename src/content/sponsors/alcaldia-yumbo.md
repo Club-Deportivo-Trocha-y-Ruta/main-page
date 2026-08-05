@@ -1,6 +1,6 @@
 ---
 name: "Alcaldía de Yumbo"
-logo: "/images/sponsors/alcaldia.jpg"
+logo: "/images/sponsors/alcaldia.webp"
 level: "oficial"
 url: "https://www.yumbo.gov.co"
 description: "Apoyo institucional del municipio de Yumbo al deporte formativo y la recreación juvenil."

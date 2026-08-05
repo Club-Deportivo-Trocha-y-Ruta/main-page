@@ -20,7 +20,8 @@ program: "formacion-juvenil"
 active: true
 featured: true
 order: 1
-draft: false
+# Ficha de demostración: perfil ficticio con foto placeholder. No publicar (T3.2 espera autorizaciones firmadas).
+draft: true
 ---
 
 Juan David inició en Trocha y Ruta a los 10 años en la escuela infantil. Hoy es uno de los corredores más destacados en categoría juvenil del Valle del Cauca. Su dedicación y amor por el ciclomontañismo lo han llevado a representar al club en competencias departamentales y nacionales.

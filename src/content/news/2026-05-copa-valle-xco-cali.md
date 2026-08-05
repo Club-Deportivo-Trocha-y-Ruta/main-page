@@ -11,6 +11,7 @@ excerpt: "Doblete del club en Prejuvenil A Femenina, debut de Thiago Duque y sel
 featured: true
 draft: false
 relatedEvent: "2026-05-copa-valle-iv-cali"
+relatedGallery: "copa-valle-cali-2026"
 galleryFolder: "/images/news/copa-valle-cali-2026"
 galleryImages:
   - accion-pista-cali-01.webp

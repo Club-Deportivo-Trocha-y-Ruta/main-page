@@ -5,7 +5,7 @@ plantedDate: 2026-05-03
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "maderable"
-image: "/images/trocha-verde/mayo-2026/carabolo.jpg"
+image: "/images/trocha-verde/mayo-2026/carabolo.webp"
 imageAlt: "Carabolo sembrado en la jornada de mayo 2026, Pista Carlos Castro, Yumbo"
 status: "sembrado"
 donor: "Helmut Ortiz (Presidente del Club)"

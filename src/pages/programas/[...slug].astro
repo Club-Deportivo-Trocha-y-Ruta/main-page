@@ -1,6 +1,8 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '@layouts/BaseLayout.astro';
+import { getRefreshImage } from '@lib/refresh-images';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Card from '@components/common/Card.astro';
 import Badge from '@components/common/Badge.astro';
@@ -19,12 +21,13 @@ const { program } = Astro.props as { program: CollectionEntry<'programs'> };
 const { Content } = await render(program);
 
 const { title } = program.data;
+const photo = getRefreshImage(program.data.image);
 
 const jsonLd = generateCourseJsonLd({
   title,
   url: `/programas/${program.id}`,
   description: program.data.subtitle || title,
-  image: program.data.image,
+  image: photo?.src,
   ageRange: program.data.ageRange,
   ageMin: program.data.ageMin,
   ageMax: program.data.ageMax,
@@ -139,6 +142,18 @@ const levelLabels: Record<string, string> = {
 
       <!-- Contenido principal -->
       <div class="md:col-span-2 order-1 md:order-1">
+        {photo && (
+          <Image
+            src={photo}
+            alt={`Deportistas del programa ${program.data.title} del Club Trocha y Ruta`}
+            widths={[600, 900]}
+            sizes="(min-width: 768px) 66vw, 100vw"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            class="mb-6 aspect-[3/2] w-full rounded-xl object-cover"
+          />
+        )}
         <h1 class="text-3xl md:text-4xl font-display font-bold text-text-primary">
           {program.data.title}
         </h1>

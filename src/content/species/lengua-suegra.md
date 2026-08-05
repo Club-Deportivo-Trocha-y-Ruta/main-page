@@ -4,7 +4,7 @@ scientificName: "Dracaena trifasciata"
 category: "ornamental"
 description: "Planta suculenta de hojas erectas, gruesas y puntiagudas con franjas verdes y amarillas. Famosa por su resistencia extrema y por purificar el aire en interiores."
 curiosity: "La NASA incluyó la lengua de suegra en su lista de plantas que ayudan a filtrar contaminantes del aire. Es de las pocas plantas que liberan oxígeno durante la noche."
-heroImage: "/images/trocha-verde/mayo-2026/donacion-olga-hernandez.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/donacion-olga-hernandez.webp"
 heroImageAlt: "Hojas de Lengua de suegra donadas al Club Trocha y Ruta, listas para propagación"
 origin: "África occidental y tropical"
 uses: ["ornamental", "purificadora de aire", "cubresuelos", "bajo mantenimiento"]

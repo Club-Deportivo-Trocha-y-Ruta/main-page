@@ -4,7 +4,7 @@ scientificName: "Acacia sp."
 category: "ornamental"
 description: "Familia de árboles y arbustos leguminosos de hojas compuestas plumosas y flores en pompón o espiga, muy resistentes a la sequía. Varias especies son nativas o ampliamente cultivadas en el Valle del Cauca."
 curiosity: "El género Acacia tiene más de 1300 especies en el mundo. Sus raíces fijan nitrógeno al suelo, mejorando la fertilidad de la tierra donde crecen y favoreciendo a otras plantas vecinas."
-heroImage: "/images/trocha-verde/mayo-2026/donacion-olga-hernandez.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/donacion-olga-hernandez.webp"
 heroImageAlt: "Acacia donada al Club Trocha y Ruta, plantón joven con follaje plumoso característico"
 origin: "Pantropical (África, Australia, América)"
 uses: ["ornamental", "sombrío", "cercos vivos", "fijación de nitrógeno"]

@@ -5,7 +5,7 @@ plantedDate: 2026-04-09
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "otro"
 category: "nativo"
-image: "/images/trocha-verde/mirto-2.jpg"
+image: "/images/trocha-verde/mirto-2.webp"
 imageAlt: "Pequeño árbol de Mirto recién sembrado con piedra naranja pintada a mano como identificación"
 status: "sembrado"
 notes: "Un segundo Mirto plantado directamente en la tierra, señalizado con una piedra naranja artesanal. Sus hojas pequeñas y delicadas ya empiezan a brotar."

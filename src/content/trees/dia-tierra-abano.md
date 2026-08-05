@@ -4,7 +4,7 @@ plantedDate: 2026-04-22
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "nativo"
-image: "/images/trocha-verde/dia-tierra-2026/jornada/06.jpg"
+image: "/images/trocha-verde/dia-tierra-2026/jornada/06.webp"
 imageAlt: "Árbol de Abano sembrado durante la Sembratón del Día de la Tierra 2026 en el Pump Track"
 status: "sembrado"
 donor: "Amigos de Óscar Eduardo Ortiz"

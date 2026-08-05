@@ -5,7 +5,7 @@ plantedDate: 2026-05-03
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "frutal"
-image: "/images/trocha-verde/mayo-2026/papaya.jpg"
+image: "/images/trocha-verde/mayo-2026/papaya.webp"
 imageAlt: "Papaya sembrada en la jornada de mayo 2026, Pista Carlos Castro, Yumbo"
 status: "sembrado"
 donor: "Helmut Ortiz (Presidente del Club)"

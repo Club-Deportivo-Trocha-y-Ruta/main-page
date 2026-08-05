@@ -2,14 +2,14 @@
 title: "Formación Juvenil"
 subtitle: "Construyendo los campeones del mañana"
 icon: "ph:mountains"
-image: "/images/placeholder-program.jpg"
+image: "programa-formacion.webp"
 ageRange: "6 a 11 años"
 ageMin: 6
 ageMax: 11
 targetLevel: "formación"
 schedule: "Lunes a viernes 4:00 - 6:00 PM"
 duration: "2 horas"
-location: "Punto de encuentro: Parque Belalcázar, Yumbo"
+location: "Punto de encuentro: Pista de Ciclomontañismo Carlos Castro, Yumbo"
 maxStudents: 25
 requirements:
   - "Bicicleta de montaña en buen estado"

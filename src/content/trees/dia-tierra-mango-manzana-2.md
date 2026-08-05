@@ -5,7 +5,7 @@ plantedDate: 2026-04-22
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "frutal"
-image: "/images/trocha-verde/dia-tierra-2026/jornada/02.jpg"
+image: "/images/trocha-verde/dia-tierra-2026/jornada/02.webp"
 imageAlt: "Segundo Mango Manzana sembrado durante la Sembratón del Día de la Tierra 2026"
 status: "sembrado"
 donor: "Amigos de Óscar Eduardo Ortiz"

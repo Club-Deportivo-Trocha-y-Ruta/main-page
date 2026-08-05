@@ -5,7 +5,7 @@ plantedDate: 2026-05-03
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "ornamental"
-image: "/images/trocha-verde/mayo-2026/palma-areka-1.jpg"
+image: "/images/trocha-verde/mayo-2026/palma-areka-1.webp"
 imageAlt: "Tercera Palma Areca sembrada en la jornada de mayo 2026, Pista Carlos Castro, Yumbo"
 status: "sembrado"
 donor: "Helmut Ortiz (Presidente del Club)"

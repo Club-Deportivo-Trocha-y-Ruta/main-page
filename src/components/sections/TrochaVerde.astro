@@ -3,17 +3,26 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import Button from '@components/common/Button.astro';
+import { getTreeStats } from '@lib/trocha-verde';
+import { formatDate } from '@lib/utils';
 
 import carretilla from '@assets/images/trocha-verde/carretilla-reciclada.jpg';
 import guayacanLila from '@assets/images/trocha-verde/guayacan-lila.jpg';
 import mangoMorada from '@assets/images/trocha-verde/mango-llanta-morada.jpg';
 
-type Tree = CollectionEntry<'trees'>;
+type Initiative = CollectionEntry<'socialInitiatives'>;
 
-const trees = (await getCollection('trees'))
-  .filter((t: Tree) => !t.data.draft);
+// Misma fuente que /trocha-verde: árboles y llantas recicladas son cifras
+// distintas (no todo árbol usa llanta como protector).
+const { totalTrees, totalRecycled } = await getTreeStats();
 
-const totalTrees = trees.length;
+// Última jornada ambiental destacada: contextualiza el acumulado con el dato
+// más reciente y absorbe el bloque LatestInitiative que duplicaba este CTA.
+const latestInitiative = (await getCollection('socialInitiatives'))
+  .filter((i: Initiative) => !i.data.draft && i.data.featured && i.data.type === 'ambiental')
+  .sort((a: Initiative, b: Initiative) => b.data.date.getTime() - a.data.date.getTime())[0];
+
+const latestNewsSlug = latestInitiative?.data.relatedNews?.[0];
 ---
 
 <section class="py-16 bg-gradient-to-b from-emerald-50/60 to-transparent">
@@ -59,8 +68,11 @@ const totalTrees = trees.length;
           Cada objeto reciclado cuenta una historia de transformación.
         </p>
 
-        <!-- Contadores dinámicos -->
-        <div class="flex gap-6 mt-6">
+        <!-- Contadores dinámicos (acumulado histórico) -->
+        <p class="mt-6 text-xs font-semibold uppercase tracking-wider text-text-secondary">
+          Acumulado del programa
+        </p>
+        <div class="flex gap-6 mt-2">
           <div class="flex items-center gap-3">
             <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
               <Icon name="ph:tree-bold" class="h-5 w-5" aria-hidden="true" />
@@ -75,11 +87,45 @@ const totalTrees = trees.length;
               <Icon name="ph:recycle-bold" class="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
-              <p class="text-xl font-bold font-display text-text-primary">{totalTrees}+</p>
+              <p class="text-xl font-bold font-display text-text-primary">{totalRecycled}</p>
               <p class="text-xs text-text-secondary">Llantas recicladas</p>
             </div>
           </div>
         </div>
+
+        <!-- Última jornada: contextualiza el acumulado con el dato reciente -->
+        {latestInitiative && (
+          <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50/70 p-4">
+            <p class="text-xs font-semibold uppercase tracking-wider text-emerald-700">
+              Última jornada · {formatDate(latestInitiative.data.date)}
+            </p>
+            <p class="mt-1 text-sm text-text-primary font-medium">
+              {latestInitiative.data.title}
+            </p>
+            <p class="mt-1 text-sm text-text-secondary">
+              {[
+                latestInitiative.data.impact?.treesPlanted !== undefined
+                  ? `${latestInitiative.data.impact.treesPlanted} árboles`
+                  : null,
+                latestInitiative.data.impact?.volunteersInvolved !== undefined
+                  ? `${latestInitiative.data.impact.volunteersInvolved} voluntarios`
+                  : null,
+                latestInitiative.data.allies.length > 0
+                  ? `${latestInitiative.data.allies.length} aliados`
+                  : null,
+              ].filter(Boolean).join(' · ')}
+            </p>
+            {latestNewsSlug && (
+              <a
+                href={`/noticias/${latestNewsSlug}`}
+                class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-emerald-700 underline underline-offset-2 hover:text-emerald-800"
+              >
+                Lee la crónica
+                <Icon name="ph:arrow-right-bold" class="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+            )}
+          </div>
+        )}
 
         <!-- CTA -->
         <div class="mt-8">

@@ -16,7 +16,8 @@ program: "formacion-juvenil"
 active: true
 featured: false
 order: 3
-draft: false
+# Ficha de demostración: perfil ficticio con foto placeholder. No publicar (T3.2 espera autorizaciones firmadas).
+draft: true
 ---
 
 Samuel descubrió el ciclomontañismo gracias a un amigo del colegio que ya entrenaba en el club. Desde su primera clase quedó enganchado con la adrenalina de rodar por los senderos de Yumbo y sus alrededores.

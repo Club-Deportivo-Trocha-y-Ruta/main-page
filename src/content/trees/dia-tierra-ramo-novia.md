@@ -4,7 +4,7 @@ plantedDate: 2026-04-22
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "ornamental"
-image: "/images/trocha-verde/dia-tierra-2026/arboles/ramo-de-novia.jpg"
+image: "/images/trocha-verde/dia-tierra-2026/arboles/ramo-de-novia.webp"
 imageAlt: "Ramo de Novia sembrado durante la Sembratón del Día de la Tierra 2026"
 status: "sembrado"
 donor: "Amigos de Óscar Eduardo Ortiz"

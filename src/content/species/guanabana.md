@@ -4,7 +4,7 @@ scientificName: "Annona muricata"
 category: "frutal"
 description: "Frutal tropical americano con frutos grandes de pulpa blanca cremosa, muy apreciado en jugos y helados en Colombia."
 curiosity: "La guanábana es investigada por sus propiedades antioxidantes; en medicina tradicional colombiana se usan hojas y cáscara para diversas dolencias."
-heroImage: "/images/trocha-verde/mayo-2026/guanabana-1.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/guanabana-1.webp"
 heroImageAlt: "Guanábana recién sembrada en la pista Carlos Castro"
 origin: "América tropical (Caribe y norte de Sudamérica)"
 uses: ["frutal", "medicinal", "alimentación"]

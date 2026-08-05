@@ -4,7 +4,7 @@ scientificName: "Carica papaya"
 category: "frutal"
 description: "Planta herbácea arborescente de crecimiento ultrarrápido con frutos dulces y enzimas digestivas únicas, cultivada en casi todos los climas tropicales colombianos."
 curiosity: "La papaya contiene papaína, una enzima proteolítica tan poderosa que se usa industrialmente para ablandar carnes y en la industria farmacéutica."
-heroImage: "/images/trocha-verde/mayo-2026/papaya.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/papaya.webp"
 heroImageAlt: "Papaya sembrada en la pista Carlos Castro de Yumbo"
 origin: "México y América Central"
 uses: ["frutal", "alimentación", "medicinal", "industrial"]

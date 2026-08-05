@@ -8,6 +8,7 @@ import NavigationProgress from '@components/common/NavigationProgress.astro';
 import WhatsAppButton from '@components/common/WhatsAppButton.astro';
 import Analytics from '@components/common/Analytics.astro';
 import ConsentBanner from '@components/common/ConsentBanner.astro';
+import { getHeroPoster } from '@lib/hero-poster';
 
 interface Props {
   title: string;
@@ -25,6 +26,11 @@ interface Props {
 }
 
 const { title, description, ogImage, ogImageWidth, ogImageHeight, jsonLd, ogType, articlePublishedTime, articleModifiedTime, articleAuthor, articleSection, articleTags } = Astro.props;
+
+// El poster del hero solo existe en la home: preloadearlo en las 27 páginas
+// competía con el LCP real del resto del sitio.
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
+const heroPoster = isHome ? await getHeroPoster() : null;
 ---
 
 <!doctype html>
@@ -40,7 +46,17 @@ const { title, description, ogImage, ogImageWidth, ogImageHeight, jsonLd, ogType
     <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/PlusJakartaSans-Variable.woff2" as="font" type="font/woff2" crossorigin />
     <!-- Hero poster preload (LCP candidate on homepage) -->
-    <link rel="preload" as="image" href="/images/hero-poster.jpg" fetchpriority="high" />
+    {heroPoster && (
+      <link
+        rel="preload"
+        as="image"
+        href={heroPoster.src}
+        imagesrcset={heroPoster.srcSet.attribute || undefined}
+        imagesizes="100vw"
+        type="image/webp"
+        fetchpriority="high"
+      />
+    )}
     <!-- Preconnect / DNS prefetch -->
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />

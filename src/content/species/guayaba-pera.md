@@ -4,7 +4,7 @@ scientificName: "Psidium guajava"
 category: "frutal"
 description: "Variedad de guayaba de forma piriforme, pulpa blanca firme y sabor más suave, ideal para consumo fresco y jugos en Colombia."
 curiosity: "La guayaba pera recibe su nombre por su forma alargada similar a una pera; es especialmente popular en mercados del Valle del Cauca."
-heroImage: "/images/trocha-verde/guayaba-pera.jpg"
+heroImage: "/images/trocha-verde/guayaba-pera.webp"
 heroImageAlt: "Guayaba pera sembrada en la pista Carlos Castro"
 origin: "América tropical (variedad colombiana)"
 uses: ["frutal", "alimentación", "mercado local"]

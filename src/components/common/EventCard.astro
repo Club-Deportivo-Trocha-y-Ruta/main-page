@@ -6,10 +6,26 @@ interface Props {
   location: string;
   category: string;
   status: string;
-  href: string;
+  /** Opcional: sin href el título se renderiza como texto plano (evita
+   *  enlaces circulares cuando la card ya está en su página destino). */
+  href?: string;
+  /** Crónicas publicadas del evento (solo tiene sentido en eventos pasados). */
+  chronicles?: { href: string; title: string }[];
+  /** Atenúa la card. Se usa para el bloque de eventos pasados. */
+  muted?: boolean;
 }
 
-const { title, date, endDate, location, category, status, href } = Astro.props;
+const {
+  title,
+  date,
+  endDate,
+  location,
+  category,
+  status,
+  href,
+  chronicles = [],
+  muted = false,
+} = Astro.props;
 
 import { Icon } from 'astro-icon/components';
 import Badge from '@components/common/Badge.astro';
@@ -44,20 +60,29 @@ const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> =
 };
 ---
 
-<div class="flex items-start gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 transition-colors hover:bg-surface-muted border-l-4 border-primary">
+<div
+  class:list={[
+    'flex items-start gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 transition-colors hover:bg-surface-muted border-l-4',
+    muted ? 'border-surface-muted' : 'border-primary',
+  ]}
+>
   <div class="min-w-[3.5rem] sm:min-w-[4rem] rounded-lg bg-primary/10 p-2 sm:p-3 text-center shrink-0">
-    <span class="block text-xs font-bold uppercase tracking-wide text-primary">
+    <span class="block text-xs font-bold uppercase tracking-wide text-primary-deep">
       {monthLabel}
     </span>
-    <span class="block font-display text-xl sm:text-2xl font-bold text-primary">
+    <span class="block font-display text-xl sm:text-2xl font-bold text-primary-deep">
       {dayLabel}
     </span>
   </div>
   <div class="flex flex-col gap-1 min-w-0">
-    <h3 class="font-display font-semibold leading-snug">
-      <a href={href} class="text-text-primary hover:text-primary transition-colors">
-        {title}
-      </a>
+    <h3 class="font-display font-semibold leading-snug text-text-primary">
+      {href ? (
+        <a href={href} class="text-text-primary hover:text-primary-deep transition-colors">
+          {title}
+        </a>
+      ) : (
+        title
+      )}
     </h3>
     <p class="text-sm text-text-secondary flex items-center gap-1"><Icon name="ph:map-pin" class="size-4" aria-hidden="true" /> {location}</p>
     <div class="mt-1 flex flex-wrap gap-1.5 sm:gap-2">
@@ -66,6 +91,21 @@ const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> =
     </div>
     {status === 'upcoming' && (
       <AddToCalendar title={title} date={date} endDate={endDate} location={location} />
+    )}
+    {chronicles.length > 0 && (
+      <ul class="mt-1 space-y-0.5">
+        {chronicles.map((c) => (
+          <li>
+            <a
+              href={c.href}
+              class="inline-flex items-start gap-1 text-sm text-primary-deep hover:underline"
+            >
+              <Icon name="ph:newspaper-clipping" class="size-4 shrink-0 mt-0.5" aria-hidden="true" />
+              <span>{c.title}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     )}
   </div>
 </div>

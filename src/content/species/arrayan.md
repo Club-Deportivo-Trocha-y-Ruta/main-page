@@ -4,7 +4,7 @@ scientificName: "Myrcianthes leucoxyla"
 category: "nativo"
 description: "Árbol nativo andino de corteza rojiza característica, frutos pequeños comestibles y gran valor ecológico para aves y mamíferos."
 curiosity: "El arrayán es símbolo de los bosques de niebla andinos y una de las especies clave en la restauración ecológica del Valle del Cauca."
-heroImage: "/images/trocha-verde/mayo-2026/arrayan.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/arrayan.webp"
 heroImageAlt: "Arrayán recién sembrado en la pista Carlos Castro"
 origin: "Andes colombianos y Ecuador"
 uses: ["reforestación", "alimento para fauna", "ornamental"]

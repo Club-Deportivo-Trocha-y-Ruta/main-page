@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import ImageLightbox from '@components/interactive/ImageLightbox.tsx';
 
 interface Props {
@@ -39,8 +40,14 @@ const allImages = imageFiles.map((file, index) => {
   };
 });
 
-const visibleImages = allImages.slice(0, maxVisible);
 const hasMore = allImages.length > maxVisible;
+
+// Solo enlazamos al álbum si existe y está publicado: un slug mal escrito en el
+// frontmatter de la noticia produciría un 404.
+const albumExists = albumSlug
+  ? (await getCollection('gallery')).some((album) => album.id === albumSlug && !album.data.draft)
+  : false;
+const showAlbumLink = albumExists && hasMore;
 ---
 
 <section class="mt-12 pt-8 border-t border-surface-muted" aria-labelledby="news-gallery-title">
@@ -53,7 +60,7 @@ const hasMore = allImages.length > maxVisible;
 
   <ImageLightbox client:visible images={allImages} />
 
-  {hasMore && albumSlug && (
+  {showAlbumLink && (
     <div class="mt-6 text-center">
       <a
         href={`/galeria/${albumSlug}`}

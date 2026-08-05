@@ -4,7 +4,7 @@ scientificName: "Mangifera indica"
 category: "frutal"
 description: "El rey de las frutas tropicales, originario de Asia y profundamente integrado en la cultura y gastronomía colombiana desde hace 500 años."
 curiosity: "Colombia tiene más de 50 variedades de mango registradas; en el Valle del Cauca el mango de azúcar y el común son parte central de la dieta y la identidad cultural."
-heroImage: "/images/trocha-verde/mango.jpg"
+heroImage: "/images/trocha-verde/mango.webp"
 heroImageAlt: "Mango sembrado en la pista Carlos Castro de Yumbo"
 origin: "India y el sur de Asia"
 uses: ["frutal", "alimentación", "sombrío", "medicinal"]

@@ -3,7 +3,6 @@ name: "Santiago Ramírez"
 type: "familia"
 role: "corredor-juvenil"
 roleLabel: "Corredor juvenil"
-photo: "/images/placeholder-testimonial.jpg"
 quote: "En Trocha y Ruta aprendí que los límites están en la cabeza, no en la montaña."
 relatedProgram: "formacion-juvenil"
 featured: false

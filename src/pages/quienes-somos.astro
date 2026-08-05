@@ -1,12 +1,96 @@
 ---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
 import PageLayout from '@layouts/PageLayout.astro';
 import SectionTitle from '@components/common/SectionTitle.astro';
-import Card from '@components/common/Card.astro';
-import { SITE } from '@lib/constants';
+import { SITE, CLUB_STATS, getYearsActive } from '@lib/constants';
 import { generateSportsClubJsonLd } from '@lib/seo';
+import { getTreeStats } from '@lib/trocha-verde';
 import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 
+import historiaPista from '@assets/images/refresh/historia-pista.webp';
+import historiaEquipoGinebra from '@assets/images/refresh/historia-equipo-ginebra.webp';
+import historiaSiembra from '@assets/images/refresh/historia-siembra.webp';
+import historiaEquipoPalmira from '@assets/images/refresh/historia-equipo-palmira.webp';
+import comunidadLluvia from '@assets/images/refresh/comunidad-lluvia.webp';
+import comunidadCircuito from '@assets/images/refresh/comunidad-circuito.webp';
+
 const sportsClubJsonLd = generateSportsClubJsonLd();
+const yearsActive = getYearsActive();
+const treeStats = await getTreeStats();
+
+// Hitos del club. Las cifras salen de CLUB_STATS y getTreeStats para no
+// contradecir el resto del sitio (ver plan de refresh, hallazgos H4/H5).
+const milestones = [
+  {
+    year: '2010',
+    title: 'Nace el club',
+    body: `El 1 de mayo de 2010 un grupo de familias de Yumbo convirtió las salidas de fin de semana en un proyecto formativo. Así arrancó ${SITE.name}.`,
+    image: historiaEquipoGinebra,
+    alt: 'Deportistas del Club Trocha y Ruta reunidos antes de la salida de una competencia',
+  },
+  {
+    year: 'La casa',
+    title: 'Pista XCO Carlos Castro',
+    body: 'La pista de ciclomontañismo Carlos Castro, en Yumbo, es donde los "teteros" dan sus primeros pedalazos y donde el club entrena semana a semana.',
+    image: historiaPista,
+    alt: 'Valla de la Pista XCO Carlos Castro de Yumbo en día de competencia',
+  },
+  {
+    year: 'Hoy',
+    title: 'Del barrio al calendario nacional',
+    body: `${CLUB_STATS.medals}+ medallas después, el club compite cada válida de la Copa Valle y lleva corredores a campeonatos departamentales y nacionales.`,
+    image: historiaEquipoPalmira,
+    alt: 'Equipo del Club Trocha y Ruta con sus familias en la carpa del club durante una válida de la Copa Valle',
+  },
+  {
+    year: '2026',
+    title: 'Trocha Verde',
+    body: `La pista también se siembra: ${treeStats.totalTrees} árboles plantados con llantas recicladas como protectores, junto a familias, vecinos y aliados ambientales.`,
+    image: historiaSiembra,
+    alt: 'Niño del club regando un árbol recién sembrado en la pista durante la Sembratón',
+  },
+];
+
+const pillars = [
+  {
+    title: 'Misión',
+    icon: 'ph:target-bold',
+    accent: 'primary',
+    body: 'Formar niños y jóvenes integrales a través del ciclomontañismo, promoviendo valores, disciplina y amor por la naturaleza.',
+  },
+  {
+    title: 'Visión',
+    icon: 'ph:mountains-bold',
+    accent: 'accent',
+    body: 'Ser el club referente en formación deportiva infantil y juvenil en el Valle del Cauca, reconocido por su excelencia deportiva y humana.',
+  },
+  {
+    title: 'Valores',
+    icon: 'ph:handshake-bold',
+    accent: 'dark',
+    body: 'Disciplina, trabajo en equipo, respeto por la naturaleza, perseverancia, honestidad y compañerismo.',
+  },
+];
+
+const pillarStyles: Record<string, { card: string; badge: string }> = {
+  primary: { card: 'border-t-4 border-primary', badge: 'bg-primary/10 text-primary' },
+  accent: { card: 'border-t-4 border-accent', badge: 'bg-accent/15 text-accent-dark' },
+  dark: { card: 'border-t-4 border-surface-dark', badge: 'bg-surface-dark/10 text-surface-dark' },
+};
+
+const achievements = [
+  { icon: 'ph:trophy-bold', text: `Más de ${CLUB_STATS.medals} medallas en competencias departamentales y nacionales` },
+  { icon: 'ph:person-simple-bike-bold', text: `${CLUB_STATS.ridersTrained}+ niños formados desde ${SITE.founded}` },
+  { icon: 'ph:flag-banner-bold', text: 'Representación en competencias nacionales desde 2018' },
+  { icon: 'ph:handshake-bold', text: 'Alianzas con la Liga Vallecaucana de Ciclismo' },
+];
+
+const communityPhotos = [
+  { image: comunidadCircuito, alt: 'Corredora del club atacando una subida técnica en un circuito de XCO' },
+  { image: comunidadLluvia, alt: 'Tres deportistas del club sonriendo bajo la lluvia en una válida de la Copa Valle' },
+  { image: historiaEquipoPalmira, alt: 'El equipo completo del club posando con familias y bicicletas en la carpa' },
+];
 ---
 
 <PageLayout
@@ -16,17 +100,16 @@ const sportsClubJsonLd = generateSportsClubJsonLd();
   jsonLd={sportsClubJsonLd}
 >
 
-  <!-- Historia -->
+  <!-- Intro -->
   <section class="mb-16">
-    <SectionTitle title="Nuestra Historia" />
+    <SectionTitle
+      eyebrow={`${yearsActive} años en Yumbo`}
+      title="Nuestra Historia"
+      subtitle={`Desde ${SITE.founded} formamos niños y jóvenes a través del ciclomontañismo en Yumbo, Valle del Cauca.`}
+    />
     <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
       <p>
-        Desde <strong class="text-text-primary">{SITE.founded}</strong>, el {SITE.name} ha dedicado
-        su labor a la formación integral de niños y jóvenes a través del ciclomontañismo en
-        <strong class="text-text-primary">Yumbo, Valle del Cauca</strong>.
-      </p>
-      <p>
-        Lo que comenzó como un grupo pequeño de familias apasionadas por la bicicleta, se convirtió
+        Lo que comenzó como un grupo pequeño de familias apasionadas por la bicicleta se convirtió
         en una comunidad que promueve el deporte, la disciplina y el contacto con la naturaleza.
         Hoy, más de una década después, seguimos pedaleando con el mismo compromiso: formar seres
         humanos íntegros dentro y fuera de la competencia.
@@ -34,56 +117,85 @@ const sportsClubJsonLd = generateSportsClubJsonLd();
     </div>
   </section>
 
+  <!-- Timeline de hitos -->
+  <section class="mb-20">
+    <ol class="space-y-12 md:space-y-16">
+      {milestones.map((m, i) => (
+        <li class="reveal grid gap-6 md:grid-cols-2 md:items-center">
+          <div class={i % 2 === 1 ? 'md:order-2' : ''}>
+            <Image
+              src={m.image}
+              alt={m.alt}
+              widths={[400, 700, 1000]}
+              sizes="(min-width: 768px) 45vw, 100vw"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              class="aspect-[3/2] w-full rounded-2xl object-cover shadow-md"
+            />
+          </div>
+          <div class={i % 2 === 1 ? 'md:order-1 md:text-right' : ''}>
+            <span class="inline-block rounded-full bg-accent/15 px-3 py-1 text-xs font-bold uppercase tracking-widest text-accent-dark">
+              {m.year}
+            </span>
+            <h3 class="mt-3 font-display text-2xl md:text-3xl font-bold text-text-primary">
+              {m.title}
+            </h3>
+            <p class="mt-3 text-text-secondary leading-relaxed">{m.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
   <!-- Misión, Visión y Valores -->
-  <section class="mb-16">
+  <section class="mb-20">
     <SectionTitle title="Misión, Visión y Valores" />
     <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-      <Card class="p-6">
-        <h3 class="text-xl font-display font-bold text-primary mb-3">Misión</h3>
-        <p class="text-text-secondary leading-relaxed">
-          Formar niños y jóvenes integrales a través del ciclomontañismo, promoviendo valores,
-          disciplina y amor por la naturaleza.
-        </p>
-      </Card>
-      <Card class="p-6">
-        <h3 class="text-xl font-display font-bold text-primary mb-3">Visión</h3>
-        <p class="text-text-secondary leading-relaxed">
-          Ser el club referente en formación deportiva infantil y juvenil en el Valle del Cauca,
-          reconocido por su excelencia deportiva y humana.
-        </p>
-      </Card>
-      <Card class="p-6">
-        <h3 class="text-xl font-display font-bold text-primary mb-3">Valores</h3>
-        <p class="text-text-secondary leading-relaxed">
-          Disciplina, trabajo en equipo, respeto por la naturaleza, perseverancia, honestidad
-          y compañerismo.
-        </p>
-      </Card>
+      {pillars.map((p) => (
+        <div class={`reveal rounded-2xl bg-surface p-6 shadow-sm ${pillarStyles[p.accent].card}`}>
+          <span class={`inline-flex size-12 items-center justify-center rounded-xl ${pillarStyles[p.accent].badge}`}>
+            <Icon name={p.icon} class="size-6" aria-hidden="true" />
+          </span>
+          <h3 class="mt-4 text-xl font-display font-bold text-text-primary">{p.title}</h3>
+          <p class="mt-2 text-text-secondary leading-relaxed">{p.body}</p>
+        </div>
+      ))}
     </div>
   </section>
 
   <!-- Logros Destacados -->
-  <section class="mb-16">
+  <section class="mb-20">
     <SectionTitle title="Logros Destacados" />
-    <div class="mx-auto max-w-2xl">
-      <ul class="space-y-4 text-lg text-text-secondary">
-        <li class="flex items-start gap-3">
-          <span class="text-2xl shrink-0" aria-hidden="true">🏆</span>
-          <span>Más de 100 medallas en competencias departamentales y nacionales</span>
+    <ul class="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
+      {achievements.map((a) => (
+        <li class="reveal flex items-start gap-3 rounded-xl bg-surface-muted/60 p-5">
+          <span class="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <Icon name={a.icon} class="size-5" aria-hidden="true" />
+          </span>
+          <span class="text-text-secondary leading-relaxed">{a.text}</span>
         </li>
-        <li class="flex items-start gap-3">
-          <span class="text-2xl shrink-0" aria-hidden="true">🚴</span>
-          <span>200+ niños formados desde {SITE.founded}</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <span class="text-2xl shrink-0" aria-hidden="true">🌟</span>
-          <span>Representación en competencias nacionales desde 2018</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <span class="text-2xl shrink-0" aria-hidden="true">🤝</span>
-          <span>Alianzas con Liga Vallecaucana de Ciclismo</span>
-        </li>
-      </ul>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Banda de comunidad -->
+  <section class="mb-16">
+    <SectionTitle
+      title="Así se ve la comunidad"
+      subtitle="Fotos reales de nuestras salidas, entrenamientos y competencias."
+    />
+    <div class="grid gap-4 sm:grid-cols-3">
+      {communityPhotos.map((p) => (
+        <Image
+          src={p.image}
+          alt={p.alt}
+          widths={[300, 500, 800]}
+          sizes="(min-width: 640px) 30vw, 100vw"
+          loading="lazy"
+          decoding="async"
+          class="reveal aspect-[4/3] w-full rounded-xl object-cover"
+        />
+      ))}
     </div>
   </section>
 

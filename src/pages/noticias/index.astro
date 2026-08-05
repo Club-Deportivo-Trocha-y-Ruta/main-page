@@ -26,10 +26,19 @@ const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = 
 >
   {news.length > 0 ? (
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {news.map((post: NewsEntry) => (
+      {news.map((post: NewsEntry, index: number) => (
         <Card href={`/noticias/${post.id}`}>
           {post.data.image ? (
-            <img src={post.data.image} alt={post.data.imageAlt ?? post.data.title} class="aspect-video w-full object-cover rounded-t-xl" loading="lazy" decoding="async" />
+            <img
+              src={post.data.image}
+              alt={post.data.imageAlt ?? post.data.title}
+              width="800"
+              height="450"
+              class="aspect-video w-full object-cover rounded-t-xl"
+              loading={index < 3 ? 'eager' : 'lazy'}
+              fetchpriority={index === 0 ? 'high' : undefined}
+              decoding="async"
+            />
           ) : (
             <div class="aspect-video bg-surface-muted rounded-t-xl flex items-center justify-center">
               <span class="text-4xl text-text-secondary/30" aria-hidden="true">📰</span>

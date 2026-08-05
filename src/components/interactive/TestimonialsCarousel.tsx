@@ -8,7 +8,6 @@ interface Testimonial {
   name: string;
   roleLabel: string;
   quote: string;
-  photo?: string;
 }
 
 interface Props {

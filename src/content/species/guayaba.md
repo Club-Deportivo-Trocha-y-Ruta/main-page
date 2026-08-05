@@ -4,7 +4,7 @@ scientificName: "Psidium guajava"
 category: "frutal"
 description: "Frutal americano de frutos aromáticos y nutritivos, base de la bocadillo veleño y múltiples dulces tradicionales colombianos."
 curiosity: "Colombia es uno de los mayores productores de guayaba de América Latina, con una notable diversidad de variedades en Boyacá, Valle del Cauca y Santander."
-heroImage: "/images/trocha-verde/guayaba.jpg"
+heroImage: "/images/trocha-verde/guayaba.webp"
 heroImageAlt: "Guayaba sembrada en la pista Carlos Castro de Yumbo"
 origin: "América tropical (México a Brasil)"
 uses: ["frutal", "alimentación", "medicinal", "sombrío"]

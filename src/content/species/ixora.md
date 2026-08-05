@@ -4,7 +4,7 @@ scientificName: "Ixora coccinea"
 category: "ornamental"
 description: "Arbusto tropical de flores en racimos vistosos, disponibles en rojo, naranja y amarillo durante todo el año; atrae mariposas y colibríes."
 curiosity: "En la India, la ixora es planta sagrada ofrecida en templos hindúes y relacionada con el dios Shiva en rituales religiosos cotidianos."
-heroImage: "/images/trocha-verde/dia-tierra-2026/donantes/vivero-guacanda-entrega.jpg"
+heroImage: "/images/trocha-verde/dia-tierra-2026/donantes/vivero-guacanda-entrega.webp"
 heroImageAlt: "Ixoras en flor en la pista Carlos Castro"
 origin: "Asia tropical (India y Sri Lanka)"
 uses: ["ornamental", "atracción de polinizadores", "medicinal"]

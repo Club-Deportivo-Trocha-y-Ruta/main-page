@@ -6,7 +6,8 @@ description: "Tienda de artículos deportivos y ropa técnica para ciclismo y de
 startDate: 2023-06-01
 active: true
 order: 3
-draft: false
+# Patrocinador de demostración: no es un aliado real del club. No publicar.
+draft: true
 ---
 
 Deportes Montaña es aliado del club desde 2023, proveyendo indumentaria deportiva y accesorios para los corredores. Ofrece precios especiales en uniformes y equipamiento técnico para los integrantes de Trocha y Ruta.

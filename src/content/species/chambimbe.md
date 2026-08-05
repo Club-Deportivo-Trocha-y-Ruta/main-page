@@ -4,7 +4,7 @@ scientificName: "Sapindus saponaria"
 category: "nativo"
 description: "Árbol nativo productor de jabón natural: sus frutos contienen saponinas que limpian sin contaminar ríos ni suelos."
 curiosity: "El chambimbe fue el jabón de los pueblos precolombinos del Valle del Cauca; sus frutos aún se usan para lavar ropa de forma ecológica."
-heroImage: "/images/trocha-verde/chambimbe.jpg"
+heroImage: "/images/trocha-verde/chambimbe.webp"
 heroImageAlt: "Chambimbe sembrado en la pista Carlos Castro de Yumbo"
 origin: "América tropical (México a Argentina)"
 uses: ["jabón natural", "reforestación", "ornamental"]

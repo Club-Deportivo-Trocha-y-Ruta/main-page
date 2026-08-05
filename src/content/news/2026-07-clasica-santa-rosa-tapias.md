@@ -10,6 +10,7 @@ imageLayout: cover
 excerpt: "Tercero en la crono escalada y cuarto en la etapa en línea: Samuel Ortiz debuta en ciclismo de ruta con dos resultados sólidos en Santa Rosa de Tapias."
 featured: true
 draft: false
+relatedGallery: "clasica-santa-rosa-tapias-2026"
 galleryFolder: "/images/news/clasica-santa-rosa-tapias-2026"
 galleryImages:
   - salida-crono-escalada.webp

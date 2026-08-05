@@ -4,7 +4,7 @@ scientificName: "Jacaranda caucana"
 category: "nativo"
 description: "Árbol nativo del Valle del Cauca con flores malva-violáceas espectaculares, endémico de Colombia y símbolo de los bosques secos del Cauca."
 curiosity: "El gualanday (*Jacaranda caucana*) es endémico de Colombia y es distinto a la jacaranda brasileña; su floración es un evento único en los valles interandinos."
-heroImage: "/images/trocha-verde/mayo-2026/gualanday.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/gualanday.webp"
 heroImageAlt: "Gualanday joven en la pista Carlos Castro de Yumbo"
 origin: "Colombia (endémico del Valle del Cauca y Cauca)"
 uses: ["ornamental", "reforestación", "sombrío", "medicinal"]

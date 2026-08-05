@@ -4,7 +4,7 @@ scientificName: "Cabralea canjerana"
 category: "nativo"
 description: "Árbol nativo de bosques andinos colombianos, de madera fina y copa densa que ofrece sombra y refugio a la fauna local."
 curiosity: "Su madera fue muy apreciada en carpintería colonial en el suroccidente colombiano; hoy es especie protegida en varios departamentos."
-heroImage: "/images/trocha-verde/dia-tierra-2026/jornada/06.jpg"
+heroImage: "/images/trocha-verde/dia-tierra-2026/jornada/06.webp"
 heroImageAlt: "Árbol habano recién sembrado durante la jornada del Día de la Tierra 2026 en la pista Carlos Castro"
 origin: "América tropical (Andes colombianos)"
 uses: ["maderero", "reforestación", "sombra"]

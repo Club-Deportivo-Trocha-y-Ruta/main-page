@@ -5,7 +5,7 @@ plantedDate: 2026-04-22
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "frutal"
-image: "/images/trocha-verde/dia-tierra-2026/donantes/pomarrosa-vladimir.jpg"
+image: "/images/trocha-verde/dia-tierra-2026/donantes/pomarrosa-vladimir.webp"
 imageAlt: "Pomarrosa donada por el Sr. Vladimir, sembrada durante la Sembratón del Día de la Tierra 2026"
 status: "sembrado"
 donor: "Sr. Vladimir"

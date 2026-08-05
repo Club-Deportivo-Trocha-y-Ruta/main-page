@@ -4,7 +4,7 @@ scientificName: "Melicoccus bijugatus"
 category: "frutal"
 description: "Frutal tropical americano de frutos pequeños agridulces en racimos, muy popular en las costas y valles cálidos colombianos."
 curiosity: "El mamoncillo es tan popular en las costas colombianas que existen festivales locales dedicados a su cosecha; en Cartagena se vende en cada esquina durante el verano."
-heroImage: "/images/trocha-verde/mamoncillo-1.jpg"
+heroImage: "/images/trocha-verde/mamoncillo-1.webp"
 heroImageAlt: "Mamoncillo sembrado en la pista Carlos Castro de Yumbo"
 origin: "América tropical (Caribe y norte de Sudamérica)"
 uses: ["frutal", "alimentación", "sombrío", "madera"]

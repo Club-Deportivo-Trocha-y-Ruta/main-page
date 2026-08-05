@@ -11,6 +11,7 @@ excerpt: "Con la pista convertida en un lodazal por la lluvia, el club sumó 2 p
 featured: true
 draft: false
 relatedEvent: "2026-04-copa-valle-iii-la-cumbre"
+relatedGallery: "copa-valle-pavas-2026"
 galleryFolder: "/images/news/copa-valle-pavas-2026"
 galleryImages:
   - portada-copa-valle-pavas.webp

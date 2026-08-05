@@ -7,7 +7,8 @@ description: "Tienda especializada en bicicletas de montaña y accesorios para c
 startDate: 2022-01-01
 active: true
 order: 1
-draft: false
+# Patrocinador de demostración: no es un aliado real del club. No publicar.
+draft: true
 ---
 
 CicloValle es nuestro patrocinador principal desde 2022. Como tienda especializada en ciclismo de montaña, provee equipos y servicio mecánico para los corredores del club, además de descuentos exclusivos para los integrantes de Trocha y Ruta.

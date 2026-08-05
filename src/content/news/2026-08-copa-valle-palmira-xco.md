@@ -11,6 +11,26 @@ excerpt: "Mariana Coronado volvió a su mejor versión y Samuel Ortiz firmó su 
 featured: true
 draft: false
 relatedEvent: "2026-08-copa-valle-v-palmira"
+relatedGallery: "copa-valle-palmira-2026"
+galleryFolder: "/images/news/copa-valle-palmira-2026"
+galleryImages:
+  - equipo-grupal-dia-2.webp
+  - jostin-villamizar-circuito-dia-2.webp
+  - jostin-villamizar-salida-dia-2.webp
+  - juan-david-giraldo-circuito-dia-2.webp
+  - juan-diego-garcia-xco-dia-2.webp
+  - mariana-coronado-obstaculo-dia-2.webp
+  - podio-elite-dia-2.webp
+  - podio-mariana-isabel-dia-2.webp
+  - podio-miguel-dia-2.webp
+  - podio-samuel-dia-2.webp
+  - samuel-ortiz-circuito-dia-2.webp
+  - sofia-gomez-calentamiento-dia-2.webp
+  - sofia-gomez-circuito-dia-2.webp
+  - sofia-gomez-curva-dia-2.webp
+  - sofia-gomez-sophia-vargas-dia-2.webp
+  - sophia-vargas-circuito-dia-2.webp
+  - sophia-vargas-familia-dia-2.webp
 seo:
   metaTitle: "Mariana Coronado y Samuel Ortiz, plata en el XCO de Palmira"
   metaDescription: "Resultados del club en el XCO de la quinta válida de la Copa Valle 2026 en el Bosque Municipal de Palmira, con la clasificación general tras cinco fechas."

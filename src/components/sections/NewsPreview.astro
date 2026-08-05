@@ -32,7 +32,15 @@ const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = 
         {allNews.map((news: NewsEntry) => (
           <Card href={`/noticias/${news.id}`} class="flex flex-col h-full">
             {news.data.image ? (
-              <img src={news.data.image} alt={news.data.imageAlt ?? news.data.title} class="aspect-video w-full object-cover rounded-t-xl" loading="lazy" decoding="async" />
+              <img
+                src={news.data.image}
+                alt={news.data.imageAlt ?? news.data.title}
+                width="800"
+                height="450"
+                class="aspect-video w-full object-cover rounded-t-xl"
+                loading="lazy"
+                decoding="async"
+              />
             ) : (
               <div class="aspect-video rounded-t-xl bg-surface-muted"></div>
             )}

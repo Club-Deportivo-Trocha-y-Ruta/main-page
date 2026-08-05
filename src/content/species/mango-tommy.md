@@ -4,7 +4,7 @@ scientificName: "Mangifera indica 'Tommy Atkins'"
 category: "frutal"
 description: "Variedad comercial de mango de frutos grandes con piel roja-verde, sabor equilibrado y excelente vida útil, líder de exportación colombiana."
 curiosity: "La variedad Tommy Atkins fue desarrollada en Florida en los años 40; Colombia la adoptó como su principal mango de exportación hacia Europa y Estados Unidos."
-heroImage: "/images/trocha-verde/dia-tierra-2026/donantes/mango-tommy-paula-santamaria.jpg"
+heroImage: "/images/trocha-verde/dia-tierra-2026/donantes/mango-tommy-paula-santamaria.webp"
 heroImageAlt: "Mango Tommy Atkins donado por Paula Santamaría, sembrado en la pista Carlos Castro, Yumbo"
 origin: "Florida, Estados Unidos (variedad comercial)"
 uses: ["frutal", "exportación", "alimentación", "sombrío"]

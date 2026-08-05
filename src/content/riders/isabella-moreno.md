@@ -15,7 +15,8 @@ program: "escuela-de-iniciacion"
 active: true
 featured: false
 order: 4
-draft: false
+# Ficha de demostración: perfil ficticio con foto placeholder. No publicar (T3.2 espera autorizaciones firmadas).
+draft: true
 ---
 
 Isabella es la integrante más joven destacada del club. Con apenas 6 años, llegó a la escuela de iniciación acompañada de su mamá, quien buscaba una actividad deportiva al aire libre para su hija.

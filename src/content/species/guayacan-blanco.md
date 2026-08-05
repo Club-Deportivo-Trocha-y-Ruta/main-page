@@ -4,7 +4,7 @@ scientificName: "Handroanthus roseus"
 category: "nativo"
 description: "Guayacán nativo de flores rosadas a blancas, más tolerante a la humedad que el amarillo, frecuente en las laderas del Valle del Cauca."
 curiosity: "A pesar de llamarse 'blanco', sus flores son en realidad rosadas suaves o malva claro, creando una versión más delicada del espectacular florecimiento de guayacanes."
-heroImage: "/images/trocha-verde/guayacan-blanco.jpg"
+heroImage: "/images/trocha-verde/guayacan-blanco.webp"
 heroImageAlt: "Guayacán blanco sembrado en la pista Carlos Castro de Yumbo"
 origin: "Colombia y América tropical"
 uses: ["ornamental", "reforestación", "sombrío"]

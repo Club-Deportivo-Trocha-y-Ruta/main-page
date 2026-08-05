@@ -4,7 +4,7 @@ scientificName: "Dypsis lutescens"
 category: "ornamental"
 description: "Palma de troncos múltiples amarillentos y frondes arqueadas, una de las más usadas en paisajismo tropical de Colombia por su elegante aspecto."
 curiosity: "Sus tallos dorados y follaje plumoso le dan un aspecto tropical que transforma visualmente los espacios donde crece. Es una de las palmas más cultivadas en jardines colombianos."
-heroImage: "/images/trocha-verde/mayo-2026/palma-areka-1.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/palma-areka-1.webp"
 heroImageAlt: "Palma areca sembrada en la pista Carlos Castro"
 origin: "Madagascar"
 uses: ["ornamental", "paisajismo", "purificación del aire"]

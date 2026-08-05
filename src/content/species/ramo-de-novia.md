@@ -4,7 +4,7 @@ scientificName: "Euphorbia fulgens"
 category: "ornamental"
 description: "Arbusto ornamental de flores rojas-anaranjadas en arcos colgantes, muy usado en floricultura colombiana por su elegancia y larga duración en flor."
 curiosity: "A pesar de su nombre romántico, todas las partes del ramo de novia son tóxicas; su látex lechoso puede causar irritación en piel y mucosas."
-heroImage: "/images/trocha-verde/dia-tierra-2026/jornada/05.jpg"
+heroImage: "/images/trocha-verde/dia-tierra-2026/jornada/05.webp"
 heroImageAlt: "Ramo de novia recién sembrado durante la jornada del Día de la Tierra 2026 en la pista Carlos Castro"
 origin: "México"
 uses: ["ornamental", "floricultura", "jardín"]

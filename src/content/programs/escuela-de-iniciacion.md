@@ -2,14 +2,14 @@
 title: "Escuela de Iniciación"
 subtitle: "Los primeros pedalazos hacia la aventura"
 icon: "ph:bicycle"
-image: "/images/placeholder-program.jpg"
+image: "programa-iniciacion.webp"
 ageRange: "3 a 5 años"
 ageMin: 3
 ageMax: 5
 targetLevel: "iniciación"
 schedule: "Martes y viernes 4:30 - 6:00 PM"
 duration: "1 hora 30 minutos"
-location: "Parque Belalcázar, Yumbo"
+location: "Pista de Ciclomontañismo Carlos Castro, Yumbo"
 maxStudents: 20
 requirements:
   - "Bicicleta en buen estado (con o sin rueditas)"

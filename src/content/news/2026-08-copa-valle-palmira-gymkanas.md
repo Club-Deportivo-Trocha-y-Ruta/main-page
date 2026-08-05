@@ -11,6 +11,19 @@ excerpt: "Isabel Quiñones ganó las gymkanas de Palmira con recorrido limpio y 
 featured: true
 draft: false
 relatedEvent: "2026-08-copa-valle-v-palmira"
+relatedGallery: "copa-valle-palmira-2026"
+galleryFolder: "/images/news/copa-valle-palmira-2026"
+galleryImages:
+  - isabel-quinones-medalla-dia-1.webp
+  - jostin-villamizar-circuito-dia-1.webp
+  - jostin-villamizar-obstaculo-dia-1.webp
+  - miguel-anaya-circuito-dia-1.webp
+  - miguel-anaya-obstaculo-dia-1.webp
+  - podio-infantil-a-fem-dia-1.webp
+  - podio-prejuvenil-a-dia-1.webp
+  - podio-prejuvenil-a-fem-dia-1.webp
+  - sophia-vargas-circuito-dia-1.webp
+  - sophia-vargas-troncos-dia-1.webp
 seo:
   metaTitle: "Trocha y Ruta en las gymkanas de Palmira (Copa Valle 2026)"
   metaDescription: "Resultados de Trocha y Ruta en las gymkanas de la Copa Valle 2026 en el Bosque Municipal de Palmira: oro de Isabel Quiñones y plata de Sophia Vargas."

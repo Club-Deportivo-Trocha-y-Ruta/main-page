@@ -4,7 +4,7 @@ scientificName: "Mangifera indica"
 category: "frutal"
 description: "Variedad de mango de fruto redondeado con tonos rojos y amarillos, sabor dulce equilibrado y pulpa firme muy apreciada en Colombia."
 curiosity: "El mango manzana recibe su nombre por su apariencia similar a una manzana roja; es una de las variedades más cultivadas en los jardines del Valle del Cauca."
-heroImage: "/images/trocha-verde/dia-tierra-2026/jornada/01.jpg"
+heroImage: "/images/trocha-verde/dia-tierra-2026/jornada/01.webp"
 heroImageAlt: "Mango manzana recién sembrado durante la jornada del Día de la Tierra 2026 en la pista Carlos Castro"
 origin: "Asia (variedad seleccionada en trópico americano)"
 uses: ["frutal", "alimentación", "jardín"]

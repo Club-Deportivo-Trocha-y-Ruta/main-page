@@ -4,7 +4,7 @@ scientificName: "Ceiba pentandra"
 category: "nativo"
 description: "El árbol más imponente de los bosques tropicales americanos, capaz de alcanzar 70 metros; símbolo sagrado para muchas culturas indígenas."
 curiosity: "La ceiba fue el árbol sagrado de los mayas, considerado el eje del universo que conecta el inframundo, la tierra y el cielo."
-heroImage: "/images/trocha-verde/mayo-2026/ceiba.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/ceiba.webp"
 heroImageAlt: "Ceiba joven sembrada en la pista Carlos Castro"
 origin: "América tropical y África occidental"
 uses: ["reforestación", "fibra (kapok)", "refugio de fauna", "medicinal"]

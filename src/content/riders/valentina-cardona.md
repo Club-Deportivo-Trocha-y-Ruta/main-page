@@ -20,7 +20,8 @@ program: "formacion-juvenil"
 active: true
 featured: true
 order: 2
-draft: false
+# Ficha de demostración: perfil ficticio con foto placeholder. No publicar (T3.2 espera autorizaciones firmadas).
+draft: true
 ---
 
 Valentina es una de las corredoras más prometedoras del club. Llegó a Trocha y Ruta cuando tenía 8 años, motivada por su padre quien también practica ciclomontañismo recreativo. Desde sus primeras salidas mostró una determinación fuera de lo común.

@@ -3,7 +3,6 @@ name: "María Fernanda López"
 type: "familia"
 role: "madre-de-familia"
 roleLabel: "Madre de familia"
-photo: "/images/placeholder-testimonial.jpg"
 quote: "Trocha y Ruta le cambió la vida a mi hijo. Pasó de ser un niño tímido a un líder seguro de sí mismo."
 relatedProgram: "formacion-juvenil"
 featured: true

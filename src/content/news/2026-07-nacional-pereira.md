@@ -11,6 +11,7 @@ excerpt: "Convocados por mérito a la Selección Valle, Isabel Quiñones y Migue
 featured: true
 draft: false
 relatedEvent: "2026-07-nacional-pereira"
+relatedGallery: "nacional-pereira-2026"
 galleryFolder: "/images/news/nacional-pereira-2026"
 galleryImages: []
 seo:

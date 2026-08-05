@@ -8,6 +8,33 @@ export const SITE = {
     'Club de ciclomontañismo para niños desde 4 años en Yumbo, Valle del Cauca, Colombia.',
 } as const;
 
+/**
+ * Métricas institucionales del club. Fuente única: cualquier página que muestre
+ * estas cifras debe importarlas de aquí, nunca hardcodearlas.
+ *
+ * `ridersTrained` es la cifra conservadora conocida por el club. Pendiente de
+ * confirmación oficial (la página Quiénes Somos afirmaba 200+ sin respaldo).
+ */
+export const CLUB_STATS = {
+  ridersTrained: 80,
+  competitions: 50,
+  medals: 100,
+} as const;
+
+/** Fecha de fundación exacta: 1 de mayo de 2010. */
+export const FOUNDING_DATE = new Date(SITE.founded, 4, 1);
+
+/** Años cumplidos desde la fundación, a la fecha de build. */
+export function getYearsActive(reference: Date = new Date()): number {
+  const anniversaryThisYear = new Date(
+    reference.getFullYear(),
+    FOUNDING_DATE.getMonth(),
+    FOUNDING_DATE.getDate()
+  );
+  const years = reference.getFullYear() - FOUNDING_DATE.getFullYear();
+  return reference < anniversaryThisYear ? years - 1 : years;
+}
+
 export const CONTACT = {
   email: 'clubtrochayruta@hotmail.com',
   phone: '314 850 5372',
@@ -36,7 +63,7 @@ export const NAV_ITEMS = [
 ] as const;
 
 export const SECONDARY_NAV = [
-  // { label: 'Galería', href: '/galeria' }, // TODO: habilitar cuando se implemente la sección de galería
+  { label: 'Galería', href: '/galeria' },
   { label: 'Trocha Verde', href: '/trocha-verde' },
   { label: 'Testimonios', href: '/testimonios' },
   { label: 'Preguntas Frecuentes', href: '/preguntas-frecuentes' },

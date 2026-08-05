@@ -4,7 +4,7 @@ scientificName: "Myrcianthes leucoxyla"
 category: "nativo"
 description: "Árbol nativo andino de corteza rojiza, frutos negros apreciados por la fauna, y gran valor en restauración ecológica de corredores de agua."
 curiosity: "El mirto es una de las especies prioritarias del Plan de Restauración Ecológica del Valle del Cauca por su papel en la conectividad de bosques de ribera."
-heroImage: "/images/trocha-verde/mirto-1.jpg"
+heroImage: "/images/trocha-verde/mirto-1.webp"
 heroImageAlt: "Mirto sembrado en la pista Carlos Castro de Yumbo"
 origin: "Andes colombianos y Ecuador"
 uses: ["reforestación", "alimento para fauna", "restauración riparia"]

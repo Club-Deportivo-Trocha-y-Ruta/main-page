@@ -4,7 +4,7 @@ scientificName: "Persea americana"
 category: "frutal"
 description: "Frutal americano de origen mesoamericano con frutos ricos en grasas saludables, muy cultivado en Colombia y el Valle del Cauca."
 curiosity: "Colombia es el cuarto productor mundial de aguacate; el Valle del Cauca es uno de sus principales departamentos productores."
-heroImage: "/images/trocha-verde/dia-tierra-2026/jornada/07.jpg"
+heroImage: "/images/trocha-verde/dia-tierra-2026/jornada/07.webp"
 heroImageAlt: "Árbol de aguacate recién sembrado durante la jornada del Día de la Tierra 2026 en la pista Carlos Castro"
 origin: "México y América Central"
 uses: ["frutal", "alimentación", "sombrío"]

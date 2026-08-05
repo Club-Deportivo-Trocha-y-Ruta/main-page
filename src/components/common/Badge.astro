@@ -7,10 +7,12 @@ interface Props {
 
 const { variant = 'primary', size = 'sm', class: className } = Astro.props;
 
+// Los tonos -deep son los únicos que cumplen 4.5:1 sobre estos fondos claros;
+// el teal y el lima de marca se quedan en 2.4:1 y 1.7:1.
 const variants: Record<string, string> = {
-  primary: 'bg-primary/10 text-primary',
-  accent: 'bg-accent/10 text-accent',
-  cyan: 'bg-primary/10 text-primary-dark',
+  primary: 'bg-primary/10 text-primary-deep',
+  accent: 'bg-accent/15 text-accent-deep',
+  cyan: 'bg-primary/15 text-primary-deep',
   neutral: 'bg-gray-100 text-text-secondary',
 };
 

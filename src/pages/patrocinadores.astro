@@ -4,7 +4,7 @@ import PageLayout from '@layouts/PageLayout.astro';
 import Card from '@components/common/Card.astro';
 import SectionTitle from '@components/common/SectionTitle.astro';
 import SponsorshipTiers from '@components/sections/SponsorshipTiers.astro';
-import { CONTACT } from '@lib/constants';
+import { CONTACT, CLUB_STATS, getYearsActive } from '@lib/constants';
 
 const sponsors: CollectionEntry<'sponsors'>[] = (await getCollection('sponsors'))
   .filter((s: CollectionEntry<'sponsors'>) => !s.data.draft && s.data.active && !s.data.logo.includes('placeholder'))
@@ -75,10 +75,10 @@ const mailtoPatrocinio = `mailto:${CONTACT.email}?subject=${encodeURIComponent('
   <section class="mb-16" aria-label="Impacto del club">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
       {[
-        { value: '16+', label: 'Años de trayectoria' },
-        { value: '80+', label: 'Niños entrenados' },
-        { value: '50+', label: 'Competencias disputadas' },
-        { value: '100+', label: 'Medallas conquistadas' },
+        { value: `${getYearsActive()}+`, label: 'Años de trayectoria' },
+        { value: `${CLUB_STATS.ridersTrained}+`, label: 'Niños entrenados' },
+        { value: `${CLUB_STATS.competitions}+`, label: 'Competencias disputadas' },
+        { value: `${CLUB_STATS.medals}+`, label: 'Medallas conquistadas' },
       ].map(({ value, label }) => (
         <div class="rounded-xl border border-surface-muted bg-white p-5 sm:p-6 text-center shadow-sm">
           <p class="text-3xl sm:text-4xl font-display font-bold text-primary">{value}</p>

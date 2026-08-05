@@ -85,7 +85,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
         aria-label="Abrir menú de navegación"
-        className="inline-flex items-center justify-center rounded-md p-2.5 text-text-secondary hover:bg-gray-100 hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="inline-flex items-center justify-center rounded-md p-2.5 text-text-secondary hover:bg-gray-100 hover:text-primary-deep transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <line x1="3" y1="6" x2="21" y2="6" />
@@ -117,11 +117,11 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
           >
             {/* Close button */}
             <div className="flex items-center justify-between p-4 border-b border-gray-100 shrink-0">
-              <span className="font-display font-bold text-primary">Menú</span>
+              <span className="font-display font-bold text-primary-deep">Menú</span>
               <button
                 onClick={close}
                 aria-label="Cerrar menú"
-                className="rounded-md p-2 text-text-secondary hover:bg-gray-100 hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="rounded-md p-2 text-text-secondary hover:bg-gray-100 hover:text-primary-deep transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <line x1="18" y1="6" x2="6" y2="18" />
@@ -141,8 +141,8 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
                       aria-current={isActive(item.href) ? 'page' : undefined}
                       className={`block rounded-md px-3 py-3 text-sm font-medium transition-colors ${
                         isActive(item.href)
-                          ? 'bg-primary/10 text-primary font-semibold'
-                          : 'text-text-secondary hover:bg-gray-50 hover:text-primary'
+                          ? 'bg-primary/10 text-primary-deep font-semibold'
+                          : 'text-text-secondary hover:bg-gray-50 hover:text-primary-deep'
                       }`}
                     >
                       {item.label}
@@ -162,8 +162,8 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
                       aria-current={isActive(item.href) ? 'page' : undefined}
                       className={`block rounded-md px-3 py-3 text-sm transition-colors ${
                         isActive(item.href)
-                          ? 'text-primary font-semibold'
-                          : 'text-text-secondary hover:bg-gray-50 hover:text-primary'
+                          ? 'text-primary-deep font-semibold'
+                          : 'text-text-secondary hover:bg-gray-50 hover:text-primary-deep'
                       }`}
                     >
                       {item.label}

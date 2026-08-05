@@ -2,7 +2,7 @@
 title: "Alto Rendimiento"
 subtitle: "Compitiendo al más alto nivel"
 icon: "ph:trophy"
-image: "/images/placeholder-program.jpg"
+image: "programa-rendimiento-samuel.webp"
 ageRange: "12 años en adelante"
 ageMin: 12
 ageMax: 99
@@ -13,12 +13,10 @@ location: "Variado: pista Yumbo (miércoles) y salidas por fuera (resto de sesio
 maxStudents: 10
 requirements:
   - "Bicicleta de montaña de competición"
-  - "Casco certificado"
+  - "Casco"
   - "Guantes"
   - "Sistema de hidratación"
   - "Kit completo de reparación"
-  - "Licencia deportiva FCC vigente"
-  - "Certificado médico deportivo"
 equipmentNeeded:
   - "Bicicleta de montaña de competición (hardtail o doble suspensión)"
   - "Casco de competición certificado"
@@ -57,10 +55,6 @@ Las sesiones son grupales pero con intensidad individualizada: cada corredor por
 ## Competencias
 
 Los integrantes representan al club y al departamento en las principales competencias del calendario departamental y nacional de la Federación Colombiana de Ciclismo. Cada corredor compite en su categoría correspondiente y el plan de competencias se diseña para alcanzar los picos de forma en los eventos más importantes del año.
-
-## Soporte técnico
-
-El programa ofrece acceso a servicio mecánico especializado, asesoría nutricional y acompañamiento en competencias. Trabajamos con un equipo multidisciplinario que incluye entrenador principal, preparador físico y apoyo en salud deportiva.
 
 ## Seguridad y protección
 

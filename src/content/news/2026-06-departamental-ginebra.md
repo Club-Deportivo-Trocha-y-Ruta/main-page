@@ -11,6 +11,7 @@ excerpt: "Primeros lugares y podios en gymkanas y XCO: así corrió Trocha y Rut
 featured: true
 draft: false
 relatedEvent: "2026-06-campeonato-departamental"
+relatedGallery: "departamental-ginebra-2026"
 galleryFolder: "/images/news/departamental-ginebra-2026"
 galleryImages: []
 seo:

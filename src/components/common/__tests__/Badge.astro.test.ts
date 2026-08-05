@@ -51,8 +51,8 @@ describe('Badge', () => {
     });
     const doc = parseHtml(html);
     const span = doc.querySelector('span')!;
-    expect(span.className).toContain('bg-accent/10');
-    expect(span.className).toContain('text-accent');
+    expect(span.className).toContain('bg-accent/15');
+    expect(span.className).toContain('text-accent-deep');
   });
 
   it('aplica clases de variante neutral', async () => {
@@ -66,14 +66,14 @@ describe('Badge', () => {
     expect(span.className).toContain('text-text-secondary');
   });
 
-  it('aplica clases de variante cyan (alias de primary-dark)', async () => {
+  it('aplica clases de variante cyan (teal accesible)', async () => {
     const html = await container.renderToString(Badge, {
       props: { variant: 'cyan' },
       slots: { default: 'Infantil' },
     });
     const doc = parseHtml(html);
     const span = doc.querySelector('span')!;
-    expect(span.className).toContain('text-primary-dark');
+    expect(span.className).toContain('text-primary-deep');
   });
 
   // ─── Tamaños ──────────────────────────────────────────────

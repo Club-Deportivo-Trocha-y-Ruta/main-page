@@ -4,7 +4,7 @@ scientificName: "Terminalia catappa"
 category: "ornamental"
 description: "Árbol de rápido crecimiento con copa en pisos horizontales, ampliamente plantado en parques y zonas urbanas del trópico colombiano."
 curiosity: "Sus hojas al caer se vuelven de color rojo intenso, creando alfombras coloridas que los acuaristas aprecian para acidificar acuarios."
-heroImage: "/images/trocha-verde/mayo-2026/almendro.jpg"
+heroImage: "/images/trocha-verde/mayo-2026/almendro.webp"
 heroImageAlt: "Almendro sembrado en la pista Carlos Castro de Yumbo"
 origin: "Asia tropical (naturalizado en América tropical)"
 uses: ["ornamental", "sombrío", "alimentación", "medicinal"]

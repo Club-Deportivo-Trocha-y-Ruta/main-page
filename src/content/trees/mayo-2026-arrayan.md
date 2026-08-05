@@ -5,7 +5,7 @@ plantedDate: 2026-05-03
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "nativo"
-image: "/images/trocha-verde/mayo-2026/arrayan.jpg"
+image: "/images/trocha-verde/mayo-2026/arrayan.webp"
 imageAlt: "Arrayán sembrado en la jornada de mayo 2026, Pista Carlos Castro, Yumbo"
 status: "sembrado"
 donor: "Helmut Ortiz (Presidente del Club)"

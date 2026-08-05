@@ -3,7 +3,6 @@ name: "Carlos Restrepo"
 type: "familia"
 role: "padre-de-familia"
 roleLabel: "Padre de familia"
-photo: "/images/placeholder-testimonial.jpg"
 quote: "El club no solo forma ciclistas, forma seres humanos con valores y amor por el deporte."
 relatedProgram: "escuela-de-iniciacion"
 featured: false

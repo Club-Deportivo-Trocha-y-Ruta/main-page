@@ -5,7 +5,7 @@ plantedDate: 2026-04-22
 location: "Pista de Ciclomontañismo Carlos Castro"
 protector: "llanta-bicicleta"
 category: "frutal"
-image: "/images/trocha-verde/dia-tierra-2026/arboles/aguacate.jpg"
+image: "/images/trocha-verde/dia-tierra-2026/arboles/aguacate.webp"
 imageAlt: "Aguacate sembrado durante la Sembratón del Día de la Tierra 2026 en el Pump Track de Yumbo"
 status: "sembrado"
 donor: "Amigos de Óscar Eduardo Ortiz"

@@ -12,22 +12,22 @@ featured: true
 draft: false
 galleryFolder: "/images/trocha-verde/dia-tierra-2026/jornada"
 galleryImages:
-  - 01.jpg
-  - 02.jpg
-  - 03.jpg
-  - 04.jpg
-  - 05.jpg
-  - 06.jpg
-  - 07.jpg
-  - 08.jpg
-  - 09.jpg
-  - 10.jpg
-  - 11.jpg
-  - 12.jpg
-  - 13.jpg
-  - 14.jpg
-  - 15.jpg
-  - 16.jpg
+  - 01.webp
+  - 02.webp
+  - 03.webp
+  - 04.webp
+  - 05.webp
+  - 06.webp
+  - 07.webp
+  - 08.webp
+  - 09.webp
+  - 10.webp
+  - 11.webp
+  - 12.webp
+  - 13.webp
+  - 14.webp
+  - 15.webp
+  - 16.webp
 seo:
   metaTitle: "Sembratón Día de la Tierra en el Pump Track de Yumbo"
   metaDescription: "¡Llenamos de vida la pista! Lideramos una gran Sembratón con 23 árboles en el Pump Track de Yumbo junto a familias, teteros y comunidad."
@@ -57,11 +57,11 @@ La Sembratón fue posible gracias a la articulación de **siete aliados** que ap
 Antes del 22 de abril, el equipo de **[Yumbo Limpio](https://www.servintegrales.com.co/yumbolimpio/index.html)**, operado por **Servintegrales**, dedicó varios días a la limpieza y adecuación del área. Sin esa preparación, no habría sido posible recibir a tantas familias en condiciones óptimas para sembrar.
 
 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 mb-12">
-  <img src="/images/trocha-verde/dia-tierra-2026/limpieza/01.jpg" alt="Personal de Yumbo Limpio adecuando la pista" class="rounded-lg shadow-md aspect-square object-cover w-full h-full" loading="lazy" />
-  <img src="/images/trocha-verde/dia-tierra-2026/limpieza/02.jpg" alt="Trabajos de limpieza en el Pump Track" class="rounded-lg shadow-md aspect-square object-cover w-full h-full" loading="lazy" />
-  <img src="/images/trocha-verde/dia-tierra-2026/limpieza/03.jpg" alt="Recolección de escombros y maleza" class="rounded-lg shadow-md aspect-square object-cover w-full h-full" loading="lazy" />
-  <img src="/images/trocha-verde/dia-tierra-2026/limpieza/04.jpg" alt="Adecuación del terreno para la siembra" class="rounded-lg shadow-md aspect-square object-cover w-full h-full" loading="lazy" />
-  <img src="/images/trocha-verde/dia-tierra-2026/limpieza/05.jpg" alt="Personal de Servintegrales apoyando la jornada" class="rounded-lg shadow-md aspect-square object-cover w-full h-full" loading="lazy" />
+  <img src="/images/trocha-verde/dia-tierra-2026/limpieza/01.webp" alt="Personal de Yumbo Limpio adecuando la pista" class="rounded-lg shadow-md aspect-square object-cover w-full h-full" loading="lazy" />
+  <img src="/images/trocha-verde/dia-tierra-2026/limpieza/02.webp" alt="Trabajos de limpieza en el Pump Track" class="rounded-lg shadow-md aspect-square object-cover w-full h-full" loading="lazy" />
+  <img src="/images/trocha-verde/dia-tierra-2026/limpieza/03.webp" alt="Recolección de escombros y maleza" class="rounded-lg shadow-md aspect-square object-cover w-full h-full" loading="lazy" />
+  <img src="/images/trocha-verde/dia-tierra-2026/limpieza/04.webp" alt="Adecuación del terreno para la siembra" class="rounded-lg shadow-md aspect-square object-cover w-full h-full" loading="lazy" />
+  <img src="/images/trocha-verde/dia-tierra-2026/limpieza/05.webp" alt="Personal de Servintegrales apoyando la jornada" class="rounded-lg shadow-md aspect-square object-cover w-full h-full" loading="lazy" />
 </div>
 
 <br />
@@ -69,13 +69,13 @@ Antes del 22 de abril, el equipo de **[Yumbo Limpio](https://www.servintegrales.
 ### Vivero Guacandá — el donante más generoso del día
 
 
-<img src="/images/trocha-verde/dia-tierra-2026/donantes/logo-vivero-guacanda.jpg" alt="Logo Vivero Guacandá" class="h-32 object-contain my-4 rounded-full shadow-sm" />
+<img src="/images/trocha-verde/dia-tierra-2026/donantes/logo-vivero-guacanda.webp" alt="Logo Vivero Guacandá" class="h-32 object-contain my-4 rounded-full shadow-sm" />
 
 El **Sr. Néstor Cortez**, dueño del Vivero Guacandá, donó **9 árboles** de gran calidad: una Palma Bismarckia (palma azul), un Ébano, una Millonaria y 6 Ixoras de colores. Su aporte representó casi el 40% del total sembrado.
 
 ### Secretaría de Ambiente y Desarrollo Agropecuario de Yumbo
 
-<img src="/images/trocha-verde/dia-tierra-2026/donantes/logo-secretaria-ambiente-yumbo.jpg" alt="Logo Secretaría de Ambiente de Yumbo" class="h-24 object-contain my-4" />
+<img src="/images/trocha-verde/dia-tierra-2026/donantes/logo-secretaria-ambiente-yumbo.webp" alt="Logo Secretaría de Ambiente de Yumbo" class="h-24 object-contain my-4" />
 
 La Secretaría se hizo presente con dos aportes técnicos clave: un **abono especial** preparado por la propia entidad y la **asistencia técnica** sobre cómo sembrar correctamente cada especie. Este acompañamiento garantizó que cada árbol quedara en las mejores condiciones para arraigar.
 
