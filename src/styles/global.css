@@ -159,6 +159,94 @@
   }
 }
 
+/* === Crónicas: componentes editoriales (formato v3) === */
+/* Parte de la válida: tira de cifras grandes al inicio de la crónica */
+.prose :where(.stat-strip) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+  margin-block: 2rem;
+}
+@media (min-width: 640px) {
+  .prose :where(.stat-strip) {
+    grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  }
+}
+.prose :where(.stat-strip__item) {
+  margin: 0;
+  background: color-mix(in srgb, var(--color-primary) 7%, var(--color-surface));
+  border-radius: 0.75rem;
+  padding: 1rem 0.75rem;
+  text-align: center;
+}
+.prose :where(.stat-strip__item--accent) {
+  background: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface));
+}
+.prose :where(.stat-strip__value) {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.625rem, 4vw, 2.125rem);
+  line-height: 1.1;
+  color: var(--color-primary-deep);
+}
+.prose :where(.stat-strip__item--accent .stat-strip__value) {
+  color: var(--color-accent-deep);
+}
+.prose :where(.stat-strip__label) {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--color-text-secondary);
+}
+
+/* Cifra destacada: un número que cuenta la historia, entre párrafos */
+.prose :where(.stat-callout) {
+  margin-block: 2.5rem;
+  padding-block: 1.25rem;
+  border-block: 2px solid var(--color-accent);
+  text-align: center;
+}
+.prose :where(.stat-callout__value) {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 7vw, 3.25rem);
+  line-height: 1.05;
+  color: var(--color-primary-deep);
+}
+.prose :where(.stat-callout__text) {
+  display: block;
+  margin: 0.375rem auto 0;
+  max-width: 36ch;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+/* Voz: cita textual de corredores o familias (solo con autorización) */
+.prose :where(.pull-quote) {
+  margin-block: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  border-left: 4px solid var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface));
+  border-radius: 0 0.75rem 0.75rem 0;
+}
+.prose :where(.pull-quote__text) {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.1875rem;
+  line-height: 1.45;
+  color: var(--color-text-primary);
+}
+.prose :where(.pull-quote__attribution) {
+  margin: 0.625rem 0 0;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .reveal {

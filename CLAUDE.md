@@ -4,370 +4,133 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Proyecto
 
-Sitio web del **Club Deportivo Trocha y Ruta** — club de ciclomontañismo para niños desde 4 años en Yumbo, Valle del Cauca, Colombia. Reconstrucción completa desde WordPress a Astro estático.
-
-**Estado**: Implementación avanzada. El sitio compila y genera 27 páginas estáticas. Faltan colecciones de contenido por poblar (directivos, results, rutas, pages) y ajustes de responsive/QA.
+Sitio web estático del **Club Deportivo Trocha y Ruta** — club de ciclomontañismo para niños desde 4 años en Yumbo, Valle del Cauca, Colombia. Migración completa desde WordPress a Astro. El build genera ~146 páginas estáticas (23 rutas `.astro`, varias dinámicas).
 
 ## Comandos
 
 ```bash
 npm run dev          # Dev server en localhost:4321
-npm run build        # Build producción (incluye astro check)
+npm run build        # astro check + astro build → dist/
 npm run preview      # Preview del build local
-npm run lint         # ESLint (archivos .ts, .tsx, .astro)
+npm run typecheck    # astro check
+npm run lint         # ESLint (src, .ts/.tsx/.astro)
 npm run lint:fix     # ESLint con auto-fix
-npm run format       # Prettier
-npm run format:check # Prettier sin escribir
-npm run typecheck    # astro check (type-checking)
+npm run format       # Prettier (escribe)
+npm run format:check # Prettier (solo verifica)
+
+npm test             # Vitest en modo watch (ambos proyectos)
+npm run test:run     # Vitest una sola vez (CI usa este gate)
+npm run test:astro   # Solo proyecto "astro" (componentes .astro + lib)
+npm run test:react   # Solo proyecto "react" (islands, jsdom)
+npm run test:coverage # Coverage con thresholds estrictos
+
+# Un solo archivo de test:
+npx vitest run --project react src/components/interactive/__tests__/ContactForm.react.test.tsx
+npx vitest run --project astro src/lib/__tests__/utils.test.ts
 ```
 
-## Stack y Decisiones Arquitectónicas
+Node >= 20 requerido (CI usa Node 22).
 
-| Capa | Tecnología | Notas Críticas |
+## Stack
+
+| Capa | Tecnología | Notas críticas |
 |------|-----------|----------------|
-| Framework | Astro ^5.17.0 | SSG estático, output `static`. **NO adoptar v6** sin validar breaking changes |
-| Estilos | Tailwind CSS ^4.1.0 | Via `@tailwindcss/vite`. **NO existe `tailwind.config.mjs`** — tokens en `@theme {}` dentro de `src/styles/global.css` |
-| Typography | @tailwindcss/typography ^0.5.19 | Plugin para prose styling en contenido Markdown |
-| Islands | React ^19.2.4 | Solo para 5 componentes interactivos en `src/components/interactive/` |
-| CMS | Sveltia CMS | Estático, sin npm. UI en `public/admin/index.html`. Config en `public/admin/config.yml` |
-| Hosting | Hostinger (FTPS) | Deploy via GitHub Actions + FTP-Deploy-Action. 2 environments: `develop` y `production` |
-| Formularios | Web3Forms | API HTTP, 250/mes gratis. Variable: `PUBLIC_WEB3FORMS_KEY` |
-| Imágenes | Astro Image + Cloudinary | Locales via `<Image>` de `astro:assets`, dominio `res.cloudinary.com` habilitado en config |
-| Iconos | astro-icon + Phosphor Icons | `icon({ include: { ph: ['*'] } })` — todos los iconos Phosphor disponibles |
-| Carruseles | Swiper ^12.1.2 | Usado en TestimonialsCarousel |
-| Lightbox | yet-another-react-lightbox ^3.21.0 | Instalado (ImageLightbox usa implementación custom) |
-| Forms | react-hook-form ^7.53.2 + zod ^3.23.8 | Validación en ContactForm e InscriptionForm |
-| Animaciones | @formkit/auto-animate ^0.8.2 | Animaciones de formulario |
-| Optimización | sharp ^0.33.5 | Procesamiento de imágenes en build |
+| Framework | Astro ^5.17 | `output: 'static'`. **NO adoptar v6** sin validar breaking changes |
+| Estilos | Tailwind CSS 4 | Via `@tailwindcss/vite`. **NO existe config JS** — tokens en `@theme {}` de `src/styles/global.css` |
+| Islands | React 19 | Solo 6 componentes en `src/components/interactive/` |
+| CMS | Sveltia CMS | Estático, sin npm. `public/admin/` (index.html + config.yml) |
+| Hosting | Hostinger (FTPS) | Deploy via GitHub Actions + **lftp** (no FTP-Deploy-Action) |
+| Formularios | Web3Forms | `PUBLIC_WEB3FORMS_KEY` |
+| Analytics | GA4 + Partytown | Consent Mode v2, banner custom. `PUBLIC_GA4_MEASUREMENT_ID` |
+| Imágenes | astro:assets + Cloudinary | Dominio `res.cloudinary.com` habilitado. `PUBLIC_CLOUDINARY_CLOUD_NAME` |
+| Iconos | astro-icon + Phosphor | `ph:*` incluido completo |
+| Mapas | Leaflet | Solo en TrochaVerdeMap island |
+| Forms/validación | react-hook-form + zod | Zod también define los schemas de contenido |
 
-### Tailwind 4 — Configuración en CSS
+Aliases TS (tsconfig): `@components/*`, `@layouts/*`, `@lib/*`, `@assets/*`, `@types/*`.
 
-Tailwind 4 **elimina el archivo de configuración JS**. Los design tokens se definen en CSS:
+### Tailwind 4 — tokens en CSS
 
-```css
-/* src/styles/global.css */
-@import "tailwindcss";
-@plugin "@tailwindcss/typography";
+Design tokens en `src/styles/global.css` dentro de `@theme {}` (primary teal `#20b7c9`, accent lima `#8be000`, surface, text). Importante: existen variantes `--color-primary-deep` / `--color-accent-deep` para **texto** teal/lima sobre fondos claros — los tonos base no cumplen contraste WCAG AA como texto. Fuentes locales (Inter Variable, Plus Jakarta Sans) en `public/fonts/` via `@font-face`.
 
-@theme {
-  --color-primary: #20b7c9;
-  --color-primary-dark: #1a96a4;
-  --color-primary-light: #4dc9d7;
-  --color-accent: #8be000;
-  --color-accent-dark: #6fb300;
-  --color-accent-light: #a3e63d;
-  --color-surface: #ffffff;
-  --color-surface-dark: #2f2f2f;
-  --color-surface-muted: #d8d8d8;
-  --color-text-primary: #2f2f2f;
-  --color-text-secondary: #5a5a5a;
-  --font-sans: 'Inter Variable', system-ui, sans-serif;
-  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
-}
-```
+### React Islands — uso mínimo
 
-Se integra en `astro.config.mjs` como plugin Vite:
-```javascript
-import tailwindcss from '@tailwindcss/vite';
-// en defineConfig:
-vite: { plugins: [tailwindcss()] }
-```
+Astro genera zero-JS por defecto. Solo estos 6 componentes hidratan:
 
-### React Islands — Uso Mínimo
-
-Astro genera zero-JS por defecto. React solo se usa en estos 5 componentes:
-
-| Componente | Directiva | Justificación |
-|-----------|-----------|---------------|
-| `MobileMenu.tsx` | `client:load` | Crítico en mobile. Portal, focus trap, scroll lock, cierra en View Transitions |
-| `ContactForm.tsx` | `client:visible` | Validación con react-hook-form + zod, honeypot anti-spam, Web3Forms |
-| `InscriptionForm.tsx` | `client:visible` | Formulario multi-paso (4 steps), localStorage persistence (48h TTL) |
-| `ImageLightbox.tsx` | `client:visible` | Lightbox custom con keyboard nav, touch swipe, focus trap |
-| `TestimonialsCarousel.tsx` | `client:visible` | Carrusel Swiper (autoplay 5s, pagination) |
-
-**Regla**: Nunca usar `client:load` excepto para `MobileMenu`. Todo lo demás es `client:visible`.
-
-## Estructura del Proyecto
-
-```
-src/
-├── assets/images/          # logo.webp, skg_logo.svg
-├── components/
-│   ├── common/             # 12 componentes: Header, Footer, Button, Card, Badge,
-│   │   │                   #   EventCard, RiderCard, Breadcrumb, SectionTitle,
-│   │   │                   #   SocialLinks, YouTubeEmbed, SEOHead
-│   ├── sections/           # 11 secciones homepage: Hero, StatsCounter, ProgramsGrid,
-│   │   │                   #   UpcomingEvents, NewsPreview, NewsGallery, GalleryPreview,
-│   │   │                   #   TestimonialsSlider, TeamRoster, SponsorsBar, AboutPreview
-│   └── interactive/        # 5 React islands (ver tabla arriba)
-├── content/                # Content Collections (ver sección abajo)
-├── data/
-│   └── transparencia-documentos.json
-├── layouts/
-│   ├── BaseLayout.astro    # Root: ClientRouter, SEOHead, Header/Footer, scroll-reveal
-│   ├── PageLayout.astro    # Páginas con breadcrumb y título
-│   └── PostLayout.astro    # Artículos con fecha/autor/categoría, prose styling
-├── lib/
-│   ├── constants.ts        # SITE, CONTACT, SOCIAL, NAV_ITEMS, SECONDARY_NAV
-│   ├── utils.ts            # formatDate, slugify, getAge, getCategoryLabel, etc.
-│   └── seo.ts              # JSON-LD generators: Organization, Event, Article, Breadcrumb
-├── pages/                  # 17 páginas (ver sección abajo)
-├── styles/
-│   └── global.css          # Tailwind @theme, fonts, reveal animations, prose table fix
-└── types/                  # (vacío — tipos inline en componentes)
-```
-
-### Páginas Implementadas (17)
-
-| Ruta | Archivo | Descripción |
-|------|---------|-------------|
-| `/` | `index.astro` | Homepage con 11 secciones |
-| `/quienes-somos` | `quienes-somos.astro` | Historia, misión/visión, logros |
-| `/programas` | `programas/index.astro` | Listado de programas |
-| `/programas/[slug]` | `programas/[...slug].astro` | Detalle de programa |
-| `/equipo` | `equipo/index.astro` | Roster de corredores |
-| `/equipo/[slug]` | `equipo/[...slug].astro` | Perfil de corredor |
-| `/noticias` | `noticias/index.astro` | Listado de noticias con filtros |
-| `/noticias/[slug]` | `noticias/[...slug].astro` | Artículo con JSON-LD, galería |
-| `/calendario` | `calendario.astro` | Eventos próximos y pasados |
-| `/galeria` | `galeria/index.astro` | Álbumes fotográficos |
-| `/galeria/[slug]` | `galeria/[...slug].astro` | Álbum con lightbox |
-| `/contacto` | `contacto.astro` | Formulario + info de contacto |
-| `/inscripciones` | `inscripciones.astro` | Formulario multi-paso |
-| `/testimonios` | `testimonios.astro` | Testimonios de familias |
-| `/patrocinadores` | `patrocinadores.astro` | Sponsors por nivel |
-| `/transparencia` | `transparencia/index.astro` | Documentos de gobernanza |
-| `/404` | `404.astro` | Página de error |
-
-## Arquitectura de Contenido
-
-11 Content Collections definidas en `src/content.config.ts` (nota: no `src/content/config.ts`):
-
-| Colección | Tipo | Archivos | Estado |
-|-----------|------|----------|--------|
-| `riders` | content (glob) | 5 .md | Poblada |
-| `directivos` | content (glob) | 0 | Sin contenido |
-| `news` | content (glob) | 4 .md | Poblada |
-| `events` | content (glob) | 8 .md | Poblada |
-| `results` | data (glob) | 0 .yaml/.json | Sin contenido |
-| `programs` | content (glob) | 3 .md | Poblada (faltan: Recreación) |
-| `testimonials` | content (glob) | 3 .md | Poblada |
-| `sponsors` | content (glob) | 6 .md | Poblada |
-| `gallery` | content (glob) | 2 .md | Poblada |
-| `rutas` | content (glob) | 0 | Sin contenido |
-| `pages` | content (glob) | 0 | Sin contenido |
-
-### Relaciones entre colecciones
-- evento → galería (1:1, via `relatedGallery`)
-- evento → noticias (1:N, via `relatedNews` array)
-- evento → resultados (1:N, via `event` field en results)
-- noticia → galería (1:1, via `relatedGallery` y `galleryFolder`)
-- rider → programa (N:1, via `program`)
-- testimonial → rider (1:1, via `relatedRider`)
-- testimonial → programa (1:1, via `relatedProgram`)
-- ruta → programa (N:M, via `usedInPrograms` array)
-
-### Schemas reutilizables
-- `seoSchema`: metaTitle, metaDescription, ogImage
-- `socialMediaSchema`: instagram, facebook, strava, youtube, tiktok
-
-## Funcionalidades Implementadas
-
-### View Transitions
-- `ClientRouter` habilitado en BaseLayout
-- `transition:persist` en Header (mantiene estado entre navegaciones)
-- `transition:animate="fade"` en contenido principal
-- MobileMenu se cierra en evento `astro:before-preparation`
-
-### SEO y JSON-LD
-- `SEOHead.astro`: title, meta, Open Graph, Twitter Card, JSON-LD
-- Locale: `es_CO`
-- Generators en `src/lib/seo.ts`: SportsOrganization, SportsEvent, Article, BreadcrumbList
-- Sitemap generado por `@astrojs/sitemap`
-
-### Accesibilidad
-- Skip-to-content link
-- Focus visible outlines (2px primary, 2px offset)
-- ARIA attributes en navegación, formularios, lightbox
-- Focus trap en MobileMenu e ImageLightbox
-- Keyboard navigation completa (Escape, Tab, Arrow keys)
-- `prefers-reduced-motion` respetado
-
-### Formularios
-- **ContactForm**: 5 campos, Zod, honeypot anti-spam, Web3Forms POST
-- **InscriptionForm**: 4 pasos, 19+ campos, localStorage persistence (48h TTL), validación progresiva
-
-### Scroll Reveal
-- IntersectionObserver en BaseLayout
-- Clase `.reveal` → `.revealed` con animación opacity + translateY
-- Compatible con View Transitions (re-observa en `astro:page-load`)
-
-## Convenciones
-
-### Componentes Astro
-- PascalCase para nombres de archivo
-- Props tipadas con `interface Props {}` en frontmatter
-- Tailwind classes directas, nunca CSS modules
-- `<Image>` de `astro:assets` para toda imagen local, nunca `<img>` directo
-- Composición via `<slot />` sobre props complejas
-
-### Path Aliases (tsconfig.json)
-```
-@components/* → src/components/*
-@layouts/*    → src/layouts/*
-@lib/*        → src/lib/*
-@assets/*     → src/assets/*
-@types/*      → src/types/*
-```
-
-### Contenido
-- Frontmatter YAML, contenido en español colombiano
-- Slugs: kebab-case sin acentos (`copa-valle-2026`, no `copa-vallé-2026`)
-- Fechas: ISO 8601 (`2026-04-15`)
-- `draft: true` oculta contenido en producción
-
-### Estilos
-- Mobile-first: base para mobile, `md:` para tablet, `lg:` para desktop
-- Colores: `text-primary`, `bg-accent`, `bg-surface-muted`, `bg-surface-dark`
-- Tipografía: `font-display` para headings, `font-sans` para body
-- Prose tables: scroll horizontal automático en mobile
-
-## Variables de Entorno
-
-Gestionadas via **GitHub Environments** (Settings → Environments). Cada environment (QA, PDN) tiene sus propios valores.
-
-| Variable | Descripción | Diferente por env |
-|----------|-------------|:-----------------:|
-| `PUBLIC_WEB3FORMS_KEY` | API key de Web3Forms (ContactForm, InscriptionForm) | No |
-| `PUBLIC_CLOUDINARY_CLOUD_NAME` | Cloud name de Cloudinary | No |
-| `PUBLIC_GA4_MEASUREMENT_ID` | Measurement ID de GA4 formato `G-XXXXXXXXXX` (carga vía Partytown) | Recomendado (develop ≠ production) |
-
-Secrets de deploy (en cada environment): `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`
-
-### CI/CD
-
-| Workflow | Trigger | Environment | CI Gate |
-|----------|---------|-------------|---------|
-| `deploy.yml` | push a `develop` | `develop` | Sí (typecheck + tests) |
-| `deploy-prod.yml` | push a `main` | `production` | No (asume CI pasó en develop) |
-
-## Assets Estáticos (public/)
-
-| Directorio | Contenido |
+| Componente | Directiva |
 |-----------|-----------|
-| `public/admin/` | Sveltia CMS: index.html + config.yml |
-| `public/fonts/` | InterVariable.woff2, PlusJakartaSans-Variable.woff2 |
-| `public/images/news/` | Fotos de noticias (ej. 64 JPGs copa-valle-ginebra) |
-| `public/images/sponsors/` | Logos de patrocinadores (SVG, PNG, JPG) |
-| `public/documentos/transparencia/` | 15 PDFs de gobernanza y cumplimiento |
-| `public/` | favicon (SVG, PNG 16/32/192/512), apple-touch-icon, robots.txt, site.webmanifest |
+| `MobileMenu.tsx` | `client:load` (único permitido con load) |
+| `ContactForm.tsx` | `client:visible` |
+| `InscriptionForm.tsx` (4 pasos, localStorage 48h TTL) | `client:visible` |
+| `ImageLightbox.tsx` | `client:visible` |
+| `TestimonialsCarousel.tsx` (Swiper) | `client:visible` |
+| `TrochaVerdeMap.tsx` (Leaflet) | `client:visible` |
 
-## Datos Estáticos
+**Regla**: nunca `client:load` salvo MobileMenu; no agregar `client:*` a componentes que no requieran interactividad.
 
-- `src/data/transparencia-documentos.json` — Metadata de documentos de transparencia (usado en `/transparencia`)
+## Arquitectura de contenido
 
-## Documentos de Referencia
+Las colecciones se definen en `src/content.config.ts` (raíz de src, no `src/content/config.ts`) con glob loaders; **todos los schemas Zod viven centralizados en `src/lib/schemas.ts`** y se testean en `src/lib/__tests__/schemas.test.ts`.
 
-| Documento | Cuándo consultarlo |
-|-----------|-------------------|
-| `docs/01-ux-architecture.md` | Wireframes ASCII, user flows, personas — al implementar UI |
-| `docs/02-technical-architecture.md` | Configs exactos, package.json, ADRs — al configurar proyecto |
-| `docs/03-content-strategy.md` | Schemas Zod completos, taxonomía, CMS config.yml — al crear collections |
-| `docs/04-implementation-workflow.md` | Fases, tareas, dependencias — al planificar trabajo |
+15 colecciones definidas; 11 con directorio y contenido: `events`, `faqs`, `gallery`, `news`, `programs`, `riders`, `social-initiatives`, `species` (~32), `sponsors`, `testimonials`, `trees` (~77). Otras 4 están en config pero **sin directorio aún**: `directivos`, `results`, `rutas`, `pages` — si trabajas con ellas, crea primero el directorio.
 
-## Agentes del Proyecto — Compañía Digital (22 agentes)
+Relaciones por referencia en frontmatter: evento→galería (`relatedGallery`), evento→noticias (`relatedNews`), noticia→galería (`relatedGallery`/`galleryFolder`), rider→programa (`program`), testimonial→rider/programa, árbol→especie.
 
-22 agentes en `.claude/agents/` organizados como una compañía digital con jerarquía de 5 tiers. Modelos pinneados a IDs específicos para reproducibilidad.
+Sveltia CMS (`public/admin/config.yml`) debe mantenerse en sync con los schemas Zod cuando cambien campos.
 
-### Tier 1 — C-Suite (Opus 4.7)
-| Agente | Rol | Reporta a | Lidera |
-|--------|-----|-----------|--------|
-| `ceo-strategist` | CEO — visión, OKRs trimestrales, decisiones cross-departamento, alineación misión club | — | cto-architect, cmo-marketing-director, head-of-operations, sponsor-relations-lead, legal-compliance-officer, project-pm |
-| `cto-architect` | CTO — decisiones técnicas, performance/a11y budget, stack roadmap, arquitectura | ceo-strategist | astro-dev, content-manager, performance-engineer, qa-auditor, accessibility-tester, image-optimizer |
-| `cmo-marketing-director` | CMO — estrategia digital integral (web + redes + email + B2B), brand voice, captación | ceo-strategist | content-marketer, seo-specialist, community-manager, photo-video-editor, ux-researcher, seo-auditor |
+## Subsistema Trocha Verde
 
-### Tier 2 — Directors / Department Heads (Opus 4.7)
-| Agente | Rol | Reporta a | Lidera |
-|--------|-----|-----------|--------|
-| `head-of-operations` | Calendario deportivo, logística Copa Valle XCO, alianzas operativas | ceo-strategist | event-manager |
-| `sponsor-relations-lead` | Monetización B2B, media kit, negociación, retención, activación marca | cmo-marketing-director | fundraiser-bd |
-| `legal-compliance-officer` | Ley 1581, Ley 1098 (menores), DIAN, transparencia, consentimientos | ceo-strategist | — (rol transversal) |
-| `project-pm` | COO — coordinación ejecución diaria, task management | ceo-strategist | — (orquesta a todos los demás) |
+Iniciativa ambiental (inventario de árboles) con su propio conjunto de piezas:
+- Páginas: `src/pages/trocha-verde/` (index, `[species].astro`, `arboles/[slug].astro`)
+- Lógica: `src/lib/trocha-verde.ts` (stats agregadas), `src/lib/tree-utils.ts` (labels/colores compartidos)
+- Secciones: `TrochaVerde*.astro` en `src/components/sections/` (`TrochaVerdeGrid` existe pero está en reserva — no importar en index hasta tener más contenido)
+- Colecciones: `trees` + `species`
 
-### Tier 3 — Specialists / Senior ICs (Opus 4.7)
-| Agente | Rol | Reporta a |
-|--------|-----|-----------|
-| `content-marketer` | Senior Editor — crónicas Copa Valle XCO (protocolo 7 bloques), copies multi-canal, comunicación a familias y sponsors | cmo-marketing-director |
-| `event-manager` | Logística operativa de eventos: kit, transporte, inscripciones, captura datos | head-of-operations |
-| `community-manager` | Operación diaria redes (Instagram, Facebook, YouTube), WhatsApp familias, atención < 4h | cmo-marketing-director |
-| `data-analyst` | GA4 + Cloudflare Analytics, funnels inscripción, KPIs marketing, ROI sponsor | cto-architect + cmo-marketing-director |
-| `ux-researcher` | Entrevistas familias, usability testing, validación personas (Carolina/Mateo/Luis Fernando) | cmo-marketing-director |
-| `photo-video-editor` | Producción visual post-evento (48h): fotos, reels, álbumes galería, miniaturas YouTube | cmo-marketing-director |
-| `fundraiser-bd` | Outreach B2B cold, propuestas personalizadas, pipeline, follow-up | sponsor-relations-lead |
+## Analytics — catálogo cerrado, sin PII
 
-### Tier 4 — Engineers (Sonnet 4.6)
-| Agente | Rol | Reporta a |
-|--------|-----|-----------|
-| `astro-dev` | Senior Frontend Engineer — componentes, layouts, páginas, React Islands, responsive | cto-architect |
-| `content-manager` | Content Engineer — Content Collections, Sveltia CMS, JSON-LD, schemas Zod | cto-architect |
-| `performance-engineer` | Bundle size, LCP/INP/CLS, análisis de cuellos de botella, performance budget | cto-architect |
-| `seo-specialist` | SEO Strategist — keywords, análisis competitivo, roadmap SEO, rich snippets | cmo-marketing-director |
+Arquitectura provider-neutral en `src/lib/`:
+- `events.ts` — catálogo cerrado `EVENT_NAMES` + whitelist `ALLOWED_PARAM_KEYS`. Todo evento/param fuera de lista se descarta en sanitización. **Prohibido agregar params con PII** (nombre, email, teléfono, fecha nacimiento, EPS, dirección)
+- `analytics.ts` — interfaz neutral de tracking
+- `analytics/providers/ga4.ts` — implementación GA4 (via Partytown)
+- `ConsentBanner.astro` + `Analytics.astro` en components/common
 
-### Tier 5 — Inspectors / Quality Gate (Haiku 4.5)
-| Agente | Rol | Reporta a |
-|--------|-----|-----------|
-| `qa-auditor` | Lighthouse audit, WCAG 2.1 AA, Core Web Vitals, responsive testing | cto-architect |
-| `seo-auditor` | Validación técnica JSON-LD, meta tags, Open Graph, sitemap, SEO local | cmo-marketing-director |
-| `accessibility-tester` | WCAG 2.1/3.0 profundo, lectores de pantalla, ARIA, a11y cognitiva y móvil | cto-architect |
-| `image-optimizer` | WebP/AVIF, srcset responsive, lazy loading, Cloudinary | cto-architect |
+Para agregar un evento: declararlo en `EVENT_NAMES`, y su param (si es nuevo) en la whitelist.
 
-**Criterio de asignación**:
-- **Opus 4.7** — liderazgo (C-Suite + Directors) y especialistas con razonamiento estratégico (Tier 3)
-- **Sonnet 4.6** — implementación de features y estrategia técnica (Engineers)
-- **Haiku 4.5** — auditorías read-only, validaciones deterministas, tareas mecánicas (Inspectors)
+## Testing
 
-## Teams Formales (`.claude/teams/`)
+Vitest 4 con dos proyectos (`vitest.config.ts` → projects):
 
-5 teams declarativos que orquestan workflows multi-departamento con leader + followers. Cada team tiene su `config.json` con el organigrama del equipo, prompts por miembro y trigger de activación.
+| Proyecto | Convención de nombre | Entorno | Notas |
+|----------|---------------------|---------|-------|
+| `astro` | `*.astro.test.ts` y `*.test.ts` | node | Usa `getViteConfig` de Astro; setup `src/test/setup-astro.ts` |
+| `react` | `*.react.test.tsx` | jsdom | Testing Library + vitest-axe; setup `src/test/setup-react.ts` |
 
-| Team | Leader | Followers (resumen) | Trigger |
-|------|--------|--------------------|---------|
-| `copa-valle-launch` | head-of-operations | event-manager, content-marketer, community-manager, photo-video-editor, seo-specialist, content-manager | 4 semanas antes de cada válida Copa Valle XCO |
-| `captacion-atletas-2026` | cmo-marketing-director | ux-researcher, community-manager, content-marketer, data-analyst, astro-dev, seo-specialist, seo-auditor | Trimestral o inicio de nueva campaña |
-| `sponsor-outreach` | sponsor-relations-lead | fundraiser-bd, data-analyst, content-marketer, legal-compliance-officer, photo-video-editor | Inicio de trimestre B2B |
-| `trocha-verde` | ceo-strategist | content-manager, astro-dev, community-manager, photo-video-editor, content-marketer, data-analyst | Activación de fase de la iniciativa |
-| `compliance-anual` | legal-compliance-officer | content-manager, data-analyst, project-pm | Anual o nuevo formulario/colección |
+El proyecto react **stubbea `astro:env/client`** via alias a `src/test/__mocks__/astro-env-client.ts` (el virtual module no existe en Vite puro). Si un island importa de `astro:env/client`, el mock debe cubrirlo.
 
-## Claude Code — Workflow
+Coverage (solo `src/lib/**` y `src/components/interactive/**`): global 70/75/70/70; `src/lib` 90%; `interactive` 80%. Tests en `__tests__/` junto al código.
 
-El proyecto se desarrolla con asistencia de Claude Code (Opus 4.7 / Sonnet 4.6 / Haiku 4.5).
+## CI/CD
 
-### Permisos y settings
-- `.claude/settings.json` define el allowlist de comandos del proyecto (`npm run *`, `git status/diff/log`, `astro check/build`) para reducir prompts de permiso.
-- Operaciones destructivas (`rm -rf`, `git push --force`, `git reset --hard`) están en la `deny` list.
+Dos workflows en `.github/workflows/`:
+- `deploy.yml` (push a `develop`): job `ci` (typecheck + `npm test`) como **gate** → job `deploy` (build + lftp a Hostinger, environment `develop`)
+- `deploy-prod.yml` (push a `main`): build + deploy directo, **sin tests** — asume que el código ya pasó el gate en develop
 
-### Skills disponibles
-23 skills en `.claude/skills/` cubren auditorías SEO (técnico, contenido, schema, hreflang, GEO, sitemap, imágenes, programmatic, competitor pages, local, page), accesibilidad (WCAG 2.2), performance (Core Web Vitals, INP), best-practices, frontend-design, Astro framework, web-design-guidelines, web-quality-audit y playwright-cli. Invocables como `/skill-name` desde el chat.
+Deploy usa **lftp** con reintentos (FTP-Deploy-Action fallaba con ECONNRESET contra Hostinger). Variables públicas (`PUBLIC_*`) van como Variables del Environment; credenciales FTP como Secrets. Flujo de trabajo: feature branch → `develop` (QA) → `main` (producción).
 
-### Comandos custom
-- `/brainstorm` — descubrimiento de requisitos vía diálogo socrático y multi-persona
-- `/research` — investigación web profunda con síntesis de evidencia
-- `/workflow` — generación de planes de implementación desde PRDs con dependency mapping
+Archivos legacy no activos: `netlify.toml`, `wrangler.toml`, `workers/donations/` (experimento Cloudflare sin código fuente) — el hosting real es Hostinger.
 
 ## Restricciones
 
-- **Zero-JS por defecto**: No agregar `client:*` a componentes Astro que no requieran interactividad
-- **Sin frameworks CSS extra**: No jQuery, Bootstrap, Chakra — solo Tailwind
-- **Lighthouse 95+**: En Performance, Accessibility, SEO, Best Practices
-- **INP < 200ms, LCP < 2.0s, CLS < 0.05**: Performance budget estricto
-- **WCAG 2.1 AA**: Headings jerárquicos, alt text, contraste 4.5:1, focus visible, keyboard nav
-- **Español colombiano**: Todo contenido visible al usuario en español. Código en inglés
-- **Node >= 20**: Requerido por Astro 5
+- **Performance budget**: Lighthouse 95+, LCP < 2.0s, INP < 200ms, CLS < 0.05
+- **WCAG 2.1 AA**: contraste 4.5:1 (usar tokens `-deep` para texto de marca), focus visible, keyboard nav, focus trap en overlays
+- **Sin frameworks CSS extra** — solo Tailwind
+- **Idioma**: contenido visible en español colombiano; código e identificadores en inglés
+- SEO: JSON-LD via generators en `src/lib/seo.ts` + `SEOHead.astro`; locale `es_CO`; la página `/enlaces` (linktree) se excluye del sitemap
 
-## Pendientes Conocidos
+## Referencias
 
-- Colecciones sin contenido: `directivos`, `results`, `rutas`, `pages`
-- Programa "Recreación" falta en `src/content/programs/`
-- Directorio `src/types/` vacío (tipos definidos inline en componentes)
-- Analytics: GA4 vía `@astrojs/partytown` con Consent Mode v2 (banner custom). Measurement ID via `PUBLIC_GA4_MEASUREMENT_ID`
-- Configuración Claude actualizada a Opus 4.7 con IDs pinneados (2026-04-30)
+- `docs/01-ux-architecture.md` — wireframes, flujos, personas (al implementar UI)
+- `docs/02-technical-architecture.md` — ADRs y configs (al configurar)
+- `docs/03-content-strategy.md` — schemas completos, taxonomía, CMS (al tocar collections)
+- `.claude/agents/` — 22 agentes de proyecto organizados como compañía digital (C-suite → engineers → auditors); `.claude/teams/` — 5 teams para workflows multi-departamento
+- `.claude/settings.json` — allowlist de comandos npm/git del proyecto; `rm -rf`, `git push --force` y `git reset --hard` en deny list

@@ -19,7 +19,11 @@
       "Bash(astro check)",
       "Bash(astro build)",
       "Bash(npx astro:*)",
-      "Read(//home/user/main-page/**)",
+      "Bash(npm run test:run)",
+      "Bash(npm run test:astro)",
+      "Bash(npm run test:react)",
+      "Bash(npm run test:coverage)",
+      "Bash(npx vitest run:*)",
       "Glob",
       "Grep"
     ],

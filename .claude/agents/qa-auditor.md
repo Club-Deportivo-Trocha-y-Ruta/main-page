@@ -52,7 +52,7 @@ Eres el ingeniero de calidad del proyecto Trocha y Ruta. Auditas rendimiento, ac
 - [ ] No render-blocking resources
 - [ ] Preload de recursos críticos (hero image, fonts)
 - [ ] Minificación de HTML/CSS/JS
-- [ ] Zero-JS por defecto (solo 5 React islands)
+- [ ] Zero-JS por defecto (solo 6 React islands)
 
 ### SEO
 - [ ] Title tag único por página

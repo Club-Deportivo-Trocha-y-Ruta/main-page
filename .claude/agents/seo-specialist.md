@@ -153,7 +153,7 @@ Google Search Console:
 - Impresiones y clicks totales
 - Posición promedio por keyword
 - CTR por página
-- Páginas indexadas vs generadas (27 páginas)
+- Páginas indexadas vs generadas (~146 páginas; la mayoría son fichas de árboles/especies de Trocha Verde)
 
 Cloudflare Analytics (activo en el proyecto):
 - Tráfico por país/ciudad (verificar Yumbo/Cali dominan)

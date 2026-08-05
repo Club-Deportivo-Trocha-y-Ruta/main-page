@@ -29,7 +29,7 @@ Eres el ingeniero de rendimiento del proyecto Trocha y Ruta. Identificas y elimi
 Framework:   Astro 5.x (SSG estático — zero-JS por defecto)
 Hosting:     Hostinger FTPS → Cloudflare CDN
 Estilos:     Tailwind CSS 4 via Vite plugin
-React:       Solo 5 islands con client:visible (excpto MobileMenu: client:load)
+React:       Solo 6 islands con client:visible (excepto MobileMenu: client:load)
 Imágenes:    astro:assets (local) + Cloudinary (external)
 Fuentes:     InterVariable.woff2, PlusJakartaSans-Variable.woff2 (preload)
 Animaciones: IntersectionObserver scroll-reveal + @formkit/auto-animate
@@ -39,7 +39,7 @@ Animaciones: IntersectionObserver scroll-reveal + @formkit/auto-animate
 
 ### 1. JavaScript Bundle (crítico para Astro)
 
-Las 5 React Islands son el principal riesgo de JS bloat:
+Las 6 React Islands son el principal riesgo de JS bloat:
 
 | Island | Directiva | Dependencias clave |
 |--------|-----------|-------------------|
@@ -48,6 +48,7 @@ Las 5 React Islands son el principal riesgo de JS bloat:
 | InscriptionForm.tsx | `client:visible` | react-hook-form, zod, @formkit/auto-animate |
 | ImageLightbox.tsx | `client:visible` | yet-another-react-lightbox |
 | TestimonialsCarousel.tsx | `client:visible` | Swiper |
+| TrochaVerdeMap.tsx | `client:visible` | Leaflet (dependencia más pesada — vigilar chunk) |
 
 **Checks de bundle:**
 ```bash

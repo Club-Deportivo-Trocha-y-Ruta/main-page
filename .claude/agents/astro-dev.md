@@ -66,4 +66,4 @@ const { title, variant = 'primary' } = Astro.props;
 - NO usar `client:load` en componentes que no necesitan interactividad JS (excepto MobileMenu)
 - Lighthouse Performance target: 95+
 - Siempre lazy-load imágenes below the fold
-- Path aliases: `@components/*`, `@layouts/*`, `@lib/*`, `@assets/*`
+- Path aliases: `@components/*`, `@layouts/*`, `@lib/*`, `@assets/*`, `@types/*`

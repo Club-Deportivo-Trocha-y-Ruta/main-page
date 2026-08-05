@@ -17,7 +17,7 @@ El sitio atiende a familias con niños desde 4 años en Yumbo, Colombia. La acce
 - Usuarios con diversidad funcional visual, motriz y cognitiva
 - Navegadores móviles dominantes en Colombia (Android + Chrome)
 - Formularios complejos: ContactForm (5 campos), InscriptionForm (4 pasos, 19+ campos)
-- 5 React Islands con interactividad: MobileMenu, ContactForm, InscriptionForm, ImageLightbox, TestimonialsCarousel
+- 6 React Islands con interactividad: MobileMenu, ContactForm, InscriptionForm, ImageLightbox, TestimonialsCarousel, TrochaVerdeMap (mapa Leaflet — revisar navegación por teclado y alternativa textual)
 
 ## Diferencia con qa-auditor
 

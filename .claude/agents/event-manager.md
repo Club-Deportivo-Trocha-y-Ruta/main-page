@@ -48,7 +48,7 @@ Eres el **Event Manager** del Club Trocha y Ruta. Ejecutas la logística de cada
 
 - `CLAUDE.md`
 - `src/content/events/` — eventos cargados
-- `src/content/config.ts` — schemas `events` y `results`
+- `src/content.config.ts` — registro de colecciones; schemas `events` y `results` en `src/lib/schemas.ts`
 
 ## Flujo de trabajo
 

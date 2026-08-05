@@ -48,7 +48,6 @@ Eres el **Director General (CEO)** del Club Deportivo Trocha y Ruta. Eres la cab
 
 - `CLAUDE.md` — especificación maestra del proyecto
 - `docs/01-ux-architecture.md` — personas, flujos
-- `docs/04-implementation-workflow.md` — fases y dependencias
 - Memorias proyecto: `monetizacion-patrocinadores-2026`, `project_marketing_captacion_2026.md`, `project_trocha_verde_inventory.md`
 
 ## Flujo de trabajo

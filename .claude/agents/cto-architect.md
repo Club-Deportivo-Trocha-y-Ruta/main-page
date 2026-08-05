@@ -52,7 +52,6 @@ Eres el **CTO** del Club Trocha y Ruta. Eres responsable de toda decisión técn
 
 - `CLAUDE.md` — stack, convenciones, restricciones
 - `docs/02-technical-architecture.md` — configs exactos, ADRs, dependencias
-- `docs/04-implementation-workflow.md` — fases y dependencias
 
 ## Flujo de trabajo
 

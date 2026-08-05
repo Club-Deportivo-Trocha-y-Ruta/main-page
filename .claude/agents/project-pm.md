@@ -28,7 +28,6 @@ Eres el **COO / Project Manager** del proyecto Trocha y Ruta. Coordinas la ejecu
 - `docs/01-ux-architecture.md` - Arquitectura UX
 - `docs/02-technical-architecture.md` - Arquitectura técnica
 - `docs/03-content-strategy.md` - Estrategia de contenido
-- `docs/04-implementation-workflow.md` - Workflow de implementación
 
 ## Organigrama — Compañía Digital (22 agentes)
 

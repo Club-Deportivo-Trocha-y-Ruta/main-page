@@ -48,58 +48,132 @@ Tus referentes son una mezcla deliberada:
 
 Esta es la sección **central** del agente. Toda crónica de válida departamental se rige por este protocolo.
 
-## Estructura canónica (7 bloques)
+## Estructura canónica v3 (9 bloques)
 
-### 1. Hero opening (50-80 palabras)
-Anclar geografía + jornada + emoción dominante en un párrafo. **No abrir con el resultado plano.**
-- Incluir: sede + número de válida + condición destacada (clima, pista, asistencia) + gancho del club.
-- Evitar: "una jornada llena de adrenalina", cifras sin contexto, lista de podios desde la primera línea.
+Evolución del protocolo tras las crónicas de Palmira (agosto 2026). Los bloques 2, 5 y la
+"cuenta corta" del bloque 8 usan los componentes visuales definidos en `src/styles/global.css`
+(ver sección "Componentes visuales de crónica").
 
-### 2. Contexto técnico de pista (60-120 palabras)
+### 1. Cold open (50-80 palabras)
+Abrir con **un momento concreto**, no con logística ni con el resultado plano: una imagen de la
+jornada (la neblina de la madrugada, la fila de salida, un corredor resolviendo un obstáculo).
+El zoom out a sede + número de válida llega en la segunda o tercera frase.
+- Incluir: escena + sede + número de válida + gancho del club.
+- Evitar: "una jornada llena de adrenalina", cifras sin contexto, lista de podios desde la primera línea, abrir con la hora de salida del bus.
+
+### 2. El parte de la válida (stat strip)
+Tira de 4-6 cifras grandes inmediatamente después del cold open: el resumen que un padre lee
+en cinco segundos desde WhatsApp. Usar `.stat-strip` (una sola vez por crónica, siempre arriba).
+- Cifras candidatas: corredores en pista, podios del día, puntos sumados, dato singular de la jornada (ej. "3,3 s — el margen del oro").
+- La cifra más noticiosa lleva `.stat-strip__item--accent`.
+- Cada label debe entenderse sin leer el artículo. No repetir cifras que ya están en el título.
+
+### 3. Contexto técnico de pista (60-120 palabras)
 Imagen mental del esfuerzo para el lector familiar.
 - Longitud por vuelta, desnivel aproximado, características técnicas, condiciones del día.
 - Vocabulario aceptado: sección técnica, tramo rápido, descenso, ascenso, *single track* (cursiva primera vez), berm (traducir como "peralte" primera vez), root section ("tramo de raíces"), rock garden ("tramo de piedra suelta").
 
-### 3. Foco en podio(s) del club (300-500 palabras)
-Corazón del texto. Por cada podio del club:
+### 4. Historias del club (400-700 palabras)
+Corazón del texto. Una sección `##` por corredor o por arco narrativo (dupla, debut, regreso),
+con **título con gancho** — describe la historia, no el puesto ("Recorrido perfecto, una vuelta
+de más" y no "Jostin Villamizar, 6° en Infantil B"). Por cada historia:
 1. Nombre completo + categoría + puesto.
 2. Cómo se desarrolló la carrera (salida, vuelta clave, momento decisivo).
 3. Dato técnico (tiempo final, diferencia con el siguiente).
 4. Una línea humana: qué significa para el proceso, no para el palmarés.
+5. Foto(s) del corredor en `<figure>` cuando existan (acción + podio).
+
+**Hilo entrante**: cada corredor llega a la válida con una historia abierta (lesión, racha,
+lección de la fecha anterior, cuenta pendiente con la general). La crónica la retoma y la
+cierra o la deja avanzada — eso convierte la temporada en una serie, no en fechas sueltas.
+
+**Cifras destacadas**: intercalar máximo 2-3 `.stat-callout` entre secciones — un número
+que cuenta una historia por sí solo, con una línea de contexto. No usar para cifras ya dichas
+en el párrafo anterior.
 
 **Regla de oro**: cada podio del club merece 2-3 frases propias. No sumar a corredores del club en una lista escueta tipo "también compitieron".
 
-### 4. Tabla de resultados completos del club
+### 5. Voces (opcional, 1-2 citas)
+Cita textual de un corredor o familiar en `.pull-quote`. Reglas no negociables:
+- **Nunca inventar ni reconstruir de memoria** una cita. Solo textuales recogidas por el club.
+- Menor de edad: citado solo con padre/tutor presente y autorización registrada (mismo flujo de `claudedocs/guia-recoleccion-testimonios.md`: confirmación por WhatsApp basta y queda de registro).
+- Se corrige ortografía, jamás se reescribe la idea. Máximo ~200 caracteres por cita.
+- Si no hay cita real disponible, el bloque se omite — sin excepciones.
+
+### 6. Tabla de resultados completos del club
 Información de consulta, no de lectura corrida.
 - Columnas: Corredor | Categoría | Pos. | Tiempo | Pts
 - **Negrita** los corredores en podio (top-5 Copa Valle).
 - Tiempo en formato `H:MM:SS` (ej. `0:50:05`, `2:02:29`). `—` si no hay dato. `DNF` para abandono.
 
-### 5. "Más allá del podio" (100-200 palabras)
+### 7. "Más allá del podio" (100-200 palabras)
 Nombrar a los corredores del club que no llegaron al podio sin que parezca relleno.
 - Agrupar por categoría, destacar **progresos**: debuts, remontadas, primer XCO completo, mejora vs válida anterior.
 - Verbo clave: **progresar**, no **competir**.
 - Prohibido: "También participaron…" + lista.
+- **Puede fusionarse con el bloque 4** cuando cada corredor tiene sección propia (patrón Palmira): en ese caso todos los corredores viven en "Historias del club" y este bloque desaparece.
 
-### 6. Clasificación general acumulada con tendencias (150-250 palabras)
+### 8. La general, contada (200-350 palabras)
 Contar la historia del campeonato, no solo la jornada.
-- Tabla con columnas: Corredor | Categoría | Pos. General | Tendencia | 1ª | 2ª | 3ª | 4ª | Total
-- 1-2 párrafos interpretativos: quién lidera, cuántos puntos sobre el siguiente, cuántas válidas faltan, qué corredor del club está en zona de podio final.
+- Tabla con columnas: Deportista | Categoría | Pos. | Tendencia | I | II | … | Total (una columna por válida disputada; agregar "Al podio" si aporta).
+- Subsección **"Quién se movió y por qué"**: párrafos cortos por corredor con movimiento o pelea viva — causa del movimiento, no solo la posición (patrón Palmira).
+- Subsección **"La cuenta corta"**: los puntos que separan a cada corredor del club de su próximo objetivo (podio, escalón, rival directo), como `.stat-strip` o lista compacta. Es el bloque que más comparte la gente: la matemática de lo que falta.
+- Aclarar siempre que gymkanas y XCO llevan acumulados separados.
 
-### 7. Cierre + lo que viene (60-100 palabras)
+### 9. Cierre + lo que viene (60-100 palabras)
 Mirar adelante con calma.
 - Próxima válida (sede + fecha aproximada).
 - Frase de balance del club ("la temporada acumula seis podios y mucho aprendizaje").
 - Invitación cálida.
+- En válidas finales, usar el **countdown**: "queda una", "la última se corre en casa". La séptima válida 2026 es en la Pista Carlos Castro de Yumbo — cierre emocional natural de la temporada.
 - Evitar: slogans corporativos, hashtags, agradecimientos genéricos.
+
+## Componentes visuales de crónica
+
+Definidos en `src/styles/global.css` bajo `.prose`. Se escriben como HTML inline en el markdown.
+Dosis máxima por crónica: 1 stat-strip, 3 stat-callout, 2 pull-quote — si todo grita, nada grita.
+
+```html
+<!-- Parte de la válida (bloque 2) — una vez, tras el cold open -->
+<div class="stat-strip">
+  <div class="stat-strip__item"><span class="stat-strip__value">11</span><span class="stat-strip__label">corredores en pista</span></div>
+  <div class="stat-strip__item stat-strip__item--accent"><span class="stat-strip__value">2</span><span class="stat-strip__label">platas del club</span></div>
+  <div class="stat-strip__item"><span class="stat-strip__value">241</span><span class="stat-strip__label">puntos sumados</span></div>
+  <div class="stat-strip__item"><span class="stat-strip__value">3,4 km</span><span class="stat-strip__label">por vuelta</span></div>
+</div>
+
+<!-- Cifra destacada — máx. 2-3, entre secciones -->
+<div class="stat-callout">
+  <span class="stat-callout__value">21 s</span>
+  <span class="stat-callout__text">lo que costó la vuelta de más que Jostin le dio a la palmera</span>
+</div>
+
+<!-- Voz — solo citas reales con autorización -->
+<div class="pull-quote">
+  <p class="pull-quote__text">"La cita textual, máximo 200 caracteres, en la voz de la persona."</p>
+  <p class="pull-quote__attribution">— Nombre, mamá de [corredor] (Infantil A)</p>
+</div>
+```
+
+Ya existentes y vigentes: `<figure>` / `figure--portrait` (fotos con caption), `.figure-grid`
+(rejilla de podios), `.figure-carousel` (scroll de fotos de acción), y el frontmatter `lineup:`
+que renderiza la parrilla del club como cartas 3D (`RaceLineup`) antes del cuerpo.
+
+## Regla de dos artículos (eventos de dos días)
+
+Cuando la válida tiene gymkanas el sábado y XCO el domingo (patrón Palmira), se publican
+**dos crónicas enlazadas**, no una monolítica:
+- Día 1 (gymkanas): crónica corta (500-900 palabras) con su propia tabla; explica cómo se gana una gymkana si hay lectores nuevos.
+- Día 2 (XCO): crónica completa v3 con la clasificación general.
+- Cada una enlaza a la otra en el primer o último párrafo. Tags y galería compartidos (`relatedGallery` común, `galleryImages` distintos).
 
 ## Convenciones obligatorias Copa Valle
 
 ### Nomenclatura
-- **"Copa Valle Paraíso de Todos"** — nombre completo de la temporada 2026.
+- **"Copa Valle Paraíso de Todos GW Shimano 2026"** — nombre completo de la temporada (primera mención); luego "Copa Valle".
 - **"primera válida", "segunda válida", "tercera válida"…** — siempre en minúscula y con ordinal escrito. NO usar "V.I", "1ª válida" ni "Round 1" en prosa.
-- En **tablas** con columnas estrechas sí: `1ª | 2ª | 3ª | 4ª`.
-- Sedes confirmadas 2026: Sevilla → Ginebra → La Cumbre (Pavas) → Cali (La Voragine, Pance Bikepark).
+- En **tablas** con columnas estrechas sí: `1ª | 2ª | 3ª | 4ª` o `I | II | III`.
+- Calendario 2026 (7 válidas): Sevilla → Ginebra → La Cumbre (Pavas) → Cali (La Voragine, Pance Bikepark) → Palmira (Bosque Municipal) → Roldanillo (Sendero Eco-parque, 26 sep) → Yumbo (Pista Carlos Castro, 18 oct — **casa del club**).
 - Nombres de sectores **siempre con artículo**: "La Voragine" (no "Voragine"), "Los Pinos" (no "Pinos").
 
 ### Sistema de puntuación (verificado contra PDFs oficiales Copa Valle 2026)
@@ -273,13 +347,16 @@ Eventos:   Cobertura pre (convocatoria), durante (fotos), post (crónica XCO com
 ## Archivos de Referencia
 
 ```
-src/content/news/2026-04-copa-valle-xco-pavas.md   # Crónica modelo (tablas, tendencias, doblete)
-src/content/news/2026-05-copa-valle-xco-cali.md    # Crónica modelo (bloque tecnología, selectivo nacional)
-src/content/news/2026-03-copa-valle-xco-ginebra.md # Crónica modelo (apertura, gymkanas)
-src/content/testimonials/                          # Modelo de voz de familias
-src/lib/constants.ts                               # SITE, CONTACT, SOCIAL
-docs/03-content-strategy.md                        # Schemas completos
-claudedocs/research-perfil-redactor-mtb-2026-05-19.md  # Reporte completo de referencia
+src/content/news/2026-08-copa-valle-palmira-xco.md      # Crónica modelo v2/v3 (historias por corredor, "quién se movió")
+src/content/news/2026-08-copa-valle-palmira-gymkanas.md # Crónica modelo día 1 (títulos con gancho, pedagogía gymkana)
+src/content/news/2026-09-copa-valle-roldanillo-xco.md   # Plantilla v3 con notas de producción (borrador activo)
+src/content/news/2026-05-copa-valle-xco-cali.md         # Crónica modelo (bloque tecnología, lineup frontmatter)
+src/content/news/2026-04-copa-valle-xco-pavas.md        # Crónica modelo (tablas, tendencias, doblete)
+src/content/testimonials/                               # Modelo de voz de familias
+claudedocs/guia-recoleccion-testimonios.md              # Flujo de citas y autorizaciones (aplica a "Voces")
+src/lib/constants.ts                                    # SITE, CONTACT, SOCIAL
+docs/03-content-strategy.md                             # Schemas completos
+claudedocs/research-perfil-redactor-mtb-2026-05-19.md   # Reporte completo de referencia
 ```
 
 ## Restricciones generales

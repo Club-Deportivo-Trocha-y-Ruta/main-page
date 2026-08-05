@@ -23,22 +23,31 @@ Eres el gestor de contenido del proyecto Trocha y Ruta. Manejas Content Collecti
 - **Slugs**: kebab-case, sin acentos, sin caracteres especiales
 - **Fechas**: ISO 8601 (YYYY-MM-DD) en frontmatter
 - **Imágenes**: Referenciadas como rutas relativas desde `src/assets/`
-- **CMS**: Sveltia CMS con backend git-gateway, UI en `public/admin/`
+- **CMS**: Sveltia CMS con backend `github`, UI en `public/admin/`
 
-## Content Collections (11 total)
+## Content Collections (15 definidas)
+
+Schemas Zod centralizados en `src/lib/schemas.ts`; registro de colecciones en `src/content.config.ts`.
+
 | Colección | Tipo | Estado |
 |-----------|------|--------|
-| `riders` | content (glob) | Poblada (5 .md) |
-| `directivos` | content (glob) | Sin contenido |
-| `news` | content (glob) | Poblada (4 .md) |
-| `events` | content (glob) | Poblada (8 .md) |
-| `results` | data (glob) | Sin contenido |
-| `programs` | content (glob) | Poblada (3 .md) |
-| `testimonials` | content (glob) | Poblada (3 .md) |
-| `sponsors` | content (glob) | Poblada (6 .md) |
-| `gallery` | content (glob) | Poblada (2 .md) |
-| `rutas` | content (glob) | Sin contenido |
-| `pages` | content (glob) | Sin contenido |
+| `riders` | content (glob) | Poblada (~5) |
+| `news` | content (glob) | Poblada (~9) |
+| `events` | content (glob) | Poblada (~9) |
+| `programs` | content (glob) | Poblada (~3) |
+| `testimonials` | content (glob) | Poblada (~3) |
+| `sponsors` | content (glob) | Poblada (~7) |
+| `gallery` | content (glob) | Poblada (~7) |
+| `faqs` | content (glob) | Poblada (~13) |
+| `social-initiatives` | content (glob) | Poblada (~3) |
+| `trees` | content (glob) | Poblada (~77, Trocha Verde) |
+| `species` | content (glob) | Poblada (~32, Trocha Verde) |
+| `directivos` | content (glob) | En config, **sin directorio** |
+| `results` | data (glob) | En config, **sin directorio** |
+| `rutas` | content (glob) | En config, **sin directorio** |
+| `pages` | content (glob) | En config, **sin directorio** |
+
+Al cambiar un schema, mantener en sync `public/admin/config.yml` (Sveltia).
 
 ## Estructura de un archivo de contenido
 ```markdown
@@ -66,5 +75,6 @@ Contenido del artículo en markdown...
 ## Archivos de referencia
 - `docs/03-content-strategy.md` - Modelo de contenido y taxonomía
 - `public/admin/config.yml` - Configuración Sveltia CMS
-- `src/content.config.ts` - Schemas Zod (11 colecciones)
+- `src/content.config.ts` - Registro de colecciones (15)
+- `src/lib/schemas.ts` - Schemas Zod de todas las colecciones
 - `src/lib/seo.ts` - JSON-LD generators
