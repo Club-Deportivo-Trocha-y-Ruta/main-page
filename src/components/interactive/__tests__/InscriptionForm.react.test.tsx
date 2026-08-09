@@ -179,10 +179,10 @@ describe('InscriptionForm', () => {
     await user.click(checkboxes[0]); // acceptTerms
     await user.click(checkboxes[1]); // acceptDataPolicy
 
-    await user.click(screen.getByRole('button', { name: /Enviar Inscripcion/ }));
+    await user.click(screen.getByRole('button', { name: /Enviar Solicitud/ }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Inscripcion enviada con exito/)).toBeInTheDocument();
+      expect(screen.getByText(/Solicitud de preinscripcion enviada/)).toBeInTheDocument();
     });
   });
 
@@ -208,7 +208,7 @@ describe('InscriptionForm', () => {
     await user.click(checkboxes[0]);
     await user.click(checkboxes[1]);
 
-    await user.click(screen.getByRole('button', { name: /Enviar Inscripcion/ }));
+    await user.click(screen.getByRole('button', { name: /Enviar Solicitud/ }));
 
     await waitFor(() => {
       expect(screen.getByText(/Error de conexion/)).toBeInTheDocument();
