@@ -123,7 +123,7 @@ describe('MobileMenu', () => {
     render(<MobileMenu {...defaultProps} />);
     await user.click(screen.getByLabelText('Abrir menú de navegación'));
 
-    expect(screen.getByText('Inscríbete')).toBeInTheDocument();
+    expect(screen.getByText('Preinscríbete')).toBeInTheDocument();
   });
 
   // ─── Accesibilidad ───────────────────────────────────────
