@@ -239,7 +239,7 @@ export default function InscriptionForm({ programs }: Props) {
 
     const formData = new FormData();
     formData.append('access_key', PUBLIC_WEB3FORMS_KEY ?? '');
-    formData.append('subject', `Nueva inscripcion - ${data.riderName}`);
+    formData.append('subject', `Nueva solicitud de preinscripcion - ${data.riderName}`);
     formData.append('from_name', data.guardianName);
 
     // Honeypot
@@ -297,11 +297,11 @@ export default function InscriptionForm({ programs }: Props) {
           </svg>
         </div>
         <h2 className="font-display text-2xl font-bold text-text-primary">
-          Inscripcion enviada con exito
+          Solicitud de preinscripcion enviada
         </h2>
         <p className="mt-2 text-text-secondary">
-          Hemos recibido la inscripcion de <strong>{getValues('riderName')}</strong> al programa{' '}
-          <strong>{programs.find((p) => p.id === getValues('programId'))?.title}</strong>.
+          Hemos recibido tu solicitud para preinscribir a <strong>{getValues('riderName')}</strong> en el programa{' '}
+          <strong>{programs.find((p) => p.id === getValues('programId'))?.title}</strong>. Esto todavia no es una inscripcion confirmada.
         </p>
 
         <div className="mt-8 rounded-xl bg-surface-muted p-6 text-left">
@@ -311,22 +311,22 @@ export default function InscriptionForm({ programs }: Props) {
           <ol className="mt-4 space-y-3 text-sm text-text-secondary">
             <li className="flex gap-3">
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">1</span>
-              Recibiras un email de confirmacion en tu correo.
+              Recibiras un email de confirmacion de tu solicitud.
             </li>
             <li className="flex gap-3">
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">2</span>
-              Nos comunicaremos contigo en las proximas 24-48 horas.
+              El director deportivo se comunicara contigo en las proximas 24-48 horas.
             </li>
             <li className="flex gap-3">
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">3</span>
-              Te indicaremos fecha de inicio y equipo necesario.
+              Para confirmar la inscripcion necesitaras presentar documento de identidad, EPS vigente, certificado medico deportivo y autorizacion firmada por el acudiente.
             </li>
           </ol>
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <a
-            href={`${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, acabo de inscribir a mi hijo/a en Trocha y Ruta.')}`}
+            href={`${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, acabo de enviar la solicitud de preinscripcion de mi hijo/a en Trocha y Ruta.')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
@@ -882,7 +882,7 @@ export default function InscriptionForm({ programs }: Props) {
                   Enviando...
                 </>
               ) : (
-                'Enviar Inscripcion'
+                'Enviar Solicitud'
               )}
             </button>
           )}
