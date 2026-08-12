@@ -3,7 +3,7 @@
  * Estos schemas definen la estructura de datos de las Content Collections.
  * content.config.ts importa desde aquí para evitar duplicación.
  */
-import { z } from 'zod';
+import { z } from 'astro/zod';
 
 // ============================================================
 // SCHEMAS REUTILIZABLES
@@ -19,11 +19,11 @@ export const seoSchema = z
 
 export const socialMediaSchema = z
   .object({
-    instagram: z.string().url().optional(),
-    facebook: z.string().url().optional(),
-    strava: z.string().url().optional(),
-    youtube: z.string().url().optional(),
-    tiktok: z.string().url().optional(),
+    instagram: z.url().optional(),
+    facebook: z.url().optional(),
+    strava: z.url().optional(),
+    youtube: z.url().optional(),
+    tiktok: z.url().optional(),
   })
   .optional();
 
@@ -81,7 +81,7 @@ export const directivosSchema = z.object({
   ]),
   roleLabel: z.string(),
   bio: z.string().optional(),
-  email: z.string().email().optional(),
+  email: z.email().optional(),
   phone: z.string().optional(),
   socialMedia: socialMediaSchema,
   certifications: z.array(z.string()).default([]),
@@ -127,7 +127,7 @@ export const eventsSchema = z.object({
   location: z.string(),
   city: z.string().optional(),
   department: z.string().default('Valle del Cauca'),
-  mapUrl: z.string().url().optional(),
+  mapUrl: z.url().optional(),
   category: z.enum([
     'xco',
     'xcm',
@@ -151,11 +151,11 @@ export const eventsSchema = z.object({
   image: z.string().optional(),
   imageAlt: z.string().optional(),
   status: z.enum(['upcoming', 'ongoing', 'past', 'cancelled']).default('upcoming'),
-  registrationUrl: z.string().url().optional(),
+  registrationUrl: z.url().optional(),
   registrationDeadline: z.coerce.date().optional(),
   relatedGallery: z.string().optional(),
   relatedNews: z.array(z.string()).default([]),
-  resultsUrl: z.string().url().optional(),
+  resultsUrl: z.url().optional(),
   featured: z.boolean().default(false),
   draft: z.boolean().default(false),
   seo: seoSchema,
@@ -233,7 +233,7 @@ export const sponsorsSchema = z.object({
   logo: z.string(),
   logoLight: z.string().optional(),
   level: z.enum(['principal', 'oficial', 'aliado', 'proveedor']),
-  url: z.string().url().optional(),
+  url: z.url().optional(),
   description: z.string().optional(),
   startDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional(),
@@ -259,7 +259,7 @@ export const gallerySchema = z.object({
   videos: z
     .array(
       z.object({
-        url: z.string().url(),
+        url: z.url(),
         title: z.string(),
         thumbnail: z.string().optional(),
       })
@@ -288,8 +288,8 @@ export const rutasSchema = z.object({
   endPoint: z.string().optional(),
   city: z.string().default('Yumbo'),
   gpxFile: z.string().optional(),
-  stravaRoute: z.string().url().optional(),
-  mapUrl: z.string().url().optional(),
+  stravaRoute: z.url().optional(),
+  mapUrl: z.url().optional(),
   suitableFor: z.array(
     z.enum(['pre-infantil', 'infantil', 'juvenil', 'elite', 'recreativo'])
   ),

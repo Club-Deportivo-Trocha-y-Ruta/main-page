@@ -40,17 +40,17 @@ const inscriptionSchema = z.object({
     .string()
     .min(1, 'Ingresa el celular')
     .regex(/^3\d{9}$/, 'Celular colombiano: 10 dígitos comenzando en 3'),
-  guardianEmail: z.string().email('Ingresa un email válido'),
+  guardianEmail: z.email('Ingresa un email válido'),
   guardianAddress: z.string().optional(),
   riderEps: z.string().min(1, 'Ingresa la EPS del niño/a'),
   relationship: z.string().min(1, 'Selecciona el parentesco'),
 
   // Paso 4 - Confirmación
   acceptTerms: z.literal(true, {
-    errorMap: () => ({ message: 'Debes aceptar los términos y condiciones' }),
+    error: () => 'Debes aceptar los términos y condiciones',
   }),
   acceptDataPolicy: z.literal(true, {
-    errorMap: () => ({ message: 'Debes autorizar el tratamiento de datos' }),
+    error: () => 'Debes autorizar el tratamiento de datos',
   }),
 });
 
