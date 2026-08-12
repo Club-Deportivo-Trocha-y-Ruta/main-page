@@ -55,7 +55,7 @@ jobs:
       - name: Configurar Node.js 22
         uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '22.12'
           # Activa el caché de npm automáticamente usando package-lock.json
           # como clave. Reduce npm ci de ~45s a ~8s en runs siguientes.
           cache: 'npm'
@@ -98,7 +98,7 @@ jobs:
       - name: Configurar Node.js 22
         uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '22.12'
           cache: 'npm'
 
       # ── 3. Instalar dependencias ──────────────────────────

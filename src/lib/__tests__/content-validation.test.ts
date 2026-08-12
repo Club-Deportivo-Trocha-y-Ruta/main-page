@@ -23,7 +23,16 @@ import {
 const CONTENT_DIR = 'src/content';
 
 // Mapa colección → schema Zod
-const collectionSchemas: Record<string, ReturnType<typeof ridersSchema.safeParse> extends never ? never : { safeParse: (data: unknown) => { success: boolean; error?: { issues: Array<{ path: (string | number)[]; message: string }> } } }> = {
+// Zod 4 tipa `issue.path` como PropertyKey[] (admite symbol), no (string|number)[].
+const collectionSchemas: Record<
+  string,
+  {
+    safeParse: (data: unknown) => {
+      success: boolean;
+      error?: { issues: ReadonlyArray<{ path: PropertyKey[]; message: string }> };
+    };
+  }
+> = {
   riders: ridersSchema,
   news: newsSchema,
   events: eventsSchema,
