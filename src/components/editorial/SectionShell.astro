@@ -1,0 +1,88 @@
+---
+/**
+ * Marco de sección del sistema editorial.
+ *
+ * Resuelve fondo, aire vertical, ancho de contenido y textura decorativa a
+ * partir de variantes, para que ninguna sección tenga que inventar clases.
+ * El `<section>` siempre ocupa el ancho completo; el contenido se centra según
+ * `width`.
+ *
+ * Ver docs/04-sistema-editorial.md.
+ */
+import {
+  getTone,
+  getWidth,
+  getSpacing,
+  uniqueSvgId,
+  TOPO_PATHS,
+  TOPO_TILE,
+  type SectionTone,
+  type SectionPattern,
+  type SectionWidth,
+  type SectionSpacing,
+} from '@lib/editorial';
+
+interface Props {
+  tone?: SectionTone;
+  pattern?: SectionPattern;
+  width?: SectionWidth;
+  spacing?: SectionSpacing;
+  id?: string;
+  /** id del titular que nombra la sección (accesibilidad). */
+  labelledby?: string;
+  /** Nombre de la sección cuando no hay titular visible. */
+  label?: string;
+  class?: string;
+  /** Clases extra para el contenedor interno. */
+  innerClass?: string;
+}
+
+const {
+  tone = 'plain',
+  pattern = 'none',
+  width = 'default',
+  spacing = 'default',
+  id,
+  labelledby,
+  label,
+  class: className,
+  innerClass,
+} = Astro.props;
+
+const tokens = getTone(tone);
+const patternId = uniqueSvgId('topo');
+---
+
+<section
+  id={id}
+  aria-labelledby={labelledby}
+  aria-label={label}
+  class:list={['relative isolate overflow-hidden', tokens.surface, getSpacing(spacing), className]}
+>
+  {pattern === 'topo' && (
+    <svg
+      class:list={['pointer-events-none absolute inset-0 -z-10 h-full w-full', tokens.pattern]}
+      aria-hidden="true"
+      focusable="false"
+      style="mask-image: linear-gradient(to bottom, black, transparent 78%);"
+    >
+      <defs>
+        <pattern
+          id={patternId}
+          width={TOPO_TILE}
+          height={TOPO_TILE}
+          patternUnits="userSpaceOnUse"
+        >
+          {TOPO_PATHS.map((d) => (
+            <path d={d} fill="none" stroke="currentColor" stroke-width="1.25" />
+          ))}
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+    </svg>
+  )}
+
+  <div class:list={['mx-auto px-4 sm:px-6 lg:px-8', getWidth(width), innerClass]}>
+    <slot />
+  </div>
+</section>

@@ -182,6 +182,12 @@ export const resultsSchema = z.object({
 export const programsSchema = z.object({
   title: z.string(),
   subtitle: z.string().optional(),
+  /**
+   * Promesa del programa en una o dos frases: es el texto que se lee en las
+   * tarjetas de inicio y en la página de programas. Sin él, la interfaz cae al
+   * `subtitle`, que es más corto y no alcanza a explicar la etapa.
+   */
+  summary: z.string().optional(),
   icon: z.string(),
   image: z.string().optional(),
   ageRange: z.string(),

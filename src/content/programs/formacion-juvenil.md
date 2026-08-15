@@ -1,6 +1,7 @@
 ---
 title: "Formación Juvenil"
 subtitle: "Construyendo los campeones del mañana"
+summary: "El salto de jugar a entrenar. Técnica sobre la bici, rodadas de fondo progresivas y mecánica básica: la base para llegar listo a las primeras válidas departamentales."
 icon: "ph:mountains"
 image: "programa-formacion.webp"
 ageRange: "6 a 11 años"

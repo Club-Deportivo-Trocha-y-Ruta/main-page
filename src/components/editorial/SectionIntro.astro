@@ -1,0 +1,97 @@
+---
+/**
+ * Entrada narrativa de una sección: antetítulo, titular y bajada.
+ *
+ * El antetítulo dice de qué habla la sección, el titular dice qué gana quien
+ * lee y la bajada aterriza el dato concreto. `highlight` marca una parte del
+ * titular con el trazo lima de marca (ver `.editorial-mark` en global.css).
+ */
+import { Icon } from 'astro-icon/components';
+import { getTone, type SectionTone } from '@lib/editorial';
+
+interface Props {
+  eyebrow?: string;
+  /** Icono Phosphor que acompaña al antetítulo. */
+  eyebrowIcon?: string;
+  title: string;
+  /** Fragmento exacto del título que va resaltado. */
+  highlight?: string;
+  lead?: string;
+  align?: 'left' | 'center';
+  tone?: SectionTone;
+  as?: 'h1' | 'h2' | 'h3';
+  /** id del titular, para el `aria-labelledby` de la sección. */
+  id?: string;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  eyebrowIcon,
+  title,
+  highlight,
+  lead,
+  align = 'left',
+  tone = 'plain',
+  as: Heading = 'h2',
+  id,
+  class: className,
+} = Astro.props;
+
+const tokens = getTone(tone);
+const centered = align === 'center';
+
+// El resaltado se aplica sobre el texto tal cual viene: si el fragmento no
+// aparece en el título, se renderiza el título completo sin marcar.
+const cut = highlight ? title.indexOf(highlight) : -1;
+const before = cut >= 0 ? title.slice(0, cut) : title;
+const after = cut >= 0 && highlight ? title.slice(cut + highlight.length) : '';
+
+const sizes: Record<string, string> = {
+  h1: 'text-3xl sm:text-4xl md:text-5xl',
+  h2: 'text-2xl sm:text-3xl md:text-4xl',
+  h3: 'text-xl sm:text-2xl',
+};
+---
+
+<div class:list={[centered && 'text-center', className]}>
+  {eyebrow && (
+    <p
+      class:list={[
+        'flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]',
+        tokens.eyebrow,
+        centered && 'justify-center',
+      ]}
+    >
+      {eyebrowIcon && <Icon name={eyebrowIcon} class="size-4 shrink-0" aria-hidden="true" />}
+      {eyebrow}
+    </p>
+  )}
+
+  <Heading
+    id={id}
+    class:list={[
+      'mt-3 text-balance font-display font-bold leading-[1.15]',
+      sizes[Heading] ?? sizes.h2,
+      tokens.heading,
+    ]}
+  >
+    {before}
+    {cut >= 0 && <span class="editorial-mark"><span>{highlight}</span></span>}
+    {after}
+  </Heading>
+
+  {lead && (
+    <p
+      class:list={[
+        'mt-4 max-w-2xl text-base leading-relaxed sm:text-lg',
+        tokens.muted,
+        centered && 'mx-auto',
+      ]}
+    >
+      {lead}
+    </p>
+  )}
+
+  <slot />
+</div>

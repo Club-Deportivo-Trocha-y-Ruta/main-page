@@ -333,6 +333,7 @@ collections:
     fields:
       - { label: "Título", name: "title", widget: "string", required: true }
       - { label: "Subtítulo", name: "subtitle", widget: "string", required: false }
+      - { label: "Resumen", name: "summary", widget: "text", required: false, hint: "Una o dos frases con la promesa del programa. Es lo que se lee en las tarjetas de inicio y en la página de programas." }
       - { label: "Icono (Phosphor)", name: "icon", widget: "string", required: true, hint: "Nombre del icono de Phosphor Icons" }
       - { label: "Imagen", name: "image", widget: "image", required: false, media_folder: "/src/assets/images/programs" }
       - { label: "Rango de edad (texto)", name: "ageRange", widget: "string", required: true, hint: "Ej: 4 a 8 años" }

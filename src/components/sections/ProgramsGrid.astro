@@ -1,8 +1,19 @@
 ---
+/**
+ * Sección de programas en la portada.
+ *
+ * Cuenta los tres programas como lo que son —tramos de una misma ruta— en vez
+ * de tres tarjetas equivalentes: primero el perfil de edades, después cada
+ * etapa con su promesa y sus datos duros. Todo el texto sale del contenido.
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import Card from '@components/common/Card.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import ProgramPathway from '@components/sections/ProgramPathway.astro';
+import { getRefreshImage } from '@lib/refresh-images';
+import { buildPathway, countWeeklySessions, getLevelStyle, toPathwayInput } from '@lib/programs';
 
 type Program = CollectionEntry<'programs'>;
 
@@ -10,70 +21,127 @@ const programs = (await getCollection('programs'))
   .filter((p: Program) => !p.data.draft)
   .sort((a: Program, b: Program) => a.data.order - b.data.order);
 
-const programStyles: Record<string, { barColor: string; iconBg: string; iconColor: string }> = {
-  'escuela-de-iniciacion': {
-    barColor: 'bg-primary',
-    iconBg: 'bg-primary/15',
-    iconColor: 'text-primary',
-  },
-  'formacion-juvenil': {
-    barColor: 'bg-accent',
-    iconBg: 'bg-accent/15',
-    iconColor: 'text-accent-dark',
-  },
-  'alto-rendimiento': {
-    barColor: 'bg-primary-light',
-    iconBg: 'bg-primary-light/15',
-    iconColor: 'text-primary-dark',
-  },
-};
+const pathwayInput = programs.map(toPathwayInput);
 
-const excerpts: Record<string, string> = {
-  'escuela-de-iniciacion': 'Primeros pasos en el ciclomontañismo. Desarrollo de habilidades motrices básicas y amor por la bicicleta en un ambiente seguro y divertido.',
-  'formacion-juvenil': 'Perfeccionamiento técnico y preparación para competencias departamentales. Entrenamiento estructurado con enfoque en disciplina deportiva.',
-  'alto-rendimiento': 'Programa competitivo con planificación periodizada, preparación física avanzada y participación en competencias departamentales y nacionales en su respectiva categoría.',
-};
+// La numeración de las tarjetas sale de la ruta, no del campo `order`: así el
+// "02" de una tarjeta siempre es el mismo "02" que se ve en el perfil.
+const stepById = new Map(buildPathway(pathwayInput).stages.map((stage) => [stage.id, stage.step]));
 
-/* Iconos Phosphor por programa */
-const programIcons: Record<string, string> = {
-  'escuela-de-iniciacion': 'ph:bicycle-bold',
-  'formacion-juvenil': 'ph:mountains-bold',
-  'alto-rendimiento': 'ph:trophy-bold',
-};
+const cards = programs.map((program: Program) => ({
+  program,
+  level: getLevelStyle(program.data.targetLevel),
+  step: stepById.get(program.id) ?? 0,
+  photo: getRefreshImage(program.data.image),
+  sessions: countWeeklySessions(program.data.schedule),
+}));
 ---
 
-<section class="py-20 bg-gray-50">
-  <div class="mx-auto max-w-6xl px-4">
-    <SectionTitle title="Nuestros Programas" subtitle="Formación integral para cada etapa" />
+<SectionShell tone="muted" pattern="topo" width="wide" labelledby="programas-heading">
+  <SectionIntro
+    id="programas-heading"
+    eyebrow="Programas"
+    eyebrowIcon="ph:path-bold"
+    title="Del primer equilibrio al primer podio"
+    highlight="primer podio"
+    lead="Tres etapas de una misma ruta. Cada programa recoge al niño donde está —sea que apenas suelte las rueditas o que ya sueñe con la Copa Valle— y lo acompaña hasta el siguiente tramo."
+    align="center"
+    class="mx-auto max-w-3xl"
+  />
 
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-      {programs.map((program: Program) => {
-        const style = programStyles[program.id] ?? programStyles['escuela-de-iniciacion'];
-        const iconPath = programIcons[program.id] ?? programIcons['escuela-de-iniciacion'];
-        return (
-          <Card href={`/programas/${program.id}`} class="group overflow-hidden">
-            {/* Color accent bar */}
-            <div class={`h-1.5 ${style.barColor}`}></div>
-            <div class="p-6 pt-5">
-              {/* Icon circle */}
-              <div class={`mb-4 flex h-14 w-14 items-center justify-center rounded-xl ${style.iconBg} ${style.iconColor} transition-transform duration-300 group-hover:scale-110`}>
-                <Icon name={iconPath} class="h-7 w-7" aria-hidden="true" />
-              </div>
-              <h3 class="font-display text-xl font-bold text-text-primary">
-                {program.data.title}
-              </h3>
-              <p class="mt-1 text-sm font-medium text-primary">{program.data.ageRange}</p>
-              <p class="mt-3 text-text-secondary leading-relaxed">
-                {excerpts[program.id] ?? ''}
-              </p>
-              <span class="mt-4 inline-flex items-center gap-1 font-semibold text-primary transition-all duration-200 group-hover:gap-2">
-                Ver programa
-                <Icon name="ph:caret-right-bold" class="h-4 w-4" aria-hidden="true" />
+  <ProgramPathway programs={pathwayInput} class="mt-10" />
+
+  <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+    {cards.map(({ program, level, step, photo, sessions }, index) => (
+      <article
+        class="reveal group relative flex flex-col overflow-hidden rounded-2xl bg-surface shadow-sm ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+        style={`--stagger:${index * 90}ms`}
+      >
+        <div class="relative aspect-[16/10] overflow-hidden bg-surface-muted">
+          {photo ? (
+            <Image
+              src={photo}
+              alt={`Niños del programa ${program.data.title} del Club Trocha y Ruta`}
+              layout="none"
+              widths={[400, 600, 800]}
+              sizes="(min-width: 768px) 33vw, 100vw"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <span class="flex h-full items-center justify-center">
+              <Icon name={program.data.icon} class="size-16 text-primary/40" aria-hidden="true" />
+            </span>
+          )}
+
+          <!-- Numeral de etapa: ancla visual con el perfil de arriba -->
+          <span
+            class="absolute inset-x-0 top-0 bg-gradient-to-b from-black/55 to-transparent p-3 font-display text-3xl font-extrabold leading-none text-white/90"
+            aria-hidden="true"
+          >
+            {String(step).padStart(2, '0')}
+          </span>
+
+          <span
+            class:list={[
+              'absolute bottom-3 left-3 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider',
+              level.solid,
+              level.ink,
+            ]}
+          >
+            {level.label}
+          </span>
+        </div>
+
+        <div class="flex flex-1 flex-col p-5">
+          <h3 class="font-display text-lg font-bold text-text-primary sm:text-xl">
+            <a
+              href={`/programas/${program.id}`}
+              class="after:absolute after:inset-0 hover:text-primary-deep"
+            >
+              {program.data.title}
+            </a>
+          </h3>
+          <p class:list={['mt-1 text-sm font-semibold', level.text]}>{program.data.ageRange}</p>
+
+          <p class="mt-3 flex-1 text-sm leading-relaxed text-text-secondary">
+            {program.data.summary ?? program.data.subtitle}
+          </p>
+
+          <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-black/5 pt-3 text-xs text-text-secondary">
+            {sessions !== null && (
+              <span class="inline-flex items-center gap-1.5">
+                <Icon name="ph:calendar-dots-bold" class="size-4 shrink-0 text-primary-deep" aria-hidden="true" />
+                {sessions} {sessions === 1 ? 'sesión' : 'sesiones'} por semana
               </span>
-            </div>
-          </Card>
-        );
-      })}
-    </div>
+            )}
+            {program.data.duration && (
+              <span class="inline-flex items-center gap-1.5">
+                <Icon name="ph:clock-bold" class="size-4 shrink-0 text-primary-deep" aria-hidden="true" />
+                {program.data.duration}
+              </span>
+            )}
+          </div>
+
+          <span
+            class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary-deep transition-all duration-200 group-hover:gap-2"
+            aria-hidden="true"
+          >
+            Ver programa
+            <Icon name="ph:arrow-right-bold" class="size-4" />
+          </span>
+        </div>
+      </article>
+    ))}
   </div>
-</section>
+
+  <p class="mt-10 text-center">
+    <a
+      href="/programas"
+      class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white"
+    >
+      Compara los tres programas
+      <Icon name="ph:arrow-right-bold" class="size-4" aria-hidden="true" />
+    </a>
+  </p>
+</SectionShell>

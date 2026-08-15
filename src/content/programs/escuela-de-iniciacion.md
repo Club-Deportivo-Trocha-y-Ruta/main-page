@@ -1,6 +1,7 @@
 ---
 title: "Escuela de Iniciación"
 subtitle: "Los primeros pedalazos hacia la aventura"
+summary: "Aquí no se entrena: se juega. Circuitos de habilidad, senderos cortos y un monitor por cada diez niños para que el equilibrio y la confianza lleguen sin afanes ni presión de cronómetro."
 icon: "ph:bicycle"
 image: "programa-iniciacion.webp"
 ageRange: "3 a 5 años"

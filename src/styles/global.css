@@ -62,6 +62,34 @@
   }
 }
 
+/* === Sistema editorial === */
+/* Trazo de resaltado del titular (SectionIntro `highlight`). El texto conserva
+   su propio color —el contraste no depende del trazo—, así que el lima de marca
+   puede usarse aquí aunque no cumpla AA como color de texto. */
+.editorial-mark {
+  position: relative;
+  display: inline-block;
+}
+.editorial-mark > span {
+  position: relative;
+  z-index: 1;
+}
+.editorial-mark::before {
+  content: '';
+  position: absolute;
+  inset: auto -0.12em 0.04em -0.12em;
+  height: 0.34em;
+  z-index: 0;
+  background: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  /* Radios desiguales: se lee como un trazo hecho a mano, no como subrayado. */
+  border-radius: 0.6em 0.2em 0.5em 0.25em;
+}
+
+/* Escalonado del scroll-reveal dentro de una misma rejilla. */
+.reveal[style*='--stagger'] {
+  transition-delay: var(--stagger, 0ms);
+}
+
 /* Scroll-reveal animations */
 @layer utilities {
   .reveal {
@@ -253,6 +281,10 @@
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .reveal[style*='--stagger'] {
+    transition-delay: 0ms;
   }
 
   #nav-progress {

@@ -1,0 +1,203 @@
+---
+/**
+ * "La ruta de formación": perfil de elevación + regla de edades.
+ *
+ * Responde de un vistazo la pregunta con la que llega toda familia —¿cuál le
+ * corresponde a mi hijo?— y de paso cuenta que los programas son etapas de un
+ * mismo camino, no tres opciones sueltas. Los tramos salen de `ageMin`/`ageMax`
+ * del contenido: si cambian las edades en el CMS, el dibujo cambia solo.
+ *
+ * El perfil se estira con `preserveAspectRatio="none"`, así que dentro del SVG
+ * no van ni círculos ni texto: los marcadores son HTML posicionado encima.
+ */
+import { Icon } from 'astro-icon/components';
+import { elevationProfile, elevationPointAt, uniqueSvgId } from '@lib/editorial';
+import { buildPathway, type PathwayInput } from '@lib/programs';
+
+interface Props {
+  programs: PathwayInput[];
+  /** Prefijo del enlace de cada tramo: `/programas/` o `#programa-`. */
+  hrefBase?: string;
+  startLabel?: string;
+  endLabel?: string;
+  /** Lista de etapas con nombre y foco debajo de la regla. */
+  legend?: boolean;
+  class?: string;
+}
+
+const {
+  programs,
+  hrefBase = '/programas/',
+  startLabel = 'Primer equilibrio',
+  endLabel = 'Podio departamental',
+  legend = false,
+  class: className,
+} = Astro.props;
+
+const { stages, ticks, domain } = buildPathway(programs);
+const profile = elevationProfile();
+const uid = uniqueSvgId('pathway');
+
+// El marcador de cada etapa se para en la mitad de su tramo, sobre el terreno.
+const markers = stages.map((stage) => ({
+  stage,
+  ...elevationPointAt((stage.startPct + stage.widthPct / 2) / 100),
+}));
+
+// Los tramos se solapan medio punto para que el antialias no deje costuras
+// blancas entre dos rellenos contiguos.
+const band = (startPct: number, widthPct: number) => ({
+  x: startPct * 10 - 0.5,
+  width: widthPct * 10 + 1,
+});
+---
+
+{stages.length > 0 && (
+  <figure class:list={['not-prose', className]}>
+    <figcaption class="sr-only">
+      Ruta de formación del club: {stages.length} etapas encadenadas por edad, desde los{' '}
+      {domain.from} años. Cada tramo enlaza a su programa.
+    </figcaption>
+
+    <!-- Extremos del recorrido: dónde empieza y a dónde lleva -->
+    <div class="flex items-center justify-between gap-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-text-secondary">
+      <span class="inline-flex items-center gap-1.5">
+        <Icon name="ph:flag-bold" class="size-3.5 shrink-0 text-accent-deep" aria-hidden="true" />
+        {startLabel}
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-right">
+        {endLabel}
+        <Icon name="ph:trophy-bold" class="size-3.5 shrink-0 text-primary-deep" aria-hidden="true" />
+      </span>
+    </div>
+
+    <!-- Perfil de elevación -->
+    <div class="relative mt-3 h-28 sm:h-36 md:h-44">
+      <svg
+        class="absolute inset-0 h-full w-full text-black/15"
+        viewBox="0 0 1000 260"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          {stages.map((stage, index) => (
+            <clipPath id={`${uid}-band-${index}`}>
+              <rect y="0" height="260" {...band(stage.startPct, stage.widthPct)} />
+            </clipPath>
+          ))}
+        </defs>
+
+        {stages.map((stage, index) => (
+          <g clip-path={`url(#${uid}-band-${index})`}>
+            <path d={profile.area} style={`fill:${stage.level.color};opacity:0.18`} />
+            <path
+              d={profile.line}
+              fill="none"
+              stroke-width="2.5"
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              vector-effect="non-scaling-stroke"
+              style={`stroke:${stage.level.color}`}
+            />
+          </g>
+        ))}
+
+        <!-- Cambios de etapa -->
+        {stages.slice(1).map((stage) => (
+          <line
+            x1={stage.startPct * 10}
+            y1="0"
+            x2={stage.startPct * 10}
+            y2="260"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-dasharray="5 7"
+            vector-effect="non-scaling-stroke"
+          />
+        ))}
+      </svg>
+
+      {markers.map(({ stage, xPct, yPct }) => (
+        <span
+          class:list={[
+            'absolute flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center',
+            'rounded-full font-display text-xs font-bold shadow-sm ring-2 ring-white',
+            stage.level.solid,
+            stage.level.ink,
+          ]}
+          style={`left:${xPct}%;top:${yPct}%`}
+          aria-hidden="true"
+        >
+          {stage.step}
+        </span>
+      ))}
+    </div>
+
+    <!-- Regla de años: marca mayor en cada cambio de etapa -->
+    <div class="relative mt-1 h-2.5 border-t border-black/10" aria-hidden="true">
+      {ticks.map((tick) => (
+        <span
+          class:list={['absolute top-0 w-px', tick.major ? 'bg-black/25' : 'bg-black/10']}
+          style={`left:${tick.pct}%;height:${tick.major ? '10px' : '5px'}`}
+        ></span>
+      ))}
+    </div>
+
+    <!-- Tramos por edad -->
+    <ol class="relative mt-1.5 h-14 sm:h-16">
+      {stages.map((stage) => (
+        <li class="absolute inset-y-0 px-px" style={`left:${stage.startPct}%;width:${stage.widthPct}%`}>
+          <a
+            href={`${hrefBase}${stage.id}`}
+            aria-label={`Etapa ${stage.step}: ${stage.title}, ${stage.ageRange}`}
+            class:list={[
+              'flex h-full flex-col items-center justify-center overflow-hidden rounded-lg border-t-[3px]',
+              'transition-colors duration-200 hover:brightness-95',
+              stage.level.soft,
+              stage.level.border,
+            ]}
+          >
+            <span class:list={['font-display text-sm font-extrabold sm:text-base', stage.level.text]}>
+              {stage.shortAge}
+            </span>
+            <span class="mt-0.5 hidden text-[10px] uppercase tracking-wider text-text-secondary sm:block">
+              años
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+
+    {legend && (
+      <ol class="mt-6 grid gap-4 sm:grid-cols-3">
+        {stages.map((stage) => (
+          <li class="flex items-start gap-2.5">
+            <span
+              class:list={[
+                'mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full',
+                'font-display text-[11px] font-bold',
+                stage.level.solid,
+                stage.level.ink,
+              ]}
+              aria-hidden="true"
+            >
+              {stage.step}
+            </span>
+            <span class="min-w-0">
+              <a
+                href={`${hrefBase}${stage.id}`}
+                class="block font-display text-sm font-bold text-text-primary transition-colors hover:text-primary-deep"
+              >
+                {stage.title}
+              </a>
+              <span class="mt-0.5 block text-xs leading-snug text-text-secondary">
+                {stage.ageRange} · {stage.level.focus}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ol>
+    )}
+  </figure>
+)}
