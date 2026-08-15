@@ -1,36 +1,72 @@
 ---
+/**
+ * Presentación del club en la portada.
+ *
+ * Versión corta de Quiénes Somos: una foto de la casa (la pista), la frase que
+ * explica qué es el club y las tres cifras que lo respaldan. El detalle vive en
+ * `/quienes-somos`.
+ */
 import { Image } from 'astro:assets';
 import Button from '@components/common/Button.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
-import { SITE } from '@lib/constants';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import { SITE, CLUB_STATS, getYearsActive } from '@lib/constants';
+import { getTreeStats } from '@lib/trocha-verde';
 import pistaXco from '@assets/images/pista-xco-carlos-castro.jpg';
 
-interface Props {}
+const yearsActive = getYearsActive();
+const treeStats = await getTreeStats();
+
+const figures = [
+  { value: `${CLUB_STATS.ridersTrained}+`, label: 'Niños formados' },
+  { value: `${CLUB_STATS.medals}+`, label: 'Medallas' },
+  { value: treeStats.totalTrees, label: 'Árboles sembrados' },
+];
 ---
 
-<section class="py-20">
-  <div class="mx-auto max-w-6xl px-4">
-    <div class="grid md:grid-cols-2 gap-12 items-center">
+<SectionShell tone="plain" width="wide" labelledby="club-preview-heading">
+  <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+    <div class="relative">
       <Image
         src={pistaXco}
         alt="Pista XCO Carlos Castro en Yumbo, sede de entrenamiento del Club Trocha y Ruta"
-        class="rounded-2xl aspect-video object-cover w-full"
+        layout="none"
+        widths={[500, 800, 1100]}
+        sizes="(min-width: 1024px) 45vw, 100vw"
         loading="lazy"
+        decoding="async"
+        class="aspect-[4/3] w-full rounded-2xl object-cover shadow-md"
       />
-      <div>
-        <SectionTitle align="left" title="Quiénes Somos" />
-        <p class="text-text-secondary text-lg leading-relaxed">
-          Desde {SITE.founded}, el Club Deportivo Trocha y Ruta forma niños y
-          jóvenes a través del ciclomontañismo en Yumbo, Valle del Cauca. Más
-          que un club deportivo, somos una familia que promueve valores,
-          disciplina y amor por la naturaleza.
+
+      <!-- La cifra que más pesa, encima de la foto -->
+      <div class="absolute bottom-4 right-4 rounded-2xl bg-surface p-4 shadow-lg ring-1 ring-black/5 sm:p-5 lg:-bottom-6 lg:-right-6">
+        <p class="font-display text-3xl font-extrabold leading-none text-primary-deep sm:text-4xl">
+          {yearsActive}
         </p>
-        <div class="mt-8">
-          <Button href="/quienes-somos">
-            Conoce nuestra historia
-          </Button>
-        </div>
+        <p class="mt-1 text-xs leading-snug text-text-secondary">
+          años formando<br />ciclistas en Yumbo
+        </p>
       </div>
     </div>
+
+    <div>
+      <SectionIntro
+        id="club-preview-heading"
+        eyebrow="El club"
+        eyebrowIcon="ph:mountains-bold"
+        title="Una escuela de ciclomontañismo con pista propia en Yumbo"
+        highlight="pista propia"
+        lead={`Desde ${SITE.founded}, ${SITE.name} forma niños y jóvenes en la pista Carlos Castro. Más que un club deportivo, somos una comunidad de familias que entrena, compite y siembra junta.`}
+      />
+
+      <dl class="mt-8 grid grid-cols-3 gap-4 border-t border-black/10 pt-6">
+        {figures.map((figure) => (
+          <StatFigure value={figure.value} label={figure.label} />
+        ))}
+      </dl>
+
+      <Button href="/quienes-somos" class="mt-8">Conoce nuestra historia</Button>
+    </div>
   </div>
-</section>
+</SectionShell>

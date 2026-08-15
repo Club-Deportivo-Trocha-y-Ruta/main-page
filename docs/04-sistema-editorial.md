@@ -86,6 +86,8 @@ Ilustraciones disponibles en `src/lib/editorial.ts`:
   cualquier progresión: edades, temporada, crecimiento de una siembra.
 - `elevationPointAt()` — posición de un hito sobre ese perfil, en porcentaje.
 - `TOPO_PATHS` / `TOPO_TILE` — curvas de nivel del patrón de fondo.
+- `Timeline.astro` — recorrido vertical con sendero punteado y marcadores. El
+  pariente vertical del perfil: sirve para historias y secuencias con fecha.
 
 El SVG se estira con `preserveAspectRatio="none"`, así que **dentro del SVG no va texto ni
 círculos**: los marcadores se dibujan en HTML encima del recuadro.
@@ -131,11 +133,12 @@ WhatsApp — pero siempre algo.
 | Sección / página | Estado |
 |------------------|--------|
 | Programas (portada + `/programas`) | ✅ Migrada — referencia del sistema |
+| Quiénes somos (portada + `/quienes-somos`) | ✅ Migrada |
 | Detalle de programa (`/programas/[slug]`) | ⬜ Pendiente |
-| Quiénes somos | ⬜ Pendiente |
 | Trocha Verde | ⬜ Pendiente |
 | Noticias y calendario | ⬜ Pendiente |
 | Patrocinadores | ⬜ Pendiente |
+| Testimonios | ⬜ Pendiente |
 
 ---
 
@@ -154,3 +157,18 @@ Lo que hace de referencia, para copiar el patrón:
   juego, teal en la formación, teal profundo en la competencia.
 - **`summary`** (frontmatter) — la promesa de cada programa, editable desde Sveltia. Antes
   vivía como un objeto literal dentro de `ProgramsGrid.astro`, invisible para el club.
+
+---
+
+## 6. Referencia de Quiénes Somos
+
+Tres movimientos que conviene repetir en las páginas que faltan:
+
+- **Contenido que ya existía y no se veía.** La metodología de cada programa y el detalle de
+  la póliza estaban en el frontmatter y en el cuerpo de los `.md` sin que ninguna página los
+  mostrara. Antes de escribir texto nuevo, revisa qué hay sin usar en las collections.
+- **Afirmar y dejar verificar.** La sección *Respaldo* no solo dice que hay póliza,
+  entrenadores certificados o cuentas públicas: cada tarjeta enlaza a la página donde la
+  familia puede comprobarlo. Una afirmación sin destino es una afirmación más débil.
+- **Fotos vivas, no escogidas a mano.** La banda de comunidad sale de los últimos álbumes de
+  `gallery` y la cita, de `testimonials`: la página se actualiza sola cuando el club publica.

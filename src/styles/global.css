@@ -84,6 +84,10 @@
   /* Radios desiguales: se lee como un trazo hecho a mano, no como subrayado. */
   border-radius: 0.6em 0.2em 0.5em 0.25em;
 }
+/* Sobre fondo oscuro el mismo 55% se apaga: el trazo necesita más cuerpo. */
+.editorial-mark--on-dark::before {
+  background: color-mix(in srgb, var(--color-accent) 80%, transparent);
+}
 
 /* Escalonado del scroll-reveal dentro de una misma rejilla. */
 .reveal[style*='--stagger'] {

@@ -1,0 +1,115 @@
+---
+/**
+ * Recorrido: hitos encadenados por un sendero punteado con marcadores.
+ *
+ * Es el pariente vertical del perfil de elevación de los programas — misma
+ * idea (esto es un camino, no una lista de cosas sueltas) aplicada a una
+ * historia. Sirve para la historia del club, la de una iniciativa o cualquier
+ * secuencia con fecha.
+ *
+ * En móvil el sendero va a la izquierda y todo el contenido a su derecha; desde
+ * `md` la línea se centra y los hitos alternan lado, con la foto siempre en la
+ * columna opuesta al texto.
+ */
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { getTone, type SectionTone } from '@lib/editorial';
+
+export interface TimelineItem {
+  /** Marca temporal o de contexto: "2010", "Hoy", "La casa". */
+  label: string;
+  title: string;
+  body: string;
+  /** Icono Phosphor dentro del marcador. */
+  icon?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+}
+
+interface Props {
+  items: TimelineItem[];
+  tone?: SectionTone;
+  class?: string;
+}
+
+const { items, tone = 'plain', class: className } = Astro.props;
+const tokens = getTone(tone);
+---
+
+{items.length > 0 && (
+  <ol class:list={['relative', className]}>
+    <!-- El sendero: punteado, como una ruta en un mapa -->
+    <div
+      class:list={[
+        'absolute inset-y-2 left-4 border-l-2 border-dashed md:left-1/2 md:-translate-x-px',
+        tone === 'dark' ? 'border-white/25' : 'border-primary/30',
+      ]}
+      aria-hidden="true"
+    ></div>
+
+    {items.map((item, index) => (
+      <li
+        class:list={[
+          'reveal relative pl-12 md:grid md:grid-cols-2 md:items-center md:gap-14 md:pl-0',
+          index > 0 && 'mt-12 md:mt-20',
+        ]}
+        style={`--stagger:${Math.min(index, 3) * 80}ms`}
+      >
+        <span
+          class:list={[
+            'absolute left-4 top-1 flex size-8 -translate-x-1/2 items-center justify-center rounded-full',
+            'bg-primary text-surface-dark ring-4 md:left-1/2 md:top-1/2 md:-translate-y-1/2',
+            tone === 'dark' ? 'ring-surface-dark' : 'ring-white',
+          ]}
+          aria-hidden="true"
+        >
+          {item.icon ? (
+            <Icon name={item.icon} class="size-4" />
+          ) : (
+            <span class="size-2.5 rounded-full bg-surface-dark"></span>
+          )}
+        </span>
+
+        <div
+          class:list={[
+            'md:row-start-1',
+            index % 2 === 0 ? 'md:col-start-1 md:text-right' : 'md:col-start-2',
+          ]}
+        >
+          <p
+            class:list={[
+              'text-xs font-bold uppercase tracking-[0.18em]',
+              tone === 'dark' ? 'text-accent-light' : 'text-accent-deep',
+            ]}
+          >
+            {item.label}
+          </p>
+          <h3 class:list={['mt-2 font-display text-xl font-bold sm:text-2xl', tokens.heading]}>
+            {item.title}
+          </h3>
+          <p class:list={['mt-3 leading-relaxed', tokens.muted]}>{item.body}</p>
+        </div>
+
+        {item.image && (
+          <div
+            class:list={[
+              'mt-5 md:row-start-1 md:mt-0',
+              index % 2 === 0 ? 'md:col-start-2' : 'md:col-start-1',
+            ]}
+          >
+            <Image
+              src={item.image}
+              alt={item.imageAlt ?? ''}
+              layout="none"
+              widths={[400, 700, 1000]}
+              sizes="(min-width: 768px) 45vw, 100vw"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              class="aspect-[3/2] w-full rounded-2xl object-cover shadow-md"
+            />
+          </div>
+        )}
+      </li>
+    ))}
+  </ol>
+)}
