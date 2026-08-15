@@ -1,22 +1,40 @@
 ---
+/**
+ * Franja de confianza en la portada: quiénes ya acompañan al club, en una
+ * tira que se desplaza sola. El detalle completo —niveles, antigüedad y
+ * dónde aparece cada marca— vive en `/patrocinadores`, a donde enlaza el CTA.
+ *
+ * Sin props: la portada la usa como `<SponsorsBar />` y `src/pages/index.astro`
+ * no se puede tocar, así que el componente sigue resolviendo su propio
+ * contenido en vez de recibirlo por props.
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Button from '@components/common/Button.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import { isPublishableSponsor } from '@lib/sponsors';
 
 type Sponsor = CollectionEntry<'sponsors'>;
 
 const sponsors = (await getCollection('sponsors'))
-  .filter((s: Sponsor) => !s.data.draft && s.data.active && !s.data.logo.includes('placeholder'))
+  .filter((s: Sponsor) => isPublishableSponsor(s))
   .sort((a: Sponsor, b: Sponsor) => a.data.order - b.data.order);
 ---
 
-<section class="py-16">
-  <div class="max-w-6xl mx-auto px-4">
-    <SectionTitle title="Nos Apoyan" />
+<SectionShell tone="plain" width="wide" spacing="compact" labelledby="sponsors-bar-heading">
+  <SectionIntro
+    id="sponsors-bar-heading"
+    eyebrow="Patrocinadores"
+    eyebrowIcon="ph:handshake-bold"
+    title="Empresas que ya confían en el club"
+    align="center"
+    class="mx-auto max-w-2xl"
+  />
 
-    {sponsors.length > 0 && (
-      <div class="overflow-hidden relative">
-        <div class="animate-scroll flex gap-12 items-center">
+  {
+    sponsors.length > 0 && (
+      <div class="relative mt-10 overflow-hidden">
+        <div class="animate-scroll flex items-center gap-12">
           {[...sponsors, ...sponsors].map((s) => (
             <a
               href={s.data.url || '#'}
@@ -30,7 +48,7 @@ const sponsors = (await getCollection('sponsors'))
                 src={s.data.logo}
                 alt={s.data.name}
                 class:list={[
-                  'w-auto grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100',
+                  'w-auto opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0',
                   s.data.level === 'principal' ? 'h-16' : 'h-12',
                 ]}
                 loading="lazy"
@@ -40,15 +58,13 @@ const sponsors = (await getCollection('sponsors'))
           ))}
         </div>
       </div>
-    )}
+    )
+  }
 
-    <div class="mt-10 text-center">
-      <Button href="/contacto?asunto=patrocinio" variant="outline">
-        Quiero ser patrocinador
-      </Button>
-    </div>
-  </div>
-</section>
+  <p class="mt-10 text-center">
+    <Button href="/patrocinadores" variant="outline">Quiero ser patrocinador</Button>
+  </p>
+</SectionShell>
 
 <style>
   @keyframes scroll {
