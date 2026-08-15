@@ -10,8 +10,8 @@ function parseHtml(html: string) {
 const items = [
   {
     label: '2010',
-    title: 'Nace el club',
-    body: 'Un grupo de familias de Yumbo convirtió las salidas de fin de semana en un proyecto formativo.',
+    title: 'De Ciclo Yumbo a Trocha y Ruta',
+    body: 'La reestructuración del antiguo Club Ciclo Yumbo da origen al club.',
     icon: 'ph:flag-bold',
   },
   {
@@ -47,13 +47,13 @@ describe('Timeline', () => {
     const entries = doc.querySelectorAll('ol > li');
     expect(entries).toHaveLength(3);
     expect(entries[0].textContent).toContain('2010');
-    expect(entries[0].textContent).toContain('Nace el club');
+    expect(entries[0].textContent).toContain('De Ciclo Yumbo a Trocha y Ruta');
   });
 
   it('titula cada hito con un h3', async () => {
     const doc = await render({ items });
     expect([...doc.querySelectorAll('ol > li h3')].map((h) => h.textContent?.trim())).toEqual([
-      'Nace el club',
+      'De Ciclo Yumbo a Trocha y Ruta',
       'Pista XCO Carlos Castro',
       'Del barrio al calendario nacional',
     ]);
