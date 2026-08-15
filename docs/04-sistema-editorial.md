@@ -141,10 +141,12 @@ WhatsApp — pero siempre algo.
 | Quiénes somos (portada + `/quienes-somos`) | ✅ Migrada |
 | Noticias (portada + `/noticias`) | ✅ Migrada |
 | Calendario (portada + `/calendario`) | ✅ Migrada |
+| Transparencia (`/transparencia`) | ✅ Migrada |
+| Patrocinadores (portada + `/patrocinadores`) | ✅ Migrada |
+| Inscripciones (`/inscripciones`) | ✅ Migrada |
 | Detalle de programa (`/programas/[slug]`) | ⬜ Pendiente |
 | Detalle de noticia (`/noticias/[slug]`) | ⬜ Pendiente |
 | Trocha Verde | ⬜ Pendiente |
-| Patrocinadores | ⬜ Pendiente |
 | Testimonios | ⬜ Pendiente |
 
 ---
@@ -228,3 +230,106 @@ Tres movimientos que conviene repetir en las páginas que faltan:
 - **No rotules lo que el contexto ya dice.** Una tarjeta bajo "Ya corrido" no
   necesita un badge que diga "Corrido"; el estado solo se rotula cuando aporta
   (en curso, cancelado).
+
+---
+
+## 9. Referencia de Transparencia
+
+- **Cada categoría explica antes de listar.** Este es el corazón de la página: los
+  documentos no son una pila de PDF con nombres burocráticos ("ECF Club Trocha y
+  Ruta 2024"), son la respuesta a una pregunta concreta de una familia. El mapa
+  `DOCUMENT_CATEGORIES` (`src/lib/transparency.ts`) fija, por categoría, una frase
+  —a qué pregunta responde—, un icono y un orden de lectura (de la pregunta más
+  amplia, la plata, a la más granular, una firma de acta). `DocumentLedger.astro`
+  pinta esa frase antes de la rejilla de fichas, nunca al revés.
+- **Las cifras se derivan, nunca se escriben.** `summarizeDocuments()` calcula el
+  total, las categorías presentes, la vigencia más reciente (`anio` máximo,
+  ignorando `null`) y cuántos años distintos de estados financieros están
+  publicados. Sin documentos con año, esos campos quedan en `null` y la página
+  omite el `StatFigure` correspondiente — mismo contrato que `summarizePrograms()`
+  o `summarizeNews()`.
+- **El peso real se lee del disco en build, no en la librería.** `transparency.ts`
+  se queda puro (igual que `calendar.ts` o `programs.ts`): ni importa el JSON ni
+  toca `node:fs`. La página (`src/pages/transparencia/index.astro`) hace el
+  `statSync` en su frontmatter —Astro corre en Node durante el build— y solo le
+  pasa el número de bytes a `formatFileSize()`. Si un archivo no aparece bajo
+  `public/`, el `try/catch` local deja `sizeLabel` en `null` y la ficha omite el
+  peso en vez de romper el build. `formatFileSize()` usa base 1024 (KB/MB, como
+  el resto de herramientas de archivos) con coma como separador decimal en el
+  tramo de MB — el peso real del club va de 38 KB a ~14,8 MB, un contraste que
+  vale la pena mostrar tal cual, sin inventar una cifra más "redonda".
+- **Una categoría que el JSON no conoce no desaparece.** Si `categoria` trae un
+  valor fuera de las cinco definidas, `getCategoryProfile()` cae en
+  `FALLBACK_CATEGORY` (al final del orden de lectura) en vez de perder el
+  documento silenciosamente. `groupByCategory()` es genérica sobre el tipo de
+  documento para poder recibirlo con o sin `sizeLabel` ya resuelto.
+- **El catálogo de analytics es cerrado: se preserva, no se reinterpreta.** Cada
+  ficha conserva `data-analytics-event="transparencia_pdf_download"` y
+  `data-analytics-pdf-name` exactamente como los lee `Analytics.astro`, más
+  `download` y un `aria-label` que ahora incluye el tipo de archivo y el peso
+  cuando se conoce.
+
+---
+
+## 10. Referencia de Patrocinadores
+
+- **La evidencia pesa más que el adjetivo.** Un patrocinador no necesita que
+  le digan "impulsamos el deporte juvenil": necesita saber dónde aparece su
+  marca. `summarizeEvidence()` (`@lib/sponsors`) traduce tres collections
+  ajenas a los sponsors —`events`, `news`, `trees`— en las cifras que
+  responden esa pregunta: cuántas fechas corre el equipo en la temporada,
+  cuántas crónicas se publican y cuántos árboles lleva sembrados Trocha
+  Verde. Reutiliza `buildSeason()` de `@lib/calendar` para lo primero en vez
+  de recalcular qué año es la temporada en curso.
+- **La antigüedad es la prueba de permanencia que no se estaba mostrando.**
+  `startDate` existía en el schema y en cada `.md` desde el principio, pero
+  ninguna página lo leía. `sponsorSince()` lo convierte en "Con el club desde
+  2020"; sin el dato, la tarjeta omite la antigüedad en vez de inventarla.
+- **Los niveles son una progresión, no cuatro cajas iguales.**
+  `SPONSOR_LEVELS` centraliza etiqueta (singular y plural), icono, jerarquía
+  visual (`order`) y beneficios de cada nivel —los mismos beneficios que ya
+  estaban redactados, nunca inventados de nuevo— y `SponsorshipTiers.astro`
+  los pinta como una escalera que crece de proveedor a principal, igual que
+  `ProgramPathway` convirtió tres programas sueltos en una ruta encadenada.
+  El nivel principal cierra la fila y lleva el tratamiento visual más
+  fuerte: es el que debe mandar sobre los demás.
+- **Los aliados actuales se arman con dos reglas, no con lógica suelta en la
+  plantilla.** `isPublishableSponsor()` es el filtro de publicación (sin
+  `draft`, activo, sin logo placeholder) que antes vivía duplicado en
+  `SponsorsBar` y en la página; `groupByLevel()` agrupa lo que pasa ese
+  filtro en el orden jerárquico de `SPONSOR_LEVEL_ORDER` y omite el nivel que
+  nadie ocupa —hoy no hay ningún `proveedor` real— en vez de dejar un
+  encabezado de grupo sin tarjetas debajo.
+- **Los logos son proporciones dispares, igual que los afiches de
+  noticias.** Van en `object-contain` dentro de una caja de alto fijo y en
+  posición absoluta, para que un logo vertical no estire la tarjeta hasta su
+  tamaño natural.
+
+---
+
+## 11. Referencia de Inscripciones
+
+- **El proceso como recorrido, no como aviso suelto.** La página traía una sola advertencia
+  ("esto no es una inscripción confirmada") sin decir qué seguía ni cuánto demoraba.
+  `EnrollmentSteps` envuelve `Timeline` y numera cada hito por su posición en
+  `ENROLLMENT_STEPS` (`src/lib/enrollment.ts`), igual que la ruta de programas numera sus
+  etapas: si se reordena un paso, la numeración visible y las referencias cruzadas ("es el
+  paso 3 del proceso") se recalculan solas en vez de quedar sueltas en el texto.
+- **La ruta de edades usa el mismo filtro que el formulario.** `ProgramPathway` ya resolvía
+  "¿cuál le corresponde a mi hijo?" en `/programas`; aquí se alimenta con el mismo predicado
+  (`!draft && active && enrollmentOpen`) que arma la lista de programas de `InscriptionForm`.
+  Dibujar la regla de edades con un criterio distinto al que usa el paso 1 del formulario
+  habría mostrado un programa que después no aparece como opción para elegir.
+- **No todo dato "real" sale de una collection.** No hay ficha de contenido para "el seguro
+  deportivo": es información fija que el club publica y que antes estaba dispersa en dos
+  cajas de texto. `src/lib/enrollment.ts` la deja en constantes tipadas (`ENROLLMENT_POLICY`,
+  `ENROLLMENT_DOCUMENTS`, `ENROLLMENT_STEPS`), con el mismo patrón que `EVENT_CATEGORIES` en
+  `calendar.ts` o `LEVEL_STYLES` en `programs.ts`. La cobertura que no trae un tope en pesos
+  ("Ambulancia para eventos") se marca como "Incluida en la póliza" en vez de inventarle un
+  monto.
+- **El FAQPage JSON-LD tiene que pintarse.** Las preguntas del `schema.org/FAQPage` no
+  aparecían en ningún lado de la página; Google penaliza ese desacople. Ahora el mismo array
+  `faqs` alimenta `generateFAQPageJsonLd()` y `FaqAccordion` (el mismo componente que ya usa
+  `/preguntas-frecuentes`), así que lo que el buscador indexa es lo que la familia lee. Dos de
+  las cinco respuestas (edad mínima, costo) interpolan el mismo dato que se ve en la ruta de
+  edades y en la póliza — una sola fuente, no una cifra copiada dos veces.
