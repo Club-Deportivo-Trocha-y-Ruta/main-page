@@ -95,38 +95,47 @@ describe('EventCard', () => {
 
   // ─── Badges de categoría y estado ────────────────────────
 
-  it('renderiza un badge con la etiqueta de categoría', async () => {
+  it('renderiza la sigla de la disciplina, no el valor crudo del schema', async () => {
     const html = await container.renderToString(EventCard, {
       props: baseProps,
     });
-    // getCategoryLabel('xco') → 'xco' (fallback al valor raw — el mapa es solo para categorías de corredor)
     const doc = parseHtml(html);
     const spans = Array.from(doc.querySelectorAll('span'));
-    expect(spans.some((s) => s.textContent?.trim() === 'xco')).toBe(true);
+    expect(spans.some((s) => s.textContent?.trim() === 'XCO')).toBe(true);
+    // Antes se pasaba por getCategoryLabel(), que traduce categorías de
+    // corredores, y las de evento salían en minúscula tal cual.
+    expect(spans.some((s) => s.textContent?.trim() === 'xco')).toBe(false);
   });
 
-  it('renderiza un badge con la etiqueta de estado "upcoming"', async () => {
+  it('renderiza el nivel del evento cuando viene', async () => {
     const html = await container.renderToString(EventCard, {
-      props: { ...baseProps, status: 'upcoming' },
+      props: { ...baseProps, level: 'nacional' },
     });
-    // getEventStatusLabel('upcoming') → 'Proximo' (sin tilde en la implementación)
-    expect(html).toContain('Proximo');
+    expect(html).toContain('Nacional');
   });
 
-  it('renderiza la etiqueta de estado "past" correctamente', async () => {
-    const html = await container.renderToString(EventCard, {
-      props: { ...baseProps, status: 'past' },
+  it('no rotula el estado cuando la sección ya lo dice', async () => {
+    // Un "Próximo" en la lista de próximos o un "Corrido" en la de corridos es
+    // ruido: el titular de la sección ya lo dijo.
+    for (const status of ['upcoming', 'past']) {
+      const html = await container.renderToString(EventCard, {
+        props: { ...baseProps, status },
+      });
+      expect(html).not.toContain('Próximo');
+      expect(html).not.toContain('Corrido');
+    }
+  });
+
+  it('sí rotula el estado cuando no se puede deducir del contexto', async () => {
+    const enCurso = await container.renderToString(EventCard, {
+      props: { ...baseProps, status: 'ongoing' },
     });
-    // getEventStatusLabel('past') → 'Pasado'
-    expect(html).toContain('Pasado');
-  });
+    expect(enCurso).toContain('En curso');
 
-  it('renderiza la etiqueta de estado "cancelled" correctamente', async () => {
-    const html = await container.renderToString(EventCard, {
+    const cancelado = await container.renderToString(EventCard, {
       props: { ...baseProps, status: 'cancelled' },
     });
-    // getEventStatusLabel('cancelled') → 'Cancelado'
-    expect(html).toContain('Cancelado');
+    expect(cancelado).toContain('Cancelado');
   });
 
   // ─── Clases de la tarjeta ─────────────────────────────────
@@ -143,11 +152,15 @@ describe('EventCard', () => {
 
   // ─── Categorías múltiples ─────────────────────────────────
 
-  it('maneja la categoría xcm (fallback al valor raw cuando no está en el mapa)', async () => {
-    const html = await container.renderToString(EventCard, {
+  it('traduce también las demás disciplinas', async () => {
+    const xcm = await container.renderToString(EventCard, {
       props: { ...baseProps, category: 'xcm' },
     });
-    // getCategoryLabel('xcm') → 'xcm' (no está en el mapa, se devuelve el valor raw)
-    expect(html).toContain('xcm');
+    expect(xcm).toContain('XCM');
+
+    const ruta = await container.renderToString(EventCard, {
+      props: { ...baseProps, category: 'ruta' },
+    });
+    expect(ruta).toContain('Ruta');
   });
 });

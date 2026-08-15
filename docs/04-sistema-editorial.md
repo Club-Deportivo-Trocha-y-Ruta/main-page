@@ -90,6 +90,9 @@ Ilustraciones disponibles en `src/lib/editorial.ts`:
   pariente vertical del perfil: sirve para historias y secuencias con fecha.
 - `groupByMonth()` (`src/lib/news.ts`) — parte una colección con fecha en meses
   rotulados. Sirve para cualquier archivo que crezca con el tiempo.
+- `SeasonTrack.astro` + `buildSeason()` — riel horizontal con una parada por
+  fecha y la barra llena hasta donde va el año. Sirve para cualquier secuencia
+  con un "vas aquí".
 
 El SVG se estira con `preserveAspectRatio="none"`, así que **dentro del SVG no va texto ni
 círculos**: los marcadores se dibujan en HTML encima del recuadro.
@@ -137,10 +140,10 @@ WhatsApp — pero siempre algo.
 | Programas (portada + `/programas`) | ✅ Migrada — referencia del sistema |
 | Quiénes somos (portada + `/quienes-somos`) | ✅ Migrada |
 | Noticias (portada + `/noticias`) | ✅ Migrada |
+| Calendario (portada + `/calendario`) | ✅ Migrada |
 | Detalle de programa (`/programas/[slug]`) | ⬜ Pendiente |
 | Detalle de noticia (`/noticias/[slug]`) | ⬜ Pendiente |
 | Trocha Verde | ⬜ Pendiente |
-| Calendario | ⬜ Pendiente |
 | Patrocinadores | ⬜ Pendiente |
 | Testimonios | ⬜ Pendiente |
 
@@ -162,12 +165,17 @@ Lo que hace de referencia, para copiar el patrón:
 - **`summary`** (frontmatter) — la promesa de cada programa, editable desde Sveltia. Antes
   vivía como un objeto literal dentro de `ProgramsGrid.astro`, invisible para el club.
 
-### Fechas: siempre en UTC
+### Fechas: siempre en UTC, y "hoy" en la zona del club
 
 Las fechas del frontmatter se parsean como medianoche UTC y Colombia está en
 UTC-5. Con los getters locales, una noticia del 1.º de marzo se archiva en
 febrero. Todo cálculo de mes o día usa `getUTC*` y los formateadores llevan
 `timeZone: 'UTC'` — igual que `formatDate()` en `utils.ts`.
+
+Cuando además hay que comparar con el presente, "hoy" se calcula en
+`America/Bogota` (`clubToday()`): a las 2 a.m. UTC del día de la carrera, en
+Colombia todavía es la víspera. Comparar días como texto `AAAA-MM-DD` evita
+toda la aritmética de husos.
 
 ---
 
@@ -201,3 +209,22 @@ Tres movimientos que conviene repetir en las páginas que faltan:
 - **Ninguna imagen aporta alto propio.** Las `<img>` de las tarjetas van en
   absoluto dentro de un recuadro con proporción fija; si aportaran alto, un
   afiche vertical estiraría la fila entera hasta su tamaño natural.
+
+---
+
+## 8. Referencia del Calendario
+
+- **Una temporada, no una lista de fechas.** `SeasonTrack` responde de un vistazo
+  "¿en qué punto vamos?": paradas apagadas para lo corrido, lima para la que
+  sigue y la barra llena hasta ahí. Cada parada enlaza al ancla de su fecha.
+- **El estado se deriva, no se declara.** `resolveEventStatus()` lo calcula de la
+  fecha; del frontmatter solo se respeta `cancelled`, que no se puede deducir.
+  El campo manual se quedaba viejo: un evento del sábado pasado seguía
+  anunciándose como próximo hasta que alguien editaba el archivo.
+- **Las etiquetas del schema no son texto de interfaz.** `category` trae siglas
+  (`xco`, `xcm`) y `status`, palabras en inglés. Se traducen en `@lib/calendar`.
+  Antes las categorías de evento pasaban por `getCategoryLabel()` de utils, que
+  traduce categorías de corredores, y salían crudas y en minúscula.
+- **No rotules lo que el contexto ya dice.** Una tarjeta bajo "Ya corrido" no
+  necesita un badge que diga "Corrido"; el estado solo se rotula cuando aporta
+  (en curso, cancelado).
