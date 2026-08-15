@@ -65,28 +65,29 @@
 /* === Sistema editorial === */
 /* Trazo de resaltado del titular (SectionIntro `highlight`). El texto conserva
    su propio color —el contraste no depende del trazo—, así que el lima de marca
-   puede usarse aquí aunque no cumpla AA como color de texto. */
+   puede usarse aquí aunque no cumpla AA como color de texto.
+   Va como fondo del texto y no como pseudo-elemento: con `box-decoration-break`
+   el trazo se corta y se repite en cada línea, así que sigue al titular cuando
+   la frase resaltada parte en dos. Como pseudo-elemento se estiraba a todo el
+   ancho del bloque. */
 .editorial-mark {
-  position: relative;
-  display: inline-block;
-}
-.editorial-mark > span {
-  position: relative;
-  z-index: 1;
-}
-.editorial-mark::before {
-  content: '';
-  position: absolute;
-  inset: auto -0.12em 0.04em -0.12em;
-  height: 0.34em;
-  z-index: 0;
-  background: color-mix(in srgb, var(--color-accent) 55%, transparent);
-  /* Radios desiguales: se lee como un trazo hecho a mano, no como subrayado. */
-  border-radius: 0.6em 0.2em 0.5em 0.25em;
+  background-image: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--color-accent) 55%, transparent) 0.34em,
+    transparent 0.34em
+  );
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding-inline: 0.1em;
+  border-radius: 0.12em;
 }
 /* Sobre fondo oscuro el mismo 55% se apaga: el trazo necesita más cuerpo. */
-.editorial-mark--on-dark::before {
-  background: color-mix(in srgb, var(--color-accent) 80%, transparent);
+.editorial-mark--on-dark {
+  background-image: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--color-accent) 80%, transparent) 0.34em,
+    transparent 0.34em
+  );
 }
 
 /* Escalonado del scroll-reveal dentro de una misma rejilla. */

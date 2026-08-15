@@ -79,7 +79,7 @@ const sizes: Record<string, string> = {
     {before}
     {cut >= 0 && (
       <span class:list={['editorial-mark', tokens.inverted && 'editorial-mark--on-dark']}>
-        <span>{highlight}</span>
+        {highlight}
       </span>
     )}
     {after}
