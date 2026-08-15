@@ -58,9 +58,12 @@ seo:
      [ ] Autorizaciones de imagen de cualquier corredor nuevo o debutante
          (Ley 1581 y Ley 1098).
      [ ] Datos de pista: desnivel, tipo de terreno, clima del día.
-     [ ] TABLERO DE LA GENERAL (nuevo v4): por cada corredor del club, sus
-         puntos y los del 3° de su categoría (del PDF GENERAL VI). Esos dos
-         números alimentan el gráfico; sin el segundo no se puede dibujar.
+     [ ] TABLERO DE LA GENERAL (nuevo v4): por cada corredor del club, tres
+         números del PDF GENERAL VI — sus puntos, su total antes de esta
+         válida y los puntos del 3° de su categoría. El tercero hay que
+         buscarlo en el top-3 de cada categoría; sin él la fila no se dibuja.
+         Y el movimiento de puesto (VI vs V) para el chip: subió / mantiene /
+         bajó / entra. Debe coincidir con la columna "Tendencia" de la tabla.
      [ ] Verificar todo lo marcado CONFIRMAR (viaje, vía, color local).
      [ ] Título definitivo (50-65 chars), excerpt ≤200, metaTitle/metaDescription,
          tags de protagonistas, galleryImages.
@@ -272,11 +275,31 @@ Con seis de siete disputadas, así queda Trocha y Ruta en la tabla general del *
      · --reach:40 — los puntos que quedan en juego en la final de Yumbo.
        Dibuja la zona rayada: hasta dónde PODRÍA llegar el corredor.
      · --pts — puntos acumulados del corredor (columna Total).
+     · --pts-prev — su total ANTES de esta válida (Total menos lo que sumó
+       hoy). Dibuja el tramo claro al final de la barra: se ve de un vistazo
+       cuánto creció el corredor esta fecha. Si no se declara, la barra sale
+       sólida (correcto para la primera válida del año).
      · --podio — puntos del 3° de SU categoría en la general. Es la línea
        punteada. Este dato NO está en la fila del corredor: hay que leerlo
        del top-3 de cada categoría en el PDF. Sin él la fila no se dibuja.
      · Fila con el podio ya ocupado → añadir standings-board__row--podium
        (pinta la barra en lima y resalta el meta).
+
+     MOVIMIENTO EN LA GENERAL (.standings-board__move)
+     El chip bajo el nombre dice cómo se movió respecto de la válida
+     anterior. Cuatro estados, cada uno con su modificador:
+       --up    ▲ subió al 4°        (ganó posiciones)
+       --down  ▼ bajó al 8°         (las perdió)
+       (base)  = mantiene el 5°     (sin cambio; va sin modificador)
+       --new   ★ entra a la general (primera vez que puntúa)
+     Reglas: la flecha va en un <span aria-hidden> y el VERBO en texto — el
+     color nunca es el único portador del dato, así funciona impreso en
+     blanco y negro y con lector de pantalla. Los puestos salen de comparar
+     el PDF GENERAL VI con el GENERAL V; son los mismos datos de la columna
+     "Tendencia" de la tabla de abajo, así que deben coincidir con ella.
+     Si un corredor no corrió esta válida, igual puede haber bajado porque
+     otros lo pasaron: ese caso se marca --down y se explica en "Quién se
+     movió y por qué" (le pasó a Thiago tras Palmira).
 
      LECTURA QUE HABILITA
      · Línea punteada dentro de la barra → está en zona de podio.
@@ -289,28 +312,34 @@ Con seis de siete disputadas, así queda Trocha y Ruta en la tabla general del *
      distancia al podio, o el lector de pantalla se queda sin la información.
 
      EJEMPLO CON DATOS REALES DE PALMIRA (V válida), para calibrar:
-     Isabel, 150 pts, 3ª de Prejuvenil A Fem., ya en podio →
-       <li class="standings-board__row standings-board__row--podium" style="--pts:150; --podio:139">
-     Miguel Ángel, 133 pts, 5° de Infantil A, a 13 del podio (146) →
-       <li class="standings-board__row" style="--pts:133; --podio:146">
+     Isabel, 150 pts tras sumar 27, 3ª de Prejuvenil A Fem., ya en podio →
+       <li class="standings-board__row standings-board__row--podium" style="--pts:150; --pts-prev:123; --podio:139">
+     Miguel Ángel, 133 tras sumar 33, 5° de Infantil A, subió un puesto →
+       <li class="standings-board__row" style="--pts:133; --pts-prev:100; --podio:146">
      Ojo: esos --podio son ilustrativos; los reales salen del PDF GENERAL VI. -->
 
 <ol class="standings-board" style="--board-max:240; --reach:40">
-  <li class="standings-board__row" style="--pts:0; --podio:0">
+  <li class="standings-board__row" style="--pts:0; --pts-prev:0; --podio:0">
     <span class="standings-board__label">
       <span class="standings-board__name">[PENDIENTE — corredor]</span>
-      <span class="standings-board__meta">[Categoría] · [pos.] · [pts] pts · [a X del podio / en podio]</span>
+      <span class="standings-board__meta">[Categoría] · [pos.] · [a X del podio / en podio]</span>
+      <span class="standings-board__move standings-board__move--up"><span aria-hidden="true">▲</span> subió al [X]°</span>
     </span>
     <span class="standings-board__track" aria-hidden="true">
       <span class="standings-board__reach"></span>
-      <span class="standings-board__bar">—</span>
+      <span class="standings-board__bar"><span class="standings-board__gain"></span></span>
       <span class="standings-board__podium"></span>
+    </span>
+    <span class="standings-board__total">
+      <span class="standings-board__total-value">—</span>
+      <span class="standings-board__total-gain">+— hoy</span>
     </span>
   </li>
 </ol>
 
 <p class="standings-board__legend">
-  <span><span class="standings-board__key"></span> puntos acumulados</span>
+  <span><span class="standings-board__key"></span> puntos antes de Roldanillo</span>
+  <span><span class="standings-board__key standings-board__key--gain"></span> lo que sumó hoy</span>
   <span><span class="standings-board__key standings-board__key--podium"></span> ya en zona de podio</span>
   <span><span class="standings-board__key standings-board__key--reach"></span> alcance con los 40 de la final</span>
   <span><span class="standings-board__key standings-board__key--line"></span> podio de su categoría</span>
