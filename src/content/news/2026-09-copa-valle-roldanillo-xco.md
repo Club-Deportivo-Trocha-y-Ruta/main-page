@@ -33,10 +33,11 @@ seo:
      Estado: esqueleto de producción. Se publica solo cuando el checklist
      esté completo. Protocolo completo: .claude/agents/content-marketer.md.
 
-     NOVEDADES v4 (estreno en esta crónica): .circuit-map (bloque 3b),
-     .thread en cada historia del bloque 4, .standings-board abriendo la
-     general. Los tres piden datos que antes no se recogían — están en el
-     checklist de abajo.
+     NOVEDADES v4 (estreno en esta crónica): .thread en cada historia del
+     bloque 4 y .standings-board abriendo la general. Ambos piden datos que
+     antes no se recogían — están en el checklist de abajo.
+     El tercer componente de v4, .circuit-map, queda EN RESERVA (ver bloque
+     3b): existe en global.css pero no se usa hasta tener el trazado real.
 
      CHECKLIST DEL FIN DE SEMANA DE CARRERA
      [ ] Confirmar formato: ¿un solo día (sáb 26) o dos días como Palmira?
@@ -57,11 +58,6 @@ seo:
      [ ] Autorizaciones de imagen de cualquier corredor nuevo o debutante
          (Ley 1581 y Ley 1098).
      [ ] Datos de pista: desnivel, tipo de terreno, clima del día.
-     [ ] MAPA DEL CIRCUITO (nuevo v4): esquema del trazado de 3,7 km y 4-6
-         momentos ubicados en él (dónde se rompió el grupo, dónde se pasó
-         a un rival, dónde se cayó alguien). Redibujar el `path` del SVG con
-         la forma real del Sendero Eco-parque — el que viene es un marcador.
-         Sin momentos reales el bloque se borra: un mapa decorativo no aporta.
      [ ] TABLERO DE LA GENERAL (nuevo v4): por cada corredor del club, sus
          puntos y los del 3° de su categoría (del PDF GENERAL VI). Esos dos
          números alimentan el gráfico; sin el segundo no se puede dibujar.
@@ -113,72 +109,23 @@ Roldanillo queda en el norte del Valle, a [CONFIRMAR: ~dos horas] de Yumbo por l
 
 [PENDIENTE — contexto de pista]
 
-<!-- ── BLOQUE 3b · MAPA DEL CIRCUITO (v4, nuevo) ──
-     Convierte la carrera en un lugar: el trazado con los momentos del día
-     clavados encima. Es el bloque que distingue una crónica de un boletín.
+<!-- ── BLOQUE 3b · MAPA DEL CIRCUITO — EN RESERVA ──
+     El componente `.circuit-map` existe y está probado en global.css, pero
+     NO se usa todavía: el trazado real del Sendero Eco-parque no está
+     levantado y un mapa de relleno ocupa pantalla sin decir nada.
 
-     CÓMO SE ARMA
-     1. Redibujar el `path.circuit-map__line`: el que viene es un lazo
-        genérico de relleno, NO el Sendero Eco-parque. Sirve cualquier
-        esquema a mano alzada pasado a SVG, o un trazo aproximado sobre el
-        recorrido del Strava/GPX del reconocimiento. Sistema de coordenadas:
-        viewBox 0 0 480 300. No hace falta precisión cartográfica — hace
-        falta que se reconozcan las curvas y los tramos duros.
-     2. Poner un `<g class="circuit-map__pin">` por momento, con el círculo
-        sobre el punto del trazado donde ocurrió, numerado en orden de vuelta.
-     3. Cada pin necesita su `<li>` en la leyenda, EN EL MISMO ORDEN: el
-        número se genera solo con counter(). Un momento por pin, concreto y
-        con nombre propio ("aquí Miguel Ángel pasó a Benavides en la 3ª"),
-        nunca genérico ("tramo técnico").
-     4. Actualizar el <desc> del SVG: es lo que oye un lector con lector de
-        pantalla, así que debe describir el trazado en una frase.
+     Para activarlo hace falta, primero, el material:
+     · La forma del circuito (trazo a mano alzada, croquis del organizador o
+       el GPX del reconocimiento pasado a un `path` sobre viewBox 0 0 480 300).
+     · 4-6 momentos ubicados EN el trazado, concretos y con nombre propio
+       ("aquí Miguel Ángel pasó a Benavides en la tercera vuelta"), no
+       etiquetas genéricas de terreno.
 
-     REGLA: 4-6 pins. Si solo hay dos momentos reales, el bloque se borra. -->
-
-<figure class="circuit-map">
-  <svg class="circuit-map__svg" viewBox="0 0 480 300" role="img" aria-labelledby="circuito-titulo circuito-desc">
-    <title id="circuito-titulo">Circuito de 3,7 km del Sendero Eco-parque de Roldanillo</title>
-    <desc id="circuito-desc">[PENDIENTE — descripción del trazado en una frase: forma general, tramos de subida y zonas técnicas, para quien no ve el mapa]</desc>
-
-    <!-- PENDIENTE: reemplazar este trazado de marcador por el real -->
-    <path class="circuit-map__ground" d="M 90 210 C 60 150, 110 95, 175 90 C 245 85, 265 140, 320 135 C 385 128, 425 165, 405 215 C 385 262, 300 268, 235 250 C 175 234, 120 262, 90 210 Z" />
-    <path class="circuit-map__line" d="M 90 210 C 60 150, 110 95, 175 90 C 245 85, 265 140, 320 135 C 385 128, 425 165, 405 215 C 385 262, 300 268, 235 250 C 175 234, 120 262, 90 210 Z" />
-
-    <!-- Meta / zona de salida: sobre el trazado, separada del pin 1 -->
-    <line class="circuit-map__start" x1="151" y1="230" x2="151" y2="258" />
-
-    <g class="circuit-map__pin">
-      <circle class="circuit-map__dot" cx="90" cy="210" r="13" />
-      <text class="circuit-map__num" x="90" y="210">1</text>
-    </g>
-    <g class="circuit-map__pin">
-      <circle class="circuit-map__dot" cx="175" cy="90" r="13" />
-      <text class="circuit-map__num" x="175" y="90">2</text>
-    </g>
-    <g class="circuit-map__pin">
-      <circle class="circuit-map__dot" cx="320" cy="135" r="13" />
-      <text class="circuit-map__num" x="320" y="135">3</text>
-    </g>
-    <g class="circuit-map__pin">
-      <circle class="circuit-map__dot" cx="405" cy="215" r="13" />
-      <text class="circuit-map__num" x="405" y="215">4</text>
-    </g>
-    <g class="circuit-map__pin">
-      <circle class="circuit-map__dot" cx="235" cy="250" r="13" />
-      <text class="circuit-map__num" x="235" y="250">5</text>
-    </g>
-  </svg>
-
-  <ol class="circuit-map__legend">
-    <li>[PENDIENTE — la salida: cómo se formó la parrilla y quién resolvió bien el arranque]</li>
-    <li>[PENDIENTE — momento 2]</li>
-    <li>[PENDIENTE — momento 3]</li>
-    <li>[PENDIENTE — momento 4]</li>
-    <li>[PENDIENTE — la llegada: dónde se decidió lo que se decidió]</li>
-  </ol>
-
-  <figcaption>Los 3,7 km del Sendero Eco-parque y los cinco puntos donde se movió la carrera del club. Esquema aproximado, no a escala.</figcaption>
-</figure>
+     Con eso en mano, el markup completo y las reglas están en la sección
+     "Componentes visuales de crónica" de .claude/agents/content-marketer.md,
+     y el histórico en el commit que estrenó el formato v4.
+     Misma convención que TrochaVerdeGrid: construido, documentado, sin usar
+     hasta que haya contenido que lo justifique. -->
 
 ## Lo que se jugaba
 

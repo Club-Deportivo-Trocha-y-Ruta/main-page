@@ -54,16 +54,19 @@ Evolución del protocolo tras las crónicas de Palmira (agosto 2026). Los bloque
 "cuenta corta" del bloque 8 usan los componentes visuales definidos en `src/styles/global.css`
 (ver sección "Componentes visuales de crónica").
 
-**Qué cambió en v4** (estrenado en Roldanillo, sexta válida): tres piezas nuevas que atacan
-las tres debilidades de v3 — la carrera no se veía, la temporada no se sentía y la general
-no se leía en el celular.
-- **`.circuit-map`** en el bloque 3: el trazado con los momentos del día clavados encima.
+**Qué cambió en v4** (estrenado en Roldanillo, sexta válida): dos piezas activas que atacan
+dos debilidades de v3 — la temporada no se sentía y la general no se leía en el celular.
 - **`.thread`** al abrir cada sección del bloque 4: el hilo de temporada de cada corredor
   (la pregunta con la que llegó / la respuesta que se llevó), que hasta v3 vivía en
   comentarios HTML invisibles para el lector.
 - **`.standings-board`** al abrir el bloque 8: la general como barras con la línea del
   podio y la zona alcanzable con los puntos que quedan en juego. La tabla completa pasa a
   ser respaldo de consulta debajo.
+
+**`.circuit-map` — en reserva.** El tercer componente de v4 está construido y documentado
+en `global.css`, pero **no se usa todavía**: sin el trazado real de la sede y sin momentos
+ubicados sobre él, un mapa es decoración que ocupa pantalla. Misma convención que
+`TrochaVerdeGrid`. No incluirlo en una crónica hasta tener el material de la sección 3.
 
 ### 1. Cold open (50-80 palabras)
 Abrir con **un momento concreto**, no con logística ni con el resultado plano: una imagen de la
@@ -84,9 +87,11 @@ Imagen mental del esfuerzo para el lector familiar.
 - Longitud por vuelta, desnivel aproximado, características técnicas, condiciones del día.
 - Vocabulario aceptado: sección técnica, tramo rápido, descenso, ascenso, *single track* (cursiva primera vez), berm (traducir como "peralte" primera vez), root section ("tramo de raíces"), rock garden ("tramo de piedra suelta").
 
-**Mapa del circuito (`.circuit-map`, v4)**: esquema del trazado en SVG con 4-6 puntos
-numerados donde pasó algo, y una leyenda que los narra en orden de vuelta. Convierte la
-carrera en un lugar y le da al lector dónde imaginar cada historia del bloque 4.
+**Mapa del circuito (`.circuit-map`, v4 — EN RESERVA, no usar todavía)**: esquema del
+trazado en SVG con 4-6 puntos numerados donde pasó algo, y una leyenda que los narra en
+orden de vuelta. Convierte la carrera en un lugar y le da al lector dónde imaginar cada
+historia del bloque 4. Se activa cuando exista el material de abajo — hasta entonces el
+bloque 3 va solo con texto.
 - El `path` se redibuja por válida: basta un trazo a mano alzada o el recorrido aproximado del GPX. No es cartografía, es orientación.
 - Cada pin necesita un momento **concreto y con nombre propio** ("aquí Miguel Ángel pasó a Benavides en la tercera vuelta"), nunca una etiqueta genérica ("tramo técnico").
 - El `<desc>` del SVG describe el trazado en una frase: es lo único que oye quien usa lector de pantalla.
@@ -158,8 +163,8 @@ Mirar adelante con calma.
 ## Componentes visuales de crónica
 
 Definidos en `src/styles/global.css` bajo `.prose`. Se escriben como HTML inline en el markdown.
-Dosis máxima por crónica: 1 stat-strip, 3 stat-callout, 2 pull-quote, 1 circuit-map,
-1 standings-board — si todo grita, nada grita. El `.thread` es la excepción: va uno por
+Dosis máxima por crónica: 1 stat-strip, 3 stat-callout, 2 pull-quote, 1 standings-board
+(y 1 circuit-map cuando salga de reserva) — si todo grita, nada grita. El `.thread` es la excepción: va uno por
 sección de corredor, porque su valor está en la repetición (el lector aprende a buscarlo).
 
 ```html
@@ -212,8 +217,10 @@ sección de corredor, porque su valor está en la repetición (el lector aprende
   <span><span class="standings-board__key standings-board__key--line"></span> podio de su categoría</span>
 </p>
 
-<!-- Mapa del circuito (v4) — bloque 3. El path se redibuja por válida;
-     la leyenda numera sola con counter(), en el mismo orden que los pins. -->
+<!-- Mapa del circuito (v4) — EN RESERVA: markup listo, sin usar hasta tener
+     el trazado real de la sede y los momentos ubicados sobre él. El path se
+     redibuja por válida; la leyenda numera sola con counter(), en el mismo
+     orden que los pins. -->
 <figure class="circuit-map">
   <svg class="circuit-map__svg" viewBox="0 0 480 300" role="img" aria-labelledby="circuito-titulo circuito-desc">
     <title id="circuito-titulo">Circuito de 3,7 km del Sendero Eco-parque</title>
