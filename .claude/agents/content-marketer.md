@@ -146,7 +146,10 @@ Nombrar a los corredores del club que no llegaron al podio sin que parezca relle
 Contar la historia del campeonato, no solo la jornada.
 - **Tablero (`.standings-board`, v4) primero**: una barra por corredor sobre una escala común (`--board-max` = 40 pts × válidas disputadas), con la línea punteada del podio de su categoría (`--podio`) y la zona rayada de lo que todavía alcanza con los puntos en juego (`--reach`). Responde de un vistazo la única pregunta de la recta final: ¿le alcanza? Si la línea cae dentro de la barra está en podio; dentro de la zona rayada, le alcanza; fuera, no le da — y la crónica lo dice sin rodeos.
 - El `--podio` **no** está en la fila del corredor: se lee del top-3 de su categoría en el PDF GENERAL. Sin ese dato la fila no se puede dibujar.
-- La pista es decorativa (`aria-hidden`): todo el dato —incluida la distancia al podio— va en el texto de `__meta`.
+- **Movimiento**: el tramo claro al final de la barra (`--pts-prev`) es lo que sumó en esta válida, y el chip `.standings-board__move` bajo el nombre dice si subió, se mantuvo, bajó o entra por primera vez. Son dos preguntas distintas —cuántos puntos ganó y cuántos puestos se movió— y conviene que estén juntas: se puede sumar bien y aun así perder posición porque un rival sumó más.
+- El chip nunca depende solo del color: la flecha da la forma (▲ ▼ = ★) y el verbo va en texto, de modo que sobrevive impreso en blanco y negro y con lector de pantalla. Debe coincidir con la columna "Tendencia" de la tabla de abajo.
+- Un corredor que **no corrió** puede igual haber bajado porque otros lo pasaron: se marca `--down` y se explica en "Quién se movió y por qué".
+- La pista es decorativa (`aria-hidden`): todo el dato —incluida la distancia al podio— va en el texto de `__meta` y del chip.
 - Debajo, la tabla completa como respaldo de consulta: Deportista | Categoría | Pos. | Tendencia | I | II | … | Total (una columna por válida disputada; agregar "Al podio" si aporta).
 - Subsección **"Quién se movió y por qué"**: párrafos cortos por corredor con movimiento o pelea viva — causa del movimiento, no solo la posición (patrón Palmira).
 - Subsección **"La cuenta corta"**: los puntos que separan a cada corredor del club de su próximo objetivo (podio, escalón, rival directo), como `.stat-strip` o lista compacta. Es el bloque que más comparte la gente: la matemática de lo que falta.
@@ -196,22 +199,31 @@ sección de corredor, porque su valor está en la repetición (el lector aprende
 
 <!-- Tablero de la general (v4) — abre el bloque 8, antes de la tabla.
      --board-max = 40 × válidas disputadas · --reach = puntos aún en juego
-     --pts = total del corredor · --podio = puntos del 3° de su categoría -->
+     --pts = total del corredor · --pts-prev = su total antes de esta válida
+     --podio = puntos del 3° de su categoría
+     El chip de movimiento: --up / --down / --new, o sin modificador para
+     "mantiene". Flecha en aria-hidden, verbo en texto. -->
 <ol class="standings-board" style="--board-max:240; --reach:40">
-  <li class="standings-board__row standings-board__row--podium" style="--pts:150; --podio:139">
+  <li class="standings-board__row standings-board__row--podium" style="--pts:150; --pts-prev:123; --podio:139">
     <span class="standings-board__label">
       <span class="standings-board__name">Isabel Quiñones</span>
-      <span class="standings-board__meta">Prejuvenil A Fem. · 3ª · 150 pts · en podio</span>
+      <span class="standings-board__meta">Prejuvenil A Fem. · 3ª · en podio</span>
+      <span class="standings-board__move"><span aria-hidden="true">=</span> mantiene el 3°</span>
     </span>
     <span class="standings-board__track" aria-hidden="true">
       <span class="standings-board__reach"></span>
-      <span class="standings-board__bar">150</span>
+      <span class="standings-board__bar"><span class="standings-board__gain"></span></span>
       <span class="standings-board__podium"></span>
+    </span>
+    <span class="standings-board__total">
+      <span class="standings-board__total-value">150</span>
+      <span class="standings-board__total-gain">+27 hoy</span>
     </span>
   </li>
 </ol>
 <p class="standings-board__legend">
-  <span><span class="standings-board__key"></span> puntos acumulados</span>
+  <span><span class="standings-board__key"></span> puntos antes de la válida</span>
+  <span><span class="standings-board__key standings-board__key--gain"></span> lo que sumó hoy</span>
   <span><span class="standings-board__key standings-board__key--podium"></span> ya en zona de podio</span>
   <span><span class="standings-board__key standings-board__key--reach"></span> alcance con los puntos en juego</span>
   <span><span class="standings-board__key standings-board__key--line"></span> podio de su categoría</span>
