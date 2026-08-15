@@ -88,6 +88,8 @@ Ilustraciones disponibles en `src/lib/editorial.ts`:
 - `TOPO_PATHS` / `TOPO_TILE` — curvas de nivel del patrón de fondo.
 - `Timeline.astro` — recorrido vertical con sendero punteado y marcadores. El
   pariente vertical del perfil: sirve para historias y secuencias con fecha.
+- `groupByMonth()` (`src/lib/news.ts`) — parte una colección con fecha en meses
+  rotulados. Sirve para cualquier archivo que crezca con el tiempo.
 
 El SVG se estira con `preserveAspectRatio="none"`, así que **dentro del SVG no va texto ni
 círculos**: los marcadores se dibujan en HTML encima del recuadro.
@@ -134,9 +136,11 @@ WhatsApp — pero siempre algo.
 |------------------|--------|
 | Programas (portada + `/programas`) | ✅ Migrada — referencia del sistema |
 | Quiénes somos (portada + `/quienes-somos`) | ✅ Migrada |
+| Noticias (portada + `/noticias`) | ✅ Migrada |
 | Detalle de programa (`/programas/[slug]`) | ⬜ Pendiente |
+| Detalle de noticia (`/noticias/[slug]`) | ⬜ Pendiente |
 | Trocha Verde | ⬜ Pendiente |
-| Noticias y calendario | ⬜ Pendiente |
+| Calendario | ⬜ Pendiente |
 | Patrocinadores | ⬜ Pendiente |
 | Testimonios | ⬜ Pendiente |
 
@@ -158,6 +162,13 @@ Lo que hace de referencia, para copiar el patrón:
 - **`summary`** (frontmatter) — la promesa de cada programa, editable desde Sveltia. Antes
   vivía como un objeto literal dentro de `ProgramsGrid.astro`, invisible para el club.
 
+### Fechas: siempre en UTC
+
+Las fechas del frontmatter se parsean como medianoche UTC y Colombia está en
+UTC-5. Con los getters locales, una noticia del 1.º de marzo se archiva en
+febrero. Todo cálculo de mes o día usa `getUTC*` y los formateadores llevan
+`timeZone: 'UTC'` — igual que `formatDate()` en `utils.ts`.
+
 ---
 
 ## 6. Referencia de Quiénes Somos
@@ -172,3 +183,21 @@ Tres movimientos que conviene repetir en las páginas que faltan:
   familia puede comprobarlo. Una afirmación sin destino es una afirmación más débil.
 - **Fotos vivas, no escogidas a mano.** La banda de comunidad sale de los últimos álbumes de
   `gallery` y la cita, de `testimonials`: la página se actualiza sola cuando el club publica.
+
+---
+
+## 7. Referencia de Noticias
+
+- **Las noticias son la crónica de la temporada**, no avisos sueltos: la página
+  abre con la última y ordena el archivo por mes, que es como se lee un año
+  deportivo. `groupByMonth()` hace el corte; el rótulo del mes queda fijo al
+  costado mientras se recorren sus crónicas.
+- **`readingTime()`** deriva los minutos del cuerpo en markdown descontando HTML
+  incrustado y URL. Devuelve `null` si no hay cuerpo, y la tarjeta omite el dato.
+- **Respetar `imageLayout`.** Las portadas suelen ser afiches verticales de la
+  válida: recortarlos a 16:9 se come el nombre de la carrera. Con `contain` la
+  tarjeta muestra el afiche completo y rellena el sobrante con el mismo archivo
+  desenfocado, que ya está en caché.
+- **Ninguna imagen aporta alto propio.** Las `<img>` de las tarjetas van en
+  absoluto dentro de un recuadro con proporción fija; si aportaran alto, un
+  afiche vertical estiraría la fila entera hasta su tamaño natural.

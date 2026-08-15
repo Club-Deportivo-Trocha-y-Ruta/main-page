@@ -1,0 +1,179 @@
+---
+/**
+ * Tarjeta de noticia, en tres tallas.
+ *
+ * `lead` es la nota que abre (foto grande al lado del texto), `default` la de
+ * la rejilla del archivo y `compact` una fila con miniatura para listas
+ * secundarias.
+ *
+ * Las portadas de las crónicas suelen ser afiches de la válida, no fotos: por
+ * eso se respeta `imageLayout`. Recortar un afiche a 16:9 se come el nombre de
+ * la carrera, así que en ese caso se muestra completo sobre un fondo hecho con
+ * el mismo archivo desenfocado.
+ */
+import { Icon } from 'astro-icon/components';
+import { formatDate } from '@lib/utils';
+import { getCategoryStyle, readingTime } from '@lib/news';
+
+interface Props {
+  href: string;
+  title: string;
+  date: Date;
+  category: string;
+  excerpt?: string;
+  image?: string;
+  imageAlt?: string;
+  imageLayout?: 'cover' | 'contain';
+  /** Cuerpo en markdown, solo para calcular el tiempo de lectura. */
+  body?: string;
+  variant?: 'lead' | 'default' | 'compact';
+  /** Nivel del titular. Baja a `h4` cuando la tarjeta cuelga de un subtítulo,
+   *  como el rótulo del mes en el archivo. */
+  as?: 'h3' | 'h4';
+  /** La primera tarjeta visible de la página carga con prioridad. */
+  eager?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  title,
+  date,
+  category,
+  excerpt,
+  image,
+  imageAlt,
+  imageLayout = 'cover',
+  body,
+  variant = 'default',
+  as: Heading = 'h3',
+  eager = false,
+  class: className,
+} = Astro.props;
+
+const style = getCategoryStyle(category);
+const minutes = readingTime(body);
+const isLead = variant === 'lead';
+const isCompact = variant === 'compact';
+
+// El afiche se muestra completo; la foto llena el recuadro. Un afiche vertical
+// dentro de una caja 16:9 deja medio recuadro vacío, así que detrás va el mismo
+// archivo recortado y desenfocado: el navegador ya lo tiene en caché y la
+// tarjeta deja de verse a medias.
+const contained = imageLayout === 'contain' && !isCompact;
+const fit = contained ? 'object-contain' : 'object-cover';
+---
+
+<article
+  class:list={[
+    'group relative overflow-hidden rounded-2xl bg-surface shadow-sm ring-1 ring-black/5',
+    'transition duration-300 hover:-translate-y-1 hover:shadow-lg',
+    isLead && 'md:grid md:grid-cols-2 md:items-stretch',
+    isCompact && 'flex gap-4 p-3',
+    className,
+  ]}
+>
+  {image ? (
+    <div
+      class:list={[
+        'relative overflow-hidden bg-surface-muted',
+        isCompact ? 'size-20 shrink-0 rounded-xl sm:size-24' : 'aspect-video',
+        isLead && 'md:aspect-auto md:h-full md:min-h-56',
+      ]}
+    >
+      {contained && (
+        <img
+          src={image}
+          alt=""
+          aria-hidden="true"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          class="absolute inset-0 size-full scale-110 object-cover blur-xl saturate-150"
+        />
+      )}
+      <!-- Ambas van en absoluto: si la imagen aportara alto propio, un afiche
+           vertical estiraría la tarjeta entera hasta su tamaño natural. -->
+      <img
+        src={image}
+        alt={imageAlt ?? ''}
+        loading={eager ? 'eager' : 'lazy'}
+        fetchpriority={eager ? 'high' : undefined}
+        decoding="async"
+        class:list={[
+          'absolute inset-0 size-full transition-transform duration-500',
+          fit,
+          !contained && 'group-hover:scale-105',
+        ]}
+      />
+    </div>
+  ) : (
+    <div
+      class:list={[
+        'flex items-center justify-center bg-surface-muted',
+        isCompact ? 'size-20 shrink-0 rounded-xl sm:size-24' : 'aspect-video',
+      ]}
+    >
+      <Icon name="ph:newspaper-bold" class="size-8 text-text-secondary/40" aria-hidden="true" />
+    </div>
+  )}
+
+  <div class:list={['flex flex-col', isCompact ? 'min-w-0 justify-center' : 'p-5', isLead && 'md:p-8']}>
+    {!isCompact && (
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span
+          class:list={[
+            'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider',
+            style.soft,
+            style.text,
+          ]}
+        >
+          <Icon name={style.icon} class="size-3.5" aria-hidden="true" />
+          {style.label}
+        </span>
+        <time datetime={date.toISOString()} class="text-xs text-text-secondary">
+          {formatDate(date)}
+        </time>
+      </div>
+    )}
+
+    <Heading
+      class:list={[
+        'font-display font-bold text-text-primary',
+        isCompact ? 'line-clamp-2 text-sm leading-snug' : 'mt-3 line-clamp-3',
+        isLead ? 'text-xl sm:text-2xl md:text-3xl' : !isCompact && 'text-lg',
+      ]}
+    >
+      <a href={href} class="after:absolute after:inset-0 hover:text-primary-deep">
+        {title}
+      </a>
+    </Heading>
+
+    {excerpt && !isCompact && (
+      <p class:list={['mt-2 text-sm leading-relaxed text-text-secondary', isLead ? 'line-clamp-4' : 'line-clamp-3']}>
+        {excerpt}
+      </p>
+    )}
+
+    {isCompact ? (
+      <time datetime={date.toISOString()} class="mt-1 block text-xs text-text-secondary">
+        {formatDate(date)}
+      </time>
+    ) : (
+      <div class="mt-4 flex items-center gap-3 pt-3 text-xs text-text-secondary">
+        {minutes !== null && (
+          <span class="inline-flex items-center gap-1.5">
+            <Icon name="ph:clock-bold" class="size-3.5 shrink-0" aria-hidden="true" />
+            {minutes} min de lectura
+          </span>
+        )}
+        <span
+          class="ml-auto inline-flex items-center gap-1 font-semibold text-primary-deep transition-all duration-200 group-hover:gap-2"
+          aria-hidden="true"
+        >
+          {isLead ? 'Leer la crónica' : 'Leer'}
+          <Icon name="ph:arrow-right-bold" class="size-3.5" />
+        </span>
+      </div>
+    )}
+  </div>
+</article>

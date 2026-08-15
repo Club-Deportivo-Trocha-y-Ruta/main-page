@@ -1,9 +1,22 @@
 ---
+/**
+ * Noticias.
+ *
+ * Las noticias del club no son avisos sueltos: son la crónica de la temporada,
+ * válida tras válida. Por eso la página abre con la última y después ordena el
+ * archivo por mes, que es como se lee una temporada.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md).
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
-import Card from '@components/common/Card.astro';
-import Badge from '@components/common/Badge.astro';
-import { formatDate } from '@lib/utils';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import NewsCard from '@components/common/NewsCard.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import { groupByMonth, summarizeNews } from '@lib/news';
 
 type NewsEntry = CollectionEntry<'news'>;
 
@@ -11,62 +24,172 @@ const news = (await getCollection('news'))
   .filter((n: NewsEntry) => !n.data.draft)
   .sort((a: NewsEntry, b: NewsEntry) => b.data.date.getTime() - a.data.date.getTime());
 
-const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
-  competencias: 'primary',
-  club: 'cyan',
-  entrenamiento: 'accent',
-  comunidad: 'neutral',
-};
+// La más reciente abre la página; el resto va al archivo por mes.
+const [latest, ...rest] = news;
+const months = groupByMonth(rest);
+const summary = summarizeNews(news);
+const competitions = summary.byCategory.find((c) => c.category === 'competencias');
 ---
 
-<PageLayout
+<BaseLayout
   title="Noticias"
-  description="Últimas novedades del Club Deportivo Trocha y Ruta"
-  breadcrumbs={[{ label: 'Noticias' }]}
+  description="Crónicas de la temporada del Club Deportivo Trocha y Ruta: resultados, competencias y jornadas de comunidad en Yumbo y el Valle del Cauca."
 >
-  {news.length > 0 ? (
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {news.map((post: NewsEntry, index: number) => (
-        <Card href={`/noticias/${post.id}`}>
-          {post.data.image ? (
-            <img
-              src={post.data.image}
-              alt={post.data.imageAlt ?? post.data.title}
-              width="800"
-              height="450"
-              class="aspect-video w-full object-cover rounded-t-xl"
-              loading={index < 3 ? 'eager' : 'lazy'}
-              fetchpriority={index === 0 ? 'high' : undefined}
-              decoding="async"
+  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="noticias-titulo">
+    <Breadcrumb items={[{ label: 'Noticias' }]} />
+
+    <div class="mt-6 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+      <SectionIntro
+        as="h1"
+        id="noticias-titulo"
+        eyebrow="Noticias"
+        eyebrowIcon="ph:newspaper-bold"
+        title="La temporada, contada carrera por carrera"
+        highlight="carrera por carrera"
+        lead="Cada válida deja algo que contar: un podio, una caída, un debut. Aquí quedan las crónicas del club, con nombres propios y resultados verificables."
+      />
+
+      {summary.total > 0 && (
+        <dl class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-2">
+          <StatFigure value={summary.total} label="Crónicas publicadas" icon="ph:newspaper-bold" />
+          {competitions && (
+            <StatFigure
+              value={competitions.count}
+              label="Competencias cubiertas"
+              icon="ph:flag-checkered-bold"
             />
-          ) : (
-            <div class="aspect-video bg-surface-muted rounded-t-xl flex items-center justify-center">
-              <span class="text-4xl text-text-secondary/30" aria-hidden="true">📰</span>
-            </div>
           )}
-          <div class="p-6">
-            <Badge variant={badgeVariant[post.data.category] ?? 'neutral'}>
-              {post.data.category}
-            </Badge>
-            <h3 class="mt-3 text-lg font-display font-bold text-text-primary line-clamp-2">
-              {post.data.title}
-            </h3>
-            <p class="mt-2 text-sm text-text-secondary line-clamp-3">
-              {post.data.excerpt}
-            </p>
-            <time
-              datetime={post.data.date.toISOString()}
-              class="mt-3 block text-xs text-text-secondary"
-            >
-              {formatDate(post.data.date)}
-            </time>
-          </div>
-        </Card>
-      ))}
+          {summary.span && (
+            <StatFigure
+              value={summary.span}
+              label="Periodo cubierto"
+              icon="ph:calendar-dots-bold"
+              size="sm"
+              class="col-span-2 sm:col-span-1 lg:col-span-2"
+            />
+          )}
+        </dl>
+      )}
     </div>
+  </SectionShell>
+
+  {latest ? (
+    <>
+      <!-- Lo último -->
+      <SectionShell tone="plain" width="wide" spacing="compact" labelledby="ultima-titulo">
+        <h2
+          id="ultima-titulo"
+          class="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-primary-deep"
+        >
+          <span class="relative flex size-2">
+            <span class="absolute inline-flex size-full rounded-full bg-accent opacity-75"></span>
+            <span class="relative inline-flex size-2 rounded-full bg-accent-dark"></span>
+          </span>
+          Lo último
+        </h2>
+
+        <NewsCard
+          class="mt-5"
+          variant="lead"
+          eager
+          href={`/noticias/${latest.id}`}
+          title={latest.data.title}
+          date={latest.data.date}
+          category={latest.data.category}
+          excerpt={latest.data.excerpt}
+          image={latest.data.image}
+          imageAlt={latest.data.imageAlt ?? latest.data.title}
+          imageLayout={latest.data.imageLayout}
+          body={latest.body}
+        />
+      </SectionShell>
+
+      <!-- Archivo por mes -->
+      {months.length > 0 && (
+        <SectionShell tone="muted" width="wide" labelledby="archivo-titulo">
+          <SectionIntro
+            id="archivo-titulo"
+            eyebrow="Archivo"
+            eyebrowIcon="ph:archive-bold"
+            title="Mes a mes, como se vivió la temporada"
+            highlight="como se vivió"
+            lead="El calendario del club se lee hacia atrás: de la última válida hasta el arranque del año."
+            class="max-w-3xl"
+          />
+
+          <div class="mt-12 space-y-14">
+            {months.map((month) => (
+              <section aria-labelledby={`mes-${month.key}`}>
+                <div class="grid gap-6 lg:grid-cols-[10rem_1fr] lg:gap-10">
+                  <div class="lg:sticky lg:top-24 lg:self-start">
+                    <h3
+                      id={`mes-${month.key}`}
+                      class="font-display text-lg font-bold text-text-primary"
+                    >
+                      {month.label}
+                    </h3>
+                    <p class="mt-1 text-xs text-text-secondary">
+                      {month.items.length} {month.items.length === 1 ? 'crónica' : 'crónicas'}
+                    </p>
+                    <div class="mt-3 h-0.5 w-12 rounded-full bg-accent" aria-hidden="true"></div>
+                  </div>
+
+                  <ul class="grid gap-6 sm:grid-cols-2">
+                    {month.items.map((post: NewsEntry, index: number) => (
+                      <li class="reveal" style={`--stagger:${Math.min(index, 3) * 70}ms`}>
+                        <NewsCard
+                          as="h4"
+                          href={`/noticias/${post.id}`}
+                          title={post.data.title}
+                          date={post.data.date}
+                          category={post.data.category}
+                          excerpt={post.data.excerpt}
+                          image={post.data.image}
+                          imageAlt={post.data.imageAlt ?? post.data.title}
+                          imageLayout={post.data.imageLayout}
+                          body={post.body}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
+            ))}
+          </div>
+        </SectionShell>
+      )}
+    </>
   ) : (
-    <p class="text-center text-text-secondary py-12">
-      No hay noticias publicadas aún.
-    </p>
+    <SectionShell tone="plain" width="default" label="Sin noticias">
+      <p class="py-12 text-center text-text-secondary">No hay noticias publicadas aún.</p>
+    </SectionShell>
   )}
-</PageLayout>
+
+  <SectionShell tone="plain" width="default" spacing="compact" label="Seguir al club">
+    <div class="rounded-2xl border border-primary/20 bg-primary/5 px-6 py-8 text-center sm:px-10">
+      <h2 class="font-display text-xl font-bold text-text-primary sm:text-2xl">
+        ¿No te quieres perder la próxima válida?
+      </h2>
+      <p class="mx-auto mt-2 max-w-xl text-text-secondary">
+        El calendario tiene las fechas de toda la temporada, y la galería, las fotos de cada
+        carrera apenas terminan.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a
+          href="/calendario"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white"
+        >
+          <Icon name="ph:calendar-dots-bold" class="size-4" aria-hidden="true" />
+          Ver el calendario
+        </a>
+        <a
+          href="/galeria"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white"
+        >
+          <Icon name="ph:images-bold" class="size-4" aria-hidden="true" />
+          Ver la galería
+        </a>
+      </div>
+    </div>
+  </SectionShell>
+</BaseLayout>

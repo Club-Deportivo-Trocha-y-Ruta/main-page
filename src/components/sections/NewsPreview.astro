@@ -1,74 +1,84 @@
 ---
+/**
+ * Últimas noticias en la portada.
+ *
+ * Portada de periódico antes que rejilla: la crónica más reciente ocupa el
+ * lugar principal y las dos anteriores quedan como titulares de apoyo. Así se
+ * entiende qué pasó el fin de semana sin abrir nada.
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
-import Card from '@components/common/Card.astro';
-import Badge from '@components/common/Badge.astro';
-import Button from '@components/common/Button.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
-import { formatDate } from '@lib/utils';
+import { Icon } from 'astro-icon/components';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import NewsCard from '@components/common/NewsCard.astro';
 
 type NewsEntry = CollectionEntry<'news'>;
 
-const allNews = (await getCollection('news'))
+const news = (await getCollection('news'))
   .filter((n: NewsEntry) => !n.data.draft)
   .sort((a: NewsEntry, b: NewsEntry) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
 
-const [featuredNews, ...otherNews] = allNews;
-
-const badgeVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
-  competencias: 'primary',
-  club: 'cyan',
-  entrenamiento: 'accent',
-  comunidad: 'neutral',
-};
+const [latest, ...previous] = news;
 ---
 
-<section class="py-20 bg-gray-50">
-  <div class="mx-auto max-w-6xl px-4">
-    <SectionTitle title="Últimas Noticias" />
+{latest && (
+  <SectionShell tone="muted" width="wide" labelledby="noticias-heading">
+    <SectionIntro
+      id="noticias-heading"
+      eyebrow="Noticias"
+      eyebrowIcon="ph:newspaper-bold"
+      title="Lo último que pasó en carrera"
+      highlight="en carrera"
+      lead="Crónicas con nombres propios: quién corrió, cómo le fue y qué sigue."
+      class="max-w-2xl"
+    />
 
-    {allNews.length > 0 && (
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {allNews.map((news: NewsEntry) => (
-          <Card href={`/noticias/${news.id}`} class="flex flex-col h-full">
-            {news.data.image ? (
-              <img
-                src={news.data.image}
-                alt={news.data.imageAlt ?? news.data.title}
-                width="800"
-                height="450"
-                class="aspect-video w-full object-cover rounded-t-xl"
-                loading="lazy"
-                decoding="async"
-              />
-            ) : (
-              <div class="aspect-video rounded-t-xl bg-surface-muted"></div>
-            )}
-            <div class="flex flex-col flex-grow p-6">
-              <div class="mb-3">
-                <Badge variant={badgeVariant[news.data.category] ?? 'neutral'}>
-                  {news.data.category}
-                </Badge>
-              </div>
-              <h3 class="font-display text-xl font-bold text-text-primary">
-                {news.data.title}
-              </h3>
-              <p class="mt-3 text-text-secondary line-clamp-3 text-sm">
-                {news.data.excerpt}
-              </p>
-              <div class="mt-auto pt-4">
-                <time class="block text-xs font-medium text-text-secondary" datetime={news.data.date.toISOString()}>
-                  {formatDate(news.data.date)}
-                </time>
-              </div>
-            </div>
-          </Card>
+    <!-- Portada de periódico: la última ocupa el ancho completo y las
+         anteriores quedan debajo. La talla `lead` reparte foto y texto en dos
+         columnas, así que necesita el ancho entero para no estirar el afiche. -->
+    <NewsCard
+      variant="lead"
+      class="reveal mt-10"
+      href={`/noticias/${latest.id}`}
+      title={latest.data.title}
+      date={latest.data.date}
+      category={latest.data.category}
+      excerpt={latest.data.excerpt}
+      image={latest.data.image}
+      imageAlt={latest.data.imageAlt ?? latest.data.title}
+      imageLayout={latest.data.imageLayout}
+      body={latest.body}
+    />
+
+    {previous.length > 0 && (
+      <ul class="mt-6 grid gap-6 sm:grid-cols-2">
+        {previous.map((post: NewsEntry, index: number) => (
+          <li class="reveal" style={`--stagger:${(index + 1) * 90}ms`}>
+            <NewsCard
+              href={`/noticias/${post.id}`}
+              title={post.data.title}
+              date={post.data.date}
+              category={post.data.category}
+              excerpt={post.data.excerpt}
+              image={post.data.image}
+              imageAlt={post.data.imageAlt ?? post.data.title}
+              imageLayout={post.data.imageLayout}
+              body={post.body}
+            />
+          </li>
         ))}
-      </div>
+      </ul>
     )}
 
-    <div class="mt-12 text-center">
-      <Button href="/noticias" variant="outline">Ver todas las noticias</Button>
-    </div>
-  </div>
-</section>
+    <p class="mt-10 text-center">
+      <a
+        href="/noticias"
+        class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white"
+      >
+        Ver todas las crónicas
+        <Icon name="ph:arrow-right-bold" class="size-4" aria-hidden="true" />
+      </a>
+    </p>
+  </SectionShell>
+)}

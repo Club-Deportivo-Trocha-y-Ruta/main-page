@@ -18,6 +18,8 @@ interface Props {
   note?: string;
   tone?: SectionTone;
   variant?: 'plain' | 'tile';
+  /** `sm` para valores que son texto ("marzo – agosto 2026") y no una cifra. */
+  size?: 'default' | 'sm';
   /** Color de la cifra. Por defecto, el teal accesible de marca. */
   accent?: string;
   class?: string;
@@ -31,6 +33,7 @@ const {
   note,
   tone = 'plain',
   variant = 'plain',
+  size = 'default',
   accent,
   class: className,
 } = Astro.props;
@@ -52,7 +55,12 @@ const valueColor = tokens.inverted ? 'text-white' : 'text-primary-deep';
       aria-hidden="true"
     />
   )}
-  <p class="font-display text-3xl font-extrabold leading-none sm:text-4xl">
+  <p
+    class:list={[
+      'font-display font-extrabold leading-none',
+      size === 'sm' ? 'text-xl sm:text-2xl' : 'text-3xl sm:text-4xl',
+    ]}
+  >
     <span class:list={[!accent && valueColor]} style={accent ? `color:${accent}` : undefined}>
       {value}
     </span>
