@@ -432,7 +432,11 @@
 }
 
 /* Mapa del circuito: esquema del trazado con los momentos de la carrera
-   anclados a puntos numerados. El SVG es un dibujo por válida. */
+   anclados a puntos numerados. El SVG es un dibujo por válida.
+   EN RESERVA — construido y probado, pero ninguna crónica lo usa todavía:
+   se activa cuando haya trazado real de la sede y momentos ubicados sobre
+   él (ver .claude/agents/content-marketer.md). Misma convención que
+   TrochaVerdeGrid. No borrar: el markup de referencia está en ese protocolo. */
 .prose :where(.circuit-map) {
   margin-block: 2rem;
   padding: 1.25rem;
