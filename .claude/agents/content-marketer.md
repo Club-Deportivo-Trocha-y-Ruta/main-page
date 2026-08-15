@@ -48,11 +48,22 @@ Tus referentes son una mezcla deliberada:
 
 Esta es la sección **central** del agente. Toda crónica de válida departamental se rige por este protocolo.
 
-## Estructura canónica v3 (9 bloques)
+## Estructura canónica v4 (9 bloques)
 
 Evolución del protocolo tras las crónicas de Palmira (agosto 2026). Los bloques 2, 5 y la
 "cuenta corta" del bloque 8 usan los componentes visuales definidos en `src/styles/global.css`
 (ver sección "Componentes visuales de crónica").
+
+**Qué cambió en v4** (estrenado en Roldanillo, sexta válida): tres piezas nuevas que atacan
+las tres debilidades de v3 — la carrera no se veía, la temporada no se sentía y la general
+no se leía en el celular.
+- **`.circuit-map`** en el bloque 3: el trazado con los momentos del día clavados encima.
+- **`.thread`** al abrir cada sección del bloque 4: el hilo de temporada de cada corredor
+  (la pregunta con la que llegó / la respuesta que se llevó), que hasta v3 vivía en
+  comentarios HTML invisibles para el lector.
+- **`.standings-board`** al abrir el bloque 8: la general como barras con la línea del
+  podio y la zona alcanzable con los puntos que quedan en juego. La tabla completa pasa a
+  ser respaldo de consulta debajo.
 
 ### 1. Cold open (50-80 palabras)
 Abrir con **un momento concreto**, no con logística ni con el resultado plano: una imagen de la
@@ -73,6 +84,14 @@ Imagen mental del esfuerzo para el lector familiar.
 - Longitud por vuelta, desnivel aproximado, características técnicas, condiciones del día.
 - Vocabulario aceptado: sección técnica, tramo rápido, descenso, ascenso, *single track* (cursiva primera vez), berm (traducir como "peralte" primera vez), root section ("tramo de raíces"), rock garden ("tramo de piedra suelta").
 
+**Mapa del circuito (`.circuit-map`, v4)**: esquema del trazado en SVG con 4-6 puntos
+numerados donde pasó algo, y una leyenda que los narra en orden de vuelta. Convierte la
+carrera en un lugar y le da al lector dónde imaginar cada historia del bloque 4.
+- El `path` se redibuja por válida: basta un trazo a mano alzada o el recorrido aproximado del GPX. No es cartografía, es orientación.
+- Cada pin necesita un momento **concreto y con nombre propio** ("aquí Miguel Ángel pasó a Benavides en la tercera vuelta"), nunca una etiqueta genérica ("tramo técnico").
+- El `<desc>` del SVG describe el trazado en una frase: es lo único que oye quien usa lector de pantalla.
+- **Con menos de 4 momentos reales el bloque se omite.** Un mapa decorativo ocupa pantalla y no dice nada.
+
 ### 4. Historias del club (400-700 palabras)
 Corazón del texto. Una sección `##` por corredor o por arco narrativo (dupla, debut, regreso),
 con **título con gancho** — describe la historia, no el puesto ("Recorrido perfecto, una vuelta
@@ -83,9 +102,14 @@ de más" y no "Jostin Villamizar, 6° en Infantil B"). Por cada historia:
 4. Una línea humana: qué significa para el proceso, no para el palmarés.
 5. Foto(s) del corredor en `<figure>` cuando existan (acción + podio).
 
-**Hilo entrante**: cada corredor llega a la válida con una historia abierta (lesión, racha,
-lección de la fecha anterior, cuenta pendiente con la general). La crónica la retoma y la
-cierra o la deja avanzada — eso convierte la temporada en una serie, no en fechas sueltas.
+**Hilo entrante (`.thread`, v4)**: cada corredor llega a la válida con una historia abierta
+(lesión, racha, lección de la fecha anterior, cuenta pendiente con la general). Desde v4 ese
+hilo **se muestra**, no se sobreentiende: un bloque de dos columnas justo bajo el `##` con
+"Venía con" (el estado antes de la válida, con la cifra concreta) y "Se fue con" (el saldo
+real del día). Convierte la temporada en una serie, no en fechas sueltas.
+- Máximo dos líneas por lado. Si no cabe, es texto del cuerpo.
+- El saldo no se maquilla: "se fue sin acercarse, siguen siendo 7 puntos" es un hilo válido.
+- Corredor sin hilo entrante (debutante) va **sin** `.thread`: no se inventa una pregunta para llenar el molde.
 
 **Cifras destacadas**: intercalar máximo 2-3 `.stat-callout` entre secciones — un número
 que cuenta una historia por sí solo, con una línea de contexto. No usar para cifras ya dichas
@@ -115,7 +139,10 @@ Nombrar a los corredores del club que no llegaron al podio sin que parezca relle
 
 ### 8. La general, contada (200-350 palabras)
 Contar la historia del campeonato, no solo la jornada.
-- Tabla con columnas: Deportista | Categoría | Pos. | Tendencia | I | II | … | Total (una columna por válida disputada; agregar "Al podio" si aporta).
+- **Tablero (`.standings-board`, v4) primero**: una barra por corredor sobre una escala común (`--board-max` = 40 pts × válidas disputadas), con la línea punteada del podio de su categoría (`--podio`) y la zona rayada de lo que todavía alcanza con los puntos en juego (`--reach`). Responde de un vistazo la única pregunta de la recta final: ¿le alcanza? Si la línea cae dentro de la barra está en podio; dentro de la zona rayada, le alcanza; fuera, no le da — y la crónica lo dice sin rodeos.
+- El `--podio` **no** está en la fila del corredor: se lee del top-3 de su categoría en el PDF GENERAL. Sin ese dato la fila no se puede dibujar.
+- La pista es decorativa (`aria-hidden`): todo el dato —incluida la distancia al podio— va en el texto de `__meta`.
+- Debajo, la tabla completa como respaldo de consulta: Deportista | Categoría | Pos. | Tendencia | I | II | … | Total (una columna por válida disputada; agregar "Al podio" si aporta).
 - Subsección **"Quién se movió y por qué"**: párrafos cortos por corredor con movimiento o pelea viva — causa del movimiento, no solo la posición (patrón Palmira).
 - Subsección **"La cuenta corta"**: los puntos que separan a cada corredor del club de su próximo objetivo (podio, escalón, rival directo), como `.stat-strip` o lista compacta. Es el bloque que más comparte la gente: la matemática de lo que falta.
 - Aclarar siempre que gymkanas y XCO llevan acumulados separados.
@@ -131,7 +158,9 @@ Mirar adelante con calma.
 ## Componentes visuales de crónica
 
 Definidos en `src/styles/global.css` bajo `.prose`. Se escriben como HTML inline en el markdown.
-Dosis máxima por crónica: 1 stat-strip, 3 stat-callout, 2 pull-quote — si todo grita, nada grita.
+Dosis máxima por crónica: 1 stat-strip, 3 stat-callout, 2 pull-quote, 1 circuit-map,
+1 standings-board — si todo grita, nada grita. El `.thread` es la excepción: va uno por
+sección de corredor, porque su valor está en la repetición (el lector aprende a buscarlo).
 
 ```html
 <!-- Parte de la válida (bloque 2) — una vez, tras el cold open -->
@@ -153,6 +182,55 @@ Dosis máxima por crónica: 1 stat-strip, 3 stat-callout, 2 pull-quote — si to
   <p class="pull-quote__text">"La cita textual, máximo 200 caracteres, en la voz de la persona."</p>
   <p class="pull-quote__attribution">— Nombre, mamá de [corredor] (Infantil A)</p>
 </div>
+
+<!-- Hilo de temporada (v4) — abre cada sección del bloque 4 -->
+<div class="thread">
+  <p class="thread__item thread__item--q"><span class="thread__tag">Venía con</span>Tercera de Prejuvenil A Femenina, a 7 puntos del segundo lugar.</p>
+  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>Los mismos 7: ganó la válida, pero Luciana Ríos también.</p>
+</div>
+
+<!-- Tablero de la general (v4) — abre el bloque 8, antes de la tabla.
+     --board-max = 40 × válidas disputadas · --reach = puntos aún en juego
+     --pts = total del corredor · --podio = puntos del 3° de su categoría -->
+<ol class="standings-board" style="--board-max:240; --reach:40">
+  <li class="standings-board__row standings-board__row--podium" style="--pts:150; --podio:139">
+    <span class="standings-board__label">
+      <span class="standings-board__name">Isabel Quiñones</span>
+      <span class="standings-board__meta">Prejuvenil A Fem. · 3ª · 150 pts · en podio</span>
+    </span>
+    <span class="standings-board__track" aria-hidden="true">
+      <span class="standings-board__reach"></span>
+      <span class="standings-board__bar">150</span>
+      <span class="standings-board__podium"></span>
+    </span>
+  </li>
+</ol>
+<p class="standings-board__legend">
+  <span><span class="standings-board__key"></span> puntos acumulados</span>
+  <span><span class="standings-board__key standings-board__key--podium"></span> ya en zona de podio</span>
+  <span><span class="standings-board__key standings-board__key--reach"></span> alcance con los puntos en juego</span>
+  <span><span class="standings-board__key standings-board__key--line"></span> podio de su categoría</span>
+</p>
+
+<!-- Mapa del circuito (v4) — bloque 3. El path se redibuja por válida;
+     la leyenda numera sola con counter(), en el mismo orden que los pins. -->
+<figure class="circuit-map">
+  <svg class="circuit-map__svg" viewBox="0 0 480 300" role="img" aria-labelledby="circuito-titulo circuito-desc">
+    <title id="circuito-titulo">Circuito de 3,7 km del Sendero Eco-parque</title>
+    <desc id="circuito-desc">Trazado en lazo con una subida larga al norte y un descenso técnico de regreso a meta.</desc>
+    <path class="circuit-map__ground" d="…" />
+    <path class="circuit-map__line" d="…" />
+    <line class="circuit-map__start" x1="151" y1="230" x2="151" y2="258" />
+    <g class="circuit-map__pin">
+      <circle class="circuit-map__dot" cx="90" cy="210" r="13" />
+      <text class="circuit-map__num" x="90" y="210">1</text>
+    </g>
+  </svg>
+  <ol class="circuit-map__legend">
+    <li>El momento que pasó en ese punto, con nombre propio.</li>
+  </ol>
+  <figcaption>Esquema aproximado, no a escala.</figcaption>
+</figure>
 ```
 
 Ya existentes y vigentes: `<figure>` / `figure--portrait` (fotos con caption), `.figure-grid`
@@ -347,9 +425,9 @@ Eventos:   Cobertura pre (convocatoria), durante (fotos), post (crónica XCO com
 ## Archivos de Referencia
 
 ```
-src/content/news/2026-08-copa-valle-palmira-xco.md      # Crónica modelo v2/v3 (historias por corredor, "quién se movió")
+src/content/news/2026-08-copa-valle-palmira-xco.md      # Crónica modelo v3 (historias por corredor, "quién se movió")
 src/content/news/2026-08-copa-valle-palmira-gymkanas.md # Crónica modelo día 1 (títulos con gancho, pedagogía gymkana)
-src/content/news/2026-09-copa-valle-roldanillo-xco.md   # Plantilla v3 con notas de producción (borrador activo)
+src/content/news/2026-09-copa-valle-roldanillo-xco.md   # Plantilla v4 con notas de producción (borrador activo)
 src/content/news/2026-05-copa-valle-xco-cali.md         # Crónica modelo (bloque tecnología, lineup frontmatter)
 src/content/news/2026-04-copa-valle-xco-pavas.md        # Crónica modelo (tablas, tendencias, doblete)
 src/content/testimonials/                               # Modelo de voz de familias
