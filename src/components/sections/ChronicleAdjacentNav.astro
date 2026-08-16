@@ -1,0 +1,79 @@
+---
+/**
+ * La crónica anterior y la siguiente.
+ *
+ * Mismo papel que `ProgramAdjacentNav` en el detalle de programa: quien
+ * termina de leer no tiene que volver al índice para seguir. El orden es
+ * cronológico, que es como se lee una temporada — "anterior" es la fecha
+ * pasada, no la que está más arriba en el índice.
+ *
+ * `placeChronicle()` también dice en qué número va, así que la crónica queda
+ * situada en el archivo y no suelta en el aire.
+ */
+import { Icon } from 'astro-icon/components';
+import type { ChroniclePlacement } from '@lib/chronicle';
+
+interface Props {
+  placement: ChroniclePlacement;
+  class?: string;
+}
+
+const { placement, class: className } = Astro.props;
+const { previous, next, position, total } = placement;
+---
+
+{
+  (previous || next) && (
+    <nav class:list={[className]} aria-label="Crónica anterior y siguiente">
+      {position > 0 && (
+        <p class="text-center text-xs font-semibold uppercase tracking-[0.18em] text-text-secondary">
+          Crónica {position} de {total}
+        </p>
+      )}
+
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">
+        {previous ? (
+          <a
+            href={previous.href}
+            rel="prev"
+            class="group flex flex-col rounded-2xl border border-black/10 bg-surface p-4 transition duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            <span class="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+              <Icon
+                name="ph:arrow-left-bold"
+                class="size-3.5 shrink-0 transition-transform group-hover:-translate-x-0.5"
+                aria-hidden="true"
+              />
+              Anterior · {previous.when}
+            </span>
+            <span class="mt-1.5 font-display text-sm font-bold leading-snug text-text-primary group-hover:text-primary-deep">
+              {previous.title}
+            </span>
+          </a>
+        ) : (
+          <div class="hidden sm:block" aria-hidden="true"></div>
+        )}
+
+        {next && (
+          <a
+            href={next.href}
+            rel="next"
+            class="group flex flex-col rounded-2xl border border-black/10 bg-surface p-4 text-right transition duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            <span class="flex items-center justify-end gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+              Siguiente · {next.when}
+              <Icon
+                name="ph:arrow-right-bold"
+                class="size-3.5 shrink-0 transition-transform group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </span>
+            <span class="mt-1.5 font-display text-sm font-bold leading-snug text-text-primary group-hover:text-primary-deep">
+              {next.title}
+            </span>
+          </a>
+        )}
+      </div>
+    </nav>
+  )
+}

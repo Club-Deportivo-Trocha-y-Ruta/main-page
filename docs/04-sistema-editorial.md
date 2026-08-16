@@ -146,7 +146,7 @@ WhatsApp — pero siempre algo.
 | Inscripciones (`/inscripciones`) | ✅ Migrada |
 | Detalle de programa (`/programas/[slug]`) | ✅ Migrada |
 | Galería (`/galeria` + álbum) | ✅ Migrada |
-| Detalle de noticia (`/noticias/[slug]`) | ⬜ Pendiente |
+| Detalle de noticia (`/noticias/[slug]`) | ✅ Migrada |
 | Trocha Verde (portada + índice + especie + árbol) | ✅ Migrada |
 | 404 (`/404`) | ✅ Migrada |
 | Contacto (`/contacto`) | ✅ Migrada |
@@ -766,3 +766,58 @@ escritorio y pesa sobre el LCP, pero quitarlo es una decisión de producto, no
 de migración. Y ninguna edad mínima nueva en el texto: la colección `programs`
 arranca en 3 y las FAQ y `constants.ts` dicen 4, así que la portada describe la
 ruta sin zanjar la cifra.
+
+---
+
+## 20. Referencia del detalle de noticia
+
+**Qué cambió.** Una crónica del club no es una entrada de blog suelta: es un
+capítulo de la temporada. La página era "imagen + título + texto" y no decía de
+qué carrera hablaba, aunque el dato estuviera en el frontmatter — de las nueve
+crónicas publicadas, ocho declaran `relatedEvent` y ocho `relatedGallery`, y la
+plantilla no usaba ninguno de los dos.
+
+**Estructura.**
+
+| Bloque | Qué muestra |
+|--------|-------------|
+| Cabecera | Categoría con su etiqueta legible, titular, bajada, fecha, autor, minutos de lectura |
+| Ficha de la carrera | `ChronicleContext`: qué fecha cubre, dónde, modalidad, nivel |
+| Cuerpo | La crónica, con `RaceLineup` cuando hay `lineup` |
+| Fotos | `NewsGallery` + enlace al álbum, solo si el álbum existe |
+| Seguir leyendo | `ChronicleAdjacentNav`: anterior, siguiente y en qué número va |
+
+**Las relaciones que ya estaban y no se veían.** `resolveChronicleContext()`
+(`@lib/chronicle`) resuelve la cadena crónica → carrera → álbum → crónicas
+hermanas. Lo más valioso es lo último: la V válida de Palmira tiene **dos**
+crónicas —la de XCO y la de gymkanas— y ninguna sabía de la otra. Se encuentran
+cruzando las dos direcciones de la relación, reutilizando `chroniclesForEvent()`
+de `@lib/gallery`, y se descarta la crónica actual de sus propias hermanas.
+
+**La regla de los enlaces.** Ningún eslabón se convierte en URL sin comprobar
+que resuelve contra su colección. No es teórico: `2026-09-copa-valle-roldanillo-xco`
+declara un álbum que no existe. Hoy es inofensivo porque esa crónica está en
+`draft`, pero el día que se publique el enlace apuntaría a una página inexistente.
+Con la comprobación, el bloque simplemente no se pinta.
+
+**Correcciones que aparecieron por el camino.**
+
+- La categoría se pintaba con el valor crudo del enum ("competencias", en
+  minúscula y plural). Ahora usa `getCategoryStyle()` de `@lib/news`, que ya
+  tenía la etiqueta, el icono y los colores con contraste AA.
+- `readingTime()` existía en `@lib/news` y no se usaba en ninguna parte.
+- `RaceLineup` traía un `intro` por defecto escrito a mano —"10 corredores
+  representaron a Yumbo y al Club Trocha y Ruta en el selectivo nacional"— y la
+  página no le pasaba ninguno. Para la única crónica con `lineup` la frase era
+  correcta (esa fecha sí funcionaba como selectivo), pero era una constante
+  disfrazada de contenido: la habría repetido igual en cualquier crónica futura
+  con `lineup`. Ahora se deriva del número real de atletas y del nombre del
+  evento.
+- Las crónicas no tenían botones de compartir. Los había en `PostLayout`, que
+  **no lo usa ningún archivo del sitio**.
+
+**Lo que se dejó fuera.** Los `tags` no se pintan. Además de ser texto libre sin
+vocabulario controlado —el mismo motivo que en la galería—, buena parte son
+nombres de menores del club (`samuel-ortiz`, `isabel-quinones`, …). Convertirlos
+en fichas destacadas es una decisión que le corresponde al club, no a la
+plantilla, y choca con su propia política de protección infantil.

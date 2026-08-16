@@ -1,0 +1,144 @@
+---
+/**
+ * De qué carrera habla esta crónica.
+ *
+ * Nueve de las diez crónicas declaran `relatedEvent` y nueve `relatedGallery`,
+ * y la página de detalle no usaba ninguno de los dos: se leía la crónica sin
+ * saber qué fecha del calendario cubría ni que había fotos de ese mismo día.
+ *
+ * Aquí se pinta la ficha de la carrera, el enlace al álbum y —cuando existe—
+ * la otra crónica de esa misma fecha. La V válida de Palmira tiene dos: la de
+ * XCO y la de gymkanas, y hasta ahora ninguna sabía de la otra.
+ *
+ * Cada eslabón viene ya resuelto contra su colección por
+ * `resolveChronicleContext()`: si algo no existe, llega en `null` y no se
+ * pinta. Nunca se arma una URL a partir de un campo sin comprobar.
+ */
+import { Icon } from 'astro-icon/components';
+import type { ChronicleContext } from '@lib/chronicle';
+
+interface Props {
+  context: ChronicleContext;
+  class?: string;
+}
+
+const { context, class: className } = Astro.props;
+const { race, album, siblings } = context;
+
+const hasSomething = Boolean(race || album || siblings.length > 0);
+---
+
+{
+  hasSomething && (
+    <aside
+      class:list={['rounded-2xl border border-primary/15 bg-gray-50 p-5 sm:p-6', className]}
+      aria-labelledby="cronica-contexto-titulo"
+    >
+      <h2
+        id="cronica-contexto-titulo"
+        class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary-deep"
+      >
+        <Icon name="ph:flag-checkered-bold" class="size-4 shrink-0" aria-hidden="true" />
+        La carrera que se cuenta aquí
+      </h2>
+
+      {race && (
+        <>
+          <a
+            href={race.href}
+            class="group mt-4 block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            <p class="font-display text-lg font-bold leading-tight text-text-primary group-hover:text-primary-deep sm:text-xl">
+              {race.title}
+            </p>
+          </a>
+
+          <dl class="mt-4 flex flex-wrap gap-x-6 gap-y-3">
+            <div>
+              <dt class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+                Cuándo
+              </dt>
+              <dd class="mt-0.5 text-sm font-semibold text-text-primary">{race.when}</dd>
+            </div>
+            <div>
+              <dt class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+                Dónde
+              </dt>
+              <dd class="mt-0.5 text-sm font-semibold text-text-primary">{race.where}</dd>
+            </div>
+            <div>
+              <dt class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+                Modalidad
+              </dt>
+              <dd class="mt-0.5 flex items-center gap-1.5 text-sm font-semibold text-text-primary">
+                <Icon
+                  name={race.disciplineIcon}
+                  class="size-4 shrink-0 text-primary-deep"
+                  aria-hidden="true"
+                />
+                {race.discipline}
+              </dd>
+            </div>
+            {race.level && (
+              <div>
+                <dt class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+                  Nivel
+                </dt>
+                <dd class="mt-0.5 text-sm font-semibold text-text-primary">{race.level}</dd>
+              </div>
+            )}
+          </dl>
+        </>
+      )}
+
+      <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-primary/15 pt-4">
+        {race && (
+          <a
+            href={race.href}
+            class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-deep hover:underline"
+          >
+            <Icon name="ph:calendar-dots-bold" class="size-4 shrink-0" aria-hidden="true" />
+            Ver la fecha en el calendario
+          </a>
+        )}
+
+        {album && (
+          <a
+            href={album.href}
+            class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-deep hover:underline"
+          >
+            <Icon name="ph:images-bold" class="size-4 shrink-0" aria-hidden="true" />
+            Álbum completo · {album.photos}
+          </a>
+        )}
+      </div>
+
+      {siblings.length > 0 && (
+        <div class="mt-5 border-t border-primary/15 pt-4">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+            {siblings.length === 1
+              ? 'La otra crónica de esta misma fecha'
+              : 'Las otras crónicas de esta misma fecha'}
+          </p>
+          <ul class="mt-2 space-y-1.5">
+            {siblings.map((sibling) => (
+              <li>
+                <a
+                  href={sibling.href}
+                  class="group inline-flex items-start gap-1.5 text-sm font-semibold text-primary-deep hover:underline"
+                >
+                  <Icon
+                    name="ph:newspaper-bold"
+                    class="mt-0.5 size-4 shrink-0"
+                    aria-hidden="true"
+                  />
+                  {sibling.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </aside>
+  )
+}

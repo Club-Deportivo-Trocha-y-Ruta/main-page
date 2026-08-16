@@ -13,11 +13,19 @@ interface Props {
   intro?: string;
 }
 
-const {
-  athletes,
-  heading = 'El equipo en pista',
-  intro = '10 corredores representaron a Yumbo y al Club Trocha y Ruta en el selectivo nacional.',
-} = Astro.props;
+/**
+ * El `intro` por defecto era una frase fija: "10 corredores representaron a
+ * Yumbo y al Club Trocha y Ruta en el selectivo nacional". La única crónica
+ * con `lineup` es la de la IV válida Copa Valle en Cali, y la página no le
+ * pasaba `intro`, así que ese texto se publicaba sobre una carrera que no era
+ * el selectivo nacional. Ahora la frase se deriva del número real de atletas y
+ * del nombre de la carrera, que sí sale del contenido.
+ */
+const { athletes, heading = 'El equipo en pista', eventName, intro } = Astro.props;
+
+const riders = athletes?.length ?? 0;
+const who = riders === 1 ? '1 corredor del club compitió' : `${riders} corredores del club compitieron`;
+const resolvedIntro = intro ?? (eventName ? `${who} en ${eventName}.` : `${who} esta fecha.`);
 ---
 
 {athletes && athletes.length > 0 && (
@@ -32,9 +40,9 @@ const {
       >
         {heading}
       </h2>
-      {intro && (
+      {resolvedIntro && (
         <p class="mt-2 text-text-secondary max-w-2xl">
-          {intro}
+          {resolvedIntro}
         </p>
       )}
     </header>
