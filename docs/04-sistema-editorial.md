@@ -145,6 +145,7 @@ WhatsApp — pero siempre algo.
 | Patrocinadores (portada + `/patrocinadores`) | ✅ Migrada |
 | Inscripciones (`/inscripciones`) | ✅ Migrada |
 | Detalle de programa (`/programas/[slug]`) | ✅ Migrada |
+| Galería (`/galeria` + álbum) | ✅ Migrada |
 | Detalle de noticia (`/noticias/[slug]`) | ⬜ Pendiente |
 | Trocha Verde (portada + índice + especie + árbol) | ✅ Migrada |
 
@@ -531,3 +532,63 @@ Tres movimientos que conviene repetir en las páginas que faltan:
   árbol además pasa `generateBreadcrumbJsonLd()` (`@lib/seo`) por el prop
   `jsonLd` de `BaseLayout` — el mismo mecanismo que ya traía la versión
   anterior de la página, preservado a propósito en vez de reemplazado.
+
+---
+
+## 15. Referencia de Galería
+
+- **La jerarquía sale de dos señales reales, no de una elegida a dedo.**
+  `selectFeaturedAlbum()` respeta primero la curación manual del club (`featured:
+  true`, hoy solo en la V válida de Palmira) y, si ningún álbum la trae —o si hay
+  más de uno—, cae en el álbum con más fotos. Con los datos reales las dos
+  señales no coinciden: Ginebra tiene 45 fotos, el doble que cualquier otro
+  álbum, pero no está marcado destacado. Gana la curación manual, y por eso es
+  Palmira —con 27 fotos— quien abre la portada, con el resto de la temporada en
+  una rejilla secundaria detrás.
+- **El hilo álbum → evento → crónica estaba en el contenido y no se usaba en
+  ninguna dirección.** `resolveAlbumContext()` (`@lib/gallery`) resuelve
+  `relatedEvent` contra la colección `events` y cruza las dos direcciones de la
+  relación evento↔noticia —mismo patrón que ya resolvía `chroniclesOf()` en
+  `/calendario`— para reunir las crónicas publicadas de ese evento.
+  `AlbumEventContext.astro` pinta ese bloque una sola vez y lo reutilizan tanto
+  la tarjeta del álbum destacado en `/galeria` como la cabecera de cada álbum:
+  es el mismo componente, no una copia con otro nombre.
+- **Una referencia rota se omite, no se disimula ni se repara en la
+  plantilla.** El álbum más grande de los siete (Copa Valle Ginebra, 45 fotos)
+  trae `relatedEvent: "2026-copa-valle-ginebra"`, un id que no existe en la
+  colección `events` —el real es `2026-02-copa-valle-ii-ginebra`— y la noticia
+  de esa misma válida arrastra exactamente el mismo error en su propio
+  `relatedEvent`. `findEventForAlbum()` no intenta adivinar por fecha ni por
+  título: si el id no aparece, devuelve `null` y todo el bloque de contexto
+  desaparece, tanto en la portada como en el detalle del álbum, aunque el
+  evento y su crónica sí existan en el sitio bajo otro id.
+- **Cuatro categorías definidas, una sola usada — a propósito.** Los siete
+  álbumes reales son los siete `competencia`; un filtro o una agrupación por
+  categoría hoy sería una fila de un solo elemento, así que la interfaz no lo
+  ofrece. `GALLERY_CATEGORIES` (`@lib/gallery`) define igual las cuatro del
+  schema, con el mismo par de tonos teal/lima que ya usan `EVENT_CATEGORIES` y
+  `NEWS_CATEGORIES`, lista para cuando el club publique la primera jornada
+  social o de entrenamiento sin tener que tocar la plantilla.
+- **El periodo cubierto reutiliza el cálculo de "Noticias", no lo repite.**
+  `summarizeGallery()` importa `monthKey()`/`monthLabel()` de `@lib/news` para
+  el mismo criterio de "mismo mes", "mismo año" o "años distintos" que ya usa
+  `summarizeNews()` — igual que `sponsors.ts` reutiliza `buildSeason()` de
+  `calendar.ts` en vez de recalcular qué año es la temporada en curso. Con los
+  siete álbumes reales el resultado es "marzo – agosto 2026".
+- **La portada del álbum es tan dispar como los afiches de noticias, y la
+  solución es la misma.** `object-cover` dentro de una caja de alto fijo
+  (`aspect-video`) con la imagen en posición absoluta — la resolvió primero
+  `NewsCard.astro`; `AlbumCard.astro` la reutiliza en sus dos tallas (`featured`
+  y `default`) en vez de reinventarla. La insignia de conteo (`bg-black/60`) ya
+  existía en la rejilla anterior, pero escribía "N fotos" a mano y siempre en
+  plural; `photoCountLabel()` ahora distingue "1 foto" de "45 fotos".
+- **El detalle separa cifras de relaciones: `StatFigure` no lleva enlaces.**
+  La cabecera del álbum muestra fotos y fecha como `StatFigure` (el dato) y
+  reserva `AlbumEventContext` —con enlaces reales a `/calendario` y
+  `/noticias`— para lo que sí se puede seguir. El island `ImageLightbox` sigue
+  exactamente igual (`client:visible`, misma forma de `images`): como no admite
+  fecha, evento ni crónica, ese contexto se resuelve y se pinta antes de la
+  parrilla de fotos, nunca dentro del island. Los siete álbumes reales tienen el
+  cuerpo markdown vacío, así que el bloque "Notas adicionales" —nombrado igual
+  que el campo `body` en Sveltia— no se pinta hoy, pero queda listo para el día
+  en que el club escriba algo ahí.

@@ -95,7 +95,7 @@ images:
     alt: "Corredores de Trocha y Ruta en la II válida de la Copa Valle 2026 en Ginebra — foto 44 de 45"
   - src: "/images/news/copa-valle-ginebra-2026/DSC_9010.webp"
     alt: "Corredores de Trocha y Ruta en la II válida de la Copa Valle 2026 en Ginebra — foto 45 de 45"
-relatedEvent: "2026-copa-valle-ginebra"
+relatedEvent: "2026-02-copa-valle-ii-ginebra"
 category: "competencia"
 tags: ["copa-valle", "copa-valle-2026", "xco", "ginebra"]
 featured: false
