@@ -1,11 +1,47 @@
 ---
+/**
+ * Ficha de un árbol concreto de Trocha Verde.
+ *
+ * El árbol abre como protagonista —su foto, su especie (con enlace), cuánto
+ * lleva vivo desde `plantedDate`— y se respalda con lo que su contenido trae:
+ * el padrino cuando existe (el dato más humano de la ficha, 60 de 77 lo
+ * tienen), con qué protector lo cuida el club y por qué, su estado y la nota
+ * real escrita para él. Cierra con los demás árboles de su especie y cómo
+ * apadrinar el próximo.
+ *
+ * Hermana de `/trocha-verde/[species]`: mismo sistema editorial (docs/04,
+ * sección 12 — hero + contexto + datos + paso siguiente), mismos mapas y
+ * helpers de `@lib/tree-utils`.
+ */
 import { getCollection, render, type CollectionEntry } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
 import { Icon } from 'astro-icon/components';
-import { slugify, formatDate } from '@lib/utils';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import ShareButtons from '@components/common/ShareButtons.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import FactGrid from '@components/editorial/FactGrid.astro';
+import TreeCard from '@components/sections/TreeCard.astro';
+import { CONTACT } from '@lib/constants';
 import { generateBreadcrumbJsonLd } from '@lib/seo';
+import { formatDate } from '@lib/utils';
+import {
+  categoryLabels,
+  categoryColors,
+  statusLabels,
+  getProtector,
+  protectorDescription,
+  protectorStory,
+  timeSincePlanted,
+  findSpeciesForTree,
+  treesOfSpecies,
+  treeDisplayLabel,
+  speciesGrammar,
+} from '@lib/tree-utils';
 
 type Tree = CollectionEntry<'trees'>;
+type SpeciesEntry = CollectionEntry<'species'>;
 
 export async function getStaticPaths() {
   const allTrees = await getCollection('trees', (t: Tree) => !t.data.draft);
@@ -18,180 +54,276 @@ export async function getStaticPaths() {
 const { tree } = Astro.props as { tree: Tree };
 const { Content } = await render(tree);
 
-const categoryLabels: Record<string, string> = {
-  frutal: 'Frutal',
-  ornamental: 'Ornamental',
-  nativo: 'Nativo',
-  maderable: 'Maderable',
-};
-const categoryColors: Record<string, { bg: string; text: string }> = {
-  frutal: { bg: 'bg-amber-100', text: 'text-amber-700' },
-  ornamental: { bg: 'bg-purple-100', text: 'text-purple-900' },
-  nativo: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
-  maderable: { bg: 'bg-orange-100', text: 'text-orange-700' },
-};
-const statusLabels: Record<string, string> = {
-  sembrado: 'Sembrado',
-  creciendo: 'Creciendo',
-  floreciendo: 'Floreciendo',
-};
+const allSpecies = await getCollection('species', (s: SpeciesEntry) => !s.data.draft);
+const allTrees = await getCollection('trees', (t: Tree) => !t.data.draft);
 
-const catColors = categoryColors[tree.data.category] || categoryColors.nativo;
-const speciesSlug = slugify(tree.data.species);
+// La especie del árbol puede no tener ficha propia todavía (pasa con "Abano",
+// sembrado el Día de la Tierra sin species/abano.md): el enlace se omite en
+// vez de apuntar a una ruta que no existe.
+const speciesEntry = findSpeciesForTree(tree, allSpecies);
+const speciesLike = speciesEntry ?? { id: tree.id, data: { commonName: tree.data.species } };
+const speciesTrees = treesOfSpecies(allTrees, speciesLike);
+const treeLabel = treeDisplayLabel(tree, speciesTrees);
 
-const protectorLabel = tree.data.protectorColor
-  ? `Llanta ${tree.data.protectorColor}`
-  : undefined;
+const siblingTrees = speciesTrees.filter((entry) => entry.id !== tree.id);
+const SIBLING_DISPLAY_LIMIT = 6;
+const siblingsToShow = siblingTrees.slice(0, SIBLING_DISPLAY_LIMIT);
+const hiddenSiblingsCount = siblingTrees.length - siblingsToShow.length;
 
-const treeNumber = tree.id.match(/-(\d+)$/)?.[1];
-const treeLabel = treeNumber ? `${tree.data.species} ${treeNumber}` : tree.data.species;
+const grammar = speciesGrammar(speciesEntry?.data ?? { commonName: tree.data.species });
+const otherWord = grammar.article === 'las' ? 'Otras' : 'Otros';
 
-const breadcrumbs = [
+const catColors = categoryColors[tree.data.category] ?? categoryColors.nativo;
+const catLabel = categoryLabels[tree.data.category] ?? tree.data.category;
+const statusLabel = statusLabels[tree.data.status] ?? tree.data.status;
+const scientificName = tree.data.scientificName ?? speciesEntry?.data.scientificName;
+
+// Cuánto lleva vivo, no solo cuándo se sembró.
+const duration = timeSincePlanted(tree.data.plantedDate);
+const leadSentence = `Lleva ${duration.value} ${duration.unit} creciendo en la pista Carlos Castro.`;
+
+const protectorInfo = getProtector(tree.data.protector);
+const protectorText = protectorDescription(tree.data.protector, tree.data.protectorColor);
+
+const speciesUrl = speciesEntry ? `/trocha-verde/${speciesEntry.id}` : undefined;
+
+const breadcrumbItems = [
   { label: 'Trocha Verde', href: '/trocha-verde' },
-  { label: tree.data.species, href: `/trocha-verde/${speciesSlug}` },
+  speciesEntry
+    ? { label: speciesEntry.data.commonName, href: speciesUrl }
+    : { label: tree.data.species },
   { label: treeLabel },
 ];
 
 const breadcrumbJsonLd = generateBreadcrumbJsonLd([
   { name: 'Inicio', url: '/' },
   { name: 'Trocha Verde', url: '/trocha-verde' },
-  { name: tree.data.species, url: `/trocha-verde/${speciesSlug}` },
+  { name: speciesEntry?.data.commonName ?? tree.data.species, url: speciesUrl ?? '/trocha-verde' },
   { name: treeLabel, url: `/trocha-verde/arboles/${tree.id}` },
 ]);
 
-const pageTitle = `${tree.data.species} — Trocha Verde`;
-const pageDescription =
-  tree.data.notes ??
-  `Árbol de ${tree.data.species} sembrado el ${formatDate(tree.data.plantedDate)} en la Pista de Ciclomontañismo Carlos Castro, Yumbo.`;
+const pageTitle = `${treeLabel} | Trocha Verde`;
+
+const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
+  `Hola, quiero apadrinar un árbol de ${tree.data.species} en Trocha Verde`
+)}`;
 ---
 
-<PageLayout
+<BaseLayout
   title={pageTitle}
-  description={pageDescription}
+  description={tree.data.notes}
   ogImage={tree.data.image}
-  breadcrumbs={breadcrumbs}
   jsonLd={[breadcrumbJsonLd]}
 >
-  <!-- Hero árbol -->
-  <div class="relative -mt-8 mb-12 overflow-hidden rounded-2xl">
-    <img
-      src={tree.data.image}
-      alt={tree.data.imageAlt}
-      class="h-64 w-full object-cover sm:h-80"
-      loading="eager"
-      width="1200"
-      height="320"
-      fetchpriority="high"
-    />
-    <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/80 to-transparent" />
-    <div class="absolute bottom-0 left-0 p-6 sm:p-8">
-      <span
-        class={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${catColors.bg} ${catColors.text}`}
-      >
-        {categoryLabels[tree.data.category]}
-      </span>
-      <h2 class="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
-        {tree.data.species}
-      </h2>
-      {tree.data.scientificName && (
-        <p class="mt-1 text-lg italic text-emerald-200">{tree.data.scientificName}</p>
-      )}
-    </div>
-  </div>
-
-  <!-- Datos rápidos -->
-  <div
-    class="mb-12 flex flex-wrap gap-3"
-    role="region"
-    aria-label="Datos del árbol"
+  <!-- El árbol como protagonista -->
+  <SectionShell
+    tone="tinted"
+    pattern="topo"
+    width="wide"
+    spacing="compact"
+    labelledby="arbol-titulo"
   >
-    <div class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4">
-      <Icon name="ph:calendar-bold" class="h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
-      <div>
-        <p class="font-display text-sm font-bold text-text-primary">Fecha de siembra</p>
-        <p class="text-sm text-text-secondary">{formatDate(tree.data.plantedDate)}</p>
-      </div>
-    </div>
+    <Breadcrumb items={breadcrumbItems} />
 
-    {tree.data.donor && (
-      <div class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4">
-        <Icon name="ph:heart-bold" class="h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
-        <div>
-          <p class="font-display text-sm font-bold text-text-primary">Donado por</p>
-          <p class="text-sm text-text-secondary">{tree.data.donor}</p>
+    <div class="mt-6 grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
+      <SectionIntro
+        as="h1"
+        id="arbol-titulo"
+        eyebrow="Trocha Verde"
+        eyebrowIcon="ph:tree-bold"
+        title={treeLabel}
+        lead={leadSentence}
+      >
+        <div class="mt-3 flex flex-wrap items-center gap-3">
+          {speciesEntry ? (
+            <a
+              href={speciesUrl}
+              class="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary-deep transition-colors duration-200 hover:bg-primary/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-deep"
+            >
+              <Icon name="ph:tree-bold" class="size-3.5" aria-hidden="true" />
+              {speciesEntry.data.commonName}
+            </a>
+          ) : (
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-surface-muted px-3 py-1 text-sm font-medium text-text-secondary">
+              <Icon name="ph:tree-bold" class="size-3.5" aria-hidden="true" />
+              {tree.data.species}
+            </span>
+          )}
+          <span
+            class={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${catColors.bg} ${catColors.text}`}
+          >
+            {catLabel}
+          </span>
+          {scientificName && <p class="font-display text-sm italic text-text-secondary">{scientificName}</p>}
         </div>
-      </div>
-    )}
 
-    <div class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4">
-      <Icon name="ph:map-pin-bold" class="h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
-      <div>
-        <p class="font-display text-sm font-bold text-text-primary">Ubicación</p>
-        <p class="text-sm text-text-secondary">{tree.data.location}</p>
-      </div>
-    </div>
+        <FactGrid
+          class="mt-6"
+          columns={2}
+          items={[
+            { icon: 'ph:map-pin-bold', label: 'Dónde crece', value: tree.data.location },
+            { icon: 'ph:plant-bold', label: 'Estado', value: statusLabel },
+          ]}
+        />
+      </SectionIntro>
 
-    <div class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4">
-      <Icon name="ph:plant-bold" class="h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
-      <div>
-        <p class="font-display text-sm font-bold text-text-primary">Estado</p>
-        <p class="text-sm text-text-secondary">{statusLabels[tree.data.status]}</p>
-      </div>
-    </div>
-
-    {protectorLabel && (
-      <div class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4">
-        <Icon name="ph:shield-bold" class="h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
-        <div>
-          <p class="font-display text-sm font-bold text-text-primary">Protector</p>
-          <p class="text-sm text-text-secondary">{protectorLabel}</p>
-        </div>
-      </div>
-    )}
-  </div>
-
-  <!-- Contenido markdown -->
-  <div class="prose prose-emerald mb-12 max-w-none">
-    <Content />
-  </div>
-
-  <!-- CO₂ estimado -->
-  {tree.data.co2EstimateKg && (
-    <div
-      class="mb-12 flex items-start gap-4 rounded-xl border border-emerald-200 bg-emerald-50 p-6"
-      role="region"
-      aria-label={`CO₂ estimado: ${tree.data.co2EstimateKg} kg por año`}
-    >
-      <Icon
-        name="ph:leaf-bold"
-        class="mt-0.5 h-6 w-6 shrink-0 text-emerald-600"
-        aria-hidden="true"
+      <img
+        src={tree.data.image}
+        alt={tree.data.imageAlt}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        width="800"
+        height="600"
+        class="aspect-[4/3] w-full rounded-2xl object-cover shadow-md"
       />
-      <div>
-        <p class="font-display font-bold text-emerald-800">Captura de CO₂ estimada</p>
-        <p class="mt-1 text-sm leading-relaxed text-emerald-700">
-          ~{tree.data.co2EstimateKg} kg CO₂/año estimado al alcanzar su madurez
-        </p>
-      </div>
     </div>
+
+    <div class="mt-8 max-w-2xl space-y-4">
+      {tree.data.donor && (
+        <aside
+          class="flex gap-3 rounded-2xl border border-primary/15 bg-surface/70 p-5 backdrop-blur-sm sm:p-6"
+          aria-label="Padrino del árbol"
+        >
+          <Icon name="ph:heart-bold" class="mt-0.5 size-5 shrink-0 text-accent-deep" aria-hidden="true" />
+          <div>
+            <p class="font-display text-sm font-bold text-text-primary">Este árbol tiene padrino</p>
+            <p class="mt-1 text-sm leading-relaxed text-text-secondary">
+              {tree.data.donor} lo sembró para la pista Carlos Castro.
+            </p>
+          </div>
+        </aside>
+      )}
+
+      <aside
+        class="flex gap-3 rounded-2xl border border-primary/15 bg-surface/70 p-5 backdrop-blur-sm sm:p-6"
+        aria-label="Cómo se protege este árbol"
+      >
+        <Icon name={protectorInfo.icon} class="mt-0.5 size-5 shrink-0 text-primary-deep" aria-hidden="true" />
+        <div>
+          <p class="font-display text-sm font-bold text-text-primary">Cómo lo protegemos</p>
+          <p class="mt-1 text-sm leading-relaxed text-text-secondary">
+            {protectorText}. {protectorStory(tree.data.protector)}
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Cifras que respaldan el titular: cuánto lleva vivo, con qué lo cuidamos -->
+    <dl class="mt-8 grid grid-cols-1 gap-6 border-t border-primary/15 pt-8 sm:max-w-xl sm:grid-cols-2">
+      <StatFigure
+        value={duration.value}
+        unit={duration.unit}
+        label="Lleva creciendo en la pista"
+        note={`Sembrado el ${formatDate(tree.data.plantedDate)}`}
+        icon="ph:hourglass-medium-bold"
+      />
+      <StatFigure
+        value={protectorText}
+        size="sm"
+        label="Protegido con"
+        icon={protectorInfo.icon}
+      />
+    </dl>
+  </SectionShell>
+
+  <!-- Los demás árboles de su especie -->
+  {siblingsToShow.length > 0 && (
+    <SectionShell tone="muted" width="wide" labelledby="mas-arboles-titulo">
+      <SectionIntro
+        id="mas-arboles-titulo"
+        eyebrow="Misma especie"
+        eyebrowIcon="ph:tree-bold"
+        title={`${otherWord} ${grammar.plural} en la pista`}
+        lead="Cada ficha trae su propia fecha de siembra y, cuando lo hay, el nombre de quien la sembró."
+        class="max-w-2xl"
+      />
+
+      <ul class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4" role="list">
+        {siblingsToShow.map((sibling, index) => (
+          <li class="reveal" style={`--stagger:${Math.min(index, 3) * 60}ms`}>
+            <TreeCard
+              id={sibling.id}
+              label={treeDisplayLabel(sibling, speciesTrees)}
+              image={sibling.data.image}
+              imageAlt={sibling.data.imageAlt}
+              plantedDate={sibling.data.plantedDate}
+              status={sibling.data.status}
+              donor={sibling.data.donor}
+            />
+          </li>
+        ))}
+      </ul>
+
+      {hiddenSiblingsCount > 0 && speciesEntry && (
+        <p class="mt-6 text-sm text-text-secondary">
+          <a href={speciesUrl} class="font-semibold text-primary-deep hover:underline">
+            Ver {grammar.article} {speciesTrees.length} {grammar.plural} →
+          </a>
+        </p>
+      )}
+    </SectionShell>
   )}
 
-  <!-- Acciones -->
-  <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-    <a
-      href={`/trocha-verde/${speciesSlug}`}
-      class="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-emerald-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
-    >
-      Ver más sobre {tree.data.species}
-      <Icon name="ph:arrow-right-bold" class="h-4 w-4" aria-hidden="true" />
-    </a>
+  <!-- La historia de este árbol: la nota real del club + el cuerpo editorial -->
+  <SectionShell tone="plain" width="default" labelledby="sobre-titulo">
+    <SectionIntro
+      id="sobre-titulo"
+      eyebrow="Sobre este árbol"
+      eyebrowIcon="ph:notepad-bold"
+      title="Este árbol tiene su propia historia"
+      highlight="propia historia"
+      lead={tree.data.notes}
+      class="max-w-2xl"
+    />
 
-    <a
-      href="/trocha-verde"
-      class="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-white px-5 py-3 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
-    >
-      <Icon name="ph:arrow-left-bold" class="h-4 w-4" aria-hidden="true" />
-      Volver a Trocha Verde
-    </a>
-  </div>
-</PageLayout>
+    <div class="prose prose-lg mt-8 max-w-3xl">
+      <Content />
+    </div>
+
+    <div class="mt-8 max-w-3xl border-t border-black/10 pt-6">
+      <ShareButtons title={treeLabel} description={tree.data.notes} />
+    </div>
+  </SectionShell>
+
+  <!-- Paso siguiente -->
+  <SectionShell tone="muted" width="default" spacing="compact" label="Paso siguiente">
+    <div class="rounded-2xl border border-primary/20 bg-primary/5 px-6 py-8 text-center sm:px-10">
+      <h2 class="font-display text-xl font-bold text-text-primary sm:text-2xl">
+        Trocha Verde sigue creciendo
+      </h2>
+      <p class="mx-auto mt-2 max-w-xl text-text-secondary">
+        Recorre el resto de especies sembradas en la pista Carlos Castro o escríbenos si quieres
+        apadrinar el próximo árbol.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        {speciesEntry && (
+          <a
+            href={speciesUrl}
+            class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 text-sm font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-deep"
+          >
+            <Icon name="ph:arrow-left-bold" class="size-4" aria-hidden="true" />
+            Ver toda la especie
+          </a>
+        )}
+        <a
+          href="/trocha-verde"
+          class="inline-flex items-center gap-2 rounded-lg bg-primary-deep px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-deep"
+        >
+          <Icon name="ph:tree-bold" class="size-4" aria-hidden="true" />
+          Ver todo Trocha Verde
+        </a>
+        <a
+          href={whatsappApadrinar}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-analytics-event="whatsapp_click"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 text-sm font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-deep"
+        >
+          <Icon name="ph:whatsapp-logo-bold" class="size-4" aria-hidden="true" />
+          Apadrinar un árbol
+        </a>
+      </div>
+    </div>
+  </SectionShell>
+</BaseLayout>

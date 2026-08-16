@@ -91,6 +91,20 @@ export function protectorDescription(protector: string, protectorColor?: string)
   return getProtector(protector).label;
 }
 
+/**
+ * La frase que explica por qué el club protege así sus árboles: el hilo
+ * central de Trocha Verde. 76 de los 77 protectores de hoy son una llanta
+ * reciclada de entrenamiento (`llanta-bicicleta`/`llanta-moto`); los 5 que no
+ * lo son (`piedras`/`otro`) comparten una frase genérica de protección
+ * artesanal, porque ninguno de los árboles reales usa hoy `piedras`.
+ */
+export function protectorStory(protector: string): string {
+  const isTire = protector === 'llanta-bicicleta' || protector === 'llanta-moto';
+  return isTire
+    ? 'Como la mayoría de los árboles de Trocha Verde, crece protegido por una llanta que el club deja de usar en los entrenamientos: nada se compra, se reutiliza lo que ya rueda por la pista.'
+    : 'El club lo protege con un cerco artesanal hecho por las familias, con la misma filosofía de siempre: cuidar cada árbol con lo que ya se tiene a mano, sin comprar nada nuevo.';
+}
+
 export interface ProtectorTally {
   protector: string;
   count: number;

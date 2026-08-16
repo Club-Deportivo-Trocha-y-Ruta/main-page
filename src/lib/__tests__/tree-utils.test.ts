@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   getProtector,
   protectorDescription,
+  protectorStory,
   describeProtectorMix,
   daysSincePlanted,
   timeSincePlanted,
@@ -109,6 +110,22 @@ describe('describeProtectorMix', () => {
         { protector: 'llanta-moto', count: 1 },
       ])
     ).toBe('8 con llanta de bicicleta reciclada · 1 con llanta de moto reciclada');
+  });
+});
+
+describe('protectorStory', () => {
+  it('cuenta la historia de la llanta reciclada para los dos protectores de llanta', () => {
+    expect(protectorStory('llanta-bicicleta')).toContain('llanta');
+    expect(protectorStory('llanta-bicicleta')).toBe(protectorStory('llanta-moto'));
+  });
+
+  it('usa la frase genérica de protección artesanal para piedras y otro', () => {
+    expect(protectorStory('piedras')).toBe(protectorStory('otro'));
+    expect(protectorStory('piedras')).not.toContain('llanta');
+  });
+
+  it('no se cae con un protector desconocido: cae en la frase artesanal', () => {
+    expect(protectorStory('jaula-de-madera')).toBe(protectorStory('otro'));
   });
 });
 
