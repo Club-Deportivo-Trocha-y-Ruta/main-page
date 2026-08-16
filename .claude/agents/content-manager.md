@@ -35,7 +35,6 @@ Schemas Zod centralizados en `src/lib/schemas.ts`; registro de colecciones en `s
 | `news` | content (glob) | Poblada (~9) |
 | `events` | content (glob) | Poblada (~9) |
 | `programs` | content (glob) | Poblada (~3) |
-| `testimonials` | content (glob) | Poblada (~3) |
 | `sponsors` | content (glob) | Poblada (~7) |
 | `gallery` | content (glob) | Poblada (~7) |
 | `faqs` | content (glob) | Poblada (~13) |

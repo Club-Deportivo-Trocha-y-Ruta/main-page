@@ -47,7 +47,7 @@ seo:
          ánimo, anécdota. Sin esto las secciones quedan planas — no publicar
          solo con posiciones y tiempos.
      [ ] Voces: 1-2 citas textuales recogidas en sitio. Menores: con padre
-         presente y autorización (flujo de guia-recoleccion-testimonios.md).
+         presente y autorización registrada (Ley 1581 y Ley 1098).
          Si no hay cita real, el bloque se elimina.
      [ ] Autorizaciones de imagen de cualquier corredor nuevo o debutante
          (Ley 1581 y Ley 1098).

@@ -46,8 +46,6 @@
 │
 ├── /inscripciones                         (Formulario multi-paso)
 │
-├── /testimonios                           (Historias de familias y corredores)
-│
 ├── /patrocinadores                        (Sponsors por nivel)
 │
 ├── /transparencia
@@ -77,7 +75,6 @@
 | Item            | Justificacion                                     |
 |-----------------|---------------------------------------------------|
 | Galeria         | Contenido visual de soporte                       |
-| Testimonios     | Social proof, pero no es accion principal         |
 | Patrocinadores  | Relevante para sponsors, no para padres           |
 | Transparencia   | Legal/institucional, bajo trafico                 |
 | Contacto        | Siempre accesible en footer                       |
@@ -477,18 +474,6 @@ Este es el flujo critico del sitio. Un padre/madre llega (probablemente desde re
 |                  [ VER GALERIA ]                                |
 +================================================================+
 
-+================================================================+
-|                 TESTIMONIOS                                     |
-|                                                                |
-|          "Mi hijo llego timido y ahora es un lider.            |
-|           Trocha y Ruta le cambio la vida."                    |
-|                                                                |
-|              - Maria Fernanda Lopez,                           |
-|                Mama de Samuel (9 anos)                         |
-|                                                                |
-|              [ o ]  [ o ]  [*o*]  [ o ]                        |
-|                    (indicadores carrusel)                       |
-+================================================================+
 
 +================================================================+
 |                 NUESTROS PATROCINADORES                         |
@@ -789,7 +774,6 @@ La audiencia principal (padres colombianos, corredores jovenes) accede desde dis
 Los padres necesitan sentirse seguros antes de inscribir a su hijo. Elementos de confianza:
 
 - **Fotos reales** del club, entrenadores y ninos (nunca stock photos)
-- **Testimonios** de otros padres con nombre y foto real
 - **Staff visible**: fotos y credenciales de entrenadores en /quienes-somos
 - **Transparencia**: seccion con documentos legales, reconocimientos deportivos, certificaciones DIAN
 - **Contacto accesible**: WhatsApp siempre visible, telefono clickeable, formulario simple
@@ -840,7 +824,7 @@ Requisitos minimos de accesibilidad:
 | **Skeleton loading** | Imagenes, cards | Placeholder gris animado mientras carga |
 | **Scroll suave** | Anclas internas, "volver arriba" | `scroll-behavior: smooth` + boton flotante |
 | **Pull-to-refresh visual** | Mobile general | Indicador de recarga nativo |
-| **Swipe** | Galeria, testimonios | Carrusel con soporte touch/swipe |
+| **Swipe** | Galeria | Carrusel con soporte touch/swipe |
 | **Share nativo** | Noticias, eventos, perfiles | Web Share API con fallback a copiar URL |
 | **Formularios progresivos** | Inscripciones | Multi-paso con validacion por campo |
 | **Toast notifications** | Formularios enviados | Notificacion temporal de exito/error |
@@ -897,7 +881,7 @@ Despues de analizar el PROMPT-PROYECTO.md y compararlo con las mejores practicas
 - Un simple formulario de "suscribete para recibir avisos de proximas competencias" en la pagina de calendario.
 
 **10. Seccion de "Exalumnos" o "Historias de Exito"**
-- Complementaria a testimonios, enfocada en corredores que crecieron en el club y ahora compiten en categorias superiores.
+- Enfocada en corredores que crecieron en el club y ahora compiten en categorias superiores.
 
 **11. Modo oscuro**
 - No es prioridad, pero la paleta de colores ya incluye `surface.dark`. Podria implementarse como enhancement posterior.

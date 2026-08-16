@@ -17,12 +17,11 @@ Análisis del sitio actual en WordPress (Astra + Elementor): https://clubdeporti
 
 | Página Actual | Tipo de Contenido | Estado | Prioridad | Notas |
 |---|---|---|---|---|
-| Homepage (`/`) | Hero + CTA + galería miniatura + próximos eventos | **Reescribir** | Alta | Rediseñar con secciones modulares (stats, programas, equipo, testimonios, sponsors) |
+| Homepage (`/`) | Hero + CTA + galería miniatura + próximos eventos | **Reescribir** | Alta | Rediseñar con secciones modulares (stats, programas, equipo, sponsors) |
 | Quiénes Somos (`/quienes-somos-2/`) | Texto institucional básico: misión, valores, datos de contacto | **Reescribir** | Alta | Falta historia/timeline, equipo directivo, logros, reconocimientos. Expandir significativamente |
 | Programas (`/programas/`) | 4 programas listados: Escuela de Iniciación (4-8), Formación Juvenil (9-15), Alto Rendimiento (16+), Recreación y Familia | **Migrar + Expandir** | Alta | Estructura buena pero falta detalle (horarios, requisitos, metodología, equipo necesario) |
 | Inscripciones (`/inscripciones/`) | Formulario básico de registro | **Reescribir** | Alta | Implementar formulario multi-paso con validación |
 | Galería (`/galeria/`) | 10 fotos sin organización, sin álbumes, sin fechas, sin captions | **Reescribir** | Media | Reorganizar en álbumes por evento/fecha con metadatos |
-| Testimonios (`/testimonios/`) | Página existe pero contenido no visible (posible carga dinámica rota) | **Reescribir** | Media | Crear contenido nuevo con testimonios reales de familias y corredores |
 | Información Pública (`/transparencia/`) | Documentos DIAN y certificados | **Migrar** | Baja | Migrar PDFs y links existentes |
 | Contacto (`/contacto/`) | Formulario + datos de contacto | **Reescribir** | Media | Agregar mapa embebido, horarios, redes sociales |
 | **NO EXISTE** | Noticias / Blog | **Crear** | Alta | Sección completamente nueva para comunicación del club |
@@ -33,7 +32,7 @@ Análisis del sitio actual en WordPress (Astra + Elementor): https://clubdeporti
 
 ### Resumen del inventario
 - **Contenido a migrar**: ~20% (programas, transparencia)
-- **Contenido a reescribir**: ~50% (homepage, quiénes somos, galería, testimonios, contacto, inscripciones)
+- **Contenido a reescribir**: ~50% (homepage, quiénes somos, galería, contacto, inscripciones)
 - **Contenido nuevo**: ~30% (noticias, equipo, calendario, patrocinadores)
 
 ---
@@ -301,37 +300,6 @@ const programs = defineCollection({
 });
 
 // ============================================================
-// COLECCIÓN: TESTIMONIALS (Testimonios)
-// ============================================================
-const testimonials = defineCollection({
-  type: 'content',
-  schema: z.object({
-    name: z.string(),
-    role: z.enum([
-      'padre-de-familia',
-      'madre-de-familia',
-      'corredor',
-      'corredor-juvenil',
-      'exalumno',
-      'entrenador',
-      'aliado',
-    ]),
-    roleLabel: z.string(),      // Texto libre: "Padre de familia de Santiago"
-    photo: z.string().optional(),
-    quote: z.string(),           // Cita corta para cards
-    // El body del markdown es el testimonio completo
-
-    // --- Relación ---
-    relatedRider: z.string().optional(),  // slug del corredor
-    relatedProgram: z.string().optional(), // slug del programa
-
-    featured: z.boolean().default(false),
-    order: z.number().default(0),
-    draft: z.boolean().default(false),
-  }),
-});
-
-// ============================================================
 // COLECCIÓN: SPONSORS (Patrocinadores)
 // ============================================================
 const sponsors = defineCollection({
@@ -458,7 +426,6 @@ export const collections = {
   events,
   results,
   programs,
-  testimonials,
   sponsors,
   gallery,
   rutas,
@@ -492,7 +459,7 @@ export const collections = {
            └───────────────┘
 
    ┌────────────┐   ┌──────────────┐   ┌──────────────┐
-   │ directivos │   │ testimonials │   │   sponsors   │
+   │ directivos │   │   sponsors   │
    └────────────┘   └──────────────┘   └──────────────┘
                            │
                     riders / programs
@@ -504,7 +471,6 @@ export const collections = {
 - `event` → `news` (1:N) — Un evento puede generar varias noticias
 - `rider` → `results` (N:M) — Un corredor aparece en múltiples resultados
 - `rider` → `program` (N:1) — Un corredor pertenece a un programa
-- `testimonial` → `rider` / `program` (opcional) — Testimonios pueden referenciar corredores o programas
 - `gallery` → `event` (1:1) — Álbum vinculado a un evento
 - `ruta` → `program` (N:M) — Una ruta puede usarse en varios programas
 
@@ -630,7 +596,6 @@ Tags que pueden usarse en noticias, eventos y galería:
 | Galería | `/galeria` | fotos ciclomontañismo yumbo | Galería de Fotos - Club Trocha y Ruta | Galería fotográfica del Club Trocha y Ruta. Competencias, entrenamientos y momentos del club. | `CollectionPage`, `ImageGallery` |
 | Álbum Detalle | `/galeria/[slug]` | fotos {evento} ciclismo | {Título del álbum} - Galería Club Trocha y Ruta | {Descripción del álbum con evento y fecha} | `ImageGallery` |
 | Inscripciones | `/inscripciones` | inscripción escuela ciclismo yumbo | Inscripciones - Club Deportivo Trocha y Ruta | Inscribe a tu hijo en el Club Trocha y Ruta. Ciclomontañismo desde los 4 años en Yumbo, Valle del Cauca. | `WebPage` |
-| Testimonios | `/testimonios` | opiniones club ciclismo yumbo | Testimonios - Club Trocha y Ruta | Testimonios de familias y corredores del Club Trocha y Ruta. Descubre cómo el ciclismo transforma vidas. | `WebPage`, `Review` |
 | Patrocinadores | `/patrocinadores` | patrocinadores club ciclismo | Patrocinadores y Aliados - Club Trocha y Ruta | Empresas y aliados que apoyan el ciclomontañismo juvenil en Yumbo a través del Club Trocha y Ruta. | `WebPage` |
 | Transparencia | `/transparencia` | - | Transparencia e Información Pública - Club Trocha y Ruta | Documentos públicos, certificados DIAN y reconocimientos del Club Deportivo Trocha y Ruta. | `WebPage`, `GovernmentService` |
 | Contacto | `/contacto` | contacto club ciclismo yumbo | Contacto - Club Deportivo Trocha y Ruta | Contáctanos: CL 8 Norte 2 N° 55, Yumbo. Tel: 314 850 5372. Escríbenos y conoce el club. | `ContactPage`, `LocalBusiness` |
@@ -665,7 +630,6 @@ Tags que pueden usarse en noticias, eventos y galería:
 
 **Desde Programas:**
 - Link a inscripciones → `/inscripciones`
-- Link a testimonios filtrados → `/testimonios`
 - Link a corredores del programa → `/equipo?programa={slug}`
 
 ### 4.3 Datos Estructurados JSON-LD
@@ -740,7 +704,6 @@ Implementar en `src/lib/seo.ts`:
 | `riders` | 10-15 | Real (solicitar al club) | 0 | P0 - Imprescindible |
 | `news` | 5 | 3 reales + 2 de ejemplo | 2 | P1 - Importante |
 | `events` | 5 | 3 reales (calendario 2026) + 2 pasados | 0 | P1 - Importante |
-| `testimonials` | 4 | Real (solicitar al club) | 0 | P1 - Importante |
 | `gallery` | 3 álbumes | 3 reales (migrar fotos existentes) | 0 | P1 - Importante |
 | `sponsors` | 2-4 | Real (solicitar al club) | 0 | P2 - Deseable |
 | `results` | 2-3 | 2 de eventos recientes | 0 | P2 - Deseable |
@@ -759,7 +722,6 @@ Implementar en `src/lib/seo.ts`:
 | Calendario | Funcional | Mínimo 3 eventos próximos + 2 pasados |
 | Galería | Funcional | 3 álbumes con al menos 8 fotos cada uno |
 | Inscripciones | Completa | Formulario funcional conectado a Netlify Forms |
-| Testimonios | Funcional | Mínimo 4 testimonios reales |
 | Patrocinadores | Básica | Al menos 2 patrocinadores reales |
 | Transparencia | Básica | PDFs existentes migrados |
 | Contacto | Completa | Formulario + mapa + datos actualizados |
@@ -768,7 +730,7 @@ Implementar en `src/lib/seo.ts`:
 ### 5.3 Prioridad de Migración
 
 **Fase 1 (Pre-lanzamiento, semana 1-2):**
-1. Solicitar al club: fotos de corredores, datos de directivos, testimonios, logos de sponsors
+1. Solicitar al club: fotos de corredores, datos de directivos, logos de sponsors
 2. Migrar los 4 programas con contenido expandido
 3. Organizar las 10 fotos existentes en álbumes
 4. Migrar documentos de transparencia
@@ -1133,40 +1095,6 @@ collections:
           - { label: "Meta descripción", name: "metaDescription", widget: "text", required: false }
           - { label: "Imagen OG", name: "ogImage", widget: "image", required: false }
       - { label: "Descripción completa", name: "body", widget: "markdown" }
-
-  # ----------------------------------------------------------
-  # TESTIMONIOS
-  # ----------------------------------------------------------
-  - name: "testimonials"
-    label: "Testimonios"
-    label_singular: "Testimonio"
-    folder: "src/content/testimonials"
-    create: true
-    slug: "{{slug}}"
-    sortable_fields: ["name", "role"]
-    summary: "{{name}} — {{roleLabel}}"
-    fields:
-      - { label: "Nombre", name: "name", widget: "string", required: true }
-      - label: "Tipo"
-        name: "role"
-        widget: "select"
-        options:
-          - { label: "Padre de familia", value: "padre-de-familia" }
-          - { label: "Madre de familia", value: "madre-de-familia" }
-          - { label: "Corredor", value: "corredor" }
-          - { label: "Corredor juvenil", value: "corredor-juvenil" }
-          - { label: "Exalumno", value: "exalumno" }
-          - { label: "Entrenador", value: "entrenador" }
-          - { label: "Aliado", value: "aliado" }
-      - { label: "Descripción del rol", name: "roleLabel", widget: "string", required: true, hint: "Ej: Padre de familia de Santiago (8 años)" }
-      - { label: "Foto", name: "photo", widget: "image", required: false, media_folder: "/src/assets/testimonials" }
-      - { label: "Cita corta", name: "quote", widget: "text", required: true, hint: "Frase destacada para mostrar en cards" }
-      - { label: "Corredor relacionado (slug)", name: "relatedRider", widget: "string", required: false }
-      - { label: "Programa relacionado (slug)", name: "relatedProgram", widget: "string", required: false }
-      - { label: "Destacado", name: "featured", widget: "boolean", default: false }
-      - { label: "Orden", name: "order", widget: "number", default: 0 }
-      - { label: "Borrador", name: "draft", widget: "boolean", default: false }
-      - { label: "Testimonio completo", name: "body", widget: "markdown", required: false }
 
   # ----------------------------------------------------------
   # PATROCINADORES
