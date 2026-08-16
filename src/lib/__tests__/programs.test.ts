@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   countWeeklySessions,
+  parseSchedule,
+  parseScheduleDays,
   buildPathway,
   summarizePrograms,
   getAdjacentPrograms,
@@ -84,6 +86,83 @@ describe('countWeeklySessions', () => {
     expect(countWeeklySessions('Horario flexible, consultar')).toBeNull();
     expect(countWeeklySessions('')).toBeNull();
     expect(countWeeklySessions(undefined)).toBeNull();
+  });
+});
+
+// ============================================================
+// parseSchedule / parseScheduleDays
+// ============================================================
+
+describe('parseScheduleDays', () => {
+  it('devuelve los días en orden de semana, no en el que se escribieron', () => {
+    expect(parseScheduleDays('Viernes y martes 4:30 - 6:00 PM')).toEqual(['martes', 'viernes']);
+  });
+
+  it('expande el rango a los días intermedios', () => {
+    expect(parseScheduleDays('Lunes a viernes 4:00 - 6:00 PM')).toEqual([
+      'lunes',
+      'martes',
+      'miercoles',
+      'jueves',
+      'viernes',
+    ]);
+  });
+
+  it('devuelve null cuando no reconoce ningún día', () => {
+    expect(parseScheduleDays('Horario flexible, consultar')).toBeNull();
+    expect(parseScheduleDays(undefined)).toBeNull();
+  });
+});
+
+describe('parseSchedule', () => {
+  it('separa cada sesión con su hora y su aclaración', () => {
+    const segments = parseSchedule(
+      'Mar/Jue 4-6 PM (salida) · Mié 4-6 PM (gymkanas en pista) · Sáb 7-9 AM (salida) · Dom 7-10 AM (salida, +12 años)'
+    );
+
+    expect(segments).toHaveLength(4);
+    expect(segments[0]).toMatchObject({
+      days: ['martes', 'jueves'],
+      time: '4-6 PM',
+      note: 'salida',
+    });
+    expect(segments[1]).toMatchObject({ days: ['miercoles'], note: 'gymkanas en pista' });
+    expect(segments[2]).toMatchObject({ days: ['sabado'], time: '7-9 AM' });
+    // El "+12" de la aclaración no debe confundirse con la franja horaria.
+    expect(segments[3]).toMatchObject({
+      days: ['domingo'],
+      time: '7-10 AM',
+      note: 'salida, +12 años',
+    });
+  });
+
+  it('lee la franja con minutos', () => {
+    expect(parseSchedule('Martes y viernes 4:30 - 6:00 PM')[0]).toMatchObject({
+      days: ['martes', 'viernes'],
+      time: '4:30 - 6:00 PM',
+      note: null,
+    });
+  });
+
+  it('conserva el tramo aunque no se entienda ningún día', () => {
+    // Nada se descarta en silencio: la plantilla decide qué hacer con el texto.
+    const segments = parseSchedule('Horario flexible, consultar');
+    expect(segments).toHaveLength(1);
+    expect(segments[0].days).toEqual([]);
+    expect(segments[0].raw).toBe('Horario flexible, consultar');
+  });
+
+  it('devuelve una lista vacía sin horario', () => {
+    expect(parseSchedule(undefined)).toEqual([]);
+    expect(parseSchedule('')).toEqual([]);
+  });
+
+  it('no arrastra el índice del regex entre llamadas', () => {
+    // `TIME_PATTERN` y `NOTE_PATTERN` se reutilizan: si llevaran la bandera /g,
+    // la segunda llamada empezaría a buscar donde terminó la primera.
+    const once = parseSchedule('Lunes 4-6 PM (pista)');
+    const twice = parseSchedule('Lunes 4-6 PM (pista)');
+    expect(twice).toEqual(once);
   });
 });
 

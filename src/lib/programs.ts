@@ -85,12 +85,44 @@ export function getLevelStyle(level: string): LevelStyle {
   return LEVEL_STYLES[level as ProgramLevel] ?? LEVEL_STYLES['iniciación'];
 }
 
-// ─── Sesiones por semana ──────────────────────────────────────────────────────
+// ─── Horario semanal ──────────────────────────────────────────────────────────
 
 const WEEK = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'] as const;
 
+export type WeekDay = (typeof WEEK)[number];
+
+/** La semana en orden de lectura, de lunes a domingo. */
+export const WEEK_DAYS: readonly WeekDay[] = WEEK;
+
+export interface DayLabel {
+  /** Nombre completo, con tilde: "Miércoles". */
+  label: string;
+  /** Abreviatura para columnas estrechas: "Mié". */
+  short: string;
+  /**
+   * Inicial para la vista más compacta. La X de miércoles es la convención
+   * española para no confundirlo con martes.
+   */
+  initial: string;
+}
+
+/**
+ * Los nombres de los días viven junto al vocabulario que los parsea, no en cada
+ * plantilla: `WEEK` va sin tildes porque el parseo normaliza, pero lo que se lee
+ * en pantalla sí las lleva.
+ */
+export const WEEK_DAY_LABELS: Record<WeekDay, DayLabel> = {
+  lunes: { label: 'Lunes', short: 'Lun', initial: 'L' },
+  martes: { label: 'Martes', short: 'Mar', initial: 'M' },
+  miercoles: { label: 'Miércoles', short: 'Mié', initial: 'X' },
+  jueves: { label: 'Jueves', short: 'Jue', initial: 'J' },
+  viernes: { label: 'Viernes', short: 'Vie', initial: 'V' },
+  sabado: { label: 'Sábado', short: 'Sáb', initial: 'S' },
+  domingo: { label: 'Domingo', short: 'Dom', initial: 'D' },
+};
+
 /** Abreviaturas usadas en los horarios del CMS (ya sin tildes). */
-const DAY_ALIASES: Record<string, (typeof WEEK)[number]> = {
+const DAY_ALIASES: Record<string, WeekDay> = {
   lun: 'lunes',
   mar: 'martes',
   mie: 'miercoles',
@@ -109,6 +141,20 @@ const DAY_PATTERN = new RegExp(
 /** Conectores que convierten dos días sueltos en un rango ("lunes a viernes"). */
 const RANGE_CONNECTOR = /^\s*(a|al|hasta)\s*$/;
 
+/**
+ * Separador de sesiones dentro de un mismo horario. Un programa con varias
+ * sesiones distintas las escribe como "Mar/Jue 4-6 PM (salida) · Mié 4-6 PM
+ * (gymkanas)": cada tramo trae su propia hora y su propia aclaración.
+ */
+const SEGMENT_SEPARATOR = /[·|;]/;
+
+/** Franja horaria: "4:30 - 6:00 PM", "7-9 AM", "4 a 6 PM". */
+const TIME_PATTERN =
+  /\d{1,2}(?::\d{2})?\s*(?:[-–—]|\ba\b)\s*\d{1,2}(?::\d{2})?\s*(?:[ap]\.?\s?m\.?)?/i;
+
+/** Aclaración entre paréntesis: "(salida)", "(gymkanas en pista)". */
+const NOTE_PATTERN = /\(([^)]+)\)/;
+
 function normalize(text: string): string {
   return text
     .toLowerCase()
@@ -116,29 +162,14 @@ function normalize(text: string): string {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
-/**
- * Cuenta los días distintos que aparecen en el horario del frontmatter.
- *
- * El campo `schedule` es texto libre en el CMS, así que se leen tanto nombres
- * completos como abreviaturas y se expanden los rangos:
- *   "Martes y viernes 4:30 - 6:00 PM"            → 2
- *   "Lunes a viernes 4:00 - 6:00 PM"             → 5
- *   "Mar/Jue 4-6 PM · Mié 4-6 PM · Sáb · Dom"    → 5
- *
- * Devuelve `null` cuando no reconoce ningún día: la interfaz oculta el dato en
- * vez de inventarlo.
- */
-export function countWeeklySessions(schedule: string | undefined): number | null {
-  if (!schedule) return null;
-
-  const text = normalize(schedule);
+/** Los días que menciona un tramo, ya con los rangos expandidos. */
+function daysInSegment(segment: string): WeekDay[] {
+  const text = normalize(segment);
   const matches = [...text.matchAll(DAY_PATTERN)];
-  if (matches.length === 0) return null;
-
-  const days = new Set<string>();
+  const days = new Set<WeekDay>();
 
   for (let i = 0; i < matches.length; i++) {
-    const current = DAY_ALIASES[matches[i][1]] ?? matches[i][1];
+    const current = (DAY_ALIASES[matches[i][1]] ?? matches[i][1]) as WeekDay;
     days.add(current);
 
     const next = matches[i + 1];
@@ -149,15 +180,80 @@ export function countWeeklySessions(schedule: string | undefined): number | null
 
     // Rango: se agregan los días intermedios. Si el rango cruza el fin de
     // semana ("viernes a lunes") se recorre la semana dándole la vuelta.
-    const from = WEEK.indexOf(current as (typeof WEEK)[number]);
-    const to = WEEK.indexOf((DAY_ALIASES[next[1]] ?? next[1]) as (typeof WEEK)[number]);
+    const from = WEEK.indexOf(current);
+    const to = WEEK.indexOf((DAY_ALIASES[next[1]] ?? next[1]) as WeekDay);
     const span = (to - from + WEEK.length) % WEEK.length;
     for (let step = 1; step <= span; step++) {
       days.add(WEEK[(from + step) % WEEK.length]);
     }
   }
 
-  return days.size;
+  return WEEK.filter((day) => days.has(day));
+}
+
+/** Una sesión del horario: qué días, a qué hora y con qué aclaración. */
+export interface ScheduleSegment {
+  days: WeekDay[];
+  /** Franja tal como la escribió el club. `null` si el tramo no trae hora. */
+  time: string | null;
+  /** Lo que iba entre paréntesis. `null` si no hay. */
+  note: string | null;
+  /** El tramo completo, sin tocar: el respaldo cuando no se entendió nada. */
+  raw: string;
+}
+
+/**
+ * Descompone el horario de texto libre del CMS en sus sesiones.
+ *
+ * `schedule` no tiene formato obligatorio —lo escribe una persona en Sveltia—,
+ * así que se leen nombres completos y abreviaturas, se expanden los rangos y se
+ * separan los tramos:
+ *
+ *   "Martes y viernes 4:30 - 6:00 PM"
+ *     → [{ days: [martes, viernes], time: "4:30 - 6:00 PM" }]
+ *   "Mar/Jue 4-6 PM (salida) · Sáb 7-9 AM (salida)"
+ *     → [{ days: [martes, jueves], time: "4-6 PM", note: "salida" },
+ *        { days: [sabado],         time: "7-9 AM", note: "salida" }]
+ *
+ * Un tramo del que no se reconoce ningún día se devuelve igual, con `days`
+ * vacío y su `raw` intacto: quien lo pinte decide si lo muestra como texto en
+ * vez de perderlo. Nada se inventa y nada se descarta en silencio.
+ */
+export function parseSchedule(schedule: string | undefined): ScheduleSegment[] {
+  if (!schedule) return [];
+
+  return schedule
+    .split(SEGMENT_SEPARATOR)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((raw) => ({
+      days: daysInSegment(raw),
+      time: TIME_PATTERN.exec(raw)?.[0].trim() ?? null,
+      note: NOTE_PATTERN.exec(raw)?.[1].trim() ?? null,
+      raw,
+    }));
+}
+
+/**
+ * Los días distintos que cubre un horario, en orden de lunes a domingo.
+ * Devuelve `null` cuando no reconoce ninguno: la interfaz oculta el dato en vez
+ * de inventarlo.
+ */
+export function parseScheduleDays(schedule: string | undefined): WeekDay[] | null {
+  const days = new Set(parseSchedule(schedule).flatMap((segment) => segment.days));
+  if (days.size === 0) return null;
+  return WEEK.filter((day) => days.has(day));
+}
+
+/**
+ * Cuántos días a la semana entrena un programa.
+ *
+ *   "Martes y viernes 4:30 - 6:00 PM"            → 2
+ *   "Lunes a viernes 4:00 - 6:00 PM"             → 5
+ *   "Mar/Jue 4-6 PM · Mié 4-6 PM · Sáb · Dom"    → 5
+ */
+export function countWeeklySessions(schedule: string | undefined): number | null {
+  return parseScheduleDays(schedule)?.length ?? null;
 }
 
 // ─── Ruta de formación (regla de edades + perfil) ─────────────────────────────
