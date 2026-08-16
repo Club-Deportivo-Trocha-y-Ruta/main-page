@@ -1,24 +1,55 @@
 ---
+/**
+ * Índice de Trocha Verde.
+ *
+ * El club tiene algo que nadie más: las llantas que gasta entrenando
+ * terminan protegiendo los árboles que siembra — 71 de 77 hoy. La página
+ * abre con esa idea y la respalda con el ritmo real de la siembra (77
+ * árboles en nueve semanas, una campaña, no un goteo), antes de bajar al
+ * inventario, el mapa, las jornadas, los padrinos y el proceso.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md). Cero cifras
+ * inventadas: CO₂ y altura estimada no existen en el contenido y no se
+ * pintan (ver nota de cabecera de `@lib/trocha-verde`).
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
-import PageLayout from '@layouts/PageLayout.astro';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Button from '@components/common/Button.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
-import TrochaVerdeStats from '@components/sections/TrochaVerdeStats.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import FactGrid from '@components/editorial/FactGrid.astro';
 import TrochaVerdeNav from '@components/sections/TrochaVerdeNav.astro';
+import TrochaVerdeTimeline from '@components/sections/TrochaVerdeTimeline.astro';
+import TrochaVerdeComposition from '@components/sections/TrochaVerdeComposition.astro';
 import TrochaVerdeSiembras from '@components/sections/TrochaVerdeSiembras.astro';
 import TrochaVerdeSponsors from '@components/sections/TrochaVerdeSponsors.astro';
 import TrochaVerdeMap from '@components/interactive/TrochaVerdeMap';
 import type { TreeMarker } from '@components/interactive/TrochaVerdeMap';
 // TrochaVerdeGrid en reserva — reintroducir como /trocha-verde/arboles cuando >40 árboles
 // import TrochaVerdeGrid from '@components/sections/TrochaVerdeGrid.astro';
-import { Icon } from 'astro-icon/components';
 import { CONTACT } from '@lib/constants';
-import { generateBreadcrumbJsonLd, generateSocialInitiativeJsonLd } from '@lib/seo';
+import { generateSocialInitiativeJsonLd } from '@lib/seo';
 import { formatDate, slugify } from '@lib/utils';
+import { getTone } from '@lib/editorial';
 import { categoryLabels, categoryColors, journeyLabels } from '@lib/tree-utils';
+import {
+  summarizeTrees,
+  summarizeRecycling,
+  buildCategoryComposition,
+  buildSpeciesInventory,
+  summarizeDonors,
+  buildPlantingTimeline,
+  groupTreesByPlantingDate,
+  checkMapReadiness,
+  type TreeInput,
+} from '@lib/trocha-verde';
 import carretillaAntes from '@assets/images/trocha-verde/carretilla-reciclada.jpg';
 import carretillaDespues from '@assets/images/trocha-verde/carretilla-despues.jpg';
+import guayacanLila from '@assets/images/trocha-verde/guayacan-lila.jpg';
 
 type Tree = CollectionEntry<'trees'>;
 
@@ -26,86 +57,56 @@ const trees = (await getCollection('trees'))
   .filter((t: Tree) => !t.data.draft)
   .sort((a: Tree, b: Tree) => a.data.order - b.data.order);
 
-const totalTrees = trees.length;
+const treeInputs: TreeInput[] = trees.map((t: Tree) => t.data);
 
-// Inventario por especie (sin render de Markdown)
-type SpeciesEntry = {
-  commonName: string;
-  scientificName: string;
-  category: string;
-  count: number;
-  thumbnail: string;
-  thumbnailAlt: string;
-};
-const speciesMap = new Map<string, SpeciesEntry>();
-trees.forEach((t: Tree) => {
-  const key = t.data.scientificName ?? t.data.species;
-  if (speciesMap.has(key)) {
-    speciesMap.get(key)!.count++;
-  } else {
-    speciesMap.set(key, {
-      commonName: t.data.species,
-      scientificName: t.data.scientificName ?? '',
-      category: t.data.category,
-      count: 1,
-      thumbnail: t.data.image,
-      thumbnailAlt: t.data.imageAlt,
-    });
-  }
-});
-const uniqueSpecies = speciesMap.size;
-const sortedSpecies = [...speciesMap.values()].sort((a, b) =>
-  a.commonName.localeCompare(b.commonName, 'es')
+// Cifras de cabecera: todas derivadas de `@lib/trocha-verde`, ninguna escrita
+// a mano. Sin CO₂ ni área estimada — ver nota de cabecera del módulo.
+const stats = summarizeTrees(treeInputs);
+const recycling = summarizeRecycling(treeInputs);
+const composition = buildCategoryComposition(treeInputs);
+const speciesInventory = buildSpeciesInventory(treeInputs);
+
+// El slug de la ficha de especie es el id del archivo en `species`, no el
+// nombre común pasado por slugify(): hay especies sembradas sin ficha propia
+// (Abano, Lengua de suegra) y derivar el slug del nombre las enlazaba a una
+// ruta inexistente. Solo se enlaza lo que `[species].astro` genera de verdad.
+const speciesPages = new Map(
+  (await getCollection('species'))
+    .filter((s: CollectionEntry<'species'>) => !s.data.draft)
+    .map((s: CollectionEntry<'species'>) => [s.data.commonName.toLowerCase(), s.id])
 );
+const donors = summarizeDonors(treeInputs);
+const timeline = buildPlantingTimeline(treeInputs);
+const mapReadiness = checkMapReadiness(treeInputs);
 
-// Agrupar árboles por fecha de siembra (jornadas) — sin Content renderizado
-type TreeItem = {
-  id: string;
-  species: string;
-  scientificName?: string;
-  category: string;
-  status: string;
-  plantedDate: Date;
-  image: string;
-  imageAlt: string;
-  protectorColor?: string;
-  notes?: string;
-};
+const muted = getTone('muted');
 
-const treesByDate = new Map<string, { date: Date; trees: TreeItem[] }>();
-trees.forEach((t: Tree) => {
-  const dateKey = t.data.plantedDate.toISOString().split('T')[0];
-  const item: TreeItem = {
-    id: t.id,
-    species: t.data.species,
-    scientificName: t.data.scientificName,
-    category: t.data.category,
-    status: t.data.status,
-    plantedDate: t.data.plantedDate,
-    image: t.data.image,
-    imageAlt: t.data.imageAlt,
-    protectorColor: t.data.protectorColor,
-    notes: t.data.notes,
-  };
-  if (!treesByDate.has(dateKey)) {
-    treesByDate.set(dateKey, { date: t.data.plantedDate, trees: [] });
-  }
-  treesByDate.get(dateKey)!.trees.push(item);
-});
+// Jornadas de siembra para TrochaVerdeSiembras — se excluye temporalmente el
+// Día de la Tierra (2026-04-22) mientras se cura su propio contenido, igual
+// que antes de esta migración.
+const journeys = groupTreesByPlantingDate(trees)
+  .filter((group) => group.dateKey !== '2026-04-22')
+  .map((group, index) => ({
+    dateKey: group.dateKey,
+    date: group.date,
+    label: journeyLabels[index] ?? `Siembra #${index + 1}`,
+    trees: group.trees.map((t: Tree) => ({
+      id: t.id,
+      species: t.data.species,
+      scientificName: t.data.scientificName,
+      category: t.data.category,
+      status: t.data.status,
+      plantedDate: t.data.plantedDate,
+      image: t.data.image,
+      imageAlt: t.data.imageAlt,
+      protectorColor: t.data.protectorColor,
+      notes: t.data.notes,
+    })),
+  }));
 
-// Ordenar jornadas cronológicamente — excluir Día de la Tierra temporalmente
-const sortedDates = [...treesByDate.keys()]
-  .sort()
-  .filter(date => date !== '2026-04-22');
-
-const journeys = sortedDates.map((dateKey, index) => ({
-  dateKey,
-  date: treesByDate.get(dateKey)!.date,
-  label: journeyLabels[index] ?? `Siembra #${index + 1}`,
-  trees: treesByDate.get(dateKey)!.trees,
-}));
-
-// Marcadores para el mapa interactivo — solo árboles geolocalizados
+// Marcadores para el mapa interactivo — solo se construyen para usarlos si
+// `mapReadiness.ready` es cierto; con los datos de hoy (2 de 77) no se monta
+// el island y Leaflet no se descarga.
 const treeMarkers: TreeMarker[] = trees
   .filter((t: Tree) => t.data.lat !== undefined && t.data.lng !== undefined)
   .map((t: Tree) => ({
@@ -123,24 +124,15 @@ const treeMarkers: TreeMarker[] = trees
 // WhatsApp URLs
 const whatsappFamilias = `${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, quiero unirme a la próxima siembra de Trocha Verde')}`;
 
-const breadcrumbs = [{ label: 'Trocha Verde' }];
-
-const breadcrumbJsonLd = generateBreadcrumbJsonLd([
-  { name: 'Inicio', url: '/' },
-  { name: 'Trocha Verde', url: '/trocha-verde' },
-]);
-
 const initiativeJsonLd = generateSocialInitiativeJsonLd({
   title: 'Trocha Verde — Programa Ambiental',
-  date: new Date('2026-03-15'),
-  description: `Programa de reforestación del Club Trocha y Ruta: ${totalTrees} árboles nativos sembrados con llantas de bicicleta recicladas en la Pista Carlos Castro, Yumbo, Valle del Cauca.`,
+  date: timeline?.start ?? new Date(),
+  description: `Programa de reforestación del Club Trocha y Ruta: ${stats.totalTrees} árboles sembrados, ${recycling.tireCount} de ellos protegidos con una llanta reciclada, en la Pista Carlos Castro, Yumbo, Valle del Cauca.`,
   location: 'Pista de Ciclomontañismo Carlos Castro, Yumbo, Valle del Cauca',
   image: '/images/trocha-verde/dia-tierra-2026/afiche.jpg',
   url: '/trocha-verde',
   type: 'ambiental',
 });
-
-const jsonLd = [breadcrumbJsonLd, initiativeJsonLd];
 
 const processSteps = [
   {
@@ -170,180 +162,259 @@ const processSteps = [
 ];
 ---
 
-<PageLayout
+<BaseLayout
   title="Trocha Verde"
-  description={`Programa de reforestación del Club Trocha y Ruta: ${totalTrees} árboles nativos sembrados con llantas de bicicleta recicladas en Yumbo, Valle del Cauca`}
+  description={`Programa de reforestación del Club Trocha y Ruta: ${stats.totalTrees} árboles sembrados y ${recycling.tireCount} protegidos con una llanta de bicicleta reciclada, en Yumbo, Valle del Cauca`}
   ogImage="/images/trocha-verde/dia-tierra-2026/afiche.jpg"
-  breadcrumbs={breadcrumbs}
-  jsonLd={jsonLd}
+  jsonLd={initiativeJsonLd}
 >
-  <!-- 1. Hero compacto -->
-  <div class="relative -mt-8 mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-800 via-emerald-700 to-emerald-500 px-6 py-12 text-white sm:px-10 sm:py-16">
-    <div class="absolute inset-0 opacity-10" aria-hidden="true">
-      <svg class="h-full w-full" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="40" fill="currentColor" />
-        <circle cx="350" cy="100" r="60" fill="currentColor" />
-        <circle cx="150" cy="350" r="50" fill="currentColor" />
-        <circle cx="300" cy="300" r="35" fill="currentColor" />
-      </svg>
+  <!-- 1. Hero: la promesa + el ritmo de la siembra como prueba -->
+  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="trocha-verde-titulo">
+    <Breadcrumb items={[{ label: 'Trocha Verde' }]} />
+
+    <div class="mt-6 grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
+      <SectionIntro
+        as="h1"
+        id="trocha-verde-titulo"
+        eyebrow="Trocha Verde"
+        eyebrowIcon="ph:recycle-bold"
+        title="Las llantas que gastamos entrenando protegen los árboles que sembramos"
+        highlight="protegen los árboles que sembramos"
+        lead={`En la Pista Carlos Castro, ${recycling.bicycleTireCount} de los ${recycling.total} árboles de Trocha Verde crecen dentro de una llanta de bicicleta que ya rodó por sus senderos. Lo que el entrenamiento desgasta, la siembra lo vuelve a poner en la trocha.`}
+      >
+        <div class="mt-6 flex flex-wrap gap-3">
+          <Button
+            href={whatsappFamilias}
+            variant="accent"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-whatsapp-cta
+            data-source="trocha-verde"
+            data-location="hero"
+            aria-label="Únete a la próxima siembra por WhatsApp"
+          >
+            <Icon name="ph:whatsapp-logo-bold" class="size-5" aria-hidden="true" />
+            <span class="ml-2">Únete a la próxima siembra</span>
+          </Button>
+          <Button href="#sponsors" variant="outline" data-sticky-nav-click data-section="sponsors">
+            Empresas: apadrina árboles
+          </Button>
+        </div>
+      </SectionIntro>
+
+      <Image
+        src={guayacanLila}
+        alt="Guayacán sembrado dentro de una llanta de bicicleta reciclada y pintada de rosado"
+        layout="none"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        widths={[500, 800, 1100]}
+        sizes="(min-width: 1024px) 45vw, 100vw"
+        class="aspect-[4/3] w-full rounded-2xl object-cover shadow-md"
+      />
     </div>
-    <div class="relative z-10 text-center">
-      <p class="text-sm font-semibold uppercase tracking-widest text-emerald-200">
-        Programa Ambiental
-      </p>
-      <p class="mt-2 font-display text-3xl font-bold sm:text-4xl md:text-5xl">
-        Donde cada pedalada deja raíces
-      </p>
-      <!-- Misión — 2 líneas compactas -->
-      <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-emerald-100 sm:text-lg">
-        Nuestros niños pedalean por los cerros de Yumbo — y aprenden que cuidar esos senderos es cuidar su deporte.
-        Cada llanta que pintamos y cada árbol nativo que sembramos es una lección viva: el Valle se defiende con las manos.
-      </p>
 
-      <!-- Contadores animados (4 stats inline) -->
-      <TrochaVerdeStats />
+    <dl class="mt-10 grid grid-cols-2 gap-6 border-t border-primary/15 pt-8 sm:grid-cols-4">
+      <StatFigure value={stats.totalTrees} label="Árboles sembrados" icon="ph:tree-bold" />
+      <StatFigure value={stats.totalSpecies} label="Especies distintas" icon="ph:leaf-bold" />
+      <StatFigure
+        value={`${recycling.tirePct}%`}
+        label="Protegidos con llanta reciclada"
+        note={`${recycling.tireCount} de ${recycling.total} árboles`}
+        icon="ph:tire-bold"
+      />
+      <StatFigure
+        value={donors.sponsoredTrees}
+        label="Con padrino o madrina"
+        note={`${donors.donors.length} familias y aliados distintos`}
+        icon="ph:heart-bold"
+      />
+    </dl>
 
-      <!-- CTAs -->
-      <div class="mt-8 flex flex-wrap justify-center gap-3 sm:gap-4">
-        <a
-          href={whatsappFamilias}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-text-primary shadow-sm transition-colors hover:bg-accent-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:px-6 sm:py-3 sm:text-base"
-          data-whatsapp-cta
-          data-source="trocha-verde"
-          data-location="hero"
-          aria-label="Únete a la próxima siembra por WhatsApp"
-        >
-          <Icon name="ph:whatsapp-logo-bold" class="h-5 w-5" aria-hidden="true" />
-          Únete a la próxima siembra
-        </a>
-        <a
-          href="#sponsors"
-          class="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:px-6 sm:py-3 sm:text-base"
-          data-sticky-nav-click
-          data-section="sponsors"
-        >
-          Empresas: apadrina árboles
-        </a>
+    {timeline && (
+      <div class="mt-10 rounded-2xl border border-primary/15 bg-surface/70 p-5 backdrop-blur-sm sm:p-7">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-deep">
+          {timeline.total} árboles en {timeline.totalWeeks} semanas: una campaña, no un goteo
+        </p>
+        <TrochaVerdeTimeline timeline={timeline} class="mt-4" />
       </div>
-    </div>
-  </div>
+    )}
+  </SectionShell>
 
-  <!-- 2. Sticky nav -->
+  <!-- 2. Navegación interna -->
   <TrochaVerdeNav />
 
-  <!-- 3. Inventario por especie -->
-  <section id="especies" class="mb-16 scroll-mt-28" aria-labelledby="especies-title">
-    <SectionTitle
-      title="Inventario de Especies"
-      subtitle={`${uniqueSpecies} especies distintas sembradas en la pista`}
+  <!-- 3. Inventario de especies + composición del bosque -->
+  <SectionShell id="especies" tone="muted" width="wide" labelledby="especies-titulo" class="scroll-mt-28">
+    <SectionIntro
+      id="especies-titulo"
+      eyebrow="Inventario"
+      eyebrowIcon="ph:leaf-bold"
+      title={`${stats.totalSpecies} especies conviven en la pista Carlos Castro`}
+      highlight={`${stats.totalSpecies} especies`}
+      lead="Ornamentales, frutales, nativas y maderables: así se reparte el bosque que hemos sembrado hasta hoy."
+      class="max-w-2xl"
     />
 
-    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
-      {sortedSpecies.map((sp) => {
+    <TrochaVerdeComposition composition={composition} class="mt-8 max-w-2xl" />
+
+    <ul class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4" role="list">
+      {speciesInventory.map((sp) => {
         const catColors = categoryColors[sp.category] ?? categoryColors.nativo;
-        const speciesSlug = slugify(sp.commonName);
+        const speciesSlug = speciesPages.get(sp.commonName.toLowerCase()) ?? null;
+        // Sin ficha de especie la tarjeta se pinta igual, pero sin enlace.
+        const Tag = speciesSlug ? 'a' : 'div';
         return (
-          <a
-            href={`/trocha-verde/${speciesSlug}`}
-            class="flex flex-col overflow-hidden rounded-xl border border-emerald-100 bg-white transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emerald-700"
-            data-tree-card
-            data-species={sp.commonName}
-            data-tree-id={speciesSlug}
-          >
-            <div class="aspect-square overflow-hidden bg-surface-muted">
-              {/* Thumbnails vienen de Cloudinary (URL remota) — se mantiene <img> con lazy + dims */}
-              <img
-                src={sp.thumbnail}
-                alt={sp.thumbnailAlt}
-                class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-                loading="lazy"
-                width="200"
-                height="200"
-              />
-            </div>
-            <div class="flex flex-1 flex-col justify-between p-3">
-              <div>
-                <p class="font-display text-sm font-bold leading-tight text-text-primary">
-                  {sp.commonName}
-                </p>
-                {sp.scientificName && (
-                  <p class="mt-0.5 line-clamp-2 text-xs italic leading-tight text-text-secondary">
-                    {sp.scientificName}
+          <li>
+            <Tag
+              href={speciesSlug ? `/trocha-verde/${speciesSlug}` : undefined}
+              class:list={[
+                'group flex h-full flex-col overflow-hidden rounded-xl border transition-shadow hover:shadow-md',
+                'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-deep',
+                muted.hairline,
+                muted.card,
+              ]}
+              data-tree-card
+              data-species={sp.commonName}
+              data-tree-id={speciesSlug}
+            >
+              <div class="aspect-square overflow-hidden bg-surface-muted">
+                {/* Miniaturas servidas desde Cloudinary (URL remota) — <img> con lazy + dims */}
+                <img
+                  src={sp.thumbnail}
+                  alt={sp.thumbnailAlt}
+                  class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                  width="200"
+                  height="200"
+                />
+              </div>
+              <div class="flex flex-1 flex-col justify-between p-3">
+                <div>
+                  <p class="font-display text-sm font-bold leading-tight text-text-primary">
+                    {sp.commonName}
                   </p>
-                )}
+                  {sp.scientificName && (
+                    <p class="mt-0.5 line-clamp-2 text-xs italic leading-tight text-text-secondary">
+                      {sp.scientificName}
+                    </p>
+                  )}
+                </div>
+                <div class="mt-2 flex items-center justify-between">
+                  <span class={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${catColors.bg} ${catColors.text}`}>
+                    {categoryLabels[sp.category] ?? sp.category}
+                  </span>
+                  <span
+                    class="flex h-6 w-6 items-center justify-center rounded-full bg-primary-deep text-xs font-bold text-white"
+                    aria-label={`${sp.count} ${sp.count === 1 ? 'árbol sembrado' : 'árboles sembrados'}`}
+                  >
+                    {sp.count}
+                  </span>
+                </div>
               </div>
-              <div class="mt-2 flex items-center justify-between">
-                <span class={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${catColors.bg} ${catColors.text}`}>
-                  {categoryLabels[sp.category] ?? sp.category}
-                </span>
-                <span
-                  class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white"
-                  aria-label={`${sp.count} ${sp.count === 1 ? 'árbol sembrado' : 'árboles sembrados'}`}
-                >
-                  {sp.count}
-                </span>
-              </div>
-            </div>
-          </a>
+            </Tag>
+          </li>
         );
       })}
-    </div>
-  </section>
+    </ul>
+  </SectionShell>
 
-  <!-- 4. Mapa Interactivo -->
-  <section id="mapa" class="mb-16 scroll-mt-28" aria-labelledby="mapa-title">
-    <SectionTitle
-      title="Mapa del Inventario"
-      subtitle="Árboles geolocalizados en la Pista Carlos Castro"
+  <!-- 4. Mapa del inventario — solo se monta con suficientes árboles ubicados -->
+  <SectionShell id="mapa" tone="plain" width="wide" labelledby="mapa-titulo" class="scroll-mt-28">
+    <SectionIntro
+      id="mapa-titulo"
+      eyebrow="Dónde están"
+      eyebrowIcon="ph:map-trifold-bold"
+      title={
+        mapReadiness.ready
+          ? 'Cada árbol, ubicado en la pista Carlos Castro'
+          : 'Estamos ubicando cada árbol en el mapa'
+      }
+      lead={
+        mapReadiness.ready
+          ? `${mapReadiness.geolocated} de los ${mapReadiness.total} árboles del inventario ya tienen coordenadas registradas.`
+          : `Por ahora ${mapReadiness.geolocated} de los ${mapReadiness.total} árboles tienen coordenadas registradas. Publicamos el mapa completo cuando tengamos ubicada una parte representativa de la siembra.`
+      }
+      class="max-w-2xl"
     />
 
-    {treeMarkers.length > 0 ? (
+    {mapReadiness.ready ? (
       <>
         <TrochaVerdeMap client:visible trees={treeMarkers} />
-
         <noscript>
-          <div class="mt-3 rounded-xl border border-emerald-100 bg-emerald-50 p-6">
-            <p class="text-sm text-emerald-800">
-              El mapa interactivo requiere JavaScript. Consulta el inventario completo en las secciones de especies y siembras de esta página.
+          <div class="mt-3 rounded-xl border border-primary/15 bg-surface/70 p-6">
+            <p class="text-sm text-text-secondary">
+              El mapa interactivo requiere JavaScript. Consulta el inventario completo en las secciones de
+              especies y siembras de esta página.
             </p>
           </div>
         </noscript>
       </>
     ) : (
-      <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-6 text-center">
-        <p class="text-sm text-emerald-800">
-          Pronto geolocalizaremos cada árbol del inventario en este mapa.
+      <div class="mt-8 flex items-start gap-3 rounded-2xl border border-primary/15 bg-surface/70 p-6 backdrop-blur-sm sm:p-8">
+        <Icon name="ph:map-pin-line-bold" class="mt-0.5 size-6 shrink-0 text-primary-deep" aria-hidden="true" />
+        <p class="text-sm leading-relaxed text-text-secondary">
+          Vamos geolocalizando el inventario jornada a jornada. Mientras tanto, recorre el inventario
+          completo en <a href="#especies" class="font-semibold text-primary-deep underline underline-offset-2">Especies</a>{' '}
+          o revisa cada siembra en{' '}
+          <a href="#siembras" class="font-semibold text-primary-deep underline underline-offset-2">Nuestras siembras</a>.
         </p>
       </div>
     )}
-  </section>
+  </SectionShell>
 
-  <!-- 5. Timeline de Siembras -->
+  <!-- 5. Siembras por jornada -->
   <TrochaVerdeSiembras journeys={journeys} />
 
-  <!-- 6. Sponsors block -->
-  <TrochaVerdeSponsors />
+  <!-- 6. Padrinos: quién sembró cada árbol -->
+  {donors.donors.length > 0 && (
+    <SectionShell tone="muted" width="wide" labelledby="padrinos-titulo">
+      <SectionIntro
+        id="padrinos-titulo"
+        eyebrow="Quiénes siembran"
+        eyebrowIcon="ph:heart-bold"
+        title={`${donors.sponsoredTrees} árboles ya tienen padrino o madrina`}
+        highlight={`${donors.sponsoredTrees} árboles`}
+        lead={`Detrás de esas siembras hay ${donors.donors.length} familias y aliados que se sumaron con nombre propio — ${donors.pct}% del inventario.`}
+        class="max-w-2xl"
+      />
 
-  <!-- 7. El Proceso -->
-  <section id="proceso" class="mb-16 scroll-mt-28" aria-labelledby="proceso-title">
-    <SectionTitle
-      title="El Proceso"
-      subtitle="Así transformamos residuos en vida"
+      <FactGrid
+        class="mt-8"
+        columns={2}
+        items={donors.donors.map((donor) => ({
+          icon: 'ph:heart-bold',
+          label: donor.count === 1 ? 'Apadrinó 1 árbol' : `Apadrinó ${donor.count} árboles`,
+          value: donor.name,
+        }))}
+      />
+    </SectionShell>
+  )}
+
+  <!-- 7. El proceso -->
+  <SectionShell id="proceso" tone="plain" width="wide" labelledby="proceso-titulo" class="scroll-mt-28">
+    <SectionIntro
+      id="proceso-titulo"
+      eyebrow="Cómo lo hacemos"
+      eyebrowIcon="ph:recycle-bold"
+      title="De llanta usada a protector de raíces"
+      highlight="protector de raíces"
+      lead="Cuatro pasos, siempre con los niños del club como protagonistas."
+      class="max-w-2xl"
     />
 
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {processSteps.map((step) => (
-        <div class="relative rounded-xl border border-emerald-100 bg-white p-6 text-center">
+        <div class:list={['relative rounded-xl border p-6 text-center', muted.hairline, muted.card]}>
           <div
-            class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
+            class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary-deep"
             role="img"
             aria-label={`Paso ${step.number}: ${step.title}`}
           >
             <Icon name={step.icon} class="h-7 w-7" aria-hidden="true" />
           </div>
-          <span class="text-xs font-bold uppercase tracking-wider text-emerald-500">
+          <span class="text-xs font-bold uppercase tracking-wider text-accent-deep">
             Paso {step.number}
           </span>
           <h3 class="mt-1 font-display text-lg font-bold text-text-primary">
@@ -355,17 +426,22 @@ const processSteps = [
         </div>
       ))}
     </div>
-  </section>
+  </SectionShell>
 
-  <!-- 8. Antes y Después -->
-  <section class="mb-16" aria-labelledby="transformacion-title">
-    <SectionTitle
-      title="Transformación en acción"
-      subtitle="Una carretilla reciclada que pasó de estar abandonada a ser herramienta clave de nuestras siembras"
+  <!-- 8. Antes y después -->
+  <SectionShell tone="muted" width="wide" labelledby="transformacion-titulo">
+    <SectionIntro
+      id="transformacion-titulo"
+      eyebrow="La evidencia"
+      eyebrowIcon="ph:arrows-clockwise-bold"
+      title="Una carretilla que encontró un segundo uso"
+      highlight="segundo uso"
+      lead="Pasó de estar abandonada a ser herramienta clave de nuestras siembras."
+      class="max-w-2xl"
     />
 
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-      <figure class="overflow-hidden rounded-xl border border-emerald-100 bg-white">
+    <div class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+      <figure class:list={['overflow-hidden rounded-xl border', muted.hairline, muted.card]}>
         <div class="aspect-[4/3] overflow-hidden md:aspect-[3/4]">
           <Image
             src={carretillaAntes}
@@ -383,7 +459,7 @@ const processSteps = [
         </figcaption>
       </figure>
 
-      <figure class="overflow-hidden rounded-xl border border-emerald-100 bg-white">
+      <figure class:list={['overflow-hidden rounded-xl border', muted.hairline, muted.card]}>
         <div class="aspect-[4/3] overflow-hidden md:aspect-[3/4]">
           <Image
             src={carretillaDespues}
@@ -392,7 +468,7 @@ const processSteps = [
           />
         </div>
         <figcaption class="p-4 text-center">
-          <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-sm font-semibold text-emerald-800">
+          <span class="inline-flex items-center rounded-full bg-accent/20 px-3 py-1 text-sm font-semibold text-accent-deep">
             Después
           </span>
           <p class="mt-2 text-sm text-text-secondary">
@@ -401,40 +477,41 @@ const processSteps = [
         </figcaption>
       </figure>
     </div>
-  </section>
+  </SectionShell>
 
-  <!-- 9. CTA final -->
-  <section
-    class="rounded-2xl bg-gradient-to-r from-emerald-50 to-emerald-100 px-6 py-12 text-center sm:px-10"
-    aria-labelledby="cta-final-title"
-  >
-    <h2
-      id="cta-final-title"
-      class="font-display text-2xl font-bold text-text-primary sm:text-3xl"
-    >
-      ¿Quieres sembrar con nosotros?
-    </h2>
-    <p class="mx-auto mt-3 max-w-xl text-text-secondary">
-      Únete a nuestras jornadas de siembra. Familias, empresas y amigos del medio ambiente son bienvenidos.
-      Juntos hacemos de Yumbo un lugar más verde.
-    </p>
-    <div class="mt-6 flex flex-wrap justify-center gap-4">
-      <Button
-        href={whatsappFamilias}
-        variant="accent"
-        size="lg"
-        data-whatsapp-cta
-        data-source="trocha-verde"
-        data-location="footer"
-      >
-        Escríbenos por WhatsApp
-      </Button>
-      <Button href="/contacto" variant="outline">
-        Contáctanos
-      </Button>
+  <!-- 9. Empresas: apadrinamiento corporativo -->
+  <TrochaVerdeSponsors />
+
+  <!-- 10. Paso siguiente -->
+  <SectionShell tone="muted" width="default" spacing="compact" label="Paso siguiente">
+    <div class="rounded-2xl border border-primary/20 bg-primary/5 px-6 py-8 text-center sm:px-10">
+      <h2 class="font-display text-xl font-bold text-text-primary sm:text-2xl">
+        ¿Quieres sembrar con nosotros?
+      </h2>
+      <p class="mx-auto mt-2 max-w-xl text-text-secondary">
+        Únete a nuestras jornadas de siembra. Familias, empresas y amigos del medio ambiente son bienvenidos.
+        Juntos hacemos de Yumbo un lugar más verde.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <Button
+          href={whatsappFamilias}
+          variant="accent"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-whatsapp-cta
+          data-source="trocha-verde"
+          data-location="footer"
+        >
+          <Icon name="ph:whatsapp-logo-bold" class="size-4" aria-hidden="true" />
+          <span class="ml-2">Escríbenos por WhatsApp</span>
+        </Button>
+        <Button href="/contacto" variant="outline">
+          Contáctanos
+        </Button>
+      </div>
     </div>
-  </section>
-</PageLayout>
+  </SectionShell>
+</BaseLayout>
 
 <script>
   /**

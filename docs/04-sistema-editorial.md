@@ -146,7 +146,7 @@ WhatsApp — pero siempre algo.
 | Inscripciones (`/inscripciones`) | ✅ Migrada |
 | Detalle de programa (`/programas/[slug]`) | ✅ Migrada |
 | Detalle de noticia (`/noticias/[slug]`) | ⬜ Pendiente |
-| Trocha Verde | ⬜ Pendiente |
+| Trocha Verde (portada + índice + especie + árbol) | ✅ Migrada |
 
 ---
 
@@ -396,3 +396,138 @@ Tres movimientos que conviene repetir en las páginas que faltan:
   `<Content />` baja a `h3` — la ruta, la ficha y el cierre (vía el `h2`
   interno de `InscriptionCTA`) se quedan todos en `h2`, hermanos de los que
   trae el markdown, para que la jerarquía no salte.
+
+---
+
+## 13. Referencia de Trocha Verde
+
+- **El corazón de la página es una frase, no una lista de logros.** El club tiene algo
+  que ninguna otra iniciativa ambiental de la región tiene: las llantas que gasta
+  entrenando terminan protegiendo los árboles que siembra. 71 de 77 árboles crecen dentro
+  de una llanta de bicicleta reciclada — 72 de 77 si se cuenta también la única llanta de
+  moto. El `h1` abre con esa idea (`highlight` sobre "protegen los árboles que
+  sembramos") y el `StatFigure` de "Protegidos con llanta reciclada" la respalda con la
+  cifra real de `summarizeRecycling()`. Antes esto se mencionaba de pasada, en un párrafo
+  de tres frases junto a otras dos ideas.
+- **El ritmo de siembra es la pieza ilustrativa central, no un adorno.** 77 árboles en
+  nueve semanas es una campaña, no un goteo — y ese es literalmente el titular que va
+  encima del gráfico. `TrochaVerdeTimeline` (ya existía, sin conectar a ninguna página)
+  dibuja una escalera acumulada a partir de `buildPlantingTimeline()`, con una parada por
+  jornada real de siembra y el eje X respetando el tiempo transcurrido de verdad — dos
+  jornadas separadas por dos semanas quedan dos veces más lejos que dos separadas por una.
+  Vive dentro del mismo `SectionShell` del hero, igual que `ProgramPathway` en
+  `/programas` o `SeasonTrack` en `/calendario`: la ilustración central acompaña la
+  entrada, no una sección aparte.
+- **El mapa deja de mentir sobre lo que muestra.** Con 2 de 77 árboles geolocalizados,
+  montar Leaflet completo (el island más pesado del sitio) para pintar dos alfileres
+  sueltos no representaba el inventario y le costaba peso a todo el que visitaba la
+  página. `checkMapReadiness()` fija el corte en `MIN_GEOLOCATED_TREES_FOR_MAP` (20) y la
+  sección `#mapa` sigue existiendo — la navegación interna sigue resolviendo — pero deja
+  de renderizar `<TrochaVerdeMap client:visible>` y en su lugar dice cuántos árboles de
+  los 77 ya tienen ubicación. Cuando el club geolocalice más árboles y cruce el umbral, el
+  mapa se activa solo, sin tocar la plantilla.
+- **La composición del bosque se muestra proporcional, no como cuatro números sueltos.**
+  `buildCategoryComposition()` ya existía y no se pintaba en ningún lado. El nuevo
+  componente `TrochaVerdeComposition` la traduce en una barra apilada con leyenda —36
+  ornamental, 22 frutal, 17 nativo, 2 maderable— usando los mismos tonos de
+  `categoryColors` (`@lib/tree-utils`) que ya usan las tarjetas de especie y de árbol, así
+  que "ornamental" es el mismo morado en la barra, en el chip y en el mapa cuando exista.
+- **Los padrinos pasan de estar solo en cada ficha individual a tener su propia
+  sección.** 60 de los 77 árboles tienen un donante nombrado en el frontmatter, pero
+  ninguna vista anterior lo agregaba: solo se veía uno por uno, ficha por ficha.
+  `summarizeDonors()` agrupa esos 60 en las 7 familias y aliados reales del club (de 1 a
+  27 árboles cada uno) y la sección nueva los lista con `FactGrid` — la cifra ("Apadrinó
+  27 árboles") como etiqueta y el nombre como el dato que responde.
+- **Cuatro `aria-labelledby` que apuntaban a ids inexistentes ya resuelven.** El defecto
+  era estructural: `SectionTitle` (el componente que usaba la página antes de migrar)
+  nunca exponía el id de su propio `h2` hacia afuera, así que `aria-labelledby` en
+  "especies", "mapa", "proceso" y "transformación" apuntaba a nada. Al pasar a
+  `SectionShell` + `SectionIntro`, cada sección declara su propio `id` de titular
+  (`especies-titulo`, `mapa-titulo`, `proceso-titulo`, `transformacion-titulo`) y
+  `SectionShell` lo referencia con `labelledby` — el mismo par de props que ya usan
+  `/programas` y `/trocha-verde/[species]`.
+- **Lo que ya funcionaba se conserva sin reescribirlo.** La navegación interna por anclas
+  (`TrochaVerdeNav`), las siembras agrupadas por jornada (`TrochaVerdeSiembras`, con su
+  exclusión temporal del Día de la Tierra mientras se cura ese contenido aparte), el
+  bloque de apadrinamiento corporativo (`TrochaVerdeSponsors`) y el antes/después de la
+  carretilla reciclada siguen siendo los mismos componentes y las mismas dos imágenes con
+  `astro:assets` — solo cambian de marco (`SectionShell`) y de paleta de foco
+  (`primary-deep` en vez de `emerald-700` suelto) para hablar el mismo idioma que el resto
+  del sistema.
+- **Sin CO₂ ni área, con test que lo fija.** `@lib/trocha-verde` nunca calculó esas dos
+  cifras — `co2EstimateKg` está vacío en los 77 árboles y el "área" se inventaba a partir
+  del protector — y un test de guarda (`sin CO2 ni área estimada en todo el módulo`)
+  falla si alguien las reintroduce sin querer.
+
+---
+
+## 14. Referencia de los detalles de Trocha Verde
+
+- **Las dos fichas de detalle —especie (`/trocha-verde/[species]`) y árbol
+  (`/trocha-verde/arboles/[slug]`)— son hermanas y comparten protagonista.**
+  Cada una abre con el mismo hero (nombre, foto, cifras que respaldan el
+  titular) y cierra con el mismo paso siguiente (recorrer el inventario o
+  apadrinar), porque en el fondo cuentan la misma historia a dos escalas: la
+  especie es el bosque, el árbol es cada ejemplar con su propia fecha y, 60
+  de las veces, su propia familia. Los mapas y helpers de los que dependen
+  ambas viven en `@lib/tree-utils` (`categoryLabels`/`categoryColors`,
+  `statusLabels`/`statusColors`, el protector, el tiempo transcurrido y la
+  concordancia de género): cualquier cambio ahí es aditivo o rompe las dos
+  páginas a la vez.
+- **El id de un árbol y el id de su especie no siempre coinciden, y
+  `findSpeciesForTree()`/`treesOfSpecies()` resuelven eso por nombre común,
+  no por slug.** El archivo real es `species/lengua-suegra.md`, pero sus
+  cuatro árboles traen `species: "Lengua de suegra"` (que slugifica a
+  `lengua-de-suegra`, un id distinto). Comparar `slugify(commonName)` en vez
+  del id del archivo hace que el emparejamiento sea resistente a esa
+  diferencia. Cuando ni así aparece una especie —hoy pasa con "Abano", sin
+  `species/abano.md`—, la ficha del árbol no inventa el enlace: muestra el
+  nombre en texto plano y omite tanto el breadcrumb enlazado como el botón
+  "Ver toda la especie", en vez de apuntar a una ruta que el build nunca
+  genera.
+- **"Cuánto lleva vivo" es el dato que abre la ficha del árbol, no la fecha
+  de siembra sola.** `timeSincePlanted()` la convierte en la unidad más
+  legible para su edad (días, semanas, meses, años) reutilizando
+  `daysSincePlanted()`, que sigue la misma precaución de husos que ya
+  documenta `calendar.ts`: `plantedDate` se parsea en UTC y "hoy" se calcula
+  en `America/Bogota` vía `clubToday()`. La fecha exacta no desaparece —baja
+  a la letra menuda del `StatFigure` ("Sembrado el…")— pero el titular es la
+  frase viva ("Lleva 5 meses creciendo…"), no el registro.
+- **El protector se explica dos veces con dos propósitos distintos:
+  `protectorDescription()` dice *qué* es (con el color exacto cuando el
+  contenido lo trae, "Llanta rosada"; genérico si no) y `protectorStory()`
+  dice *por qué* importa** — el hilo central de la iniciativa: 76 de los 77
+  protectores de hoy son una llanta que el club deja de usar en los
+  entrenamientos, no algo comprado. La ficha del árbol combina ambas frases
+  en un mismo párrafo en vez de dejar la explicación solo en una cifra
+  suelta, porque es el corazón de por qué existe Trocha Verde.
+- **Dos campos del schema de `trees` nunca se pintan, a propósito:
+  `co2EstimateKg` y `heightEstimateM` están vacíos en los 77 árboles reales**
+  (se calculaban antes con constantes inventadas, no con mediciones del
+  club) y el sistema editorial los deja fuera de las dos fichas de detalle
+  por la misma regla que ya aplican `trocha-verde.ts` y `[species].astro`: si
+  el dato no existe, el bloque no se pinta. Si el club llega a medir CO₂ o
+  altura algún día, los campos ya existen en `treesSchema` — no hace falta
+  tocar el schema, solo dejar de omitir el bloque.
+- **`treeDisplayLabel()` reemplaza el número que antes se leía con una regex
+  sobre el id del archivo (`tree.id.match(/-(\d+)$/)`) por la posición real
+  dentro de `speciesTrees`, ya ordenada por el campo `order` del CMS.** Con
+  un solo árbol de la especie no numera ("Ceiba"); con varios, numera según
+  el orden que cura el club ("Mango 3"), el mismo orden en que aparece en la
+  rejilla de `[species].astro` y en la rejilla de hermanos de la ficha del
+  árbol — el número de una ficha siempre coincide con su posición en ambas
+  páginas.
+- **La ficha del árbol no repite el inventario completo de su especie: cierra
+  con hasta seis árboles hermanos (`TreeCard`, el mismo componente que usa la
+  rejilla de la especie) y, si hay más, un enlace "Ver los N…" a
+  `/trocha-verde/[species]` para el inventario completo.** Es el mismo
+  patrón de "paso siguiente" que ya usa el detalle de programa
+  (`ProgramAdjacentNav`): la ficha de un árbol no es un callejón sin salida,
+  pero tampoco intenta ser la página de la especie.
+- **El breadcrumb visual y el JSON-LD de ambas páginas conviven sin
+  compartir mecanismo, como ya hace `trocha-verde/index.astro`.**
+  `[species].astro` y la ficha del árbol usan `Breadcrumb.astro` para la
+  navegación visible (que emite su propio `BreadcrumbList`), y la ficha del
+  árbol además pasa `generateBreadcrumbJsonLd()` (`@lib/seo`) por el prop
+  `jsonLd` de `BaseLayout` — el mismo mecanismo que ya traía la versión
+  anterior de la página, preservado a propósito en vez de reemplazado.

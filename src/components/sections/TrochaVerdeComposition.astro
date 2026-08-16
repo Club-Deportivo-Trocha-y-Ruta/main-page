@@ -1,0 +1,67 @@
+---
+/**
+ * "El bosque, por categoría": composición proporcional del inventario.
+ *
+ * Traduce `buildCategoryComposition()` (`@lib/trocha-verde`) en una barra
+ * apilada — la proporción real del inventario, no cuatro cifras sueltas uno
+ * junto al otro — con su leyenda como equivalente accesible. Los colores de
+ * cada tramo comparten familia con `categoryColors` (`@lib/tree-utils`), que
+ * ya usan las tarjetas de especie y de árbol: "ornamental" es el mismo
+ * morado en la barra, en el chip de la tarjeta y en el mapa.
+ */
+import { categoryLabels } from '@lib/tree-utils';
+import type { CategorySlice } from '@lib/trocha-verde';
+
+interface Props {
+  composition: CategorySlice[];
+  class?: string;
+}
+
+const { composition, class: className } = Astro.props;
+
+/** Mismo tono por categoría que `categoryColors`, pero en relleno sólido: los chips
+ * usan fondos claros (bg-*-100) que no se leerían como una barra proporcional. */
+const CATEGORY_FILL: Record<string, string> = {
+  frutal: 'bg-amber-500',
+  ornamental: 'bg-purple-500',
+  nativo: 'bg-emerald-600',
+  maderable: 'bg-orange-500',
+};
+
+const fillFor = (category: string) => CATEGORY_FILL[category] ?? 'bg-primary';
+---
+
+{composition.length > 0 && (
+  <figure class:list={['not-prose', className]}>
+    <figcaption class="sr-only">
+      Composición del inventario por categoría:{' '}
+      {composition
+        .map((slice) => `${categoryLabels[slice.category] ?? slice.category} ${slice.pct}%`)
+        .join(', ')}
+      .
+    </figcaption>
+
+    <div class="flex h-3 w-full overflow-hidden rounded-full bg-black/5" aria-hidden="true">
+      {composition.map((slice) => (
+        <span
+          class:list={[fillFor(slice.category), 'h-full first:rounded-l-full last:rounded-r-full']}
+          style={`width:${slice.pct}%`}
+        ></span>
+      ))}
+    </div>
+
+    <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4">
+      {composition.map((slice) => (
+        <li class="flex items-center gap-2 text-sm">
+          <span class:list={['size-2.5 shrink-0 rounded-full', fillFor(slice.category)]} aria-hidden="true"></span>
+          <span class="text-text-secondary">
+            <span class="font-semibold text-text-primary">
+              {categoryLabels[slice.category] ?? slice.category}
+            </span>{' '}
+            {slice.count} · {slice.pct}%
+          </span>
+        </li>
+      ))}
+    </ul>
+  </figure>
+)}
