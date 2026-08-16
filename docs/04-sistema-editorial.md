@@ -148,6 +148,9 @@ WhatsApp — pero siempre algo.
 | Galería (`/galeria` + álbum) | ✅ Migrada |
 | Detalle de noticia (`/noticias/[slug]`) | ⬜ Pendiente |
 | Trocha Verde (portada + índice + especie + árbol) | ✅ Migrada |
+| 404 (`/404`) | ✅ Migrada |
+| Contacto (`/contacto`) | ✅ Migrada |
+| Enlaces (`/enlaces`) | ✅ Migrada — marco propio, ver §18 |
 
 ---
 
@@ -592,3 +595,121 @@ Tres movimientos que conviene repetir en las páginas que faltan:
   cuerpo markdown vacío, así que el bloque "Notas adicionales" —nombrado igual
   que el campo `body` en Sveltia— no se pinta hoy, pero queda listo para el día
   en que el club escriba algo ahí.
+
+---
+
+## 16. Referencia del 404
+
+**Qué cambió.** La página era un callejón sin salida: un emoji, un titular y un
+botón a la portada. Ahora es una señal de ruta — quien se pierde en un sendero
+no necesita que le digan "te perdiste", necesita el siguiente punto de control.
+
+**Estructura.**
+
+| Sección | `tone` | Qué muestra |
+|---------|--------|-------------|
+| Señal de ruta | `tinted` + `topo` | `h1` y la ilustración del perfil |
+| Puntos de control | `plain` | Las cuatro entradas reales del sitio |
+| Enlace roto | `muted` | A quién avisarle si la página debería existir |
+
+**La ilustración.** Reutiliza `elevationProfile()` y `elevationPointAt()` de
+`@lib/editorial` —las mismas piezas que dibujan la ruta de programas—: el
+terreno se pinta apagado, un ciclista queda fuera de la traza unido a ella por
+una línea punteada, y el tramo que lleva de vuelta va resaltado en lima hasta
+el marcador «Inicio», que es un enlace real y no un adorno. Cero JS: SVG
+generado en build, con el detalle narrado en un `figcaption` en `sr-only`.
+
+**Los datos.** `buildControlPoints()` (`@lib/not-found`) arma los cuatro puntos
+reutilizando derivaciones que ya existían —`buildSeason()`, `summarizePrograms()`,
+`ENROLLMENT_STEPS`— para que el 404 nunca contradiga a `/calendario` ni a
+`/programas`. Cada punto lleva un dato del contenido: la próxima fecha con su
+ciudad, la última crónica con su fecha, cuántos programas y desde qué edad, y
+el primer paso de la inscripción.
+
+**La regla, aquí.** Un punto de control nunca desaparece; lo que desaparece es
+su dato. Sin próxima fecha, la tarjeta de calendario se pinta igual con
+`fact: null`, y `FactGrid` no dibuja nada — nunca un "próximamente" inventado.
+
+---
+
+## 17. Referencia de Contacto
+
+**Qué cambió.** La página asumía que ya sabías qué querías: soltaba un
+formulario al lado de una lista de datos. Y anunciaba, escrito a mano en la
+plantilla, un horario que **contradecía la colección `programs`**: decía
+"Lunes a Viernes 3:00 PM - 7:00 PM · Sábados 7:00 AM - 12:00 PM" cuando entre
+semana se entrena de 4 a 6, el sábado hasta las 9, y los domingos —que sí hay
+entrenamiento— no aparecían por ningún lado. Ese bloque se eliminó.
+
+**Estructura.**
+
+| Sección | `tone` | Qué muestra |
+|---------|--------|-------------|
+| Elige canal | `tinted` + `topo` | `h1` y las cuatro vías de contacto |
+| Formulario | `plain` | `ContactForm` + los datos directos |
+| La semana del club | `muted` | El ritmo real de entrenamiento |
+| Dónde | `plain` | Mapa y el lugar de cada programa |
+| Antes de escribir | `tinted` | Las FAQ que aplican, con su JSON-LD |
+
+**Los canales.** `CONTACT_CHANNELS` (`@lib/contact`) es vocabulario editorial,
+como `DOCUMENT_CATEGORIES` o `ENROLLMENT_STEPS`: cada canal dice para qué sirve
+y **qué tener a mano** antes de usarlo, para que la primera respuesta ya sirva.
+Dos de los cuatro son anclas a esta misma página (`#escribir`, `#donde`): quien
+no sabe por dónde empezar no tiene que salir del sitio para averiguarlo.
+
+**La semana.** El centro de la página. `buildWeekRhythm()` parte de
+`parseSchedule()` (`@lib/programs`), que descompone el texto libre del CMS en
+sesiones con día, franja y aclaración. Se pinta dos veces:
+
+- **La rejilla mañana/tarde × siete días** es la ilustración, y va
+  `aria-hidden`. Dibuja la forma de la semana de un vistazo —tardes entre
+  semana, mañanas el fin de semana— con la intensidad de cada celda marcando
+  cuántos programas coinciden (el martes es el día más cargado: tres a la vez).
+- **Las filas por día** son el contenido accesible, y el que funciona a 320px.
+
+La `note` de cada tramo ("salida", "gymkanas en pista") se muestra: dice *qué*
+se hace ese día, no solo a qué hora.
+
+**La regla, aquí.** Un horario que el parser no entienda **no se descarta**:
+cae en `rhythm.unreadable` y se pinta con su texto original. Nada se inventa y
+nada desaparece en silencio. Tampoco se promete un tiempo de respuesta: no hay
+dato que lo respalde.
+
+**Lo que se dejó fuera.** El bloque de FAQ excluye a propósito las categorías
+`entrenamiento` y las preguntas de ubicación: la página ya las responde arriba,
+con la semana y el mapa. El JSON-LD declara exactamente las preguntas visibles.
+
+---
+
+## 18. Referencia de Enlaces
+
+**Esta página vive fuera del marco editorial, a propósito.** `/enlaces` es el
+linktree del QR impreso en afiches, camisetas y el pendón del club: no es una
+sección del sitio, va con `noindex` y fuera del sitemap, y su marco es
+`LinktreeLayout` —fondo oscuro, tarjetas apiladas, ancho de móvil—. No usa
+`SectionShell` ni `SectionIntro`, y no debe usarlos: el formato linktree es el
+correcto para lo que hace. Lo que sí sigue del sistema es la regla de fondo —
+**todo dato sale del contenido**—, que es justo lo que le faltaba.
+
+**Qué cambió.** Las cifras de cabecera estaban escritas a mano, y una de las
+tres —"Yumbo / Valle del Cauca"— ni siquiera era una cifra: era la dirección
+repetida del pie de página. Ahora salen de `linktreeStats()`: años cumplidos
+del club (`getYearsActive()`), corredores formados (`CLUB_STATS`) y árboles
+sembrados (`summarizeTrees()`).
+
+**Lo que se agregó.** El bloque de más valor y el que no existía: **la próxima
+carrera**. Quien escanea ese QR está de pie en una competencia con treinta
+segundos, y lo más útil es cuándo es la siguiente. `nextRace()` sale de
+`buildSeason()` —la misma derivación de `/calendario`, para que no se
+contradigan— y trae día, mes, ciudad y si la carrera **es hoy**, caso en el que
+la tarjeta cambia a lima y lo dice. La descripción del enlace al calendario
+cuenta además en qué punto va el año (`seasonProgress()`).
+
+**La regla, aquí.** Sin próxima fecha, el bloque no se pinta: nada de
+"próximamente". Una cifra que no se pueda calcular se cae y quedan las demás —
+la rejilla se ajusta al número de cifras que sobrevivan.
+
+**Lo que no se toca.** El orden de prioridad (WhatsApp primero, preinscripción
+después), los parámetros UTM de `withUtm()` en todos los enlaces internos —así
+GA4 atribuye los escaneos offline—, los `aria-label` de las redes y el
+`noindex`. La página sigue enviando **cero JavaScript**.
