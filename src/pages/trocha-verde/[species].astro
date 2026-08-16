@@ -1,13 +1,41 @@
 ---
+/**
+ * Detalle de una especie de Trocha Verde.
+ *
+ * La especie abre como protagonista —nombre, foto, de dónde viene, para qué
+ * sirve, la curiosidad si existe— y se respalda con las cifras que salen de
+ * sus propios árboles: cuántos hay, cuándo se sembró el primero y el último,
+ * cuántos tienen padrino y con qué protector los cuida el club. Después,
+ * cada árbol, uno por uno.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md, sección 12: el
+ * detalle de programa es la referencia del mismo patrón hero + contexto +
+ * datos + paso siguiente).
+ */
 import { getCollection, render, type CollectionEntry } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
 import { Icon } from 'astro-icon/components';
-import { slugify, formatDate } from '@lib/utils';
-import { generateBreadcrumbJsonLd } from '@lib/seo';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import ShareButtons from '@components/common/ShareButtons.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import FactGrid from '@components/editorial/FactGrid.astro';
+import TreeCard from '@components/sections/TreeCard.astro';
+import { CONTACT } from '@lib/constants';
+import {
+  categoryLabels,
+  categoryColors,
+  treesOfSpecies,
+  treeDisplayLabel,
+  summarizeSpeciesTrees,
+  speciesGrammar,
+  plantingSpan,
+  describeProtectorMix,
+} from '@lib/tree-utils';
 
-type Tree = CollectionEntry<'trees'>;
 type SpeciesEntry = CollectionEntry<'species'>;
+type Tree = CollectionEntry<'trees'>;
 
 export async function getStaticPaths() {
   const allSpecies = await getCollection('species', (s: SpeciesEntry) => !s.data.draft);
@@ -20,170 +48,214 @@ export async function getStaticPaths() {
 const { sp } = Astro.props as { sp: SpeciesEntry };
 const { Content } = await render(sp);
 
-// Árboles de esta especie (match por commonName slugificado)
 const allTrees = await getCollection('trees', (t: Tree) => !t.data.draft);
-const speciesTrees = allTrees
-  .filter((t: Tree) => slugify(t.data.species) === sp.id)
-  .sort((a: Tree, b: Tree) => a.data.order - b.data.order);
+const speciesTrees = treesOfSpecies(allTrees, sp);
+const stats = summarizeSpeciesTrees(speciesTrees);
+const grammar = speciesGrammar(sp.data);
 
-const categoryLabels: Record<string, string> = {
-  frutal: 'Frutal',
-  ornamental: 'Ornamental',
-  nativo: 'Nativo',
-  maderable: 'Maderable',
-};
-const categoryColors: Record<string, { bg: string; text: string }> = {
-  frutal: { bg: 'bg-amber-100', text: 'text-amber-700' },
-  ornamental: { bg: 'bg-purple-100', text: 'text-purple-900' },
-  nativo: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
-  maderable: { bg: 'bg-orange-100', text: 'text-orange-700' },
-};
-const catColors = categoryColors[sp.data.category] || categoryColors.nativo;
-const articlePlural = sp.data.feminine ? 'Nuestras' : 'Nuestros';
-const pluralName = sp.data.plural ?? (sp.data.commonName + 's');
+const catColors = categoryColors[sp.data.category] ?? categoryColors.nativo;
+const catLabel = categoryLabels[sp.data.category] ?? sp.data.category;
 
-const breadcrumbs = [
-  { label: 'Trocha Verde', href: '/trocha-verde' },
-  { label: sp.data.commonName },
-];
-const breadcrumbJsonLd = generateBreadcrumbJsonLd([
-  { name: 'Inicio', url: '/' },
-  { name: 'Trocha Verde', url: '/trocha-verde' },
-  { name: sp.data.commonName, url: `/trocha-verde/${sp.id}` },
-]);
+// Concordancia con el schema (feminine): "Ixoras sembradas" / "Guayacanes sembrados".
+const plantedPlural = sp.data.feminine ? 'sembradas' : 'sembrados';
+const plantedSingular = sp.data.feminine ? 'sembrada' : 'sembrado';
+
+const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
+  `Hola, quiero apadrinar un árbol de ${sp.data.commonName} en Trocha Verde`
+)}`;
 ---
 
-<PageLayout
-  title={`${sp.data.commonName} — Trocha Verde`}
+<BaseLayout
+  title={`${sp.data.commonName} | Trocha Verde`}
   description={sp.data.description}
   ogImage={sp.data.heroImage}
-  breadcrumbs={breadcrumbs}
-  jsonLd={[breadcrumbJsonLd]}
 >
-  <!-- Hero especie -->
-  <div class="relative -mt-8 mb-12 overflow-hidden rounded-2xl">
-    <img
-      src={sp.data.heroImage}
-      alt={sp.data.heroImageAlt}
-      class="h-64 w-full object-cover sm:h-80"
-      loading="eager"
-      width="1200"
-      height="320"
-      fetchpriority="high"
-    />
-    <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/80 to-transparent" />
-    <div class="absolute bottom-0 left-0 p-6 sm:p-8">
-      <span class={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${catColors.bg} ${catColors.text}`}>
-        {categoryLabels[sp.data.category]}
-      </span>
-      <h2 class="mt-2 font-display text-3xl font-bold text-white sm:text-4xl">
-        {sp.data.commonName}
-      </h2>
-      {sp.data.scientificName && (
-        <p class="mt-1 text-lg italic text-emerald-200">{sp.data.scientificName}</p>
-      )}
-    </div>
-  </div>
+  <!-- La especie como protagonista -->
+  <SectionShell
+    tone="tinted"
+    pattern="topo"
+    width="wide"
+    spacing="compact"
+    labelledby="especie-titulo"
+  >
+    <Breadcrumb items={[{ label: 'Trocha Verde', href: '/trocha-verde' }, { label: sp.data.commonName }]} />
 
-  <!-- Stats rápidos -->
-  <div class="mb-12 flex flex-wrap gap-4">
-    <div
-      class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4"
-      role="region"
-      aria-label={`${speciesTrees.length} ${speciesTrees.length === 1 ? 'árbol sembrado' : 'árboles sembrados'}`}
-    >
-      <Icon name="ph:tree-bold" class="h-6 w-6 text-emerald-600" aria-hidden="true" />
-      <div aria-hidden="true">
-        <p class="font-display text-2xl font-bold text-text-primary">{speciesTrees.length}</p>
-        <p class="text-sm text-text-secondary">{speciesTrees.length === 1 ? 'Árbol sembrado' : 'Árboles sembrados'}</p>
-      </div>
-    </div>
-    {sp.data.origin && (
-      <div
-        class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4"
-        role="region"
-        aria-label={`Origen: ${sp.data.origin}`}
+    <div class="mt-6 grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
+      <SectionIntro
+        as="h1"
+        id="especie-titulo"
+        eyebrow="Trocha Verde"
+        eyebrowIcon="ph:tree-bold"
+        title={sp.data.commonName}
+        lead={sp.data.description}
       >
-        <Icon name="ph:globe-hemisphere-west-bold" class="h-6 w-6 text-emerald-600" aria-hidden="true" />
-        <div>
-          <p class="font-display text-sm font-bold text-text-primary">Origen</p>
-          <p class="text-sm text-text-secondary">{sp.data.origin}</p>
+        <div class="mt-3 flex flex-wrap items-center gap-3">
+          {sp.data.scientificName && (
+            <p class="font-display text-lg italic text-text-secondary">{sp.data.scientificName}</p>
+          )}
+          <span
+            class={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${catColors.bg} ${catColors.text}`}
+          >
+            {catLabel}
+          </span>
         </div>
-      </div>
-    )}
-    {sp.data.uses && sp.data.uses.length > 0 && (
-      <div
-        class="flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-5 py-4"
-        role="region"
-        aria-label={`Usos: ${sp.data.uses.join(', ')}`}
-      >
-        <Icon name="ph:leaf-bold" class="h-6 w-6 text-emerald-600" aria-hidden="true" />
-        <div>
-          <p class="font-display text-sm font-bold text-text-primary">Usos</p>
-          <p class="text-sm text-text-secondary line-clamp-2">{sp.data.uses.join(', ')}</p>
-        </div>
-      </div>
-    )}
-  </div>
 
-  <!-- Descripción + curiosidad -->
-  <section class="mb-12 grid gap-8 md:grid-cols-2">
-    <div class="prose prose-emerald max-w-none">
-      <Content />
+        <FactGrid
+          class="mt-6"
+          columns={2}
+          items={[
+            sp.data.origin
+              ? { icon: 'ph:globe-hemisphere-west-bold', label: 'De dónde viene', value: sp.data.origin }
+              : null,
+            sp.data.uses && sp.data.uses.length > 0
+              ? { icon: 'ph:leaf-bold', label: 'Para qué se usa', value: sp.data.uses.join(', ') }
+              : null,
+          ]}
+        />
+      </SectionIntro>
+
+      <img
+        src={sp.data.heroImage}
+        alt={sp.data.heroImageAlt}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        width="800"
+        height="600"
+        class="aspect-[4/3] w-full rounded-2xl object-cover shadow-md"
+      />
     </div>
+
     {sp.data.curiosity && (
-      <aside class="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
-        <div class="flex gap-3">
-          <Icon name="ph:lightbulb-bold" class="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
-          <div>
-            <p class="font-display font-bold text-emerald-800">¿Sabías que...?</p>
-            <p class="mt-1 text-sm leading-relaxed text-emerald-700">{sp.data.curiosity}</p>
-          </div>
+      <aside
+        class="mt-8 flex gap-3 rounded-2xl border border-primary/15 bg-surface/70 p-5 backdrop-blur-sm sm:p-6"
+        aria-label="Dato curioso"
+      >
+        <Icon name="ph:lightbulb-bold" class="mt-0.5 size-5 shrink-0 text-primary-deep" aria-hidden="true" />
+        <div>
+          <p class="font-display text-sm font-bold text-text-primary">¿Sabías que...?</p>
+          <p class="mt-1 text-sm leading-relaxed text-text-secondary">{sp.data.curiosity}</p>
         </div>
       </aside>
     )}
-  </section>
 
-  <!-- Galería de árboles de esta especie -->
-  {speciesTrees.length > 0 && (
-    <section class="mb-12">
-      <SectionTitle
-        title={`${articlePlural} ${pluralName}`}
-        subtitle={`${speciesTrees.length} ${speciesTrees.length === 1 ? 'ejemplar' : 'ejemplares'} en la pista Carlos Castro`}
-      />
-      <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {speciesTrees.map((t: Tree) => (
-          <div class="overflow-hidden rounded-xl border border-emerald-100 bg-white">
-            <div class="aspect-square overflow-hidden bg-surface-muted">
-              <img
-                src={t.data.image}
-                alt={t.data.imageAlt}
-                class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-                loading="lazy"
-                width="300"
-                height="300"
-              />
-            </div>
-            <div class="p-3">
-              <p class="text-xs text-text-secondary">{formatDate(t.data.plantedDate)}</p>
-              {t.data.donor && (
-                <p class="mt-0.5 text-xs text-text-secondary">Donado por {t.data.donor}</p>
-              )}
-            </div>
-          </div>
+    <!-- Cifras de la propia especie: solo lo que sus árboles respaldan -->
+    {stats && (
+      <dl class="mt-10 grid grid-cols-2 gap-6 border-t border-primary/15 pt-8 sm:grid-cols-4">
+        <StatFigure
+          value={stats.total}
+          label={stats.total === 1 ? `${sp.data.commonName} ${plantedSingular}` : `${grammar.plural} ${plantedPlural}`}
+          icon="ph:tree-bold"
+        />
+        <StatFigure
+          value={plantingSpan(stats.firstPlanted, stats.lastPlanted)}
+          size="sm"
+          label={stats.total === 1 ? 'Fecha de siembra' : 'Periodo de siembra'}
+          icon="ph:calendar-dots-bold"
+        />
+        {stats.sponsored > 0 && (
+          <StatFigure
+            value={stats.sponsored}
+            label={stats.sponsored === 1 ? 'con padrino o madrina' : 'con padrino o madrina'}
+            note={`de ${stats.total} ${stats.total === 1 ? 'ejemplar' : 'ejemplares'}`}
+            icon="ph:heart-bold"
+          />
+        )}
+        <StatFigure
+          value={describeProtectorMix(stats.protectors)}
+          size="sm"
+          label="Protegidos con"
+          icon="ph:tire-bold"
+        />
+      </dl>
+    )}
+  </SectionShell>
+
+  <!-- Cada árbol, uno por uno -->
+  <SectionShell tone="muted" width="wide" labelledby="arboles-titulo">
+    <SectionIntro
+      id="arboles-titulo"
+      eyebrow="Inventario"
+      eyebrowIcon="ph:list-bullets-bold"
+      title={`${grammar.Article} ${grammar.plural}, una por una`}
+      highlight="una por una"
+      lead="Cada ficha trae su propia fecha de siembra y, cuando lo hay, el nombre de quien la sembró."
+      class="max-w-2xl"
+    />
+
+    {stats ? (
+      <ul class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4" role="list">
+        {speciesTrees.map((tree: Tree, index: number) => (
+          <li class="reveal" style={`--stagger:${Math.min(index, 3) * 60}ms`}>
+            <TreeCard
+              id={tree.id}
+              label={treeDisplayLabel(tree, speciesTrees)}
+              image={tree.data.image}
+              imageAlt={tree.data.imageAlt}
+              plantedDate={tree.data.plantedDate}
+              status={tree.data.status}
+              donor={tree.data.donor}
+            />
+          </li>
         ))}
-      </div>
-    </section>
-  )}
+      </ul>
+    ) : (
+      <p class="mt-10 text-text-secondary">
+        Todavía no hay árboles de esta especie en el inventario. Vuelve pronto.
+      </p>
+    )}
+  </SectionShell>
 
-  <!-- Volver -->
-  <div class="text-center">
-    <a
-      href="/trocha-verde#inventario-especies"
-      class="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-white px-5 py-3 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
-    >
-      <Icon name="ph:arrow-left-bold" class="h-4 w-4" aria-hidden="true" />
-      Ver todas las especies
-    </a>
-  </div>
-</PageLayout>
+  <!-- Sobre la especie: el cuerpo editorial completo -->
+  <SectionShell tone="plain" width="default" labelledby="sobre-titulo">
+    <SectionIntro
+      id="sobre-titulo"
+      eyebrow="Sobre la especie"
+      eyebrowIcon="ph:info-bold"
+      title="Una especie con historia propia"
+      highlight="historia propia"
+      lead="De dónde viene, cómo crece y qué representa para el club."
+      class="max-w-2xl"
+    />
+
+    <div class="prose prose-lg mt-8 max-w-3xl">
+      <Content />
+    </div>
+
+    <div class="mt-8 max-w-3xl border-t border-black/10 pt-6">
+      <ShareButtons title={sp.data.commonName} description={sp.data.description} />
+    </div>
+  </SectionShell>
+
+  <!-- Paso siguiente -->
+  <SectionShell tone="muted" width="default" spacing="compact" label="Paso siguiente">
+    <div class="rounded-2xl border border-primary/20 bg-primary/5 px-6 py-8 text-center sm:px-10">
+      <h2 class="font-display text-xl font-bold text-text-primary sm:text-2xl">
+        Trocha Verde sigue creciendo
+      </h2>
+      <p class="mx-auto mt-2 max-w-xl text-text-secondary">
+        Recorre el resto de especies sembradas en la pista Carlos Castro o escríbenos si quieres
+        apadrinar el próximo árbol.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a
+          href="/trocha-verde"
+          class="inline-flex items-center gap-2 rounded-lg bg-primary-deep px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-deep"
+        >
+          <Icon name="ph:tree-bold" class="size-4" aria-hidden="true" />
+          Ver todo Trocha Verde
+        </a>
+        <a
+          href={whatsappApadrinar}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-analytics-event="whatsapp_click"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 text-sm font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-deep"
+        >
+          <Icon name="ph:whatsapp-logo-bold" class="size-4" aria-hidden="true" />
+          Apadrinar un árbol
+        </a>
+      </div>
+    </div>
+  </SectionShell>
+</BaseLayout>

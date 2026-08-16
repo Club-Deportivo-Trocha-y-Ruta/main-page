@@ -1,0 +1,154 @@
+---
+/**
+ * "El ritmo de siembra": cómo se acumularon los árboles en el tiempo.
+ *
+ * La pieza ilustrativa central de la página de Trocha Verde. No es un
+ * perfil decorativo: es un gráfico de escalones real, calculado a partir de
+ * `plantedDate` — cada tramo plano es una espera entre jornadas, cada salto
+ * vertical es una jornada de siembra. El eje X respeta el tiempo transcurrido
+ * de verdad (una jornada dos semanas después de la anterior queda dos veces
+ * más lejos que una a una semana), así que el dibujo cuenta lo mismo que
+ * cuentan las fechas: la siembra fue a rachas, no continua.
+ *
+ * El SVG se estira con `preserveAspectRatio="none"` como el resto del
+ * sistema (`elevationProfile`, `ProgramPathway`): el viewBox es una escala de
+ * trabajo en porcentaje, no una proporción real. Los marcadores y el texto
+ * van en HTML encima, nunca dentro del SVG.
+ */
+import { getTone, type SectionTone } from '@lib/editorial';
+import type { PlantingTimeline } from '@lib/trocha-verde';
+
+interface Props {
+  timeline: PlantingTimeline;
+  tone?: SectionTone;
+  class?: string;
+}
+
+const { timeline, tone = 'plain', class: className } = Astro.props;
+const tokens = getTone(tone);
+const { stops } = timeline;
+
+// Escalera acumulada: plano hasta la jornada, salto vertical del tamaño de
+// esa jornada. Arranca en (0,0) y cierra plano en x=100 tras la última.
+const round1 = (n: number) => Math.round(n * 10) / 10;
+const toSvgY = (pct: number) => round1(100 - pct); // SVG crece hacia abajo: 0% cae en y=100.
+
+const stairPoints: [number, number][] = [[0, 0]];
+let level = 0;
+for (const stop of stops) {
+  stairPoints.push([stop.xPct, level]);
+  stairPoints.push([stop.xPct, stop.cumulativePct]);
+  level = stop.cumulativePct;
+}
+stairPoints.push([100, level]);
+
+const linePoints = stairPoints.map(([x, y]) => `${x},${toSvgY(y)}`).join(' ');
+const areaPoints = `0,100 ${linePoints} 100,100`;
+
+// Regla de semanas bajo el gráfico: puramente decorativa, como la regla de
+// años de ProgramPathway.
+const weekTicks = Array.from({ length: timeline.totalWeeks + 1 }, (_, i) => ({
+  pct: timeline.totalWeeks > 0 ? round1((i / timeline.totalWeeks) * 100) : 0,
+  major: i === 0 || i === timeline.totalWeeks,
+}));
+
+const first = stops[0];
+const last = stops[stops.length - 1];
+---
+
+{stops.length > 0 && (
+  <figure class:list={['not-prose', className]}>
+    <figcaption class="sr-only">
+      Ritmo de siembra: {timeline.total} árboles sembrados en {stops.length}{' '}
+      {stops.length === 1 ? 'jornada' : 'jornadas'}, a lo largo de {timeline.totalWeeks}{' '}
+      {timeline.totalWeeks === 1 ? 'semana' : 'semanas'} entre el {first.day} de {first.month} y el{' '}
+      {last.day} de {last.month}. La jornada más grande sembró{' '}
+      {Math.max(...stops.map((s) => s.count))} árboles.
+    </figcaption>
+
+    <div class:list={['flex items-center justify-between gap-4 text-[11px] font-semibold uppercase tracking-[0.16em]', tokens.muted]}>
+      <span class="inline-flex items-center gap-1.5">
+        <svg class:list={['size-3.5 shrink-0', tokens.inverted ? 'text-accent-light' : 'text-accent-deep']} aria-hidden="true" viewBox="0 0 256 256" fill="currentColor"><path d="M96,236a12,12,0,0,1-12,12H40a12,12,0,0,1-12-12c0-44.18,26.19-77.35,60-85.83V56A44.05,44.05,0,0,1,132,12h60a12,12,0,0,1,12,12,44.05,44.05,0,0,1-44,44H140v82.17C173.81,158.65,200,191.82,200,236a12,12,0,0,1-12,12H144a12,12,0,0,1-12-12,55.63,55.63,0,0,1,4-20.68,55.63,55.63,0,0,1,4,20.68"/></svg>
+        {first.day} de {first.month}
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-right">
+        {last.day} de {last.month}
+        <svg class:list={['size-3.5 shrink-0', tokens.inverted ? 'text-accent-light' : 'text-primary-deep']} aria-hidden="true" viewBox="0 0 256 256" fill="currentColor"><path d="M223.45,40.07a8,8,0,0,0-7.52-7.52C139.8,28.08,79.6,50.79,52.63,94.54a115.9,115.9,0,0,0-15,53.71,63.44,63.44,0,0,0-31.06,34.83c-8.42,23.66-2.7,52.34,17,85.19a8,8,0,0,0,6.87,3.87,8.29,8.29,0,0,0,1.11-.08c34.2-4.63,61.58-16.86,79.06-35.37a63.68,63.68,0,0,0,17.06-35.98,115.85,115.85,0,0,0,53.71-15C224.21,153.4,246.92,93.2,223.45,40.07Z"/></svg>
+      </span>
+    </div>
+
+    <!-- Escalera acumulada -->
+    <div class="relative mt-3 h-32 sm:h-40 md:h-48">
+      <svg
+        class="absolute inset-0 h-full w-full"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <!-- Guías al 25/50/75/100% acumulado -->
+        {[25, 50, 75, 100].map((y) => (
+          <line
+            x1="0"
+            y1={toSvgY(y)}
+            x2="100"
+            y2={toSvgY(y)}
+            class:list={[tokens.inverted ? 'text-white/15' : 'text-black/10']}
+            stroke="currentColor"
+            stroke-width="0.5"
+            vector-effect="non-scaling-stroke"
+          />
+        ))}
+        <polygon points={areaPoints} class="text-primary/15" fill="currentColor" />
+        <polyline
+          points={linePoints}
+          fill="none"
+          class="text-primary-deep"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+        />
+      </svg>
+
+      {stops.map((stop) => (
+        <span
+          class:list={[
+            'absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2',
+            tokens.inverted ? 'bg-accent-light ring-surface-dark' : 'bg-primary-deep ring-white',
+          ]}
+          style={`left:${stop.xPct}%;top:${toSvgY(stop.cumulativePct)}%`}
+          aria-hidden="true"
+        ></span>
+      ))}
+    </div>
+
+    <!-- Regla de semanas -->
+    <div class="relative mt-1 h-2.5 border-t border-black/10" aria-hidden="true">
+      {weekTicks.map((tick) => (
+        <span
+          class:list={['absolute top-0 w-px', tick.major ? 'bg-black/25' : 'bg-black/10']}
+          style={`left:${tick.pct}%;height:${tick.major ? '10px' : '5px'}`}
+        ></span>
+      ))}
+    </div>
+    <p class:list={['mt-1.5 text-center text-[10px] uppercase tracking-wider', tokens.muted]}>
+      {timeline.totalWeeks} {timeline.totalWeeks === 1 ? 'semana' : 'semanas'} de siembra
+    </p>
+
+    <!-- Detalle de cada jornada: el equivalente accesible del gráfico -->
+    <ol class="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+      {stops.map((stop, index) => (
+        <li class:list={['rounded-xl border px-3 py-2.5', tokens.hairline, tokens.card]}>
+          <p class:list={['text-[11px] font-bold uppercase tracking-wider', tokens.inverted ? 'text-accent-light' : 'text-accent-deep']}>
+            Jornada {index + 1} · {stop.day} de {stop.month}
+          </p>
+          <p class:list={['mt-1 text-sm font-semibold', tokens.heading]}>
+            {stop.count} {stop.count === 1 ? 'árbol sembrado' : 'árboles sembrados'}
+          </p>
+          <p class:list={['text-xs', tokens.muted]}>Van {stop.cumulative} de {timeline.total}</p>
+        </li>
+      ))}
+    </ol>
+  </figure>
+)}

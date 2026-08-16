@@ -7,7 +7,9 @@ const stats = await getTreeStats();
 const metrics = [
   { value: stats.totalTrees, label: 'Árboles sembrados', icon: 'ph:tree-bold' },
   { value: stats.totalSpecies, label: 'Especies distintas', icon: 'ph:leaf-bold' },
-  { value: stats.co2ProjectedKg, label: 'kg CO₂/año estimado', icon: 'ph:cloud-bold' },
+  // La cifra de CO₂ que iba aquí se calculaba con constantes por categoría, no
+  // con datos del club: `co2EstimateKg` está vacío en los 77 árboles. Se
+  // elimina hasta que exista una medición propia.
   { value: stats.totalRecycled, label: 'Llantas recicladas', icon: 'ph:recycle-bold' },
 ];
 ---
