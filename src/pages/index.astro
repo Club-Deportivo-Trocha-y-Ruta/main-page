@@ -1,4 +1,19 @@
 ---
+/**
+ * Portada.
+ *
+ * El recorrido de una familia que llega por primera vez: qué es esto (hero) →
+ * por qué creerle (cifras comprobables) → qué ofrece (programas) → quién está
+ * detrás (el club) → el paso siguiente → qué está pasando (calendario y
+ * noticias) → qué más hace el club (Trocha Verde) → en quién confía y quién
+ * confía en él (patrocinadores, club seguro) → el cierre.
+ *
+ * El ritmo lo dan los tonos del sistema editorial, alternando `plain` y
+ * `muted` para que dos secciones seguidas nunca compartan fondo. Si mueves una
+ * sección de sitio, revisa que la alternancia siga cuadrando.
+ *
+ * Ver docs/04-sistema-editorial.md.
+ */
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { SITE } from '@lib/constants';
 import { generateOrganizationJsonLd, generateWebSiteJsonLd } from '@lib/seo';
@@ -12,80 +27,78 @@ import NewsPreview from '@components/sections/NewsPreview.astro';
 import TrochaVerde from '@components/sections/TrochaVerde.astro';
 import SponsorsBar from '@components/sections/SponsorsBar.astro';
 import SafeClubBadge from '@components/sections/SafeClubBadge.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
 import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 import WaveSeparator from '@components/common/WaveSeparator.astro';
 
-const jsonLd = [
-  generateOrganizationJsonLd(),
-  generateWebSiteJsonLd(),
-];
+const jsonLd = [generateOrganizationJsonLd(), generateWebSiteJsonLd()];
 ---
 
 <BaseLayout title={SITE.name} description={SITE.description} jsonLd={jsonLd}>
-  <!-- 1. Gancho emocional -->
+  <!-- 1. El gancho, con el pulso de la temporada -->
   <Hero />
 
-  <!-- Wave: Hero → Stats -->
-  <WaveSeparator from="fill-surface-dark" to="fill-surface-muted" />
+  <!-- El corte del hero cae sobre blanco: es el fondo de la banda de cifras. -->
+  <WaveSeparator from="fill-surface-dark" to="fill-surface" />
 
-  <!-- 2. Credibilidad rápida -->
+  <!-- 2. Por qué creerle: cifras que el lector puede comprobar (plain) -->
   <div class="reveal">
     <StatsCounter />
   </div>
 
-  <!-- 3. Qué ofrecemos -->
+  <!-- 3. Qué ofrece (muted) -->
   <div class="reveal">
     <ProgramsGrid />
   </div>
 
-  <!-- 4. Quién está detrás -->
+  <!-- 4. Quién está detrás (plain) -->
   <div class="reveal">
     <AboutPreview />
   </div>
 
-  <!-- 6. CTA intermedio — momento de conversión -->
-  <div class="reveal">
-    <section class="py-16 px-4">
-      <div class="mx-auto max-w-4xl">
-        <InscriptionCTA
-          variant="inline"
-          heading="Primera clase de prueba gratis"
-          description="Formamos niños con valores a través del ciclomontañismo. Entrenadores certificados, ambiente seguro y divertido."
-        />
-      </div>
-    </section>
-  </div>
+  <!-- 5. Momento de conversión (muted) -->
+  <SectionShell tone="muted" width="default" spacing="compact" label="Clase de prueba">
+    <div class="reveal">
+      <InscriptionCTA
+        variant="inline"
+        heading="La primera clase es de prueba y no cuesta nada"
+        description="Tu hijo entrena una sesión completa con su grupo antes de que decidas. Entrenadores certificados y pista propia."
+      />
+    </div>
+  </SectionShell>
 
-  <!-- 7. Actividad y eventos -->
+  <!-- 6. Qué está pasando (plain) -->
   <div class="reveal">
     <UpcomingEvents />
   </div>
 
-  <!-- 8. Contenido editorial -->
+  <!-- 7. Lo que se contó de cada carrera (muted) -->
   <div class="reveal">
     <NewsPreview />
   </div>
 
-  <!-- 9. Valores ambientales + última jornada (fusiona el antiguo bloque
-       LatestInitiative, que duplicaba el CTA a /trocha-verde) -->
+  <!-- 8. El otro lado del club: la iniciativa ambiental. Cambia de registro a
+       propósito, con su propio verde. -->
   <div class="reveal">
     <TrochaVerde />
   </div>
 
-  <!-- 10. Trust signals: sponsors + protección infantil -->
+  <!-- 9. Quién respalda al club (plain) -->
   <div class="reveal">
     <SponsorsBar />
   </div>
+
+  <!-- 10. La señal que más pesa para una familia (muted) -->
   <div class="reveal">
     <SafeClubBadge />
   </div>
 
-  <!-- 11. CTA final -->
+  <!-- 11. El cierre -->
   <div class="reveal">
     <InscriptionCTA
       variant="banner"
-      heading="Tu hijo puede empezar desde los 4 años"
-      description="Formamos niños con valores a través del ciclomontañismo. Primera clase de prueba gratis, entrenadores certificados."
+      heading="Tu hijo puede empezar este mes"
+      description="Escríbenos y te decimos a qué grupo entra según su edad. La primera clase es de prueba."
     />
   </div>
 </BaseLayout>

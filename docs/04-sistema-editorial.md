@@ -151,6 +151,7 @@ WhatsApp — pero siempre algo.
 | 404 (`/404`) | ✅ Migrada |
 | Contacto (`/contacto`) | ✅ Migrada |
 | Enlaces (`/enlaces`) | ✅ Migrada — marco propio, ver §18 |
+| Portada (`/`) | ✅ Migrada |
 
 ---
 
@@ -713,3 +714,55 @@ la rejilla se ajusta al número de cifras que sobrevivan.
 después), los parámetros UTM de `withUtm()` en todos los enlaces internos —así
 GA4 atribuye los escaneos offline—, los `aria-label` de las redes y el
 `noindex`. La página sigue enviando **cero JavaScript**.
+
+---
+
+## 19. Referencia de la portada
+
+**Qué cambió.** La portada era una pila de nueve secciones sin ritmo, con dos
+problemas de datos debajo del diseño:
+
+1. **La banda de cifras decía ser dinámica y no lo era.** Calculaba
+   `Math.max(CLUB_STATS.x, conteoDeLaColección)`, pero los cinco corredores
+   están en `draft`: el conteo era 0 y la constante ganaba siempre. Código
+   muerto disfrazado de dato vivo.
+2. **Dos de esas cifras se mostraban dos veces en la misma página** —niños
+   formados y medallas— porque `AboutPreview` ya las pintaba más abajo.
+
+**El reparto nuevo.** `buildClubFigures()` (`@lib/home`) arma la banda con lo
+que el sitio **puede probar**: años cumplidos, programas, fechas de la
+temporada y árboles del inventario. Cada cifra viaja con su procedencia
+(`note`) y enlaza a la página donde se comprueba — la regla del sistema hecha
+verificable por el lector. Las afirmaciones históricas del club
+(`CLUB_STATS.ridersTrained`, `medals`), que no tienen dataset detrás, se
+quedan solo en `AboutPreview`.
+
+**El pulso del hero.** El hero era un cartel fijo. Ahora, debajo de los
+botones, muestra la próxima fecha real de la temporada vía `heroPulse()`, que
+sale de `buildSeason()` — la misma derivación de `/calendario` y `/enlaces`, así
+que las tres nunca se contradicen. Si la carrera es hoy, el aviso cambia. Si ya
+corrió toda la temporada, no se pinta nada. Cuando hay pulso, la flecha de
+scroll se oculta: dos señales compitiendo por la misma mirada.
+
+**El ritmo.** Los tonos alternan `plain` / `muted` de arriba abajo para que dos
+secciones seguidas nunca compartan fondo, con dos excepciones deliberadas:
+Trocha Verde usa `tinted` porque cambia de registro, y el cierre usa el fondo
+de marca. `WaveSeparator` apunta ahora a `fill-surface`, que es el fondo real
+de la sección que sigue.
+
+**Correcciones de accesibilidad y marcado.**
+
+- El banner de `InscriptionCTA` pintaba texto blanco sobre `bg-primary`: el teal
+  de marca da **2.4:1** contra blanco y no cumple AA ni para texto grande. Pasa a
+  `text-surface-dark`, medido en **5.5:1**. Afectaba a cuatro páginas.
+- Hero y el banner de CTA no tenían nombre accesible; ahora apuntan a su titular.
+- `AboutPreview` envolvía `StatFigure` —que pinta `<div><p>`— en un `<dl>`, o sea
+  una lista de definición sin términos. Es una rejilla normal.
+- La sección de Trocha Verde pintaba con `emerald-*` de Tailwind, un verde que no
+  está en la paleta del club. Pasa a los tokens de marca.
+
+**Lo que no se tocó.** El vídeo de YouTube del hero: carga la API de terceros en
+escritorio y pesa sobre el LCP, pero quitarlo es una decisión de producto, no
+de migración. Y ninguna edad mínima nueva en el texto: la colección `programs`
+arranca en 3 y las FAQ y `constants.ts` dicen 4, así que la portada describe la
+ruta sin zanjar la cifra.

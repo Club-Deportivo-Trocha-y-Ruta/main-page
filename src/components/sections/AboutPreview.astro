@@ -60,11 +60,16 @@ const figures = [
         lead={`Desde ${SITE.founded}, ${SITE.name} forma niños y jóvenes en la pista Carlos Castro. Más que un club deportivo, somos una comunidad de familias que entrena, compite y siembra junta.`}
       />
 
-      <dl class="mt-8 grid grid-cols-3 gap-4 border-t border-black/10 pt-6">
+      {/*
+        `StatFigure` pinta un `<div><p>`, no un par `<dt>/<dd>`: envolverlo en
+        un `<dl>` producía una lista de definición sin términos, que es HTML
+        inválido. Es una rejilla normal.
+      */}
+      <div class="mt-8 grid grid-cols-3 gap-4 border-t border-black/10 pt-6">
         {figures.map((figure) => (
           <StatFigure value={figure.value} label={figure.label} />
         ))}
-      </dl>
+      </div>
 
       <Button href="/quienes-somos" class="mt-8">Conoce nuestra historia</Button>
     </div>
