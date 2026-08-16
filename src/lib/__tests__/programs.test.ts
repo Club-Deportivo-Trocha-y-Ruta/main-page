@@ -3,6 +3,7 @@ import {
   countWeeklySessions,
   buildPathway,
   summarizePrograms,
+  getAdjacentPrograms,
   getLevelStyle,
   toPathwayInput,
   LEVEL_STYLES,
@@ -248,6 +249,51 @@ describe('summarizePrograms', () => {
       ageRange: null,
       weeklySessions: null,
       seats: null,
+    });
+  });
+});
+
+// ============================================================
+// getAdjacentPrograms
+// ============================================================
+
+describe('getAdjacentPrograms', () => {
+  it('devuelve el anterior y el siguiente de un programa intermedio', () => {
+    const { previous, next } = getAdjacentPrograms(REAL_PROGRAMS, 'formacion-juvenil');
+    expect(previous?.id).toBe('escuela-de-iniciacion');
+    expect(next?.id).toBe('alto-rendimiento');
+  });
+
+  it('el primer programa de la ruta no tiene anterior', () => {
+    const { previous, next } = getAdjacentPrograms(REAL_PROGRAMS, 'escuela-de-iniciacion');
+    expect(previous).toBeNull();
+    expect(next?.id).toBe('formacion-juvenil');
+  });
+
+  it('el último programa de la ruta no tiene siguiente', () => {
+    const { previous, next } = getAdjacentPrograms(REAL_PROGRAMS, 'alto-rendimiento');
+    expect(previous?.id).toBe('formacion-juvenil');
+    expect(next).toBeNull();
+  });
+
+  it('ordena por ageMin sin importar el orden de entrada', () => {
+    const shuffled = [REAL_PROGRAMS[2], REAL_PROGRAMS[0], REAL_PROGRAMS[1]];
+    const { previous, next } = getAdjacentPrograms(shuffled, 'formacion-juvenil');
+    expect(previous?.id).toBe('escuela-de-iniciacion');
+    expect(next?.id).toBe('alto-rendimiento');
+  });
+
+  it('devuelve ambos en null cuando el id no aparece en la lista', () => {
+    expect(getAdjacentPrograms(REAL_PROGRAMS, 'no-existe')).toEqual({
+      previous: null,
+      next: null,
+    });
+  });
+
+  it('devuelve ambos en null con un solo programa en la ruta', () => {
+    expect(getAdjacentPrograms([REAL_PROGRAMS[0]], 'escuela-de-iniciacion')).toEqual({
+      previous: null,
+      next: null,
     });
   });
 });

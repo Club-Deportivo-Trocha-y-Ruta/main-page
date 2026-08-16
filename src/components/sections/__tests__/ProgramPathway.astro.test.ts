@@ -128,4 +128,48 @@ describe('ProgramPathway', () => {
     expect(doc.body.textContent).toContain('Primera rodada');
     expect(doc.body.textContent).toContain('Selección Valle');
   });
+
+  describe('activeId', () => {
+    it('sin el prop no marca ninguna etapa ni cambia los valores por defecto', async () => {
+      const doc = await render({ programs, legend: true });
+
+      expect(doc.querySelectorAll('[aria-current]')).toHaveLength(0);
+
+      // Mismo grosor de trazo para las tres etapas: ninguna se destaca.
+      const linePaths = [...doc.querySelectorAll('svg g path[stroke-width]')];
+      expect(linePaths.map((p) => p.getAttribute('stroke-width'))).toEqual(['2.5', '2.5', '2.5']);
+
+      // Los marcadores conservan su tamaño y anillo por defecto.
+      const markers = [...doc.querySelectorAll('span[style*="top:"]')];
+      expect(markers).toHaveLength(3);
+      markers.forEach((marker) => {
+        expect(marker.className).toContain('size-7');
+        expect(marker.className).not.toContain('ring-primary-deep');
+      });
+    });
+
+    it('distingue la etapa activa en el tramo, el marcador del perfil y la leyenda', async () => {
+      const doc = await render({ programs, activeId: 'formacion-juvenil', legend: true });
+
+      // El tramo de la regla de edades y el ítem de la leyenda apuntan al mismo programa.
+      const current = [...doc.querySelectorAll('[aria-current="page"]')];
+      expect(current).toHaveLength(2);
+      current.forEach((el) => expect(el.getAttribute('href')).toBe('/programas/formacion-juvenil'));
+
+      // Su trazo en el perfil se dibuja más grueso que el de las otras dos etapas.
+      const linePaths = [...doc.querySelectorAll('svg g path[stroke-width]')];
+      expect(linePaths.map((p) => p.getAttribute('stroke-width'))).toEqual(['2.5', '4', '2.5']);
+
+      // Su marcador crece y gana un anillo de marca; los otros dos no cambian.
+      const markers = [...doc.querySelectorAll('span[style*="top:"]')];
+      expect(markers[1].className).toContain('ring-primary-deep');
+      expect(markers[0].className).toContain('size-7');
+      expect(markers[2].className).toContain('size-7');
+    });
+
+    it('no toca ningún programa cuando el activeId no existe en la ruta', async () => {
+      const doc = await render({ programs, activeId: 'no-existe', legend: true });
+      expect(doc.querySelectorAll('[aria-current]')).toHaveLength(0);
+    });
+  });
 });

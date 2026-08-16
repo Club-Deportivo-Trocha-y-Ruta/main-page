@@ -321,3 +321,35 @@ export function summarizePrograms(
     seats: seats.length > 0 ? seats.reduce((a, b) => a + b, 0) : null,
   };
 }
+
+// ─── Programa anterior y siguiente ────────────────────────────────────────────
+
+export interface AdjacentPrograms {
+  previous: PathwayInput | null;
+  next: PathwayInput | null;
+}
+
+/**
+ * Programa inmediatamente anterior y siguiente en la ruta, ordenados por
+ * `ageMin` — el mismo criterio que usa `buildPathway()`. La página de detalle
+ * la usa para enlazar a la etapa vecina: quien cae en el programa equivocado
+ * no tiene que volver al índice a buscar el que sí le corresponde.
+ *
+ * Devuelve `null` en el lado que no exista: el primer programa no tiene
+ * anterior, el último no tiene siguiente. También devuelve ambos en `null`
+ * si `currentId` no aparece en la lista.
+ */
+export function getAdjacentPrograms(
+  programs: PathwayInput[],
+  currentId: string
+): AdjacentPrograms {
+  const sorted = [...programs].sort((a, b) => a.ageMin - b.ageMin);
+  const index = sorted.findIndex((program) => program.id === currentId);
+
+  if (index === -1) return { previous: null, next: null };
+
+  return {
+    previous: index > 0 ? sorted[index - 1] : null,
+    next: index < sorted.length - 1 ? sorted[index + 1] : null,
+  };
+}

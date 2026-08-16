@@ -144,7 +144,7 @@ WhatsApp — pero siempre algo.
 | Transparencia (`/transparencia`) | ✅ Migrada |
 | Patrocinadores (portada + `/patrocinadores`) | ✅ Migrada |
 | Inscripciones (`/inscripciones`) | ✅ Migrada |
-| Detalle de programa (`/programas/[slug]`) | ⬜ Pendiente |
+| Detalle de programa (`/programas/[slug]`) | ✅ Migrada |
 | Detalle de noticia (`/noticias/[slug]`) | ⬜ Pendiente |
 | Trocha Verde | ⬜ Pendiente |
 
@@ -332,3 +332,67 @@ Tres movimientos que conviene repetir en las páginas que faltan:
   `/preguntas-frecuentes`), así que lo que el buscador indexa es lo que la familia lee. Dos de
   las cinco respuestas (edad mínima, costo) interpolan el mismo dato que se ve en la ruta de
   edades y en la póliza — una sola fuente, no una cifra copiada dos veces.
+
+---
+
+## 12. Referencia del detalle de programa
+
+- **El h1 es el nombre, la promesa vive en la bajada.** `SectionIntro` recibe
+  `title={program.data.title}` — el nombre propio del programa, obligatorio en
+  una página que se genera ×3 y que un lector de pantalla debe poder
+  identificar sin ambigüedad — y `lead={program.data.summary ?? program.data.subtitle}`,
+  el mismo par campo/`fallback` que `ProgramsGrid.astro` y `/programas` ya usan
+  para la promesa redactada. Por eso `highlight` se omite a propósito: el
+  nombre de un programa es un sustantivo propio, no una frase con un
+  fragmento que "cargue la promesa" — forzar un highlight sobre `Alto
+  Rendimiento` o `Escuela de Iniciación` habría sido decorar la marca, no
+  resaltar una idea. El antetítulo sí hace ese trabajo: `Etapa {step} ·
+  {level.label}` sale de `buildPathway()` + `LEVEL_STYLES`, nunca se escribe
+  a mano.
+- **La ruta se destaca a sí misma.** `ProgramPathway` ganó un prop opcional
+  `activeId` — aditivo y retrocompatible: sin él, ninguna etapa se distingue y
+  `/programas` renderiza exactamente igual que antes (tiene su propio test que
+  lo comprueba). Con él, la etapa activa gana más grosor de trazo en el
+  perfil, un anillo en su marcador y en su tramo de la regla de edades, y
+  `aria-current="page"` en sus enlaces — nunca cambiando una clase que ya
+  existía por otra (siempre una rama exclusiva por ternario), para no
+  depender del orden en que Tailwind genera las utilidades. La página de
+  detalle es la primera en pasarlo: `<ProgramPathway programs={pathwayInput}
+  activeId={program.id} legend />`.
+- **Un programa nunca es un callejón sin salida.** `getAdjacentPrograms()`
+  (`@lib/programs`) ordena por `ageMin` — el mismo criterio que
+  `buildPathway()` — y devuelve el vecino anterior y siguiente, o `null` en el
+  extremo que no exista. `ProgramAdjacentNav.astro` lo pinta como dos enlaces
+  al cierre de la página: quien cayó en `Escuela de Iniciación` con un hijo de
+  8 años sigue directo a `Formación Juvenil` en vez de devolverse al índice.
+- **La frecuencia antes que el horario minuto a minuto.** `countWeeklySessions()`
+  ya sabía traducir un `schedule` en texto libre a "N sesiones por semana";
+  ahora encabeza las cifras del programa (`StatFigure`, junto a edades,
+  duración y cupos) porque es la pregunta que un papá hace primero. El
+  `schedule` completo —con días y horas— no desaparece: baja a `FactGrid`,
+  junto a dónde entrena y la mensualidad, para quien ya decidió y necesita el
+  detalle operativo.
+- **Una sola fuente para el seguro.** La página ya no escribe "$60.000/año" ni
+  el nombre de la aseguradora a mano: los lee de `ENROLLMENT_POLICY`
+  (`@lib/enrollment`), la misma constante que alimenta `/inscripciones`, y
+  enlaza a `/inscripciones#seguro-titulo` para la cobertura completa en vez de
+  repetir las seis coberturas en las tres páginas de programa. Si el club
+  renueva la póliza, se edita un solo archivo.
+- **`methodology` y `maxStudents` ya existían y no se veían.** Los tres `.md`
+  de `programs` traían la metodología de entrenamiento y el cupo del grupo
+  desde que se migró el contenido; ninguna página los mostraba. `methodology`
+  se pinta en un bloque "Cómo se entrena" con el color de la etapa (mismo
+  tratamiento que ya usa el spread de `/programas`, sin reinventarlo);
+  `maxStudents` entra a las cifras de cabecera como "Cupos por grupo".
+- **Objetivos, requisitos y equipamiento comparten un solo vocabulario.** Las
+  tres listas usan el mismo icono (`ph:check-circle-fill`, teñido con
+  `level.text`) en vez de los `&#8226;`/`&#10003;` sueltos que traía la
+  versión anterior — una lista de "qué se lleva", "qué hay que traer" y "qué
+  hay que llevar puesto" se lee como tres variaciones del mismo gesto
+  (marcar una casilla), no como tres widgets distintos.
+- **El cuerpo markdown fija el nivel de los encabezados propios de la
+  página.** Los tres `.md` de `programs` arrancan su primer encabezado en
+  `##`; por eso ningún encabezado que la plantilla agrega antes de
+  `<Content />` baja a `h3` — la ruta, la ficha y el cierre (vía el `h2`
+  interno de `InscriptionCTA`) se quedan todos en `h2`, hermanos de los que
+  trae el markdown, para que la jerarquía no salte.
