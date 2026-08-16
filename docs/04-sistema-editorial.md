@@ -147,7 +147,6 @@ WhatsApp — pero siempre algo.
 | Detalle de programa (`/programas/[slug]`) | ⬜ Pendiente |
 | Detalle de noticia (`/noticias/[slug]`) | ⬜ Pendiente |
 | Trocha Verde | ⬜ Pendiente |
-| Testimonios | ⬜ Pendiente |
 
 ---
 
@@ -192,7 +191,7 @@ Tres movimientos que conviene repetir en las páginas que faltan:
   entrenadores certificados o cuentas públicas: cada tarjeta enlaza a la página donde la
   familia puede comprobarlo. Una afirmación sin destino es una afirmación más débil.
 - **Fotos vivas, no escogidas a mano.** La banda de comunidad sale de los últimos álbumes de
-  `gallery` y la cita, de `testimonials`: la página se actualiza sola cuando el club publica.
+  `gallery`: la página se actualiza sola cuando el club publica.
 
 ---
 

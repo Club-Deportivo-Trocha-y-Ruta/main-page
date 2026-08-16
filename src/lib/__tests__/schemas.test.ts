@@ -8,7 +8,6 @@ import {
   eventsSchema,
   resultsSchema,
   programsSchema,
-  testimonialsSchema,
   sponsorsSchema,
   gallerySchema,
   rutasSchema,
@@ -266,33 +265,6 @@ describe('directivosSchema', () => {
         role: 'presidente',
         roleLabel: 'Presidente',
         email: 'not-email',
-      })
-    ).toThrow();
-  });
-});
-
-// ============================================================
-// testimonialsSchema
-// ============================================================
-
-describe('testimonialsSchema', () => {
-  it('acepta testimonio válido', () => {
-    const result = testimonialsSchema.parse({
-      name: 'María García',
-      role: 'madre-de-familia',
-      roleLabel: 'Madre de familia',
-      quote: 'Excelente club para mi hijo.',
-    });
-    expect(result.featured).toBe(false);
-  });
-
-  it('rechaza rol inválido', () => {
-    expect(() =>
-      testimonialsSchema.parse({
-        name: 'Test',
-        role: 'desconocido',
-        roleLabel: 'Test',
-        quote: 'Quote',
       })
     ).toThrow();
   });

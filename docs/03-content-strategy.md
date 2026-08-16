@@ -1,5 +1,12 @@
 # 03 - Estrategia de Contenido y Modelo de Datos
 
+> **Nota (2026-08): la sección de testimonios se eliminó del sitio.** Los tres testimonios
+> que existían eran de demostración, no reales. Se borraron la colección `testimonials`, su
+> schema, la página `/testimonios`, el carrusel y las referencias en portada y Quiénes Somos.
+> Lo que este documento diga sobre testimonios es histórico: no lo reconstruyas sin contenido
+> real y autorizado por las familias.
+
+
 ## Club Deportivo Trocha y Ruta - Rebuild del Sitio Web
 
 ---

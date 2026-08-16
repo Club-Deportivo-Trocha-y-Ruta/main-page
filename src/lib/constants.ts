@@ -65,7 +65,6 @@ export const NAV_ITEMS = [
 export const SECONDARY_NAV = [
   { label: 'Galería', href: '/galeria' },
   { label: 'Trocha Verde', href: '/trocha-verde' },
-  { label: 'Testimonios', href: '/testimonios' },
   { label: 'Preguntas Frecuentes', href: '/preguntas-frecuentes' },
   { label: 'Patrocinadores', href: '/patrocinadores' },
   { label: 'Transparencia', href: '/transparencia' },

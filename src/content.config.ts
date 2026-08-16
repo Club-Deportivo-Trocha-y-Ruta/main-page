@@ -7,7 +7,6 @@ import {
   eventsSchema,
   resultsSchema,
   programsSchema,
-  testimonialsSchema,
   sponsorsSchema,
   gallerySchema,
   rutasSchema,
@@ -46,11 +45,6 @@ const results = defineCollection({
 const programs = defineCollection({
   loader: glob({ pattern: '**/*.md', base: 'src/content/programs' }),
   schema: programsSchema,
-});
-
-const testimonials = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: 'src/content/testimonials' }),
-  schema: testimonialsSchema,
 });
 
 const sponsors = defineCollection({
@@ -100,7 +94,6 @@ export const collections = {
   events,
   results,
   programs,
-  testimonials,
   sponsors,
   gallery,
   rutas,
