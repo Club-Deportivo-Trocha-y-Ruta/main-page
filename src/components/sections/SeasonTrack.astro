@@ -78,13 +78,14 @@ const dotFor = (stop: Stop) =>
                 class="group flex w-full flex-col items-center rounded-lg pt-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 aria-label={`${stop.event.data.title} — ${stop.day} de ${stop.month}`}
               >
-                <span
-                  class:list={[
-                    'block shrink-0 rounded-full transition-transform duration-200 group-hover:scale-125',
-                    dotFor(stop),
-                  ]}
-                  aria-hidden="true"
-                ></span>
+                <span class="flex size-5 shrink-0 items-center justify-center" aria-hidden="true">
+                  <span
+                    class:list={[
+                      'block rounded-full transition-transform duration-200 group-hover:scale-125',
+                      dotFor(stop),
+                    ]}
+                  ></span>
+                </span>
 
                 <span
                   class:list={[
