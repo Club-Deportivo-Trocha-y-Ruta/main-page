@@ -46,11 +46,10 @@ describe('ENROLLMENT_STEPS', () => {
 // ============================================================
 
 describe('ENROLLMENT_DOCUMENTS', () => {
-  it('incluye los cuatro documentos que pide el club para confirmar la inscripción', () => {
+  it('incluye los tres documentos que pide el club para confirmar la inscripción', () => {
     expect(ENROLLMENT_DOCUMENTS.map((doc) => doc.label)).toEqual([
       'Documento de identidad del niño o niña',
       'EPS vigente',
-      'Certificado médico deportivo',
       'Autorización firmada del acudiente',
     ]);
   });
