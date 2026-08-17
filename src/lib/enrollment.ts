@@ -67,7 +67,6 @@ export interface RequiredDocument {
 export const ENROLLMENT_DOCUMENTS: RequiredDocument[] = [
   { label: 'Documento de identidad del niño o niña', icon: 'ph:identification-card-bold' },
   { label: 'EPS vigente', icon: 'ph:heartbeat-bold' },
-  { label: 'Certificado médico deportivo', icon: 'ph:stethoscope-bold' },
   { label: 'Autorización firmada del acudiente', icon: 'ph:signature-bold' },
 ];
 
