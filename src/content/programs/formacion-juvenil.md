@@ -8,7 +8,7 @@ ageRange: "6 a 11 años"
 ageMin: 6
 ageMax: 11
 targetLevel: "formación"
-schedule: "Lunes a viernes 4:00 - 6:00 PM"
+schedule: "Lunes, miércoles y viernes 4:00 - 6:00 PM"
 duration: "2 horas"
 location: "Punto de encuentro: Pista de Ciclomontañismo Carlos Castro, Yumbo"
 maxStudents: 25
@@ -46,7 +46,7 @@ El programa de Formación Juvenil está diseñado para jóvenes entre 6 y 11 añ
 
 ## Estructura del entrenamiento
 
-Las sesiones de lunes a viernes combinan trabajo técnico en circuitos cerrados con salidas a senderos de dificultad progresiva en los alrededores de Yumbo y el Valle del Cauca. Los días entre semana se alternan técnica y habilidades con rodadas de mayor distancia.
+Las sesiones de lunes, miércoles y viernes combinan trabajo técnico en circuitos cerrados con salidas a senderos de dificultad progresiva en los alrededores de Yumbo y el Valle del Cauca. Los días se alternan técnica y habilidades con rodadas de mayor distancia. Los miércoles, la Formación Juvenil comparte la Pista Carlos Castro con el grupo de Alto Rendimiento: es el único día en que coinciden ambos programas, pensado para que los corredores de Alto Rendimiento no pierdan técnica.
 
 ## Preparación competitiva
 
