@@ -20,7 +20,7 @@ import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
 import StatFigure from '@components/editorial/StatFigure.astro';
 import Timeline, { type TimelineItem } from '@components/editorial/Timeline.astro';
-import { SITE, CHILD_SAFETY, getYearsActive } from '@lib/constants';
+import { SITE, getYearsActive } from '@lib/constants';
 import { summarizePrograms } from '@lib/programs';
 import { generateSportsClubJsonLd } from '@lib/seo';
 import { getTreeStats } from '@lib/trocha-verde';
@@ -126,13 +126,6 @@ const values = [
 // Respaldo: lo que una familia necesita saber antes de dejar a su hijo. Cada
 // afirmación tiene una página donde se puede verificar.
 const credentials = [
-  {
-    icon: 'ph:shield-check-bold',
-    title: 'Política de protección infantil',
-    body: `Protocolo público de protección de niños, niñas y adolescentes. Línea ICBF ${CHILD_SAFETY.icbfLine} para emergencias.`,
-    href: CHILD_SAFETY.policyUrl,
-    cta: 'Ver la política',
-  },
   {
     icon: 'ph:first-aid-kit-bold',
     title: 'Póliza de accidentes personales',

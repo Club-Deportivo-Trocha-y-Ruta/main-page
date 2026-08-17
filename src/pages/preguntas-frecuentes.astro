@@ -1,76 +1,182 @@
 ---
-import PageLayout from '@layouts/PageLayout.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
-import FaqAccordion from '@components/common/FaqAccordion.astro';
-import Button from '@components/common/Button.astro';
+/**
+ * Preguntas frecuentes.
+ *
+ * La página listaba las seis categorías del CMS en el orden de un array, cada
+ * una con un título y un acordeón. Pero quien llega aquí no busca "categorías":
+ * está recorriendo una secuencia —¿es para mi hijo? ¿cómo entra? ¿qué necesita?
+ * ¿cómo es la semana? ¿está seguro? ¿y después?— y sus dudas caen en ese orden.
+ *
+ * Ahora los temas se leen en ese recorrido, cada uno dice qué pregunta de fondo
+ * responde, y cierra apuntando a la página donde está el detalle completo: la
+ * FAQ deja de ser un callejón y se convierte en un repartidor hacia el resto
+ * del sitio.
+ *
+ * Las preguntas y las respuestas salen enteras de la colección `faqs`; el
+ * recorrido vive en `@lib/faq`. Aquí no se escribe ninguna.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md).
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { SITE } from '@lib/constants';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import FaqAccordion from '@components/common/FaqAccordion.astro';
+import { CONTACT } from '@lib/constants';
+import { groupFaqsByTopic, summarizeFaqs } from '@lib/faq';
+import { generateFAQPageJsonLd } from '@lib/seo';
 
-const allFaqs = (await getCollection('faqs'))
-  .filter((faq: CollectionEntry<'faqs'>) => !faq.data.draft)
-  .sort((a: CollectionEntry<'faqs'>, b: CollectionEntry<'faqs'>) => a.data.order - b.data.order);
+type Faq = CollectionEntry<'faqs'>;
 
-const categories = [
-  { key: 'general', label: 'General' },
-  { key: 'inscripciones', label: 'Inscripciones' },
-  { key: 'entrenamiento', label: 'Entrenamiento' },
-  { key: 'equipamiento', label: 'Equipamiento' },
-  { key: 'competencias', label: 'Competencias' },
-  { key: 'seguridad', label: 'Seguridad' },
-] as const;
+const allFaqs = (await getCollection('faqs')).filter((faq: Faq) => !faq.data.draft);
 
-const faqsByCategory = categories
-  .map((cat) => ({
-    ...cat,
-    faqs: allFaqs
-      .filter((faq: CollectionEntry<'faqs'>) => faq.data.category === cat.key)
-      .map((faq: CollectionEntry<'faqs'>) => ({
-        question: faq.data.question,
-        answer: faq.data.answer,
-      })),
-  }))
-  .filter((cat) => cat.faqs.length > 0);
+const topics = groupFaqsByTopic(allFaqs);
+const summary = summarizeFaqs(allFaqs);
 
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: allFaqs.map((faq: CollectionEntry<'faqs'>) => ({
-    '@type': 'Question',
-    name: faq.data.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: faq.data.answer,
-    },
-  })),
-};
+// El JSON-LD declara exactamente las preguntas que se ven, y en el mismo orden.
+const jsonLd = generateFAQPageJsonLd(
+  topics.flatMap((topic) =>
+    topic.faqs.map((faq) => ({ question: faq.data.question, answer: faq.data.answer }))
+  )
+);
+
+const whatsappDuda = `${CONTACT.whatsapp}?text=${encodeURIComponent(
+  'Hola, tengo una duda sobre el club que no encontré en la página'
+)}`;
 ---
 
-<PageLayout
-  title="Preguntas Frecuentes"
-  description="Resolvemos tus dudas sobre el club, los programas, inscripciones y más"
-  breadcrumbs={[{ label: 'Preguntas Frecuentes' }]}
+<BaseLayout
+  title="Preguntas frecuentes"
+  description="Las dudas que más nos hacen las familias del Club Deportivo Trocha y Ruta: edad de entrada, inscripción, equipo, horarios, seguridad y competencias."
+  jsonLd={jsonLd}
 >
-  <div class="mx-auto max-w-3xl">
-    {faqsByCategory.map((category) => (
-      <div class="mb-12 reveal">
-        <SectionTitle title={category.label} align="left" />
-        <FaqAccordion
-          items={category.faqs}
+  <!-- La promesa, con el índice de temas -->
+  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="faq-titulo">
+    <Breadcrumb items={[{ label: 'Preguntas frecuentes' }]} />
+
+    <div class="mt-6 grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:items-end">
+      <SectionIntro
+        as="h1"
+        id="faq-titulo"
+        eyebrow="Preguntas frecuentes"
+        eyebrowIcon="ph:question-bold"
+        title="Las dudas, en el orden en que aparecen"
+        highlight="en el orden en que aparecen"
+        lead="No están agrupadas por capricho: siguen el recorrido de una familia que llega por primera vez, desde «¿tiene la edad?» hasta «¿cuándo empieza a competir?»."
+      />
+
+      {summary.total > 0 && (
+        <div class="grid grid-cols-2 gap-6">
+          <StatFigure value={summary.total} label="Preguntas respondidas" icon="ph:chats-bold" />
+          <StatFigure value={summary.topics} label="Temas del recorrido" icon="ph:compass-bold" />
+        </div>
+      )}
+    </div>
+
+    {topics.length > 0 && (
+      <nav class="mt-10 border-t border-primary/15 pt-6" aria-label="Ir a un tema">
+        <ul class="flex flex-wrap gap-2">
+          {topics.map((topic, index) => (
+            <li>
+              <a
+                href={`#${topic.anchor}`}
+                class="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-surface/70 px-3.5 py-2 text-sm font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                <span class="font-display text-xs opacity-60">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                {topic.profile.label}
+                <span class="text-xs font-normal opacity-70">({topic.faqs.length})</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+  </SectionShell>
+
+  <!-- Un tema por sección, en el orden del recorrido -->
+  {topics.map((topic, index) => (
+    <SectionShell
+      id={topic.anchor}
+      tone={index % 2 === 0 ? 'plain' : 'muted'}
+      width="default"
+      labelledby={`${topic.anchor}-titulo`}
+      class="scroll-mt-20"
+    >
+      <div class="flex items-start gap-4">
+        <span
+          class="hidden size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary-deep sm:flex"
+          aria-hidden="true"
+        >
+          <Icon name={topic.profile.icon} class="size-6" />
+        </span>
+
+        <SectionIntro
+          id={`${topic.anchor}-titulo`}
+          eyebrow={`Tema ${String(index + 1).padStart(2, '0')}`}
+          title={topic.profile.label}
+          lead={topic.profile.purpose}
+          tone={index % 2 === 0 ? 'plain' : 'muted'}
+          class="flex-1"
         />
       </div>
-    ))}
-  </div>
 
-  <!-- CTA -->
-  <div class="mt-8 text-center reveal">
-    <p class="text-xl text-text-secondary mb-6">
-      ¿No encontraste la respuesta que buscabas?
-    </p>
-    <Button variant="outline" href="/contacto">
-      Escríbenos y te ayudamos
-    </Button>
-  </div>
+      <FaqAccordion
+        class="mt-8"
+        items={topic.faqs.map((faq) => ({
+          id: `pregunta-${faq.id}`,
+          question: faq.data.question,
+          answer: faq.data.answer,
+        }))}
+      />
 
-  <!-- FAQ JSON-LD structured data -->
-  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
-</PageLayout>
+      {topic.profile.detail && (
+        <p class="mt-6">
+          <a
+            href={topic.profile.detail.href}
+            class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-deep hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            {topic.profile.detail.label}
+            <Icon name="ph:arrow-right-bold" class="size-4 shrink-0" aria-hidden="true" />
+          </a>
+        </p>
+      )}
+    </SectionShell>
+  ))}
+
+  <!-- Lo que no está aquí -->
+  <SectionShell tone="tinted" width="default" spacing="compact" labelledby="faq-cierre-titulo">
+    <div class="rounded-2xl border border-primary/15 bg-surface/70 px-6 py-8 text-center sm:px-10">
+      <h2 id="faq-cierre-titulo" class="font-display text-xl font-bold text-text-primary sm:text-2xl">
+        ¿Tu pregunta no está?
+      </h2>
+      <p class="mx-auto mt-2 max-w-xl text-text-secondary">
+        Escríbenos y te respondemos. Si la pregunta se repite, termina aquí para la siguiente
+        familia.
+      </p>
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href={whatsappDuda}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-analytics-event="whatsapp_click"
+          class="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-surface-dark transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          <Icon name="ph:whatsapp-logo-bold" class="size-4 shrink-0" aria-hidden="true" />
+          Preguntar por WhatsApp
+        </a>
+        <a
+          href="/contacto"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 text-sm font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Usar el formulario
+          <Icon name="ph:arrow-right-bold" class="size-4 shrink-0" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </SectionShell>
+</BaseLayout>

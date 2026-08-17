@@ -74,7 +74,16 @@ export const SECONDARY_NAV = [
   { label: 'Contacto', href: '/contacto' },
 ] as const;
 
+/**
+ * La línea 141 del ICBF es un canal nacional de protección a la niñez,
+ * gratuito y confidencial: existe con independencia del club y por eso se
+ * sigue publicando en el pie.
+ *
+ * Aquí había también `policyUrl`, que apuntaba a una "política de protección
+ * infantil" publicada en el sitio. El club confirmó que esa política no
+ * existe en la práctica, así que la página y todo lo que la afirmaba se
+ * eliminaron: anunciar un protocolo que nadie aplica es peor que no tenerlo.
+ */
 export const CHILD_SAFETY = {
   icbfLine: '141',
-  policyUrl: '/politica-proteccion-infantil',
 } as const;

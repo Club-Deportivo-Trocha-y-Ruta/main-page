@@ -26,7 +26,6 @@ import UpcomingEvents from '@components/sections/UpcomingEvents.astro';
 import NewsPreview from '@components/sections/NewsPreview.astro';
 import TrochaVerde from '@components/sections/TrochaVerde.astro';
 import SponsorsBar from '@components/sections/SponsorsBar.astro';
-import SafeClubBadge from '@components/sections/SafeClubBadge.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
 import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 import WaveSeparator from '@components/common/WaveSeparator.astro';
@@ -83,17 +82,15 @@ const jsonLd = [generateOrganizationJsonLd(), generateWebSiteJsonLd()];
     <TrochaVerde />
   </div>
 
-  <!-- 9. Quién respalda al club (plain) -->
+  <!-- 9. Quién respalda al club (plain). Aquí iba también un sello de "club
+       seguro" que se apoyaba en una política de protección infantil publicada
+       en el sitio; el club confirmó que esa política no existe en la práctica,
+       así que la sección se retiró junto con la página. -->
   <div class="reveal">
     <SponsorsBar />
   </div>
 
-  <!-- 10. La señal que más pesa para una familia (muted) -->
-  <div class="reveal">
-    <SafeClubBadge />
-  </div>
-
-  <!-- 11. El cierre -->
+  <!-- 10. El cierre -->
   <div class="reveal">
     <InscriptionCTA
       variant="banner"

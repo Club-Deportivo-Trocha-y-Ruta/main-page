@@ -152,6 +152,7 @@ WhatsApp — pero siempre algo.
 | Contacto (`/contacto`) | ✅ Migrada |
 | Enlaces (`/enlaces`) | ✅ Migrada — marco propio, ver §18 |
 | Portada (`/`) | ✅ Migrada |
+| Preguntas frecuentes (`/preguntas-frecuentes`) | ✅ Migrada |
 
 ---
 
@@ -875,3 +876,65 @@ nombra el archivo y el campo exactos cuando falla.
 Queda fuera `trees.species`, que referencia por nombre común y no por id: hay
 especies sembradas sin ficha propia y `/trocha-verde` ya lo contempla no
 enlazándolas.
+
+---
+
+## 22. Referencia de Preguntas frecuentes
+
+**Qué cambió.** La página recorría las seis categorías del CMS en el orden de un
+array, cada una con un título y un acordeón. Pero quien llega no busca
+"categorías": está recorriendo una secuencia, y sus dudas caen en ese orden.
+
+`FAQ_TOPICS` (`@lib/faq`) define ese recorrido —el mismo tipo de vocabulario
+editorial que `DOCUMENT_CATEGORIES` o `CONTACT_CHANNELS`—: qué pregunta de
+fondo responde cada tema, en qué orden se lee y dónde está el detalle completo.
+
+| # | Tema | Responde | Lleva a |
+|---|------|----------|---------|
+| 01 | Antes de empezar | ¿Es para mi hijo? | `/quienes-somos` |
+| 02 | Cómo entra | ¿Qué hay que hacer? | `/inscripciones` |
+| 03 | Qué necesita | ¿Con qué llega el primer día? | `/programas` |
+| 04 | Cómo es la semana | ¿Qué días y a qué hora? | `/contacto#semana-titulo` |
+| 05 | Cómo se les cuida | ¿Quién los acompaña? | `/inscripciones` |
+| 06 | Y después, competir | ¿Cuándo empieza a correr? | `/calendario` |
+
+**Deja de ser un callejón.** Cada tema cierra apuntando a la página donde el
+asunto se desarrolla de verdad: la FAQ se convierte en un repartidor hacia el
+resto del sitio en vez de un destino final. El enlace del tema 04 apunta a la
+semana del club en `/contacto`, que es donde ese dato vive derivado.
+
+**Detalles.** Un índice de temas arriba, con el número de preguntas de cada
+uno; cada pregunta lleva ancla propia (`#pregunta-edad-minima`) y se resalta al
+aterrizar en ella, todo con `:target` en CSS y sin JavaScript nuevo. El JSON-LD
+declara exactamente las preguntas visibles y en el mismo orden.
+
+**Lo que no se muestra.** No hay cifra de programas en la cabecera: la
+respuesta `programas-disponibles` afirma que el club ofrece **cuatro**
+programas —e incluye uno de "Recreación"— mientras la colección publica
+**tres**. Una cifra derivada se contradiría con el texto de la propia página,
+así que se omite hasta que el contenido se ponga de acuerdo.
+
+---
+
+## 23. La política de protección infantil se eliminó
+
+`/politica-proteccion-infantil` describía un protocolo que el club **no aplica
+en la práctica**: se había publicado por sugerencia de una IA, no porque
+existiera. Publicar un protocolo de protección de menores que nadie sigue es
+peor que no tenerlo, así que se retiró junto con todo lo que lo afirmaba:
+
+- La página (540 líneas).
+- `CHILD_SAFETY.policyUrl` en `constants.ts`.
+- El enlace del pie de página, presente en las 144 páginas del sitio.
+- La tarjeta de credenciales de `/quienes-somos`.
+- **`SafeClubBadge`**, la sección de la portada. Su premisa era justamente esa
+  política: se titulaba "Un club seguro para tu hijo" y afirmaba que la
+  protección "es una política escrita, con canales concretos para reportar".
+  Sin la política, la sección publicaba una afirmación falsa.
+
+**Lo que sí se conserva** es la línea 141 del ICBF en el pie: es un canal
+nacional de protección a la niñez, gratuito y confidencial, que existe con
+independencia del club y sigue siendo información útil.
+
+Mismo criterio que con los testimonios inventados, la estimación de CO₂ y las
+cifras sin fuente: el sitio no afirma lo que no puede sostener.
