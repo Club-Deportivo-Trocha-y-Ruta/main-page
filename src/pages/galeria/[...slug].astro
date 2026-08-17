@@ -77,14 +77,14 @@ const jsonLd = generateGalleryJsonLd({
       class="mt-6 max-w-2xl"
     />
 
-    <dl class="mt-8 grid max-w-md grid-cols-2 gap-6 border-t border-primary/15 pt-8">
+    <div class="mt-8 grid max-w-md grid-cols-2 gap-6 border-t border-primary/15 pt-8">
       <StatFigure
         value={images.length}
         label={images.length === 1 ? 'Foto en el álbum' : 'Fotos en el álbum'}
         icon="ph:images-bold"
       />
       <StatFigure value={formatDate(date)} size="sm" label="Fecha" icon="ph:calendar-dots-bold" />
-    </dl>
+    </div>
 
     <AlbumEventContext class="mt-8 max-w-2xl" event={context.event} chronicles={context.chronicles} />
   </SectionShell>

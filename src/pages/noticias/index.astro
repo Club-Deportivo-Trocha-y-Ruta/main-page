@@ -50,7 +50,7 @@ const competitions = summary.byCategory.find((c) => c.category === 'competencias
       />
 
       {summary.total > 0 && (
-        <dl class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-2">
+        <div class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-2">
           <StatFigure value={summary.total} label="Crónicas publicadas" icon="ph:newspaper-bold" />
           {competitions && (
             <StatFigure
@@ -68,7 +68,7 @@ const competitions = summary.byCategory.find((c) => c.category === 'competencias
               class="col-span-2 sm:col-span-1 lg:col-span-2"
             />
           )}
-        </dl>
+        </div>
       )}
     </div>
   </SectionShell>

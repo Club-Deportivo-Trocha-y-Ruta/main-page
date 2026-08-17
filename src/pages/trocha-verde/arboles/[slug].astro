@@ -210,7 +210,7 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
     </div>
 
     <!-- Cifras que respaldan el titular: cuánto lleva vivo, con qué lo cuidamos -->
-    <dl class="mt-8 grid grid-cols-1 gap-6 border-t border-primary/15 pt-8 sm:max-w-xl sm:grid-cols-2">
+    <div class="mt-8 grid grid-cols-1 gap-6 border-t border-primary/15 pt-8 sm:max-w-xl sm:grid-cols-2">
       <StatFigure
         value={duration.value}
         unit={duration.unit}
@@ -224,7 +224,7 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
         label="Protegido con"
         icon={protectorInfo.icon}
       />
-    </dl>
+    </div>
   </SectionShell>
 
   <!-- Los demás árboles de su especie -->

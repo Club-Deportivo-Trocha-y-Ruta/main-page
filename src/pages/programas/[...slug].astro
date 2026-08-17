@@ -161,7 +161,7 @@ const jsonLd = generateCourseJsonLd({
     </div>
 
     <!-- Cifras del propio programa: solo lo que el contenido respalda -->
-    <dl class="mt-12 grid grid-cols-2 gap-6 border-t border-primary/15 pt-8 sm:grid-cols-4">
+    <div class="mt-12 grid grid-cols-2 gap-6 border-t border-primary/15 pt-8 sm:grid-cols-4">
       <StatFigure value={program.data.ageRange} size="sm" label="Edades" icon="ph:user-bold" />
       {sessions !== null && (
         <StatFigure
@@ -181,7 +181,7 @@ const jsonLd = generateCourseJsonLd({
       {program.data.maxStudents && (
         <StatFigure value={program.data.maxStudents} label="Cupos por grupo" icon="ph:users-three-bold" />
       )}
-    </dl>
+    </div>
   </SectionShell>
 
   <!-- La ruta completa: de dónde viene y hacia dónde sigue -->

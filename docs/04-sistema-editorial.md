@@ -938,3 +938,61 @@ independencia del club y sigue siendo información útil.
 
 Mismo criterio que con los testimonios inventados, la estimación de CO₂ y las
 cifras sin fuente: el sitio no afirma lo que no puede sostener.
+
+---
+
+## 24. Cabecera y pie
+
+Son lo único que aparece en las **144 páginas**, así que cada decisión aquí se
+paga 144 veces. Por eso ninguno de los dos ganó peso: ganaron información.
+
+### La cabecera
+
+**Siete secciones eran inalcanzables desde escritorio.** Galería, Trocha Verde,
+preguntas frecuentes, patrocinadores, transparencia, política editorial y
+contacto solo vivían en el menú móvil y en el pie. Ahora hay un desplegable
+"Más" con todas, y cuando estás en una de ellas el propio botón se marca —si no,
+la cabecera no daría ninguna pista de dónde estás.
+
+Está hecho con `<details>` nativo: **sin JavaScript nuevo**. Enter y Espacio lo
+abren y lo cierran, y el foco entra al panel con Tab. Lo que no hace es cerrarse
+con Escape ni al hacer clic fuera —eso es de `<dialog>` o del atributo
+`popover`, y `popover` necesita anclaje CSS que aún no está en todos los
+navegadores—. Para un desplegable de navegación el patrón de divulgación basta,
+y conseguir Escape costaría JavaScript en las 144 páginas.
+
+No se le añadió cinta de temporada porque `AnnouncementBar` ya anuncia el
+próximo evento encima de la cabecera: habría sido el mismo dato dos veces.
+
+### El pie
+
+Era una lista plana de nueve enlaces donde "Galería" y "Política de Tratamiento
+de Datos" pesaban lo mismo. Ahora repite el mapa del sitio agrupado como está
+organizado de verdad —**El club · La temporada · Para familias ·
+Institucional**—, con la agrupación en `@lib/navigation` y un test que
+comprueba que **ninguna sección del menú queda fuera del pie**.
+
+Encima, una cinta con lo que está pasando: la temporada en curso
+(`8 de 10 fechas corridas`) y el inventario de Trocha Verde, derivados del
+contenido y enlazando a su página. Si el contenido no los sostiene, la cinta no
+se pinta. Es donde más rinde que el dato esté vivo, porque se ve en todo el
+sitio.
+
+Los iconos dibujados a mano pasaron a `astro-icon`; solo sobrevive el trazado
+propio de Strava, que Phosphor no trae.
+
+### La regla de sección activa, escrita una vez
+
+Estaba copiada igual en `Header.astro` y en `MobileMenu.tsx`, y tenía un fallo
+de prefijo: `startsWith('/noticias')` también daba positivo en una futura
+`/noticias-especiales`. Ahora es `isActivePath()` en `@lib/navigation`, con
+tests que cubren la barra final, las páginas hijas, el caso de la portada y que
+**cada ruta encienda una sola entrada del menú**.
+
+### El `<dl>` inválido, cerrado de raíz
+
+Aparecía suelto en cada verificación porque el muestreo solo miraba unas pocas
+páginas. Un escaneo del build completo lo puso en su sitio: `StatFigure` pinta
+un `<div><p>`, y envolverlo en `<dl>` daba una lista de definición sin
+términos en **124 de las 145 páginas**. Corregido en los once archivos que lo
+producían; el escaneo del sitio entero da 0.

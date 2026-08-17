@@ -141,7 +141,7 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
 
     <!-- Cifras de la propia especie: solo lo que sus árboles respaldan -->
     {stats && (
-      <dl class="mt-10 grid grid-cols-2 gap-6 border-t border-primary/15 pt-8 sm:grid-cols-4">
+      <div class="mt-10 grid grid-cols-2 gap-6 border-t border-primary/15 pt-8 sm:grid-cols-4">
         <StatFigure
           value={stats.total}
           label={stats.total === 1 ? `${sp.data.commonName} ${plantedSingular}` : `${grammar.plural} ${plantedPlural}`}
@@ -167,7 +167,7 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
           label="Protegidos con"
           icon="ph:tire-bold"
         />
-      </dl>
+      </div>
     )}
   </SectionShell>
 

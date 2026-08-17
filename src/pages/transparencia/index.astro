@@ -90,7 +90,7 @@ const whatsappMessage = encodeURIComponent(
       />
 
       {summary.total > 0 && (
-        <dl class="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-2">
+        <div class="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-2">
           <StatFigure value={summary.total} label="Documentos publicados" icon="ph:files-bold" />
           <StatFigure
             value={summary.categoryCount}
@@ -112,7 +112,7 @@ const whatsappMessage = encodeURIComponent(
               icon="ph:chart-bar-bold"
             />
           )}
-        </dl>
+        </div>
       )}
     </div>
   </SectionShell>
