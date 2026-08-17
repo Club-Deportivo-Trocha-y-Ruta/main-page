@@ -1,7 +1,7 @@
 ---
 title: "Escuela de Iniciación"
 subtitle: "Los primeros pedalazos hacia la aventura"
-summary: "Aquí no se entrena: se juega. Circuitos de habilidad, senderos cortos y un monitor por cada diez niños para que el equilibrio y la confianza lleguen sin afanes ni presión de cronómetro."
+summary: "Aquí no se entrena: se juega. Circuitos de habilidad, senderos cortos y acompañamiento cercano de nuestros monitores para que el equilibrio y la confianza lleguen sin afanes ni presión de cronómetro."
 icon: "ph:bicycle"
 image: "programa-iniciacion.webp"
 ageRange: "4 a 5 años"
@@ -49,7 +49,7 @@ Los niños desarrollan equilibrio, coordinación y confianza sobre la bicicleta.
 
 ## Acompañamiento
 
-Cada grupo cuenta con un entrenador certificado y un monitor de apoyo. La relación máxima es de 10 niños por instructor, garantizando atención personalizada y seguridad en todo momento.
+Cada grupo cuenta con un entrenador certificado y monitores de apoyo, garantizando atención personalizada y seguridad en todo momento.
 
 ## Seguridad y protección
 
