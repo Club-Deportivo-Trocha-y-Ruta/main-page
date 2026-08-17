@@ -1,0 +1,90 @@
+---
+/**
+ * Estándares de Política Editorial: una categoría a la vez.
+ *
+ * Mismo patrón que `DocumentLedger` en Transparencia: cada categoría explica
+ * primero a qué pregunta responde y después desarrolla el contenido — párrafos
+ * y, cuando el estándar es un protocolo con pasos, una lista marcada.
+ */
+import { Icon } from 'astro-icon/components';
+import { getTone, type SectionTone } from '@lib/editorial';
+import { slugify } from '@lib/utils';
+import type { EditorialStandard } from '@lib/editorial-standards';
+
+interface Props {
+  standards: EditorialStandard[];
+  tone?: SectionTone;
+  class?: string;
+}
+
+const { standards, tone = 'plain', class: className } = Astro.props;
+const tokens = getTone(tone);
+const bodyText = tokens.inverted ? 'text-white/85' : 'text-text-secondary';
+---
+
+{
+  standards.length > 0 && (
+    <div class:list={['space-y-6', className]}>
+      {standards.map((standard) => {
+        const headingId = `estandar-${slugify(standard.label)}-titulo`;
+        return (
+          <section
+            aria-labelledby={headingId}
+            class:list={['rounded-2xl border p-6 sm:p-8', tokens.hairline, tokens.card]}
+          >
+            <div class="flex items-start gap-3">
+              <span
+                class:list={[
+                  'flex size-10 shrink-0 items-center justify-center rounded-xl',
+                  tokens.inverted
+                    ? 'text-accent-light bg-white/10'
+                    : 'bg-primary/10 text-primary-deep',
+                ]}
+                aria-hidden="true"
+              >
+                <Icon name={standard.icon} class="size-5" />
+              </span>
+              <div class="min-w-0">
+                <h3
+                  id={headingId}
+                  class:list={['font-display text-lg font-bold sm:text-xl', tokens.heading]}
+                >
+                  {standard.label}
+                </h3>
+                <p class:list={['mt-1 text-sm leading-relaxed', tokens.muted]}>
+                  {standard.purpose}
+                </p>
+              </div>
+            </div>
+
+            {standard.paragraphs.length > 0 && (
+              <div class:list={['mt-4 space-y-3 text-sm leading-relaxed', bodyText]}>
+                {standard.paragraphs.map((paragraph) => (
+                  <p>{paragraph}</p>
+                ))}
+              </div>
+            )}
+
+            {standard.items && standard.items.length > 0 && (
+              <ul class="mt-4 space-y-2">
+                {standard.items.map((item) => (
+                  <li class:list={['flex items-start gap-2 text-sm leading-relaxed', bodyText]}>
+                    <Icon
+                      name="ph:check-circle-fill"
+                      class:list={[
+                        'mt-0.5 size-4 shrink-0',
+                        tokens.inverted ? 'text-accent-light' : 'text-primary-deep',
+                      ]}
+                      aria-hidden="true"
+                    />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        );
+      })}
+    </div>
+  )
+}

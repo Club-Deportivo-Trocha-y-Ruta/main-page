@@ -153,6 +153,7 @@ WhatsApp — pero siempre algo.
 | Enlaces (`/enlaces`) | ✅ Migrada — marco propio, ver §18 |
 | Portada (`/`) | ✅ Migrada |
 | Preguntas frecuentes (`/preguntas-frecuentes`) | ✅ Migrada |
+| Política editorial (`/politica-editorial`) | ✅ Migrada |
 
 ---
 
@@ -996,3 +997,47 @@ páginas. Un escaneo del build completo lo puso en su sitio: `StatFigure` pinta
 un `<div><p>`, y envolverlo en `<dl>` daba una lista de definición sin
 términos en **124 de las 145 páginas**. Corregido en los once archivos que lo
 producían; el escaneo del sitio entero da 0.
+
+---
+
+## 25. Referencia de Política Editorial
+
+**Cómo apareció.** La tabla de estado de este documento marcaba la migración
+como completa, pero listaba páginas, no `src/pages/` completo. Comparando las
+dos, `/politica-editorial` seguía con `PageLayout` + `SectionTitle` + `Card` —el
+vocabulario de antes del sistema— sin que ningún commit la hubiera tocado.
+`/politica-de-tratamiento-de-datos` tiene el mismo defecto y sigue pendiente:
+es un visor de PDF sin dato propio que ilustrar, más parecida a Enlaces (§18)
+que a una sección de contenido.
+
+**Qué cambió.** El texto no se reescribió — es el mismo que ya publicaba la
+página—, pero pasó de seis bloques con `Card` sueltas a un catálogo tipado:
+`EDITORIAL_STANDARDS` (`@lib/editorial-standards`), mismo patrón que
+`DOCUMENT_CATEGORIES` en Transparencia o `CONTACT_CHANNELS` en Contacto. Cada
+estándar declara a qué pregunta responde (`purpose`) antes de que
+`EditorialStandards.astro` —calco de `DocumentLedger` cambiando fichas de PDF
+por párrafos y una lista opcional— lo desarrolle.
+
+**La categoría de contacto se volvió el paso siguiente, no una sexta
+categoría.** "Contacto editorial" era solo una dirección de correo repetida:
+se fusionó con el cierre de la página, con el mismo par correo + WhatsApp que
+usa el cierre de Transparencia, en vez de quedar como una tarjeta más en la
+rejilla.
+
+**Una sola fuente para el plazo de respuesta.** El "48 horas hábiles" de la
+política de correcciones y la cifra del `StatFigure` de cabecera vienen de la
+misma constante, `CORRECTION_RESPONSE_HOURS` — no un número escrito dos veces
+que se puede desalinear si el club cambia el plazo.
+
+**Las cifras de cabecera se cuentan, no se escriben.** `summarizeStandards()`
+cuenta las fuentes primarias declaradas (3) y los estándares publicados (5)
+sobre el propio catálogo: si mañana se agrega una fuente o una categoría, las
+dos cifras suben solas.
+
+**Lo que no se tocó.** El contenido de "Cobertura de menores" —autorización
+previa, sin datos sensibles, derecho al retiro— se preservó tal cual. Es un
+protocolo editorial acotado (qué hace el club antes de publicar una foto), no
+la política general de protección infantil que se eliminó en el §23: esa
+afirmaba un comité y canales de reporte que no existían en la práctica. Aun
+así, no está de más que el club confirme que este protocolo sí se aplica,
+igual que confirmó la edad mínima del §21.
