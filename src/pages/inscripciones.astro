@@ -1,12 +1,36 @@
 ---
+/**
+ * Inscripciones.
+ *
+ * Quien llega aquí trae tres preguntas y hoy la página no respondía ninguna
+ * antes de pedir datos: qué pasa después de enviar el formulario, si su hijo
+ * o hija tiene la edad y cuánto cuesta. Responde en ese orden — el proceso
+ * paso a paso, el programa según la edad, el formulario y el seguro— y cierra
+ * con las dudas que quedan sueltas.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md).
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import FaqAccordion from '@components/common/FaqAccordion.astro';
 import InscriptionForm from '@components/interactive/InscriptionForm';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import FactGrid from '@components/editorial/FactGrid.astro';
+import ProgramPathway from '@components/sections/ProgramPathway.astro';
+import EnrollmentSteps from '@components/sections/EnrollmentSteps.astro';
+import { buildPathway, toPathwayInput } from '@lib/programs';
+import { ENROLLMENT_STEPS, ENROLLMENT_DOCUMENTS, ENROLLMENT_POLICY } from '@lib/enrollment';
 import { CONTACT } from '@lib/constants';
 import { generateFAQPageJsonLd } from '@lib/seo';
 
 type Program = CollectionEntry<'programs'>;
 
+// Mismo filtro que consume el formulario más abajo: lo que se ve en la ruta
+// de edades es exactamente lo que se puede elegir en el paso 1.
 const programs = (await getCollection('programs'))
   .filter((p: Program) => !p.data.draft && p.data.active && p.data.enrollmentOpen)
   .sort((a: Program, b: Program) => a.data.order - b.data.order);
@@ -17,92 +41,238 @@ const programList = programs.map((p: Program) => ({
   ageRange: p.data.ageRange,
 }));
 
+const pathwayInput = programs.map(toPathwayInput);
+const pathway = buildPathway(pathwayInput);
+const firstStage = pathway.stages[0];
+
+// El número de paso se deriva de la posición en ENROLLMENT_STEPS — igual que
+// la numeración que pinta EnrollmentSteps — para que un reordenamiento no
+// deje un "paso 3" o "paso 4" hablando de otro paso.
+const trialStepNumber = ENROLLMENT_STEPS.findIndex((step) => step.title.includes('prueba')) + 1;
+const documentsStepNumber =
+  ENROLLMENT_STEPS.findIndex((step) => step.title.includes('documentos')) + 1;
+
+// Las mismas 5 preguntas se pintan más abajo con FaqAccordion: el JSON-LD no
+// puede describir contenido que la página no muestra.
 const faqs = [
   {
     question: '¿Desde qué edad pueden inscribirse los niños?',
-    answer: 'Los niños pueden inscribirse desde los 4 años en nuestro programa de iniciación.',
+    answer: firstStage
+      ? `Desde los ${pathway.domain.from} años, en ${firstStage.title}. Más abajo puedes ver qué programa le corresponde a tu hijo o hija según su edad.`
+      : 'Escríbenos por WhatsApp y te contamos qué programa tiene cupo disponible para la edad de tu hijo o hija.',
   },
   {
     question: '¿Necesitan tener bicicleta propia?',
     answer:
-      'Sí, cada niño debe tener su propia bicicleta de montaña en buen estado. No es necesario que sea profesional.',
+      'Sí, cada niño o niña debe tener su propia bicicleta en buen estado. No es necesario que sea profesional: los entrenadores te orientan sobre la talla adecuada.',
   },
   {
     question: '¿Cuánto cuesta la inscripción?',
-    answer:
-      'El costo incluye el seguro deportivo anual de $60.000 con Aseguradora Solidaria de Colombia. Las mensualidades varían según el programa.',
+    answer: `La inscripción incluye el seguro deportivo anual (${ENROLLMENT_POLICY.annualFee} con ${ENROLLMENT_POLICY.insurer}). Las mensualidades varían según el programa: consúltalas por WhatsApp.`,
   },
   {
     question: '¿Dónde se realizan los entrenamientos?',
-    answer:
-      'Los entrenamientos se realizan en Yumbo, Valle del Cauca. La dirección es CL 8 Norte 2 N° 55.',
+    answer: `Los entrenamientos se realizan en la Pista de Ciclomontañismo Carlos Castro, ${CONTACT.address}.`,
   },
   {
     question: '¿Pueden hacer una clase de prueba?',
-    answer:
-      'Sí, ofrecemos una primera clase de prueba gratuita para que el niño y la familia conozcan el club.',
+    answer: `Sí: es el paso ${trialStepNumber} del proceso y no tiene costo. La agenda el director deportivo después de contactarte.`,
   },
 ];
 
 const faqJsonLd = generateFAQPageJsonLd(faqs);
 ---
 
-<PageLayout
-  title="Preinscribe a tu hijo"
-  description="El primer paso para formar un campeón"
-  breadcrumbs={[{ label: 'Inscripciones' }]}
+<BaseLayout
+  title="Inscripciones"
+  description="Preinscribe a tu hijo o hija en el Club Trocha y Ruta: el proceso paso a paso, el programa según su edad y el seguro deportivo incluido."
   jsonLd={faqJsonLd}
 >
-  <div class="mx-auto max-w-3xl">
-    <div class="mb-6 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm text-text-secondary">
-      <strong class="text-text-primary">Este formulario es una solicitud de preinscripción, no una inscripción confirmada.</strong>
-      Al enviarlo, el director deportivo se pondrá en contacto contigo para completar el proceso oficial, que requiere documento de identidad del niño/a, EPS vigente, certificado médico deportivo y autorización firmada por el acudiente.
+  <!-- Apertura: qué es este formulario y qué no es -->
+  <SectionShell
+    tone="tinted"
+    pattern="topo"
+    width="wide"
+    spacing="compact"
+    labelledby="inscripciones-titulo"
+  >
+    <Breadcrumb items={[{ label: 'Inscripciones' }]} />
+
+    <div class="mt-6 max-w-3xl">
+      <SectionIntro
+        as="h1"
+        id="inscripciones-titulo"
+        eyebrow="Inscripciones"
+        eyebrowIcon="ph:user-plus-bold"
+        title="El primer paso para que empiece a rodar con nosotros"
+        highlight="empiece a rodar"
+        lead="Este formulario envía una solicitud de preinscripción, no un cupo confirmado. El director deportivo la revisa, te contacta y agenda una clase de prueba gratuita antes de pedirte cualquier documento."
+      />
+
+      <a
+        href="#formulario"
+        class="text-primary-deep mt-6 inline-flex items-center gap-1.5 text-sm font-semibold underline-offset-4 transition-colors hover:underline"
+      >
+        Ir directo al formulario
+        <Icon name="ph:arrow-right-bold" class="size-4" aria-hidden="true" />
+      </a>
     </div>
+  </SectionShell>
+
+  <!-- El proceso, paso a paso -->
+  <SectionShell tone="plain" width="wide" labelledby="proceso-titulo">
+    <SectionIntro
+      id="proceso-titulo"
+      eyebrow="Cómo funciona"
+      eyebrowIcon="ph:list-checks-bold"
+      title="De la solicitud al primer entrenamiento"
+      highlight="primer entrenamiento"
+      lead={`Sin letra pequeña: esto es exactamente lo que sigue, en ${ENROLLMENT_STEPS.length} pasos.`}
+      class="max-w-2xl"
+    />
+
+    <EnrollmentSteps steps={ENROLLMENT_STEPS} class="mt-12" />
+
+    <div class="border-primary/15 bg-surface-muted mt-10 rounded-2xl border p-5 sm:p-6">
+      <p class="text-text-secondary text-[11px] font-semibold tracking-wider uppercase">
+        Qué debes presentar en el paso {documentsStepNumber}
+      </p>
+      <ul class="mt-3 grid gap-2 sm:grid-cols-2">
+        {
+          ENROLLMENT_DOCUMENTS.map((doc) => (
+            <li class="text-text-primary flex items-start gap-2 text-sm leading-snug">
+              <Icon
+                name={doc.icon}
+                class="text-primary-deep mt-0.5 size-4 shrink-0"
+                aria-hidden="true"
+              />
+              <span>{doc.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </SectionShell>
+
+  <!-- Qué programa le corresponde, según la edad -->
+  {
+    programs.length > 0 && (
+      <SectionShell tone="muted" pattern="topo" width="wide" labelledby="edad-titulo">
+        <SectionIntro
+          id="edad-titulo"
+          eyebrow="Según la edad"
+          eyebrowIcon="ph:path-bold"
+          title="Un programa para cada edad, sin adivinar"
+          highlight="sin adivinar"
+          lead={`Hay ${programs.length} ${programs.length === 1 ? 'programa' : 'programas'} con cupo abierto. Toca el tramo de edad de tu hijo o hija para ver el programa completo.`}
+          class="max-w-2xl"
+        />
+
+        <div class="border-primary/15 bg-surface/70 mt-10 rounded-2xl border p-5 backdrop-blur-sm sm:p-7">
+          <ProgramPathway programs={pathwayInput} legend />
+        </div>
+      </SectionShell>
+    )
+  }
+
+  <!-- El formulario -->
+  <SectionShell
+    id="formulario"
+    tone="plain"
+    width="narrow"
+    labelledby="formulario-titulo"
+    class="scroll-mt-20"
+  >
+    <SectionIntro
+      id="formulario-titulo"
+      eyebrow="Formulario"
+      eyebrowIcon="ph:clipboard-text-bold"
+      title="Completa los datos de tu hijo o hija"
+      highlight="tu hijo o hija"
+      lead="Programa, corredor y acudiente. Si no terminas de una sentada, tus datos quedan guardados en este dispositivo por 48 horas."
+    />
 
     <InscriptionForm client:visible programs={programList} />
+  </SectionShell>
 
-    <!-- Seguro deportivo -->
-    <div class="mt-10 flex items-start gap-4 rounded-xl border border-primary/20 bg-primary/5 p-5">
-      <div class="shrink-0 rounded-full bg-primary/10 p-2.5">
-        <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-        </svg>
-      </div>
-      <div>
-        <p class="font-semibold text-text-primary">Seguro de accidentes deportivos</p>
-        <p class="mt-1 text-sm text-text-secondary">
-          El club gestiona una póliza de accidentes personales con Aseguradora Solidaria de Colombia (vigencia marzo 2026 - marzo 2027). <strong class="text-text-primary">Valor: $60.000/año por deportista</strong>, se paga por separado al momento de la inscripción. Coberturas:
-        </p>
-        <ul class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs text-text-secondary">
-          <li class="flex items-center gap-1.5"><span class="text-primary">&#10003;</span> Gastos médicos: hasta $5.000.000</li>
-          <li class="flex items-center gap-1.5"><span class="text-primary">&#10003;</span> Rehabilitación integral: $10.000.000</li>
-          <li class="flex items-center gap-1.5"><span class="text-primary">&#10003;</span> Traslado en ambulancia: $500.000</li>
-          <li class="flex items-center gap-1.5"><span class="text-primary">&#10003;</span> Renta hospitalaria: $50.000/día (30 días)</li>
-          <li class="flex items-center gap-1.5"><span class="text-primary">&#10003;</span> Incapacidad total: $10.000.000</li>
-          <li class="flex items-center gap-1.5"><span class="text-primary">&#10003;</span> Ambulancia para eventos</li>
-        </ul>
-      </div>
+  <!-- El seguro deportivo -->
+  <SectionShell tone="muted" width="default" labelledby="seguro-titulo">
+    <SectionIntro
+      id="seguro-titulo"
+      eyebrow="Seguro deportivo"
+      eyebrowIcon="ph:shield-check-bold"
+      title="La póliza que cubre cada entrenamiento"
+      highlight="cada entrenamiento"
+      lead="El club paga un seguro de accidentes personales para todos los deportistas activos. Esto es lo que incluye."
+      class="max-w-2xl"
+    />
+
+    <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
+      <StatFigure
+        value={ENROLLMENT_POLICY.annualFee}
+        unit="/año"
+        label="Valor del seguro"
+        note="Se paga aparte, al confirmar la inscripción"
+        icon="ph:currency-circle-dollar-bold"
+      />
+      <StatFigure
+        value={ENROLLMENT_POLICY.insurer}
+        size="sm"
+        label="Aseguradora"
+        icon="ph:seal-check-bold"
+      />
+      <StatFigure
+        value={ENROLLMENT_POLICY.validity}
+        size="sm"
+        label="Vigencia de la póliza"
+        icon="ph:calendar-check-bold"
+      />
     </div>
 
-    <!-- Sección de ayuda -->
-    <div class="mt-12 rounded-xl bg-surface-muted p-6 text-center">
-      <p class="mb-4 text-lg font-semibold text-text-primary">
-        ¿Dudas? Escríbenos por WhatsApp
-      </p>
+    <FactGrid
+      class="mt-10"
+      columns={3}
+      items={ENROLLMENT_POLICY.coverages.map((coverage) => ({
+        icon: coverage.icon,
+        label: coverage.label,
+        value: coverage.amount,
+      }))}
+    />
+  </SectionShell>
+
+  <!-- Dudas y contacto -->
+  <SectionShell tone="plain" width="narrow" labelledby="dudas-titulo">
+    <SectionIntro
+      id="dudas-titulo"
+      eyebrow="Dudas frecuentes"
+      eyebrowIcon="ph:question-bold"
+      title="Las dudas que más nos preguntan"
+      highlight="más nos preguntan"
+      lead="Si tu duda no está aquí, escríbenos: respondemos por WhatsApp."
+      class="max-w-2xl"
+    />
+
+    <div class="mt-8">
+      <FaqAccordion items={faqs} />
+    </div>
+
+    <div class="mt-12 flex flex-col items-center gap-4 border-t border-black/10 pt-8 text-center">
       <a
-        href={CONTACT.whatsapp}
+        href={`${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, tengo una duda sobre la inscripción')}`}
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90"
+        data-analytics-event="whatsapp_click"
+        class="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
       >
-        <svg class="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-        </svg>
+        <Icon name="ph:whatsapp-logo" class="size-5 shrink-0" aria-hidden="true" />
         Escríbenos por WhatsApp
       </a>
-      <p class="mt-4 text-sm text-text-secondary">
-        o llámanos al <a href={CONTACT.phoneLink} class="font-medium text-primary hover:underline">{CONTACT.phone}</a>
+      <p class="text-text-secondary text-sm">
+        o llámanos al <a
+          href={CONTACT.phoneLink}
+          class="text-primary-deep font-medium hover:underline">{CONTACT.phone}</a
+        >
       </p>
     </div>
-  </div>
-</PageLayout>
+  </SectionShell>
+</BaseLayout>

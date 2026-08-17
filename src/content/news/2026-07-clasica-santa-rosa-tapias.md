@@ -3,6 +3,7 @@ title: "Samuel Ortiz estrena la \"Ruta\" del club con podio en la Clásica de Sa
 date: 2026-07-12
 author: "Club Trocha y Ruta"
 category: "competencias"
+relatedEvent: "2026-07-clasica-santa-rosa-tapias"
 tags: ["ciclismo-de-ruta", "cronoescalada", "santa-rosa-de-tapias", "guacari", "samuel-ortiz", "debut", "resultados"]
 image: "/images/news/clasica-santa-rosa-tapias-2026/salida-crono-escalada.webp"
 imageAlt: "Samuel Ortiz Valencia, del Club Trocha y Ruta, en la línea de salida de la crono escalada de la I Clásica de Santa Rosa de Tapias"

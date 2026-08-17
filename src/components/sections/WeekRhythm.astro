@@ -1,0 +1,154 @@
+---
+/**
+ * La semana del club: cuándo se entrena de verdad.
+ *
+ * La página de contacto anunciaba un horario escrito a mano que contradecía la
+ * colección `programs`. Aquí todo sale de los `schedule` reales, ya parseados
+ * por `buildWeekRhythm()`.
+ *
+ * Dos lecturas de lo mismo:
+ *  - La rejilla mañana/tarde × siete días es la ilustración. Dibuja la forma de
+ *    la semana —tardes entre semana, mañanas el fin de semana— de un vistazo.
+ *    Va `aria-hidden`: no aporta nada que las filas de abajo no digan mejor.
+ *  - Las filas por día son el contenido accesible y el que funciona a 320px.
+ *
+ * Cero JS: la rejilla es HTML y color, no un gráfico.
+ */
+import { Icon } from 'astro-icon/components';
+import { getTone, type SectionTone } from '@lib/editorial';
+import { getLevelStyle } from '@lib/programs';
+import { buildPeriodGrid, type WeekRhythm } from '@lib/contact';
+
+interface Props {
+  rhythm: WeekRhythm;
+  tone?: SectionTone;
+  class?: string;
+}
+
+const { rhythm, tone = 'plain', class: className } = Astro.props;
+
+const tokens = getTone(tone);
+const grid = buildPeriodGrid(rhythm.days);
+
+/** Cuántos programas coinciden a la vez: da la intensidad de la celda. */
+const busiest = Math.max(1, ...grid.flatMap((row) => row.cells.map((cell) => cell.sessions)));
+
+/**
+ * Intensidad por número de programas simultáneos. Son tres escalones fijos y
+ * no una opacidad calculada porque Tailwind necesita la clase completa escrita
+ * para incluirla en el CSS.
+ */
+function fillClass(sessions: number): string {
+  if (sessions === 0) return 'bg-black/[0.04] ring-1 ring-inset ring-black/5';
+  const step = Math.ceil((sessions / busiest) * 3);
+  if (step <= 1) return 'bg-primary/30';
+  if (step === 2) return 'bg-primary/60';
+  return 'bg-primary';
+}
+---
+
+<div class:list={[className]}>
+  {grid.length > 0 && (
+    <div class="overflow-x-auto">
+      <div
+        class:list={['min-w-[17rem] rounded-2xl border p-4 sm:p-5', tokens.hairline, tokens.card]}
+        aria-hidden="true"
+      >
+        {/* Cabecera: las iniciales de los siete días */}
+        <div class="grid grid-cols-[3.25rem_repeat(7,minmax(0,1fr))] gap-1.5 sm:grid-cols-[4.5rem_repeat(7,minmax(0,1fr))] sm:gap-2">
+          <span></span>
+          {grid[0].cells.map((cell) => (
+            <span
+              class:list={[
+                'text-center text-[11px] font-bold uppercase tracking-wider',
+                tokens.muted,
+              ]}
+            >
+              {cell.initial}
+            </span>
+          ))}
+        </div>
+
+        {/* Una fila por momento del día */}
+        {grid.map((row) => (
+          <div class="mt-1.5 grid grid-cols-[3.25rem_repeat(7,minmax(0,1fr))] items-center gap-1.5 sm:mt-2 sm:grid-cols-[4.5rem_repeat(7,minmax(0,1fr))] sm:gap-2">
+            <span
+              class:list={[
+                'flex items-center gap-1 text-[10px] font-semibold sm:text-xs',
+                tokens.muted,
+              ]}
+            >
+              <Icon name={row.icon} class="size-3.5 shrink-0" />
+              {row.label}
+            </span>
+            {row.cells.map((cell) => (
+              <span class:list={['h-7 rounded-md sm:h-9', fillClass(cell.sessions)]}></span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {/* El detalle accesible: qué pasa cada día */}
+  <ul class:list={['mt-8 border-t', tokens.hairline]}>
+    {rhythm.days.map((day) => (
+      <li
+        class:list={[
+          'grid grid-cols-[4.5rem_1fr] items-baseline gap-x-3 gap-y-2 border-b py-3.5 sm:grid-cols-[6rem_1fr] sm:gap-x-5',
+          tokens.hairline,
+        ]}
+      >
+        <h3
+          class:list={[
+            'font-display text-sm font-bold sm:text-base',
+            day.rest ? tokens.muted : tokens.heading,
+          ]}
+        >
+          {day.label}
+        </h3>
+
+        {day.rest ? (
+          <p class:list={['text-sm', tokens.muted]}>Sin entrenamiento</p>
+        ) : (
+          <ul class="flex flex-wrap gap-2">
+            {day.sessions.map((session) => {
+              const level = getLevelStyle(session.targetLevel);
+              return (
+                <li
+                  class:list={[
+                    'rounded-lg px-2.5 py-1.5 text-xs leading-snug sm:text-sm',
+                    level.soft,
+                  ]}
+                >
+                  <span class:list={['font-semibold', level.text]}>{session.programTitle}</span>
+                  {session.time && (
+                    <span class:list={['ml-1.5 font-medium', tokens.heading]}>{session.time}</span>
+                  )}
+                  {session.note && (
+                    <span class:list={['ml-1.5', tokens.muted]}>· {session.note}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </li>
+    ))}
+  </ul>
+
+  {/*
+    Horarios que el parser no supo leer. No se pierden: se muestran tal como
+    los escribió el club, para que la información llegue igual.
+  */}
+  {rhythm.unreadable.length > 0 && (
+    <dl class:list={['mt-6 space-y-2 text-sm', tokens.muted]}>
+      {rhythm.unreadable.map((entry) => (
+        <div class="flex flex-wrap gap-x-2">
+          <dt class:list={['font-semibold', tokens.heading]}>{entry.programTitle}:</dt>
+          <dd>{entry.raw}</dd>
+        </div>
+      ))}
+    </dl>
+  )}
+</div>

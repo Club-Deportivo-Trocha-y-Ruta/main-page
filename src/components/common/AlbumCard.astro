@@ -1,0 +1,137 @@
+---
+/**
+ * Tarjeta de álbum de la galería, en dos tallas.
+ *
+ * `featured` es el álbum que abre la portada: más grande, con enlaces propios
+ * de título y de cierre ("Ver álbum completo"), y un slot libre para el
+ * contexto del evento/crónica (`AlbumEventContext`) — por eso no envuelve la
+ * tarjeta entera en un único enlace. `default` es la tarjeta de la rejilla
+ * secundaria: toda la tarjeta es un único enlace, mismo patrón que
+ * `NewsCard.astro`.
+ *
+ * La portada es de proporción variable (retrato o paisaje, según la foto): va
+ * en `object-cover` dentro de una caja de alto fijo y en posición absoluta,
+ * para que una foto vertical no estire la tarjeta — mismo problema que ya
+ * resolvió `NewsCard.astro`.
+ */
+import { Icon } from 'astro-icon/components';
+import { formatDate } from '@lib/utils';
+import { getGalleryCategory, photoCountLabel } from '@lib/gallery';
+
+interface Props {
+  href: string;
+  title: string;
+  date: Date;
+  category: string;
+  photoCount: number;
+  cover: string;
+  coverAlt: string;
+  description?: string;
+  variant?: 'featured' | 'default';
+  /** La primera tarjeta visible de la página carga con prioridad. */
+  eager?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  title,
+  date,
+  category,
+  photoCount,
+  cover,
+  coverAlt,
+  description,
+  variant = 'default',
+  eager = false,
+  class: className,
+} = Astro.props;
+
+const style = getGalleryCategory(category);
+const isFeatured = variant === 'featured';
+---
+
+<article
+  class:list={[
+    'group relative overflow-hidden rounded-2xl bg-surface shadow-sm ring-1 ring-black/5 transition duration-300',
+    isFeatured ? 'md:grid md:grid-cols-2 md:items-stretch' : 'hover:-translate-y-1 hover:shadow-lg',
+    className,
+  ]}
+>
+  <!-- La imagen nunca aporta alto propio: absoluta dentro de una caja con
+       proporción fija, si no una portada vertical estiraría la tarjeta. -->
+  <div
+    class:list={[
+      'relative aspect-video overflow-hidden bg-surface-muted',
+      isFeatured && 'md:aspect-auto md:h-full md:min-h-64',
+    ]}
+  >
+    <img
+      src={cover}
+      alt={coverAlt}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
+      decoding="async"
+      class="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+    />
+    <span class="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold text-white sm:bottom-3 sm:right-3">
+      <Icon name="ph:images-bold" class="size-3.5 shrink-0" aria-hidden="true" />
+      {photoCountLabel(photoCount)}
+    </span>
+  </div>
+
+  <div class:list={['flex flex-col', isFeatured ? 'justify-center p-6 md:p-8' : 'p-5']}>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <span
+        class:list={[
+          'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider',
+          style.soft,
+          style.text,
+        ]}
+      >
+        <Icon name={style.icon} class="size-3.5" aria-hidden="true" />
+        {style.label}
+      </span>
+      <time datetime={date.toISOString()} class="text-xs text-text-secondary">
+        {formatDate(date)}
+      </time>
+    </div>
+
+    <h3
+      class:list={[
+        'font-display font-bold text-text-primary',
+        isFeatured ? 'mt-3 text-xl sm:text-2xl' : 'mt-3 line-clamp-2 text-lg',
+      ]}
+    >
+      <a
+        href={href}
+        class:list={['hover:text-primary-deep', !isFeatured && 'after:absolute after:inset-0']}
+      >
+        {title}
+      </a>
+    </h3>
+
+    {description && (
+      <p
+        class:list={[
+          'mt-2 text-sm leading-relaxed text-text-secondary',
+          isFeatured ? 'line-clamp-3' : 'line-clamp-2',
+        ]}
+      >
+        {description}
+      </p>
+    )}
+
+    <slot />
+
+    {isFeatured && (
+      <a
+        href={href}
+        class="mt-5 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-primary-deep transition-all duration-200 hover:gap-2.5"
+      >
+        Ver álbum completo
+        <Icon name="ph:arrow-right-bold" class="size-3.5" aria-hidden="true" />
+      </a>
+    )}
+  </div>
+</article>

@@ -1,0 +1,29 @@
+---
+/**
+ * El proceso de inscripción como recorrido: del envío del formulario al
+ * primer entrenamiento. Envuelve `Timeline` con la numeración de cada paso
+ * ("Paso 1", "Paso 2"…), que se deriva de la posición en la lista — igual
+ * que el "01/02/03" de la ruta de programas — y no vive como dato propio en
+ * `src/lib/enrollment.ts`.
+ */
+import Timeline, { type TimelineItem } from '@components/editorial/Timeline.astro';
+import type { SectionTone } from '@lib/editorial';
+import type { EnrollmentStep } from '@lib/enrollment';
+
+interface Props {
+  steps: EnrollmentStep[];
+  tone?: SectionTone;
+  class?: string;
+}
+
+const { steps, tone = 'plain', class: className } = Astro.props;
+
+const items: TimelineItem[] = steps.map((step, index) => ({
+  label: `Paso ${index + 1}`,
+  title: step.title,
+  body: step.body,
+  icon: step.icon,
+}));
+---
+
+<Timeline items={items} tone={tone} class={className} />

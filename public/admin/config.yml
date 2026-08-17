@@ -333,6 +333,7 @@ collections:
     fields:
       - { label: "Título", name: "title", widget: "string", required: true }
       - { label: "Subtítulo", name: "subtitle", widget: "string", required: false }
+      - { label: "Resumen", name: "summary", widget: "text", required: false, hint: "Una o dos frases con la promesa del programa. Es lo que se lee en las tarjetas de inicio y en la página de programas." }
       - { label: "Icono (Phosphor)", name: "icon", widget: "string", required: true, hint: "Nombre del icono de Phosphor Icons" }
       - { label: "Imagen", name: "image", widget: "image", required: false, media_folder: "/src/assets/images/programs" }
       - { label: "Rango de edad (texto)", name: "ageRange", widget: "string", required: true, hint: "Ej: 4 a 8 años" }
@@ -369,48 +370,6 @@ collections:
           - { label: "Meta descripción", name: "metaDescription", widget: "text", required: false }
           - { label: "Imagen OG", name: "ogImage", widget: "image", required: false }
       - { label: "Descripción completa", name: "body", widget: "markdown" }
-
-  # ----------------------------------------------------------
-  # TESTIMONIOS
-  # ----------------------------------------------------------
-  - name: "testimonials"
-    label: "Testimonios"
-    label_singular: "Testimonio"
-    folder: "src/content/testimonials"
-    create: true
-    slug: "{{slug}}"
-    sortable_fields: ["name", "role"]
-    summary: "{{name}} — {{roleLabel}}"
-    fields:
-      - { label: "Nombre", name: "name", widget: "string", required: true }
-      - label: "Categoría del testimonio"
-        name: "type"
-        widget: "select"
-        default: "familia"
-        hint: "Familia/corredor para la página de testimonios; patrocinador para la página de patrocinadores"
-        options:
-          - { label: "Familia o corredor", value: "familia" }
-          - { label: "Patrocinador", value: "patrocinador" }
-      - label: "Rol"
-        name: "role"
-        widget: "select"
-        options:
-          - { label: "Padre de familia", value: "padre-de-familia" }
-          - { label: "Madre de familia", value: "madre-de-familia" }
-          - { label: "Corredor", value: "corredor" }
-          - { label: "Corredor juvenil", value: "corredor-juvenil" }
-          - { label: "Exalumno", value: "exalumno" }
-          - { label: "Entrenador", value: "entrenador" }
-          - { label: "Aliado", value: "aliado" }
-      - { label: "Descripción del rol", name: "roleLabel", widget: "string", required: true, hint: "Ej: Padre de familia de Santiago (8 años)" }
-      - { label: "Foto", name: "photo", widget: "image", required: false, media_folder: "/src/assets/images/testimonials" }
-      - { label: "Cita corta", name: "quote", widget: "text", required: true, hint: "Frase destacada para mostrar en cards" }
-      - { label: "Corredor relacionado (slug)", name: "relatedRider", widget: "string", required: false }
-      - { label: "Programa relacionado (slug)", name: "relatedProgram", widget: "string", required: false }
-      - { label: "Destacado", name: "featured", widget: "boolean", default: false }
-      - { label: "Orden", name: "order", widget: "number", default: 0 }
-      - { label: "Borrador", name: "draft", widget: "boolean", default: false }
-      - { label: "Testimonio completo", name: "body", widget: "markdown", required: false }
 
   # ----------------------------------------------------------
   # PATROCINADORES

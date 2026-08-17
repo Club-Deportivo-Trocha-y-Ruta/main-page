@@ -1,0 +1,73 @@
+---
+/**
+ * Cifra ilustrada: el dato que sostiene lo que afirma la sección.
+ *
+ * Regla del sistema: toda cifra sale del contenido, nunca de una estimación
+ * escrita a mano en la plantilla. Si el dato no existe, no se pinta el bloque.
+ */
+import { Icon } from 'astro-icon/components';
+import { getTone, type SectionTone } from '@lib/editorial';
+
+interface Props {
+  value: string | number;
+  label: string;
+  /** Sufijo pequeño pegado a la cifra: "+", "años", "km". */
+  unit?: string;
+  icon?: string;
+  /** Aclaración en letra menuda debajo de la etiqueta. */
+  note?: string;
+  tone?: SectionTone;
+  variant?: 'plain' | 'tile';
+  /** `sm` para valores que son texto ("marzo – agosto 2026") y no una cifra. */
+  size?: 'default' | 'sm';
+  /** Color de la cifra. Por defecto, el teal accesible de marca. */
+  accent?: string;
+  class?: string;
+}
+
+const {
+  value,
+  label,
+  unit,
+  icon,
+  note,
+  tone = 'plain',
+  variant = 'plain',
+  size = 'default',
+  accent,
+  class: className,
+} = Astro.props;
+
+const tokens = getTone(tone);
+const valueColor = tokens.inverted ? 'text-white' : 'text-primary-deep';
+---
+
+<div
+  class:list={[
+    variant === 'tile' && ['rounded-2xl border p-5', tokens.hairline, tokens.card],
+    className,
+  ]}
+>
+  {icon && (
+    <Icon
+      name={icon}
+      class:list={['mb-2 size-6', tokens.inverted ? 'text-accent-light' : 'text-primary-deep']}
+      aria-hidden="true"
+    />
+  )}
+  <p
+    class:list={[
+      'font-display font-extrabold leading-none',
+      size === 'sm' ? 'text-xl sm:text-2xl' : 'text-3xl sm:text-4xl',
+    ]}
+  >
+    <span class:list={[!accent && valueColor]} style={accent ? `color:${accent}` : undefined}>
+      {value}
+    </span>
+    {unit && (
+      <span class:list={['ml-1 text-base font-bold', tokens.muted]}>{unit}</span>
+    )}
+  </p>
+  <p class:list={['mt-2 text-sm font-medium leading-snug', tokens.muted]}>{label}</p>
+  {note && <p class:list={['mt-1 text-xs leading-snug', tokens.muted]}>{note}</p>}
+</div>

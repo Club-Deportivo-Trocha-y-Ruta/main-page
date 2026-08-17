@@ -1,0 +1,87 @@
+---
+/**
+ * Los canales de contacto, según lo que necesita quien escribe.
+ *
+ * No todas las preguntas se responden por el mismo lado: lo urgente por
+ * WhatsApp, lo que necesita explicación por el formulario, lo que lleva
+ * adjuntos por correo, y lo que solo se entiende viéndolo, yendo a la pista.
+ * Cada tarjeta dice para qué sirve el canal y qué conviene tener a mano antes
+ * de usarlo, para que la primera respuesta ya sea útil.
+ *
+ * El vocabulario vive en `CONTACT_CHANNELS` (@lib/contact), no aquí.
+ */
+import { Icon } from 'astro-icon/components';
+import { getTone, type SectionTone } from '@lib/editorial';
+import { CONTACT_CHANNELS } from '@lib/contact';
+
+interface Props {
+  tone?: SectionTone;
+  /**
+   * Nivel del titular de cada tarjeta. Por defecto `h2`, que es el nivel que
+   * corresponde cuando el bloque cuelga directamente del `h1` de la página:
+   * poner `h3` ahí saltaría un nivel.
+   */
+  as?: 'h2' | 'h3';
+  class?: string;
+}
+
+const { tone = 'plain', as: Heading = 'h2', class: className } = Astro.props;
+
+const tokens = getTone(tone);
+---
+
+<ul class:list={['grid gap-4 sm:grid-cols-2 lg:grid-cols-4', className]}>
+  {CONTACT_CHANNELS.map((channel) => (
+    <li>
+      <a
+        href={channel.href}
+        target={channel.external ? '_blank' : undefined}
+        rel={channel.external ? 'noopener noreferrer' : undefined}
+        data-analytics-event={channel.analyticsEvent}
+        class:list={[
+          'group flex h-full flex-col rounded-2xl border p-5 transition duration-300 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+          tokens.hairline,
+          tokens.card,
+        ]}
+      >
+        <span
+          class:list={[
+            'flex size-11 items-center justify-center rounded-xl',
+            tokens.inverted ? 'bg-white/10 text-accent-light' : 'bg-primary/12 text-primary-deep',
+          ]}
+        >
+          <Icon name={channel.icon} class="size-6" aria-hidden="true" />
+        </span>
+
+        <Heading class:list={['mt-4 font-display text-lg font-bold', tokens.heading]}>
+          {channel.label}
+        </Heading>
+        <p class:list={['mt-1.5 text-sm leading-relaxed', tokens.muted]}>{channel.purpose}</p>
+
+        <p
+          class:list={[
+            'mt-4 border-l-2 pl-3 text-xs leading-snug',
+            tokens.hairline,
+            tokens.muted,
+          ]}
+        >
+          <span class:list={['font-semibold', tokens.heading]}>Ten a mano:</span> {channel.bring}
+        </p>
+
+        <span
+          class:list={[
+            'mt-auto flex items-center gap-1 pt-5 text-sm font-semibold break-all transition-all duration-200 group-hover:gap-2',
+            tokens.inverted ? 'text-accent-light' : 'text-primary-deep',
+          ]}
+        >
+          {channel.cta}
+          <Icon
+            name={channel.external ? 'ph:arrow-square-out-bold' : 'ph:arrow-right-bold'}
+            class="size-4 shrink-0"
+            aria-hidden="true"
+          />
+        </span>
+      </a>
+    </li>
+  ))}
+</ul>

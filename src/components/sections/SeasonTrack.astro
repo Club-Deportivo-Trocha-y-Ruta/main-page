@@ -1,0 +1,124 @@
+---
+/**
+ * La temporada como recorrido: una parada por fecha, con la barra llena hasta
+ * donde va el año.
+ *
+ * Responde de un vistazo "¿en qué punto vamos?", que es lo que uno quiere saber
+ * al abrir un calendario deportivo a mitad de temporada. Las paradas corridas
+ * quedan apagadas, la que sigue se marca y las futuras van en hueco.
+ *
+ * En pantallas estrechas el riel se desliza en horizontal con anclaje, igual
+ * que la tira de corredores de las crónicas.
+ */
+import { Icon } from 'astro-icon/components';
+import type { Season, SeasonStop } from '@lib/calendar';
+
+interface Props {
+  season: Season<{ id: string; data: { title: string } }>;
+  /** Prefijo del enlace de cada parada, normalmente un ancla de la página. */
+  hrefBase?: string;
+  class?: string;
+}
+
+const { season, hrefBase = '#evento-', class: className } = Astro.props;
+
+// Estilos por estado. El lima marca lo que sigue; lo corrido se apaga para que
+// la vista salte sola a la próxima fecha.
+const dot: Record<string, string> = {
+  past: 'size-3 bg-primary-deep/50',
+  ongoing: 'size-5 bg-accent ring-4 ring-accent/30',
+  upcoming: 'size-3.5 bg-surface ring-2 ring-primary-deep/40',
+  cancelled: 'size-3 bg-surface-muted ring-2 ring-black/10',
+};
+
+type Stop = SeasonStop<{ id: string; data: { title: string } }>;
+
+const isNext = (stop: Stop) => season.next?.id === stop.id;
+
+// La próxima fecha lleva el mismo punto que una en curso: es el "vas aquí".
+const dotFor = (stop: Stop) =>
+  isNext(stop) ? dot.ongoing : (dot[stop.status] ?? dot.upcoming);
+---
+
+{season.stops.length > 0 && (
+  <figure class:list={['not-prose', className]}>
+    <figcaption class="sr-only">
+      Temporada {season.year}: {season.completed} de {season.total} fechas corridas.
+      {season.next && ` La próxima es en ${season.next.label}.`}
+    </figcaption>
+
+    <div class="flex flex-wrap items-baseline justify-between gap-2">
+      <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-deep">
+        Temporada {season.year}
+      </p>
+      <p class="text-xs text-text-secondary">
+        <span class="font-bold text-text-primary">{season.completed}</span> de {season.total} fechas
+        corridas
+      </p>
+    </div>
+
+    <div class="mt-4 snap-x snap-mandatory overflow-x-auto pb-2 [scrollbar-width:thin]">
+      <div class="relative min-w-full">
+        <!-- Riel: gris de punta a punta, lima hasta donde va la temporada -->
+        <div class="absolute inset-x-0 top-6 h-1 rounded-full bg-black/10" aria-hidden="true"></div>
+        <div
+          class="absolute left-0 top-6 h-1 rounded-full bg-gradient-to-r from-primary to-accent"
+          style={`width:${season.progressPct}%`}
+          aria-hidden="true"
+        ></div>
+
+        <ol
+          class="relative grid"
+          style={`grid-template-columns:repeat(${season.stops.length},minmax(5.25rem,1fr))`}
+        >
+          {season.stops.map((stop) => (
+            <li class="flex snap-start flex-col items-center px-1 text-center">
+              <a
+                href={`${hrefBase}${stop.id}`}
+                class="group flex w-full flex-col items-center rounded-lg pt-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                aria-label={`${stop.event.data.title} — ${stop.day} de ${stop.month}`}
+              >
+                <span class="flex size-5 shrink-0 items-center justify-center" aria-hidden="true">
+                  <span
+                    class:list={[
+                      'block rounded-full transition-transform duration-200 group-hover:scale-125',
+                      dotFor(stop),
+                    ]}
+                  ></span>
+                </span>
+
+                <span
+                  class:list={[
+                    'mt-3 font-display text-sm font-bold leading-none',
+                    stop.status === 'past' ? 'text-text-secondary' : 'text-text-primary',
+                    stop.status === 'cancelled' && 'line-through',
+                  ]}
+                >
+                  {stop.day}
+                </span>
+                <span class="mt-0.5 text-[10px] uppercase tracking-wider text-text-secondary">
+                  {stop.month}
+                </span>
+                <span
+                  class:list={[
+                    'mt-1.5 line-clamp-2 text-xs leading-tight',
+                    isNext(stop) ? 'font-bold text-accent-deep' : 'text-text-secondary',
+                  ]}
+                >
+                  {stop.label}
+                </span>
+
+                {isNext(stop) && (
+                  <span class="mt-1 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-accent-deep">
+                    <Icon name="ph:caret-down-bold" class="size-3" aria-hidden="true" />
+                    Sigue
+                  </span>
+                )}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </figure>
+)}

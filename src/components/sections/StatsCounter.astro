@@ -1,50 +1,89 @@
 ---
+/**
+ * La banda de credibilidad de la portada.
+ *
+ * Antes mostraba cuatro cifras que decían venir de las collections y no venían:
+ * calculaba `Math.max(<constante>, conteo)`, pero los cinco corredores están
+ * en `draft`, así que el conteo era 0 y la constante ganaba siempre. Y dos de
+ * esas cifras —niños formados y medallas— se repetían más abajo, en
+ * `AboutPreview`, y ninguna de las dos tenía fuente de verdad.
+ *
+ * Ahora enseña solo lo que el sitio puede probar, y cada cifra dice de dónde
+ * sale y enlaza a la página donde se comprueba: la regla del sistema —toda
+ * cifra sale del contenido— convertida en algo que el lector puede verificar.
+ * Las cifras sin respaldo se eliminaron del sitio entero.
+ *
+ * El contador sigue animándose al entrar en pantalla, y respeta
+ * `prefers-reduced-motion`.
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { CLUB_STATS, getYearsActive } from '@lib/constants';
+import { Icon } from 'astro-icon/components';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import { getYearsActive } from '@lib/constants';
+import { buildClubFigures } from '@lib/home';
+import { summarizeTrees } from '@lib/trocha-verde';
 
-// Los valores base son el acumulado histórico del club (fuente única en
-// constants.ts). Si el contenido de las collections lo supera, se usa el mayor.
-const yearsActive = getYearsActive();
+type Event = CollectionEntry<'events'>;
+type Program = CollectionEntry<'programs'>;
+type Tree = CollectionEntry<'trees'>;
 
-// ─── Datos dinámicos desde collections ────────────────────────────────────────
-const allRiders = await getCollection('riders');
-const ridersCount = allRiders.filter((r: CollectionEntry<'riders'>) => !r.data.draft).length;
+const events = (await getCollection('events')).filter((e: Event) => !e.data.draft);
+const trees = (await getCollection('trees')).filter((t: Tree) => !t.data.draft);
+const programs = (await getCollection('programs'))
+  .filter((p: Program) => !p.data.draft && p.data.active)
+  .map((p: Program) => ({
+    ageMin: p.data.ageMin,
+    ageMax: p.data.ageMax,
+    schedule: p.data.schedule,
+    maxStudents: p.data.maxStudents,
+  }));
 
-const allEvents = await getCollection('events');
-const eventsCount = allEvents.filter((e: CollectionEntry<'events'>) => !e.data.draft).length;
-
-// Usa el mayor entre el base histórico y el conteo dinámico
-const ridersTarget = Math.max(CLUB_STATS.ridersTrained, ridersCount);
-const eventsTarget = Math.max(CLUB_STATS.competitions, eventsCount);
-
-const stats = [
-  { value: `${yearsActive}+`, label: 'Años formando ciclistas', target: yearsActive, suffix: '+' },
-  { value: `${ridersTarget}+`, label: 'Niños entrenados', target: ridersTarget, suffix: '+' },
-  { value: `${eventsTarget}+`, label: 'Competencias', target: eventsTarget, suffix: '+' },
-  { value: `${CLUB_STATS.medals}+`, label: 'Medallas ganadas', target: CLUB_STATS.medals, suffix: '+' },
-];
+const figures = buildClubFigures({
+  years: getYearsActive(),
+  programs,
+  events,
+  trees: summarizeTrees(trees.map((tree: Tree) => tree.data)).totalTrees,
+});
 ---
 
-<section class="bg-surface-muted py-16">
-  <div class="mx-auto max-w-5xl px-4">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-      {stats.map((stat) => (
-        <div>
-          <span
-            class="block text-4xl md:text-5xl font-display font-bold text-primary"
-            data-count-target={stat.target}
-            data-count-suffix={stat.suffix}
-          >
-            0{stat.suffix}
-          </span>
-          <span class="mt-2 block text-sm md:text-base text-text-secondary font-medium">
-            {stat.label}
-          </span>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
+{
+  figures.length > 0 && (
+    <SectionShell tone="plain" width="wide" spacing="compact" label="El club en cifras">
+      <ul class="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
+        {figures.map((figure) => (
+          <li>
+            <a
+              href={figure.href}
+              class="group flex h-full flex-col border-l-2 border-primary/25 pl-4 transition-colors duration-200 hover:border-primary-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              <Icon
+                name={figure.icon}
+                class="size-5 shrink-0 text-primary-deep"
+                aria-hidden="true"
+              />
+
+              <p class="mt-3 font-display text-4xl font-extrabold leading-none text-primary-deep sm:text-5xl">
+                <span data-count-target={figure.value} data-count-suffix="">
+                  {figure.value}
+                </span>
+              </p>
+
+              <p class="mt-2 text-sm font-semibold leading-snug text-text-primary sm:text-base">
+                {figure.label}
+              </p>
+              <p class="mt-1 text-xs leading-snug text-text-secondary">{figure.note}</p>
+
+              <span class="mt-auto flex items-center gap-1 pt-3 text-xs font-semibold text-primary-deep opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+                Compruébalo
+                <Icon name="ph:arrow-right-bold" class="size-3.5" aria-hidden="true" />
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </SectionShell>
+  )
+}
 
 <script is:inline>
   function initCounters() {
@@ -59,14 +98,17 @@ const stats = [
       return;
     }
 
-    const observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          animateCount(entry.target);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.5 });
+    const observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            animateCount(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
 
     counters.forEach(function (el) {
       observer.observe(el);

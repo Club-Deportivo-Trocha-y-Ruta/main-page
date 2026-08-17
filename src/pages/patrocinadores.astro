@@ -1,227 +1,406 @@
 ---
+/**
+ * Patrocinadores.
+ *
+ * Quien entra aquí decide si pone plata, y la pregunta que trae es "¿qué
+ * recibo a cambio?". La página responde con hechos verificables, en este
+ * orden: la promesa (hero), la evidencia de dónde aparece la marca (fechas,
+ * crónicas, siembra), quiénes ya confían hoy —con su antigüedad, no como una
+ * grilla de logos anónimos— y por último los niveles como una progresión, no
+ * como cuatro cajas iguales.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md).
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
-import Card from '@components/common/Card.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
 import SponsorshipTiers from '@components/sections/SponsorshipTiers.astro';
-import { CONTACT, CLUB_STATS, getYearsActive } from '@lib/constants';
+import { CONTACT, getYearsActive } from '@lib/constants';
+import { summarizePrograms } from '@lib/programs';
+import { getTreeStats } from '@lib/trocha-verde';
+import {
+  isPublishableSponsor,
+  groupByLevel,
+  sponsorSince,
+  summarizeSponsors,
+  summarizeEvidence,
+} from '@lib/sponsors';
 
-const sponsors: CollectionEntry<'sponsors'>[] = (await getCollection('sponsors'))
-  .filter((s: CollectionEntry<'sponsors'>) => !s.data.draft && s.data.active && !s.data.logo.includes('placeholder'))
-  .sort((a: CollectionEntry<'sponsors'>, b: CollectionEntry<'sponsors'>) => a.data.order - b.data.order);
+type Sponsor = CollectionEntry<'sponsors'>;
+type Event = CollectionEntry<'events'>;
+type News = CollectionEntry<'news'>;
 
-const levelOrder = ['principal', 'oficial', 'aliado', 'proveedor'] as const;
-const levelLabels: Record<string, string> = {
-  principal: 'Patrocinador Principal',
-  oficial: 'Patrocinadores Oficiales',
-  aliado: 'Aliados',
-  proveedor: 'Proveedores',
-};
-
-const grouped = new Map<string, typeof sponsors>();
-for (const s of sponsors) {
-  const group = grouped.get(s.data.level) || [];
-  group.push(s);
-  grouped.set(s.data.level, group);
+interface EvidenceCard {
+  value: number;
+  label: string;
+  note: string;
+  icon: string;
+  body: string;
+  href: string;
+  cta: string;
 }
 
-const hasSponsorContent = sponsors.length > 0;
+const sponsors = (await getCollection('sponsors'))
+  .filter((s: Sponsor) => isPublishableSponsor(s))
+  .sort((a: Sponsor, b: Sponsor) => a.data.order - b.data.order);
+
+const groups = groupByLevel(sponsors);
+const sponsorsSummary = summarizeSponsors(sponsors);
+
+// Evidencia de exposición: de dónde sale "9 fechas al año, 9 crónicas
+// publicadas" en vez de escribirlo a mano — se pudre apenas cambie el
+// calendario.
+const events = (await getCollection('events')).filter((e: Event) => !e.data.draft);
+const news = (await getCollection('news')).filter((n: News) => !n.data.draft);
+const treeStats = await getTreeStats();
+
+const evidence = summarizeEvidence({
+  events,
+  publishedStories: news.length,
+  treesPlanted: treeStats.totalTrees,
+});
+
+const rawEvidenceCards: (EvidenceCard | null)[] = [
+  evidence.seasonDates !== null && evidence.seasonYear !== null
+    ? {
+        value: evidence.seasonDates,
+        label: 'Fechas de competencia',
+        note: `Temporada ${evidence.seasonYear}`,
+        icon: 'ph:flag-checkered-bold',
+        body: 'Cada válida de la Copa Valle y cada campeonato en el que corre el equipo, con público, otros clubes y prensa local en la línea de salida.',
+        href: '/calendario',
+        cta: 'Ver el calendario',
+      }
+    : null,
+  evidence.publishedStories !== null
+    ? {
+        value: evidence.publishedStories,
+        label: 'Crónicas publicadas',
+        note: 'Después de cada fecha',
+        icon: 'ph:newspaper-bold',
+        body: 'Resultados, fotos y el resumen de cada carrera, publicados en el sitio del club apenas termina la competencia.',
+        href: '/noticias',
+        cta: 'Leer las crónicas',
+      }
+    : null,
+  evidence.treesPlanted !== null
+    ? {
+        value: evidence.treesPlanted,
+        label: 'Árboles sembrados',
+        note: 'Por Trocha Verde',
+        icon: 'ph:tree-bold',
+        body: 'La siembra ambiental del club en la misma pista donde entrenan los niños: una huella que crece todo el año, no una jornada aislada.',
+        href: '/trocha-verde',
+        cta: 'Ver Trocha Verde',
+      }
+    : null,
+];
+
+const evidenceCards = rawEvidenceCards.filter((card): card is EvidenceCard => card !== null);
+
+const yearsActive = getYearsActive();
+
+// Alcance real de la escuela, en vez de las antiguas cifras sin fuente
+// ("80+ formados", "50+ competencias", "100+ medallas"). Las fechas, las
+// crónicas y los árboles no se repiten aquí: son las tarjetas de evidencia.
+const programTotals = summarizePrograms(
+  (await getCollection('programs'))
+    .filter((p: CollectionEntry<'programs'>) => !p.data.draft && p.data.active)
+    .map((p: CollectionEntry<'programs'>) => p.data)
+);
 
 const whatsappPatrocinio = `${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, quiero información sobre patrocinio del Club Deportivo Trocha y Ruta')}`;
 const mailtoPatrocinio = `mailto:${CONTACT.email}?subject=${encodeURIComponent('Consulta sobre patrocinio - Club Trocha y Ruta')}`;
 ---
 
-<PageLayout
+<BaseLayout
   title="Patrocinadores"
-  description="Conoce las empresas que impulsan el deporte juvenil con nosotros y descubre cómo asociar tu marca con Trocha y Ruta"
-  breadcrumbs={[{ label: 'Patrocinadores' }]}
+  description="Empresas e instituciones que patrocinan al Club Deportivo Trocha y Ruta: niveles de patrocinio, aliados actuales y dónde aparece tu marca cada temporada."
 >
-  <!-- Hero de impacto -->
-  <section class="rounded-2xl bg-gradient-to-br from-primary to-primary-dark text-white px-6 py-12 sm:px-10 sm:py-16 text-center mb-12 -mt-2">
-    <p class="text-sm font-semibold uppercase tracking-widest text-white/80 mb-3">
-      Club Deportivo Trocha y Ruta
-    </p>
-    <h2 class="text-2xl sm:text-3xl md:text-4xl font-display font-bold leading-tight">
-      Impulsa el deporte juvenil<br class="hidden sm:block" />
-      en el Valle del Cauca
-    </h2>
-    <p class="mt-4 text-base sm:text-lg text-white/90 max-w-2xl mx-auto">
-      Asocia tu marca con valores de disciplina, esfuerzo y vida saludable.
-      Más de 16 años formando campeones en Yumbo.
-    </p>
-    <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-      <a
-        href={whatsappPatrocinio}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center justify-center gap-2 rounded-lg bg-accent text-white font-semibold px-6 py-3 hover:bg-accent-dark transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-      >
-        <!-- WhatsApp icon -->
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-        Escríbenos por WhatsApp
-      </a>
-      <a
-        href="#niveles-patrocinio"
-        class="inline-flex items-center justify-center rounded-lg border-2 border-white text-white font-semibold px-6 py-3 hover:bg-white hover:text-primary transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-      >
-        Ver niveles de patrocinio
-      </a>
-    </div>
-  </section>
+  <!-- La promesa -->
+  <SectionShell
+    tone="tinted"
+    pattern="topo"
+    width="wide"
+    spacing="compact"
+    labelledby="patrocinadores-titulo"
+  >
+    <Breadcrumb items={[{ label: 'Patrocinadores' }]} />
 
-  <!-- Stats de impacto -->
-  <section class="mb-16" aria-label="Impacto del club">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-      {[
-        { value: `${getYearsActive()}+`, label: 'Años de trayectoria' },
-        { value: `${CLUB_STATS.ridersTrained}+`, label: 'Niños entrenados' },
-        { value: `${CLUB_STATS.competitions}+`, label: 'Competencias disputadas' },
-        { value: `${CLUB_STATS.medals}+`, label: 'Medallas conquistadas' },
-      ].map(({ value, label }) => (
-        <div class="rounded-xl border border-surface-muted bg-white p-5 sm:p-6 text-center shadow-sm">
-          <p class="text-3xl sm:text-4xl font-display font-bold text-primary">{value}</p>
-          <p class="mt-1 text-sm text-text-secondary leading-snug">{label}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- Sponsors actuales -->
-  {hasSponsorContent && (
-    <section class="mb-16">
-      <SectionTitle
-        title="Quienes ya confian en nosotros"
-        subtitle="Empresas y organizaciones que hacen posible el desarrollo deportivo de nuestros ciclistas"
+    <div class="mt-6 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+      <SectionIntro
+        as="h1"
+        id="patrocinadores-titulo"
+        eyebrow="Patrocinadores"
+        eyebrowIcon="ph:handshake-bold"
+        title="Tu marca rueda con el equipo toda la temporada"
+        highlight="toda la temporada"
+        lead="Cada válida, cada crónica publicada y cada árbol sembrado por Trocha Verde llevan también el nombre de quienes acompañan al club. Así se hace visible tu inversión."
       />
 
-      <div class="space-y-12">
-        {levelOrder.map((level) => {
-          const items = grouped.get(level);
-          if (!items || items.length === 0) return null;
-          const isPrincipal = level === 'principal';
+      <div class="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-2">
+        <StatFigure value={yearsActive} label="Años de trayectoria" icon="ph:calendar-heart-bold" />
+        <StatFigure
+          value={programTotals.programs}
+          label="Programas de formación"
+          note={programTotals.ageRange ? `Desde los ${programTotals.ageRange.replace('+', '')} años` : undefined}
+          icon="ph:path-bold"
+        />
+        {programTotals.seats !== null && (
+          <StatFigure
+            value={programTotals.seats}
+            label="Cupos de entrenamiento"
+            note="Capacidad publicada de los tres programas"
+            icon="ph:person-simple-bike-bold"
+          />
+        )}
+        {sponsorsSummary.total > 0 && (
+          <StatFigure
+            value={sponsorsSummary.total}
+            label="Marcas ya vinculadas"
+            icon="ph:handshake-bold"
+          />
+        )}
+      </div>
+    </div>
+  </SectionShell>
 
-          return (
+  <!-- La evidencia: dónde aparece la marca -->
+  {
+    evidenceCards.length > 0 && (
+      <SectionShell tone="muted" width="wide" labelledby="visibilidad-titulo">
+        <SectionIntro
+          id="visibilidad-titulo"
+          eyebrow="Visibilidad"
+          eyebrowIcon="ph:megaphone-bold"
+          title="Tres lugares donde tu marca queda a la vista"
+          highlight="a la vista"
+          lead="No es una promesa abstracta: esto es lo que el club produce temporada tras temporada, con tu marca en cada uno."
+          align="center"
+          class="mx-auto max-w-3xl"
+        />
+
+        <ul class="mt-12 grid gap-5 sm:grid-cols-3" role="list">
+          {evidenceCards.map((card, index) => (
+            <li
+              class="reveal bg-surface flex flex-col rounded-2xl p-6 shadow-sm ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-md"
+              style={`--stagger:${index * 80}ms`}
+            >
+              <StatFigure value={card.value} label={card.label} note={card.note} icon={card.icon} />
+              <p class="text-text-secondary mt-3 flex-1 text-sm leading-relaxed">{card.body}</p>
+              <a
+                href={card.href}
+                class="text-primary-deep mt-4 inline-flex items-center gap-1 text-sm font-semibold transition-all duration-200 hover:gap-2"
+              >
+                {card.cta}
+                <Icon name="ph:arrow-right-bold" class="size-4" aria-hidden="true" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </SectionShell>
+    )
+  }
+
+  <!-- Quiénes ya confían, con su antigüedad -->
+  {
+    groups.length > 0 && (
+      <SectionShell tone="plain" width="wide" labelledby="aliados-actuales-titulo">
+        <SectionIntro
+          id="aliados-actuales-titulo"
+          eyebrow={`${sponsorsSummary.total} ${sponsorsSummary.total === 1 ? 'marca acompaña' : 'marcas acompañan'} al club`}
+          eyebrowIcon="ph:storefront-bold"
+          title="Quiénes ya confían en nosotros"
+          highlight="ya confían"
+          lead={
+            sponsorsSummary.oldestYear
+              ? `El aliado más antiguo nos acompaña desde ${sponsorsSummary.oldestYear}.`
+              : undefined
+          }
+          align="center"
+          class="mx-auto max-w-3xl"
+        />
+
+        <div class="mt-12 space-y-10">
+          {groups.map((group) => (
             <div>
-              <h3 class="text-lg font-display font-semibold text-text-secondary uppercase tracking-wide mb-5 flex items-center gap-3">
-                <span class="h-px flex-1 bg-surface-muted"></span>
-                <span>{levelLabels[level]}</span>
-                <span class="h-px flex-1 bg-surface-muted"></span>
+              <h3 class="font-display text-text-secondary mb-5 flex items-center gap-3 text-sm font-bold tracking-wide uppercase">
+                <Icon
+                  name={group.level.icon}
+                  class:list={['size-4 shrink-0', group.level.text]}
+                  aria-hidden="true"
+                />
+                {group.level.labelPlural}
+                <span class="h-px flex-1 bg-black/10" aria-hidden="true" />
               </h3>
 
-              {isPrincipal ? (
-                <div class="space-y-6">
-                  {items.map((sponsor) => (
-                    <Card class="p-5 sm:p-6 md:p-8">
-                      <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6">
-                        <div class="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 bg-surface-muted rounded-xl flex items-center justify-center shrink-0">
+              {group.level.id === 'principal' ? (
+                <ul class="grid gap-6" role="list">
+                  {group.sponsors.map((sponsor) => {
+                    const tenure = sponsorSince(sponsor.data.startDate);
+                    return (
+                      <li class="border-primary-deep/20 from-primary-deep/5 via-surface to-surface flex flex-col gap-6 rounded-2xl border bg-gradient-to-br p-6 shadow-sm sm:flex-row sm:items-center sm:p-8">
+                        <div class="bg-surface relative h-28 w-full shrink-0 overflow-hidden rounded-xl sm:h-32 sm:w-56">
                           <img
                             src={sponsor.data.logo}
                             alt={`Logo de ${sponsor.data.name}`}
-                            class="max-w-full max-h-full object-contain p-4"
                             loading="lazy"
                             decoding="async"
+                            class="absolute inset-0 h-full w-full object-contain p-4"
                           />
                         </div>
-                        <div class="text-center md:text-left">
-                          <h4 class="text-xl font-display font-bold text-text-primary">
+                        <div class="min-w-0">
+                          <h4 class="font-display text-text-primary text-2xl font-bold">
                             {sponsor.data.name}
                           </h4>
                           {sponsor.data.description && (
-                            <p class="mt-2 text-text-secondary">{sponsor.data.description}</p>
+                            <p class="text-text-secondary mt-2">{sponsor.data.description}</p>
                           )}
-                          {sponsor.data.url && (
-                            <a
-                              href={sponsor.data.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              class="mt-3 inline-flex items-center gap-1 text-primary font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded"
-                            >
-                              Visitar sitio web &rarr;
-                            </a>
-                          )}
+                          <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+                            {tenure && (
+                              <span class="text-text-secondary inline-flex items-center gap-1.5">
+                                <Icon
+                                  name="ph:calendar-check-bold"
+                                  class="text-primary-deep size-4 shrink-0"
+                                  aria-hidden="true"
+                                />
+                                {tenure.label}
+                              </span>
+                            )}
+                            {sponsor.data.url && (
+                              <a
+                                href={sponsor.data.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                data-analytics-event="sponsor_click"
+                                data-analytics-sponsor-id={sponsor.id}
+                                class="text-primary-deep inline-flex items-center gap-1 font-semibold hover:underline"
+                              >
+                                Visitar sitio web
+                                <Icon
+                                  name="ph:arrow-square-out-bold"
+                                  class="size-3.5 shrink-0"
+                                  aria-hidden="true"
+                                />
+                              </a>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+                      </li>
+                    );
+                  })}
+                </ul>
               ) : (
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                  {items.map((sponsor) => (
-                    <Card class="p-5">
-                      <div class="flex flex-col items-center text-center">
-                        <div class="w-20 h-20 bg-surface-muted rounded-lg flex items-center justify-center mb-4">
+                <ul class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" role="list">
+                  {group.sponsors.map((sponsor) => {
+                    const tenure = sponsorSince(sponsor.data.startDate);
+                    return (
+                      <li class="bg-surface flex flex-col rounded-2xl p-5 shadow-sm ring-1 ring-black/5">
+                        <div class="bg-surface-muted relative h-20 w-full overflow-hidden rounded-lg">
                           <img
                             src={sponsor.data.logo}
                             alt={`Logo de ${sponsor.data.name}`}
-                            class="max-w-full max-h-full object-contain p-2"
                             loading="lazy"
                             decoding="async"
+                            class="absolute inset-0 h-full w-full object-contain p-3"
                           />
                         </div>
-                        <h4 class="font-display font-bold text-text-primary">{sponsor.data.name}</h4>
+                        <h4 class="font-display text-text-primary mt-4 text-base font-bold">
+                          {sponsor.data.name}
+                        </h4>
+                        {tenure && (
+                          <p class="text-text-secondary mt-1 text-xs font-medium">{tenure.label}</p>
+                        )}
                         {sponsor.data.description && (
-                          <p class="mt-1 text-sm text-text-secondary line-clamp-3">{sponsor.data.description}</p>
+                          <p class="text-text-secondary mt-2 line-clamp-3 flex-1 text-sm leading-snug">
+                            {sponsor.data.description}
+                          </p>
                         )}
                         {sponsor.data.url && (
                           <a
                             href={sponsor.data.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="mt-2 text-sm text-primary font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded"
+                            data-analytics-event="sponsor_click"
+                            data-analytics-sponsor-id={sponsor.id}
+                            class="text-primary-deep mt-3 inline-flex items-center gap-1 text-sm font-semibold hover:underline"
                           >
-                            Visitar sitio &rarr;
+                            Visitar sitio
+                            <Icon
+                              name="ph:arrow-square-out-bold"
+                              class="size-3 shrink-0"
+                              aria-hidden="true"
+                            />
                           </a>
                         )}
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+                      </li>
+                    );
+                  })}
+                </ul>
               )}
             </div>
-          );
-        })}
-      </div>
-    </section>
-  )}
+          ))}
+        </div>
+      </SectionShell>
+    )
+  }
 
-  <!-- Niveles de patrocinio -->
-  <section id="niveles-patrocinio" class="mb-16 scroll-mt-20">
-    <SectionTitle
-      title="Niveles de Patrocinio"
-      subtitle="Elige el nivel que mejor se adapte a tu marca y empieza a hacer parte de nuestra comunidad"
+  <!-- Los niveles, como una progresión -->
+  <SectionShell
+    id="niveles-patrocinio"
+    tone="muted"
+    pattern="topo"
+    width="wide"
+    labelledby="niveles-titulo"
+    class="scroll-mt-20"
+  >
+    <SectionIntro
+      id="niveles-titulo"
+      eyebrow="Niveles de patrocinio"
+      eyebrowIcon="ph:stairs-bold"
+      title="Un escalón para cada tipo de marca"
+      highlight="cada tipo de marca"
+      lead="De proveedor a patrocinador principal, cada nivel suma presencia sobre el anterior. Así aparece tu marca en cada uno."
+      align="center"
+      class="mx-auto max-w-3xl"
     />
-    <SponsorshipTiers />
-  </section>
 
-  <!-- CTA final -->
-  <section class="rounded-2xl bg-surface-dark text-white px-6 py-12 sm:px-10 sm:py-16 text-center">
-    <h2 class="text-2xl sm:text-3xl font-display font-bold">
-      ¿Listo para ser parte de Trocha y Ruta?
-    </h2>
-    <p class="mt-4 text-white/80 max-w-xl mx-auto">
-      Contáctanos hoy y te enviamos nuestro portafolio de patrocinio con todos los detalles.
-    </p>
-    <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-      <a
-        href={whatsappPatrocinio}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center justify-center gap-2 rounded-lg bg-accent text-white font-semibold px-6 py-3 hover:bg-accent-dark transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-      >
-        <!-- WhatsApp icon -->
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-        Escríbenos por WhatsApp
-      </a>
-      <a
-        href={mailtoPatrocinio}
-        class="inline-flex items-center justify-center rounded-lg border-2 border-white text-white font-semibold px-6 py-3 hover:bg-white hover:text-surface-dark transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-      >
-        Enviar correo
-      </a>
+    <SponsorshipTiers class="mt-12" />
+  </SectionShell>
+
+  <!-- El paso siguiente -->
+  <SectionShell tone="dark" width="default" spacing="compact" labelledby="cta-patrocinio-titulo">
+    <div class="text-center">
+      <h2 id="cta-patrocinio-titulo" class="font-display text-2xl font-bold text-white sm:text-3xl">
+        ¿Listo para que tu marca ruede con nosotros?
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-white/80">
+        Escríbenos y te enviamos el portafolio de patrocinio completo, con tarifas y disponibilidad
+        por nivel.
+      </p>
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a
+          href={whatsappPatrocinio}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-analytics-event="whatsapp_click"
+          class="bg-accent text-surface-dark hover:bg-accent-dark focus-visible:outline-accent inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 font-semibold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          <Icon name="ph:whatsapp-logo-bold" class="size-5" aria-hidden="true" />
+          Escríbenos por WhatsApp
+        </a>
+        <a
+          href={mailtoPatrocinio}
+          class="hover:text-surface-dark inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white px-6 py-3 font-semibold text-white transition-colors duration-200 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          <Icon name="ph:envelope-bold" class="size-5" aria-hidden="true" />
+          Enviar correo
+        </a>
+      </div>
     </div>
-  </section>
-</PageLayout>
+  </SectionShell>
+</BaseLayout>

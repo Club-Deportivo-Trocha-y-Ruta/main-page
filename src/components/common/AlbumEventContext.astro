@@ -1,0 +1,53 @@
+---
+/**
+ * El hilo álbum → evento → crónica, en un bloque reutilizable.
+ *
+ * Seis de los siete álbumes reales traen `relatedEvent`; ese evento, a su
+ * vez, puede tener crónicas publicadas (`@lib/gallery` cruza las dos
+ * direcciones de esa relación, igual que `chroniclesOf()` en `/calendario`).
+ * Sin evento resuelto no hay nada que enlazar, así que el bloque completo se
+ * omite en vez de dejar un recuadro vacío — pasa hoy con uno de los siete
+ * álbumes, cuyo `relatedEvent` no coincide con ningún id real de `events`.
+ *
+ * Se usa tanto en la tarjeta del álbum destacado de `/galeria` como en la
+ * cabecera del detalle de cada álbum.
+ */
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  event: { title: string; href: string } | null;
+  chronicles: { href: string; title: string }[];
+  class?: string;
+}
+
+const { event, chronicles, class: className } = Astro.props;
+---
+
+{event && (
+  <div class:list={['rounded-xl border border-primary/15 bg-primary/5 p-4', className]}>
+    <p class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">De qué carrera es</p>
+    <a
+      href={event.href}
+      class="mt-1.5 flex items-start gap-1.5 text-sm font-semibold text-primary-deep hover:underline"
+    >
+      <Icon name="ph:calendar-check-bold" class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+      <span>{event.title}</span>
+    </a>
+
+    {chronicles.length > 0 && (
+      <ul class="mt-2 space-y-1.5 border-t border-primary/10 pt-2">
+        {chronicles.map((chronicle) => (
+          <li>
+            <a
+              href={chronicle.href}
+              class="flex items-start gap-1.5 text-sm text-primary-deep hover:underline"
+            >
+              <Icon name="ph:newspaper-clipping-bold" class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <span>{chronicle.title}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+)}

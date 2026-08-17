@@ -47,7 +47,6 @@ Las 6 React Islands son el principal riesgo de JS bloat:
 | ContactForm.tsx | `client:visible` | react-hook-form, zod |
 | InscriptionForm.tsx | `client:visible` | react-hook-form, zod, @formkit/auto-animate |
 | ImageLightbox.tsx | `client:visible` | yet-another-react-lightbox |
-| TestimonialsCarousel.tsx | `client:visible` | Swiper |
 | TrochaVerdeMap.tsx | `client:visible` | Leaflet (dependencia más pesada — vigilar chunk) |
 
 **Checks de bundle:**

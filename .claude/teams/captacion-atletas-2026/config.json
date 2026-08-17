@@ -30,7 +30,7 @@
       "agentType": "content-marketer",
       "model": "claude-opus-4-7",
       "role": "follower",
-      "prompt": "Parte del team captacion-atletas-2026. Produce copy de landings /sedes/yumbo, /sedes/vijes, /sedes/guabinas, /openday. 6 testimonios de familias actuales (con consentimiento). Email a familias y newsletter. Captions redes."
+      "prompt": "Parte del team captacion-atletas-2026. Produce copy de landings /sedes/yumbo, /sedes/vijes, /sedes/guabinas, /openday. Email a familias y newsletter. Captions redes."
     },
     {
       "name": "data-analyst",

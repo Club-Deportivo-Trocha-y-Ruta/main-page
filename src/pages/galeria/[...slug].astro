@@ -1,12 +1,34 @@
 ---
+/**
+ * Detalle de un álbum de la galería.
+ *
+ * Antes de la parrilla de fotos, la página contextualiza: de qué fecha es el
+ * álbum, cuántas fotos trae y —cuando `relatedEvent` resuelve— de qué carrera
+ * es y el enlace a su crónica. Ese bloque (`AlbumEventContext`) es el mismo
+ * que ya usa la tarjeta destacada de `/galeria`, cruzando las dos direcciones
+ * de la relación evento↔noticia igual que `/calendario`.
+ *
+ * El grid de fotos sigue siendo el island `ImageLightbox`, sin tocar: mismo
+ * `client:visible`, misma forma de props.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md).
+ */
 import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
+import AlbumEventContext from '@components/common/AlbumEventContext.astro';
 import ImageLightbox from '@components/interactive/ImageLightbox.tsx';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
 import { formatDate } from '@lib/utils';
 import { generateGalleryJsonLd } from '@lib/seo';
+import { getGalleryCategory, photoCountLabel, resolveAlbumContext } from '@lib/gallery';
 
 type Gallery = CollectionEntry<'gallery'>;
+type Event = CollectionEntry<'events'>;
+type News = CollectionEntry<'news'>;
 type GalleryVideo = { url: string; title: string; thumbnail?: string };
 
 export async function getStaticPaths() {
@@ -19,8 +41,17 @@ export async function getStaticPaths() {
 const { gallery } = Astro.props as { gallery: Gallery };
 const { Content } = await render(gallery);
 
-const { title, date, description, images, videos } = gallery.data;
+const { title, date, description, images, videos, category } = gallery.data;
 const hasContent = (gallery as any).body && (gallery as any).body.trim().length > 0;
+
+// El hilo álbum → evento → crónica: seis de los siete álbumes reales traen
+// `relatedEvent`; sin él (o si no coincide con ningún id real de `events`),
+// `resolveAlbumContext` devuelve `event: null` y el bloque no se pinta.
+const events = (await getCollection('events')).filter((e: Event) => !e.data.draft);
+const news = (await getCollection('news')).filter((n: News) => !n.data.draft);
+const context = resolveAlbumContext(gallery, events, news);
+
+const style = getGalleryCategory(category);
 
 const jsonLd = generateGalleryJsonLd({
   title,
@@ -32,53 +63,110 @@ const jsonLd = generateGalleryJsonLd({
 ---
 
 <BaseLayout title={`${title} | Galería`} description={description} jsonLd={jsonLd}>
-  <article class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+  <!-- Contexto: de qué fecha es, cuántas fotos, de qué carrera fue -->
+  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="album-titulo">
     <Breadcrumb items={[{ label: 'Galería', href: '/galeria' }, { label: title }]} />
 
-    <h1 class="text-3xl md:text-4xl font-display font-bold">{title}</h1>
-    <div class="mt-2 flex items-center gap-3 text-text-secondary">
-      <time datetime={date.toISOString()}>{formatDate(date)}</time>
-      <span>&middot;</span>
-      <span>{images.length} fotos</span>
-    </div>
-    {description && (
-      <p class="mt-4 text-lg text-text-secondary max-w-3xl">{description}</p>
-    )}
+    <SectionIntro
+      as="h1"
+      id="album-titulo"
+      eyebrow={style.label}
+      eyebrowIcon={style.icon}
+      title={title}
+      lead={description}
+      class="mt-6 max-w-2xl"
+    />
 
-    <!-- Grid de imágenes con lightbox -->
-    <div class="mt-8">
+    <div class="mt-8 grid max-w-md grid-cols-2 gap-6 border-t border-primary/15 pt-8">
+      <StatFigure
+        value={images.length}
+        label={images.length === 1 ? 'Foto en el álbum' : 'Fotos en el álbum'}
+        icon="ph:images-bold"
+      />
+      <StatFigure value={formatDate(date)} size="sm" label="Fecha" icon="ph:calendar-dots-bold" />
+    </div>
+
+    <AlbumEventContext class="mt-8 max-w-2xl" event={context.event} chronicles={context.chronicles} />
+  </SectionShell>
+
+  <!-- La parrilla de fotos -->
+  <SectionShell tone="plain" width="wide" labelledby="fotos-titulo">
+    <h2 id="fotos-titulo" class="flex flex-wrap items-baseline gap-2 font-display text-2xl font-bold text-text-primary">
+      Todas las fotos
+      <span class="text-base font-normal text-text-secondary">({photoCountLabel(images.length)})</span>
+    </h2>
+
+    <div class="mt-6">
       <ImageLightbox client:visible images={images} />
     </div>
+  </SectionShell>
 
-    {hasContent && (
-      <div class="prose prose-lg mx-auto max-w-3xl mt-12">
+  <!-- Notas adicionales, cuando el CMS las trae ("Notas adicionales" es el
+       campo `body` tal como lo nombra Sveltia) -->
+  {hasContent && (
+    <SectionShell tone="muted" width="default" labelledby="notas-titulo">
+      <h2 id="notas-titulo" class="font-display text-2xl font-bold text-text-primary">
+        Notas adicionales
+      </h2>
+      <div class="prose prose-lg mt-6 max-w-3xl">
         <Content />
       </div>
-    )}
+    </SectionShell>
+  )}
 
-    {videos && videos.length > 0 && (
-      <section class="mt-12">
-        <h2 class="text-2xl font-display font-bold mb-6">Videos</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {videos.map((video: GalleryVideo) => (
-            <a
-              href={video.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group block rounded-lg overflow-hidden bg-surface-muted"
-            >
-              <div class="aspect-video bg-surface-muted flex items-center justify-center">
-                <span class="text-4xl text-text-secondary/30 group-hover:scale-110 transition-transform">▶</span>
-              </div>
-              <div class="p-4">
-                <p class="font-display font-semibold text-text-primary group-hover:text-primary transition-colors">
-                  {video.title}
-                </p>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
-  </article>
+  <!-- Videos, cuando el álbum los trae -->
+  {videos && videos.length > 0 && (
+    <SectionShell tone="plain" width="wide" labelledby="videos-titulo">
+      <h2 id="videos-titulo" class="font-display text-2xl font-bold text-text-primary">
+        Videos
+      </h2>
+      <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+        {videos.map((video: GalleryVideo) => (
+          <a
+            href={video.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group block overflow-hidden rounded-lg bg-surface-muted"
+          >
+            <div class="flex aspect-video items-center justify-center bg-surface-muted">
+              <span class="text-4xl text-text-secondary/30 transition-transform group-hover:scale-110">▶</span>
+            </div>
+            <div class="p-4">
+              <p class="font-display font-semibold text-text-primary transition-colors group-hover:text-primary">
+                {video.title}
+              </p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </SectionShell>
+  )}
+
+  <!-- Paso siguiente -->
+  <SectionShell tone="muted" width="default" spacing="compact" label="Paso siguiente">
+    <div class="rounded-2xl border border-primary/20 bg-primary/5 px-6 py-8 text-center sm:px-10">
+      <h2 class="font-display text-xl font-bold text-text-primary sm:text-2xl">
+        ¿Quieres ver el resto de la temporada?
+      </h2>
+      <p class="mx-auto mt-2 max-w-xl text-text-secondary">
+        Recorre todos los álbumes del club o revisa las fechas que todavía faltan por correr.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a
+          href="/galeria"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white"
+        >
+          <Icon name="ph:images-bold" class="size-4" aria-hidden="true" />
+          Ver todos los álbumes
+        </a>
+        <a
+          href="/calendario"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white"
+        >
+          <Icon name="ph:calendar-dots-bold" class="size-4" aria-hidden="true" />
+          Ver el calendario
+        </a>
+      </div>
+    </div>
+  </SectionShell>
 </BaseLayout>

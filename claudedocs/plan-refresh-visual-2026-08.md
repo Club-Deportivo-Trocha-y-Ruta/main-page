@@ -39,12 +39,11 @@
 | H7 | `public/images/` pesa **63 MB** (news 32 MB, trocha-verde 31 MB). Top: `donacion-olga-hernandez.jpg` 2,77 MB. `dia-tierra-2026/jornada/` entero en JPG sin convertir | inventario §6 |
 | H8 | Quiénes Somos: cero imágenes, emojis como iconos (anti-patrón), sin staff ni historia visual | `quienes-somos.astro:66-88` |
 | H9 | Programas: icono `ph:bicycle` gigante como placeholder de foto; `placeholder-program.jpg` referenciado **no existe** | `programas/index.astro:30-32` |
-| H10 | Testimonios: solo 3 items, campo `photo` apunta a placeholder inexistente y **sí llega al cliente** vía carrusel React | `TestimonialsSlider.astro:17` |
 | H11 | EventCard enlaza a la propia página `/calendario` (link circular) | `calendario.astro:44-86` |
 | H12 | `NewsGallery.astro:71` enlaza a `/galeria/...` que NO existe (páginas `.bak`) | fase 3 |
 | H13 | Dos bloques Trocha Verde consecutivos en home (#11 `LatestInitiative` + #12 `TrochaVerde`) con mismo CTA y cifras sin relación aparente (23 vs 77 árboles) | `index.astro:81-86` |
 | H14 | Artículos de Palmira sin `galleryImages` pese a 25 fotos/6,1 MB en disco; 2 covers de noticias faltantes | inventario §3 |
-| H15 | 7 rutas placeholder referenciadas inexistentes (`placeholder-program/testimonial/social/event/gallery/rider/sponsor`) | inventario §6 |
+| H15 | 7 rutas placeholder referenciadas inexistentes (`placeholder-program/social/event/gallery/rider/sponsor`) | inventario §6 |
 | H16 | `/equipo` y `/galeria` desactivadas (`.bak`); nav comentada con TODO; colecciones pobladas (5 riders, 2 álbumes) | `constants.ts:33,39` |
 
 ---
@@ -113,7 +112,6 @@
 - **Entregable**: carpeta `src/assets/images/refresh/` con selección optimizada (WebP, ≤150 KB c/u):
   - 1 foto por programa × 3 (acción por franja de edad: iniciación/juvenil/rendimiento)
   - 4-6 fotos historia del club para Quiénes Somos (pista Carlos Castro, competencias, siembras)
-  - 3 fotos para testimonios (si hay match con autorización de imagen — coordinar con T3.1; si no, iniciales/avatar neutro)
 - **Batch técnico** (`image-optimizer`): comprimir `donacion-olga-hernandez.jpg` (2,77 MB), convertir `trocha-verde/dia-tierra-2026/jornada/*.jpg` a WebP, objetivo: `public/images/` bajo 40 MB
 - **⚠️ LEGAL**: fotos con menores identificables en páginas nuevas → validar contra política de protección infantil ANTES de publicar (checklist de `legal-compliance-officer`, sin necesidad de auditoría completa: las fotos ya son públicas en noticias)
 - **Aceptación**: manifest de selección (archivo → página destino → peso final)
@@ -150,15 +148,10 @@
   3. Ancho completo del contenedor (hoy columna estrecha con vacío a la derecha)
 - **Aceptación**: próximo evento identificable en <1s (test 5 segundos); tap targets ≥44px; sin link circular (T1.6)
 
-### T2.4 — Testimonios: completar y humanizar
-- **Agentes**: `content-marketer` (Opus, textos) + `astro-dev` (render) · **Skills**: `frontend-design`
-- **Depende de**: T2.0 (fotos si hay autorización)
-- **Archivos**: `src/pages/testimonios.astro`, `src/content/testimonials/*.md`, `src/components/interactive/TestimonialsCarousel.tsx:17` (photo roto llega al cliente)
-- **Cambios**:
-  1. Fix inmediato: no pasar `photo` placeholder inexistente al carrusel; render con iniciales sobre fondo teal si no hay foto
-  2. `content-marketer` redacta guía de recolección (3 preguntas por WhatsApp a familias) para llegar a 6 testimonios — **⚠️ INSUMO DEL CLUB: recolectar 3 testimonios nuevos reales** (no inventar)
-  3. Página: grid 2 col desktop con foto/iniciales, programa asociado como badge (relación `relatedProgram` ya existe en schema)
-- **Aceptación**: cero rutas rotas al cliente; layout listo para 6 items; los 3 nuevos entran como `.md` cuando el club los entregue
+### T2.4 — Testimonios ~~completar y humanizar~~ · **CANCELADA**
+- La sección de testimonios se eliminó del sitio (2026-08): los 3 items publicados
+  eran de demostración, no reales. Se borró la colección, la página, el carrusel y
+  todas sus referencias. No se reconstruye sin contenido real y autorizado.
 
 ### T2.5 — Covers de noticias a Cloudinary (gradual)
 - **Agente**: `content-manager` · **Skills**: `seo-images`, `astro`
@@ -219,7 +212,6 @@ FASE 3 (cuando el club entregue autorizaciones):
 ## Insumos que solo el club puede dar (bloquean partes, no el arranque)
 
 1. **Cifra oficial de niños formados** (¿80 u otra?) — T1.2 usa 80 provisional
-2. **3 testimonios reales nuevos** (guía de recolección la produce T2.4)
 3. **Autorizaciones de imagen firmadas** — bloquea toda la Fase 3 y las fotos con menores identificables de T2.0/T2.4
 
 ## Métricas de éxito del refresh

@@ -8,18 +8,20 @@ export const SITE = {
     'Club de ciclomontañismo para niños desde 4 años en Yumbo, Valle del Cauca, Colombia.',
 } as const;
 
-/**
- * Métricas institucionales del club. Fuente única: cualquier página que muestre
- * estas cifras debe importarlas de aquí, nunca hardcodearlas.
+/*
+ * Aquí vivía `CLUB_STATS` —80 niños formados, 50 competencias, 100 medallas—.
+ * Se eliminó: ninguna de las tres tenía fuente de verdad. Eran números
+ * redondos que el sitio repetía en cuatro páginas como si fueran datos, y su
+ * propio comentario admitía que estaban "pendientes de confirmación oficial".
  *
- * `ridersTrained` es la cifra conservadora conocida por el club. Pendiente de
- * confirmación oficial (la página Quiénes Somos afirmaba 200+ sin respaldo).
+ * Las páginas que las mostraban usan ahora cifras que salen del contenido y
+ * que el lector puede comprobar: años cumplidos (`getYearsActive()`),
+ * programas y cupos (`summarizePrograms()`), fechas de la temporada
+ * (`buildSeason()`) y árboles del inventario (`summarizeTrees()`).
+ *
+ * Si el club confirma alguna de las tres con respaldo, vuelve aquí —fuente
+ * única— y no escrita a mano en la plantilla.
  */
-export const CLUB_STATS = {
-  ridersTrained: 80,
-  competitions: 50,
-  medals: 100,
-} as const;
 
 /** Fecha de fundación exacta: 1 de mayo de 2010. */
 export const FOUNDING_DATE = new Date(SITE.founded, 4, 1);
@@ -65,7 +67,6 @@ export const NAV_ITEMS = [
 export const SECONDARY_NAV = [
   { label: 'Galería', href: '/galeria' },
   { label: 'Trocha Verde', href: '/trocha-verde' },
-  { label: 'Testimonios', href: '/testimonios' },
   { label: 'Preguntas Frecuentes', href: '/preguntas-frecuentes' },
   { label: 'Patrocinadores', href: '/patrocinadores' },
   { label: 'Transparencia', href: '/transparencia' },
@@ -73,7 +74,16 @@ export const SECONDARY_NAV = [
   { label: 'Contacto', href: '/contacto' },
 ] as const;
 
+/**
+ * La línea 141 del ICBF es un canal nacional de protección a la niñez,
+ * gratuito y confidencial: existe con independencia del club y por eso se
+ * sigue publicando en el pie.
+ *
+ * Aquí había también `policyUrl`, que apuntaba a una "política de protección
+ * infantil" publicada en el sitio. El club confirmó que esa política no
+ * existe en la práctica, así que la página y todo lo que la afirmaba se
+ * eliminaron: anunciar un protocolo que nadie aplica es peor que no tenerlo.
+ */
 export const CHILD_SAFETY = {
   icbfLine: '141',
-  policyUrl: '/politica-proteccion-infantil',
 } as const;

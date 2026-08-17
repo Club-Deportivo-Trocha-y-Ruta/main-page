@@ -1,206 +1,381 @@
 ---
+/**
+ * Quiénes Somos.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md). El orden responde
+ * lo que una familia pregunta en este orden: quiénes son (cifras), de dónde
+ * vienen (el recorrido), qué los mueve (misión y valores), por qué confiarles
+ * un hijo (respaldo) y cómo se ve por dentro (comunidad).
+ *
+ * Todas las cifras salen de `constants.ts` y de las collections; los textos de
+ * la comunidad, de `gallery`.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import PageLayout from '@layouts/PageLayout.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
-import { SITE, CLUB_STATS, getYearsActive } from '@lib/constants';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import Timeline, { type TimelineItem } from '@components/editorial/Timeline.astro';
+import { SITE, getYearsActive } from '@lib/constants';
+import { summarizePrograms } from '@lib/programs';
 import { generateSportsClubJsonLd } from '@lib/seo';
 import { getTreeStats } from '@lib/trocha-verde';
-import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 
 import historiaPista from '@assets/images/refresh/historia-pista.webp';
 import historiaEquipoGinebra from '@assets/images/refresh/historia-equipo-ginebra.webp';
 import historiaSiembra from '@assets/images/refresh/historia-siembra.webp';
 import historiaEquipoPalmira from '@assets/images/refresh/historia-equipo-palmira.webp';
-import comunidadLluvia from '@assets/images/refresh/comunidad-lluvia.webp';
 import comunidadCircuito from '@assets/images/refresh/comunidad-circuito.webp';
+
+type Gallery = CollectionEntry<'gallery'>;
 
 const sportsClubJsonLd = generateSportsClubJsonLd();
 const yearsActive = getYearsActive();
 const treeStats = await getTreeStats();
 
-// Hitos del club. Las cifras salen de CLUB_STATS y getTreeStats para no
-// contradecir el resto del sitio (ver plan de refresh, hallazgos H4/H5).
-const milestones = [
+// Capacidad real de la escuela: la suma de los `maxStudents` publicados.
+// Sustituye a la antigua cifra de "niños formados", que no tenía respaldo.
+const programTotals = summarizePrograms(
+  (await getCollection('programs'))
+    .filter((p: CollectionEntry<'programs'>) => !p.data.draft && p.data.active)
+    .map((p: CollectionEntry<'programs'>) => p.data)
+);
+
+// Cifras de cabecera. Todas salen del contenido y se pueden comprobar: aquí
+// vivían "80+ niños formados" y "100+ medallas", que no tenían fuente de
+// verdad y se eliminaron del sitio.
+const figures = [
   {
-    year: '2010',
-    title: 'Nace el club',
-    body: `El 1 de mayo de 2010 un grupo de familias de Yumbo convirtió las salidas de fin de semana en un proyecto formativo. Así arrancó ${SITE.name}.`,
-    image: historiaEquipoGinebra,
-    alt: 'Deportistas del Club Trocha y Ruta reunidos antes de la salida de una competencia',
+    value: yearsActive,
+    label: 'Años formando ciclistas',
+    note: `Desde el 1 de mayo de ${SITE.founded}`,
+    icon: 'ph:calendar-heart-bold',
   },
   {
-    year: 'La casa',
+    value: programTotals.programs,
+    label: 'Programas de formación',
+    note: programTotals.ageRange ? `Desde los ${programTotals.ageRange.replace('+', '')} años` : undefined,
+    icon: 'ph:path-bold',
+  },
+  {
+    value: programTotals.seats ?? 0,
+    label: 'Cupos de entrenamiento',
+    note: 'Capacidad publicada de los tres programas',
+    icon: 'ph:person-simple-bike-bold',
+  },
+  {
+    value: treeStats.totalTrees,
+    label: 'Árboles sembrados en la pista',
+    note: `${treeStats.totalRecycled} con llantas recicladas`,
+    icon: 'ph:tree-bold',
+  },
+];
+
+const milestones: TimelineItem[] = [
+  {
+    label: `${SITE.founded}`,
+    title: 'De Ciclo Yumbo a Trocha y Ruta',
+    body: `El 1 de mayo de ${SITE.founded}, la reestructuración del antiguo Club Ciclo Yumbo da origen a ${SITE.name}, con la formación de niños y jóvenes en ciclomontañismo como propósito.`,
+    icon: 'ph:flag-bold',
+    image: historiaEquipoGinebra,
+    imageAlt:
+      'Deportistas del Club Trocha y Ruta reunidos antes de la salida de una competencia',
+  },
+  {
+    label: 'La casa',
     title: 'Pista XCO Carlos Castro',
     body: 'La pista de ciclomontañismo Carlos Castro, en Yumbo, es donde los "teteros" dan sus primeros pedalazos y donde el club entrena semana a semana.',
+    icon: 'ph:map-pin-bold',
     image: historiaPista,
-    alt: 'Valla de la Pista XCO Carlos Castro de Yumbo en día de competencia',
+    imageAlt: 'Valla de la Pista XCO Carlos Castro de Yumbo en día de competencia',
   },
   {
-    year: 'Hoy',
+    label: 'Hoy',
     title: 'Del barrio al calendario nacional',
-    body: `${CLUB_STATS.medals}+ medallas después, el club compite cada válida de la Copa Valle y lleva corredores a campeonatos departamentales y nacionales.`,
-    image: historiaEquipoPalmira,
-    alt: 'Equipo del Club Trocha y Ruta con sus familias en la carpa del club durante una válida de la Copa Valle',
+    body: 'El club compite cada válida de la Copa Valle y lleva corredores a campeonatos departamentales y nacionales.',
+    icon: 'ph:trophy-bold',
+    image: comunidadCircuito,
+    imageAlt: 'Corredora del club atacando una subida técnica en un circuito de XCO',
   },
   {
-    year: '2026',
+    label: '2026',
     title: 'Trocha Verde',
     body: `La pista también se siembra: ${treeStats.totalTrees} árboles plantados con llantas recicladas como protectores, junto a familias, vecinos y aliados ambientales.`,
+    icon: 'ph:leaf-bold',
     image: historiaSiembra,
-    alt: 'Niño del club regando un árbol recién sembrado en la pista durante la Sembratón',
+    imageAlt:
+      'Niño del club regando un árbol recién sembrado en la pista durante la Sembratón',
   },
 ];
 
-const pillars = [
+// Los valores estaban en una sola frase separada por comas: partidos en piezas
+// se pueden leer de un vistazo.
+const values = [
+  { label: 'Disciplina', icon: 'ph:target-bold' },
+  { label: 'Trabajo en equipo', icon: 'ph:users-three-bold' },
+  { label: 'Respeto por la naturaleza', icon: 'ph:leaf-bold' },
+  { label: 'Perseverancia', icon: 'ph:mountains-bold' },
+  { label: 'Honestidad', icon: 'ph:seal-check-bold' },
+  { label: 'Compañerismo', icon: 'ph:hand-heart-bold' },
+];
+
+// Respaldo: lo que una familia necesita saber antes de dejar a su hijo. Cada
+// afirmación tiene una página donde se puede verificar.
+const credentials = [
   {
-    title: 'Misión',
-    icon: 'ph:target-bold',
-    accent: 'primary',
-    body: 'Formar niños y jóvenes integrales a través del ciclomontañismo, promoviendo valores, disciplina y amor por la naturaleza.',
+    icon: 'ph:first-aid-kit-bold',
+    title: 'Póliza de accidentes personales',
+    body: 'Cada deportista cuenta con póliza de accidentes con Aseguradora Solidaria de Colombia, vigente durante entrenamientos, competencias y eventos del club.',
+    href: '/programas',
+    cta: 'Ver coberturas por programa',
   },
   {
-    title: 'Visión',
-    icon: 'ph:mountains-bold',
-    accent: 'accent',
-    body: 'Ser el club referente en formación deportiva infantil y juvenil en el Valle del Cauca, reconocido por su excelencia deportiva y humana.',
+    icon: 'ph:certificate-bold',
+    title: 'Entrenadores certificados',
+    body: 'En la Escuela de Iniciación cada grupo tiene un entrenador certificado y un monitor de apoyo, con un máximo de 10 niños por instructor.',
+    href: '/programas/escuela-de-iniciacion',
+    cta: 'Ver el programa',
   },
   {
-    title: 'Valores',
     icon: 'ph:handshake-bold',
-    accent: 'dark',
-    body: 'Disciplina, trabajo en equipo, respeto por la naturaleza, perseverancia, honestidad y compañerismo.',
+    title: 'Alianza con la Liga Vallecaucana',
+    body: 'Trabajamos con la Liga Vallecaucana de Ciclismo y competimos en el calendario oficial del departamento.',
+    href: '/calendario',
+    cta: 'Ver el calendario',
+  },
+  {
+    icon: 'ph:flag-banner-bold',
+    title: 'Representación nacional desde 2018',
+    body: 'Corredores del club compiten en campeonatos nacionales de la Federación Colombiana de Ciclismo en sus respectivas categorías.',
+    href: '/noticias',
+    cta: 'Ver resultados',
+  },
+  {
+    icon: 'ph:scales-bold',
+    title: 'Cuentas a la vista',
+    body: 'El club publica su información institucional y financiera: a dónde va cada aporte de las familias y de los patrocinadores.',
+    href: '/transparencia',
+    cta: 'Ver transparencia',
   },
 ];
 
-const pillarStyles: Record<string, { card: string; badge: string }> = {
-  primary: { card: 'border-t-4 border-primary', badge: 'bg-primary/10 text-primary' },
-  accent: { card: 'border-t-4 border-accent', badge: 'bg-accent/15 text-accent-dark' },
-  dark: { card: 'border-t-4 border-surface-dark', badge: 'bg-surface-dark/10 text-surface-dark' },
-};
+// Comunidad: últimos álbumes publicados, no fotos escogidas a mano.
+const albums = (await getCollection('gallery'))
+  .filter((g: Gallery) => !g.data.draft)
+  .sort((a: Gallery, b: Gallery) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
 
-const achievements = [
-  { icon: 'ph:trophy-bold', text: `Más de ${CLUB_STATS.medals} medallas en competencias departamentales y nacionales` },
-  { icon: 'ph:person-simple-bike-bold', text: `${CLUB_STATS.ridersTrained}+ niños formados desde ${SITE.founded}` },
-  { icon: 'ph:flag-banner-bold', text: 'Representación en competencias nacionales desde 2018' },
-  { icon: 'ph:handshake-bold', text: 'Alianzas con la Liga Vallecaucana de Ciclismo' },
-];
-
-const communityPhotos = [
-  { image: comunidadCircuito, alt: 'Corredora del club atacando una subida técnica en un circuito de XCO' },
-  { image: comunidadLluvia, alt: 'Tres deportistas del club sonriendo bajo la lluvia en una válida de la Copa Valle' },
-  { image: historiaEquipoPalmira, alt: 'El equipo completo del club posando con familias y bicicletas en la carpa' },
-];
 ---
 
-<PageLayout
+<BaseLayout
   title="Quiénes Somos"
-  description="Historia, misión y valores del Club Deportivo Trocha y Ruta"
-  breadcrumbs={[{ label: 'Quiénes Somos' }]}
+  description={`Historia, misión y valores del ${SITE.name}: ${yearsActive} años formando niños y jóvenes a través del ciclomontañismo en Yumbo, Valle del Cauca.`}
   jsonLd={sportsClubJsonLd}
 >
+  <!-- Quiénes somos, en cifras -->
+  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="club-titulo">
+    <Breadcrumb items={[{ label: 'Quiénes Somos' }]} />
 
-  <!-- Intro -->
-  <section class="mb-16">
-    <SectionTitle
-      eyebrow={`${yearsActive} años en Yumbo`}
-      title="Nuestra Historia"
-      subtitle={`Desde ${SITE.founded} formamos niños y jóvenes a través del ciclomontañismo en Yumbo, Valle del Cauca.`}
-    />
-    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
-      <p>
-        Lo que comenzó como un grupo pequeño de familias apasionadas por la bicicleta se convirtió
-        en una comunidad que promueve el deporte, la disciplina y el contacto con la naturaleza.
-        Hoy, más de una década después, seguimos pedaleando con el mismo compromiso: formar seres
-        humanos íntegros dentro y fuera de la competencia.
-      </p>
+    <div class="mt-6 grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
+      <SectionIntro
+        as="h1"
+        id="club-titulo"
+        eyebrow={`${yearsActive} años en Yumbo`}
+        eyebrowIcon="ph:map-trifold-bold"
+        title="Antes de llamarnos Trocha y Ruta ya rodábamos en Yumbo"
+        highlight="ya rodábamos en Yumbo"
+        lead={`${SITE.name} nace el 1 de mayo de ${SITE.founded} de la reestructuración del antiguo Club Ciclo Yumbo. ${yearsActive} años después, el club entrena en su propia pista, compite en cada válida de la Copa Valle y siembra el terreno por donde rueda.`}
+      />
+
+      <Image
+        src={historiaEquipoPalmira}
+        alt="El equipo completo del Club Trocha y Ruta con sus familias y bicicletas en la carpa del club durante una válida de la Copa Valle"
+        layout="none"
+        widths={[500, 800, 1100]}
+        sizes="(min-width: 1024px) 45vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        class="aspect-[4/3] w-full rounded-2xl object-cover shadow-md"
+      />
     </div>
-  </section>
 
-  <!-- Timeline de hitos -->
-  <section class="mb-20">
-    <ol class="space-y-12 md:space-y-16">
-      {milestones.map((m, i) => (
-        <li class="reveal grid gap-6 md:grid-cols-2 md:items-center">
-          <div class={i % 2 === 1 ? 'md:order-2' : ''}>
-            <Image
-              src={m.image}
-              alt={m.alt}
-              widths={[400, 700, 1000]}
-              sizes="(min-width: 768px) 45vw, 100vw"
-              loading={i === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-              class="aspect-[3/2] w-full rounded-2xl object-cover shadow-md"
-            />
-          </div>
-          <div class={i % 2 === 1 ? 'md:order-1 md:text-right' : ''}>
-            <span class="inline-block rounded-full bg-accent/15 px-3 py-1 text-xs font-bold uppercase tracking-widest text-accent-dark">
-              {m.year}
-            </span>
-            <h3 class="mt-3 font-display text-2xl md:text-3xl font-bold text-text-primary">
-              {m.title}
-            </h3>
-            <p class="mt-3 text-text-secondary leading-relaxed">{m.body}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
-  </section>
-
-  <!-- Misión, Visión y Valores -->
-  <section class="mb-20">
-    <SectionTitle title="Misión, Visión y Valores" />
-    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-      {pillars.map((p) => (
-        <div class={`reveal rounded-2xl bg-surface p-6 shadow-sm ${pillarStyles[p.accent].card}`}>
-          <span class={`inline-flex size-12 items-center justify-center rounded-xl ${pillarStyles[p.accent].badge}`}>
-            <Icon name={p.icon} class="size-6" aria-hidden="true" />
-          </span>
-          <h3 class="mt-4 text-xl font-display font-bold text-text-primary">{p.title}</h3>
-          <p class="mt-2 text-text-secondary leading-relaxed">{p.body}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- Logros Destacados -->
-  <section class="mb-20">
-    <SectionTitle title="Logros Destacados" />
-    <ul class="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
-      {achievements.map((a) => (
-        <li class="reveal flex items-start gap-3 rounded-xl bg-surface-muted/60 p-5">
-          <span class="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <Icon name={a.icon} class="size-5" aria-hidden="true" />
-          </span>
-          <span class="text-text-secondary leading-relaxed">{a.text}</span>
-        </li>
-      ))}
-    </ul>
-  </section>
-
-  <!-- Banda de comunidad -->
-  <section class="mb-16">
-    <SectionTitle
-      title="Así se ve la comunidad"
-      subtitle="Fotos reales de nuestras salidas, entrenamientos y competencias."
-    />
-    <div class="grid gap-4 sm:grid-cols-3">
-      {communityPhotos.map((p) => (
-        <Image
-          src={p.image}
-          alt={p.alt}
-          widths={[300, 500, 800]}
-          sizes="(min-width: 640px) 30vw, 100vw"
-          loading="lazy"
-          decoding="async"
-          class="reveal aspect-[4/3] w-full rounded-xl object-cover"
+    {/*
+      `StatFigure` pinta un `<div><p>`, no un par `<dt>/<dd>`: envolverlo en
+      un `<dl>` daba una lista de definición sin términos, marcado inválido.
+    */}
+    <div class="mt-12 grid grid-cols-2 gap-6 border-t border-primary/15 pt-8 lg:grid-cols-4">
+      {figures.map((figure) => (
+        <StatFigure
+          value={figure.value}
+          label={figure.label}
+          note={figure.note}
+          icon={figure.icon}
         />
       ))}
     </div>
-  </section>
+  </SectionShell>
 
-  <!-- CTA -->
-  <section class="mt-4">
-    <InscriptionCTA variant="inline" heading="¿Quieres ser parte de nuestra historia?" description="Únete a la comunidad Trocha y Ruta. Primera clase de prueba gratis, sin compromiso." />
-  </section>
-</PageLayout>
+  <!-- El recorrido -->
+  <SectionShell tone="plain" width="wide" labelledby="recorrido-titulo">
+    <SectionIntro
+      id="recorrido-titulo"
+      eyebrow="El recorrido"
+      eyebrowIcon="ph:path-bold"
+      title="De unas salidas de domingo a una escuela con pista propia"
+      highlight="pista propia"
+      lead="Cuatro paradas que explican dónde está hoy el club."
+      align="center"
+      class="mx-auto max-w-3xl"
+    />
+
+    <Timeline items={milestones} class="mt-14" />
+  </SectionShell>
+
+  <!-- Lo que nos mueve -->
+  <SectionShell tone="dark" pattern="topo" width="wide" labelledby="proposito-titulo">
+    <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <SectionIntro
+          id="proposito-titulo"
+          tone="dark"
+          eyebrow="Lo que nos mueve"
+          eyebrowIcon="ph:compass-bold"
+          title="Formar personas que, además, corren en bicicleta"
+          highlight="Formar personas"
+        />
+
+        <div class="mt-8 space-y-6">
+          <div class="border-l-2 border-accent pl-5">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-accent-light">Misión</p>
+            <p class="mt-2 text-lg leading-relaxed text-white/85">
+              Formar niños y jóvenes integrales a través del ciclomontañismo, promoviendo
+              valores, disciplina y amor por la naturaleza.
+            </p>
+          </div>
+          <div class="border-l-2 border-white/25 pl-5">
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/60">Visión</p>
+            <p class="mt-2 leading-relaxed text-white/75">
+              Ser el club referente en formación deportiva infantil y juvenil en el Valle del
+              Cauca, reconocido por su excelencia deportiva y humana.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/60">
+          Los valores que entrenamos
+        </p>
+        <ul class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2">
+          {values.map((value) => (
+            <li class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
+              <Icon name={value.icon} class="size-6 shrink-0 text-accent-light" aria-hidden="true" />
+              <span class="font-display text-sm font-bold leading-tight text-white">
+                {value.label}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </SectionShell>
+
+  <!-- Respaldo -->
+  <SectionShell tone="muted" width="wide" labelledby="respaldo-titulo">
+    <SectionIntro
+      id="respaldo-titulo"
+      eyebrow="Respaldo"
+      eyebrowIcon="ph:shield-check-bold"
+      title="Lo que hay detrás de cada entrenamiento"
+      highlight="cada entrenamiento"
+      lead="Dejar a un hijo en un club deportivo es un acto de confianza. Esto es lo que la sostiene — y dónde puedes verificarlo."
+      align="center"
+      class="mx-auto max-w-3xl"
+    />
+
+    <ul class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {credentials.map((item, index) => (
+        <li
+          class="reveal group relative flex flex-col rounded-2xl bg-surface p-6 shadow-sm ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-md"
+          style={`--stagger:${Math.min(index, 3) * 80}ms`}
+        >
+          <span class="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary-deep">
+            <Icon name={item.icon} class="size-6" aria-hidden="true" />
+          </span>
+          <h3 class="mt-4 font-display text-base font-bold text-text-primary">
+            <a href={item.href} class="after:absolute after:inset-0 hover:text-primary-deep">
+              {item.title}
+            </a>
+          </h3>
+          <p class="mt-2 flex-1 text-sm leading-relaxed text-text-secondary">{item.body}</p>
+          <span
+            class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary-deep transition-all duration-200 group-hover:gap-2"
+            aria-hidden="true"
+          >
+            {item.cta}
+            <Icon name="ph:arrow-right-bold" class="size-4" />
+          </span>
+        </li>
+      ))}
+    </ul>
+  </SectionShell>
+
+  <!-- La comunidad -->
+  <SectionShell tone="plain" width="wide" labelledby="comunidad-titulo">
+    <SectionIntro
+      id="comunidad-titulo"
+      eyebrow="La comunidad"
+      eyebrowIcon="ph:users-three-bold"
+      title="Así se ve un fin de semana del club"
+      highlight="fin de semana"
+      lead="Las fotos son de las últimas salidas y competencias, no de un banco de imágenes."
+      align="center"
+      class="mx-auto max-w-3xl"
+    />
+
+    {albums.length > 0 && (
+      <ul class="mt-12 grid gap-5 sm:grid-cols-3">
+        {albums.map((album: Gallery, index: number) => (
+          <li
+            class="reveal group relative overflow-hidden rounded-2xl bg-surface-muted shadow-sm"
+            style={`--stagger:${index * 80}ms`}
+          >
+            <a href={`/galeria/${album.id}`} class="block">
+              <img
+                src={album.data.cover}
+                alt={album.data.coverAlt ?? `Portada del álbum ${album.data.title}`}
+                width="800"
+                height="600"
+                loading="lazy"
+                decoding="async"
+                class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent p-4">
+                <span class="block font-display text-sm font-bold leading-snug text-white">
+                  {album.data.title}
+                </span>
+                <span class="mt-0.5 block text-xs text-white/80">
+                  {album.data.images.length} fotos
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+
+  </SectionShell>
+
+  <SectionShell tone="plain" width="default" spacing="compact" label="Inscripciones">
+    <InscriptionCTA
+      variant="inline"
+      heading="¿Quieres ser parte de esta historia?"
+      description="La primera clase es de prueba y no tiene costo. Ven un martes o un viernes a la pista y mira cómo entrenamos."
+    />
+  </SectionShell>
+</BaseLayout>

@@ -1,0 +1,75 @@
+---
+/**
+ * Enlace a la etapa anterior y siguiente de la ruta de formación.
+ *
+ * Cierra la página de detalle de un programa: quien cayó en el programa
+ * equivocado —el hijo ya tiene 7 años y está viendo la Escuela de
+ * Iniciación— sigue directo a la etapa que sí le corresponde, sin devolverse
+ * al índice de `/programas` a buscarla.
+ *
+ * `previous`/`next` salen de `getAdjacentPrograms()` (`@lib/programs`), que
+ * ordena por `ageMin` — el mismo criterio que dibuja `ProgramPathway`. Si el
+ * programa es el primero o el último de la ruta, ese lado llega en `null` y
+ * su enlace no se pinta; si ninguno de los dos existe, el componente entero
+ * no se pinta.
+ */
+import { Icon } from 'astro-icon/components';
+import type { PathwayInput } from '@lib/programs';
+
+interface Props {
+  previous: PathwayInput | null;
+  next: PathwayInput | null;
+  class?: string;
+}
+
+const { previous, next, class: className } = Astro.props;
+---
+
+{
+  (previous || next) && (
+    <nav
+      aria-label="Otras etapas de la ruta de formación"
+      class:list={['grid gap-4 sm:grid-cols-2', className]}
+    >
+      {previous ? (
+        <a
+          href={`/programas/${previous.id}`}
+          aria-label={`Etapa anterior: ${previous.title}, ${previous.ageRange}`}
+          class="group flex items-center gap-3 rounded-xl border border-black/10 p-4 transition-colors hover:border-primary-deep"
+        >
+          <Icon name="ph:arrow-left-bold" class="size-5 shrink-0 text-primary-deep" aria-hidden="true" />
+          <span class="min-w-0">
+            <span class="block text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+              Etapa anterior
+            </span>
+            <span class="block truncate font-display font-bold text-text-primary group-hover:text-primary-deep">
+              {previous.title}
+            </span>
+          </span>
+        </a>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+
+      {next ? (
+        <a
+          href={`/programas/${next.id}`}
+          aria-label={`Siguiente etapa: ${next.title}, ${next.ageRange}`}
+          class="group flex items-center justify-between gap-3 rounded-xl border border-black/10 p-4 transition-colors hover:border-primary-deep sm:justify-end"
+        >
+          <span class="min-w-0 sm:text-right">
+            <span class="block text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+              Siguiente etapa
+            </span>
+            <span class="block truncate font-display font-bold text-text-primary group-hover:text-primary-deep">
+              {next.title}
+            </span>
+          </span>
+          <Icon name="ph:arrow-right-bold" class="size-5 shrink-0 text-primary-deep" aria-hidden="true" />
+        </a>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+    </nav>
+  )
+}

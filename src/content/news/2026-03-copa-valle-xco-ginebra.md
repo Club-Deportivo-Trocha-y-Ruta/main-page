@@ -10,7 +10,7 @@ imageLayout: contain
 excerpt: "Con 10 corredores en pista, el club sumó 2 podios y valiosos puntos en la segunda válida de la Copa Valle disputada en Ginebra."
 featured: true
 draft: false
-relatedEvent: "2026-copa-valle-ginebra"
+relatedEvent: "2026-02-copa-valle-ii-ginebra"
 relatedGallery: "copa-valle-ginebra-2026"
 galleryFolder: "/images/news/copa-valle-ginebra-2026"
 galleryImages:

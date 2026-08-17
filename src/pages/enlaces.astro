@@ -1,9 +1,29 @@
 ---
+/**
+ * `/enlaces` — el linktree del QR.
+ *
+ * Se abre cuando alguien escanea el código impreso en un afiche, en la
+ * camiseta del equipo o en el pendón del club, casi siempre **en plena
+ * carrera**. Por eso lo primero después del logo es lo que viene: la próxima
+ * fecha real de la temporada, que la página no sabía.
+ *
+ * Mantiene su marco propio (`LinktreeLayout`, fondo oscuro, ancho de móvil) a
+ * propósito: no es una sección del sitio y no usa `SectionShell`. Lo que sigue
+ * el sistema editorial es la regla de fondo —todo dato sale del contenido—,
+ * no el envase. Ver docs/04-sistema-editorial.md.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import LinktreeLayout from '@layouts/LinktreeLayout.astro';
-import { SITE, CONTACT, SOCIAL } from '@lib/constants';
+import { SITE, CONTACT, SOCIAL, getYearsActive } from '@lib/constants';
+import { nextRace, seasonProgress, linktreeStats } from '@lib/linktree';
+import { summarizeTrees } from '@lib/trocha-verde';
 import logo from '@assets/images/logo.webp';
+
+type Event = CollectionEntry<'events'>;
+type Tree = CollectionEntry<'trees'>;
+type Program = CollectionEntry<'programs'>;
 
 const UTM_QUERY = 'utm_source=qr&utm_medium=offline&utm_campaign=enlaces';
 
@@ -17,16 +37,20 @@ const whatsappMessage = encodeURIComponent(
 );
 const whatsappHref = `${CONTACT.whatsapp}?text=${whatsappMessage}`;
 
-interface Stat {
-  value: string;
-  label: string;
-}
+const events = (await getCollection('events')).filter((event: Event) => !event.data.draft);
+const trees = (await getCollection('trees')).filter((tree: Tree) => !tree.data.draft);
+const programs = (await getCollection('programs')).filter(
+  (program: Program) => !program.data.draft && program.data.active
+);
 
-const stats: Stat[] = [
-  { value: `Desde ${SITE.founded}`, label: 'formando ciclistas' },
-  { value: 'Desde 4 años', label: 'todas las edades' },
-  { value: 'Yumbo', label: 'Valle del Cauca' },
-];
+const race = nextRace(events);
+const season = seasonProgress(events);
+
+const stats = linktreeStats({
+  years: getYearsActive(),
+  programs: programs.length,
+  trees: summarizeTrees(trees.map((tree: Tree) => tree.data)).totalTrees,
+});
 
 interface PortalLink {
   label: string;
@@ -38,25 +62,27 @@ interface PortalLink {
 const secondaryLinks: PortalLink[] = [
   {
     label: 'Calendario de eventos',
-    description: 'Próximas competencias y salidas',
+    description: season
+      ? `Temporada ${season.year}: ${season.completed} de ${season.total} fechas corridas`
+      : 'Las fechas de la temporada',
     href: withUtm('/calendario'),
     icon: 'ph:calendar-blank-bold',
   },
   {
     label: 'Noticias y resultados',
-    description: 'Lo más reciente del club',
+    description: 'La crónica de cada carrera, con los resultados del club',
     href: withUtm('/noticias'),
     icon: 'ph:newspaper-bold',
   },
   {
     label: 'Trocha Verde',
-    description: 'Programa de recuperación ambiental',
+    description: 'El bosque que el club siembra y cuida en Yumbo',
     href: withUtm('/trocha-verde'),
     icon: 'ph:plant-bold',
   },
   {
     label: 'Sitio web oficial',
-    description: 'Conoce todo sobre el club',
+    description: 'Programas, horarios, inscripciones y galería',
     href: withUtm('/'),
     icon: 'ph:globe-bold',
   },
@@ -117,21 +143,89 @@ const year = new Date().getFullYear();
       </p>
     </header>
 
-    <ul
-      class="reveal mt-5 grid grid-cols-3 gap-2 rounded-2xl bg-white/10 p-3 ring-1 ring-white/20 backdrop-blur-sm"
-      aria-label="El club en cifras"
-    >
-      {
-        stats.map((stat) => (
-          <li class="text-center">
-            <span class="block font-display text-sm font-bold leading-tight text-accent-light">
-              {stat.value}
+    {
+      stats.length > 0 && (
+        <ul
+          class="reveal mt-5 grid gap-2 rounded-2xl bg-white/10 p-3 ring-1 ring-white/20 backdrop-blur-sm"
+          style={`grid-template-columns: repeat(${stats.length}, minmax(0, 1fr));`}
+          aria-label="El club en cifras"
+        >
+          {stats.map((stat) => (
+            <li class="text-center">
+              <span class="block font-display text-lg font-bold leading-none text-accent-light">
+                {stat.value}
+                {stat.unit && <span class="text-sm">{stat.unit}</span>}
+              </span>
+              <span class="mt-1 block text-[11px] leading-snug text-white/80">{stat.label}</span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {/*
+      Lo más útil para quien acaba de escanear el QR estando en una carrera:
+      cuándo es la siguiente. Si ya corrió toda la temporada, no se pinta nada.
+    */}
+    {
+      race && (
+        <section class="reveal mt-3" aria-labelledby="proxima-title">
+          <h2 id="proxima-title" class="sr-only">
+            {race.today ? 'La carrera de hoy' : 'La próxima carrera'}
+          </h2>
+          <a
+            href={withUtm('/calendario')}
+            class:list={[
+              'group flex items-center gap-4 rounded-2xl px-4 py-3.5 transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white',
+              race.today
+                ? 'bg-accent text-surface-dark shadow-lg shadow-black/20 ring-1 ring-white/30'
+                : 'bg-white/10 text-white ring-1 ring-white/20 backdrop-blur-sm hover:bg-white/20',
+            ]}
+          >
+            <span
+              class:list={[
+                'flex size-14 shrink-0 flex-col items-center justify-center rounded-xl leading-none',
+                race.today ? 'bg-surface-dark/10' : 'bg-white/10',
+              ]}
+              aria-hidden="true"
+            >
+              <span class="font-display text-xl font-extrabold">{race.day}</span>
+              <span class="mt-0.5 text-[10px] font-bold uppercase tracking-wider opacity-80">
+                {race.month}
+              </span>
             </span>
-            <span class="mt-0.5 block text-[11px] leading-snug text-white/80">{stat.label}</span>
-          </li>
-        ))
-      }
-    </ul>
+
+            <span class="flex-1 text-left">
+              <span
+                class:list={[
+                  'block text-[10px] font-bold uppercase tracking-[0.16em]',
+                  race.today ? 'text-surface-dark/70' : 'text-accent-light',
+                ]}
+              >
+                {race.today ? 'Es hoy' : 'Próxima fecha'}
+              </span>
+              <span class="mt-0.5 block font-display text-base font-bold leading-tight">
+                {race.city ?? race.title}
+              </span>
+              <span
+                class:list={[
+                  'mt-0.5 block text-[11px] leading-snug',
+                  race.today ? 'text-surface-dark/80' : 'text-white/70',
+                ]}
+              >
+                {race.title}
+              </span>
+            </span>
+
+            <Icon
+              name="ph:caret-right-bold"
+              class="size-5 shrink-0 opacity-70 transition-transform group-hover:translate-x-1"
+              aria-hidden="true"
+            />
+          </a>
+        </section>
+      )
+    }
 
     <section class="mt-6 flex flex-col gap-3" aria-labelledby="acciones-title">
       <h2 id="acciones-title" class="sr-only">Contáctanos y preinscríbete</h2>
@@ -140,6 +234,7 @@ const year = new Date().getFullYear();
         href={whatsappHref}
         target="_blank"
         rel="noopener noreferrer"
+        data-analytics-event="whatsapp_click"
         class="reveal group flex items-center gap-4 rounded-2xl bg-accent px-5 py-5 text-surface-dark shadow-xl shadow-black/20 ring-1 ring-white/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-light focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
       >
         <span
@@ -165,6 +260,7 @@ const year = new Date().getFullYear();
 
       <a
         href={withUtm('/inscripciones')}
+        data-analytics-event="cta_inscripcion_click"
         class="reveal group flex items-center gap-4 rounded-2xl bg-white px-5 py-4 text-text-primary shadow-lg shadow-black/15 transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
       >
         <span

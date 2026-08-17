@@ -55,7 +55,7 @@ Design tokens en `src/styles/global.css` dentro de `@theme {}` (primary teal `#2
 
 ### React Islands — uso mínimo
 
-Astro genera zero-JS por defecto. Solo estos 6 componentes hidratan:
+Astro genera zero-JS por defecto. Solo estos 5 componentes hidratan:
 
 | Componente | Directiva |
 |-----------|-----------|
@@ -63,7 +63,6 @@ Astro genera zero-JS por defecto. Solo estos 6 componentes hidratan:
 | `ContactForm.tsx` | `client:visible` |
 | `InscriptionForm.tsx` (4 pasos, localStorage 48h TTL) | `client:visible` |
 | `ImageLightbox.tsx` | `client:visible` |
-| `TestimonialsCarousel.tsx` (Swiper) | `client:visible` |
 | `TrochaVerdeMap.tsx` (Leaflet) | `client:visible` |
 
 **Regla**: nunca `client:load` salvo MobileMenu; no agregar `client:*` a componentes que no requieran interactividad.
@@ -72,9 +71,9 @@ Astro genera zero-JS por defecto. Solo estos 6 componentes hidratan:
 
 Las colecciones se definen en `src/content.config.ts` (raíz de src, no `src/content/config.ts`) con glob loaders; **todos los schemas Zod viven centralizados en `src/lib/schemas.ts`** y se testean en `src/lib/__tests__/schemas.test.ts`.
 
-15 colecciones definidas; 11 con directorio y contenido: `events`, `faqs`, `gallery`, `news`, `programs`, `riders`, `social-initiatives`, `species` (~32), `sponsors`, `testimonials`, `trees` (~77). Otras 4 están en config pero **sin directorio aún**: `directivos`, `results`, `rutas`, `pages` — si trabajas con ellas, crea primero el directorio.
+14 colecciones definidas; 10 con directorio y contenido: `events`, `faqs`, `gallery`, `news`, `programs`, `riders`, `social-initiatives`, `species` (~32), `sponsors`, `trees` (~77). Otras 4 están en config pero **sin directorio aún**: `directivos`, `results`, `rutas`, `pages` — si trabajas con ellas, crea primero el directorio.
 
-Relaciones por referencia en frontmatter: evento→galería (`relatedGallery`), evento→noticias (`relatedNews`), noticia→galería (`relatedGallery`/`galleryFolder`), rider→programa (`program`), testimonial→rider/programa, árbol→especie.
+Relaciones por referencia en frontmatter: evento→galería (`relatedGallery`), evento→noticias (`relatedNews`), noticia→galería (`relatedGallery`/`galleryFolder`), rider→programa (`program`), árbol→especie.
 
 Sveltia CMS (`public/admin/config.yml`) debe mantenerse en sync con los schemas Zod cuando cambien campos.
 
@@ -85,6 +84,21 @@ Iniciativa ambiental (inventario de árboles) con su propio conjunto de piezas:
 - Lógica: `src/lib/trocha-verde.ts` (stats agregadas), `src/lib/tree-utils.ts` (labels/colores compartidos)
 - Secciones: `TrochaVerde*.astro` en `src/components/sections/` (`TrochaVerdeGrid` existe pero está en reserva — no importar en index hasta tener más contenido)
 - Colecciones: `trees` + `species`
+
+## Sistema editorial — cómo se diseña una sección
+
+Toda sección rediseñada se arma con el mismo vocabulario, no con clases sueltas:
+`SectionShell` (marco: `tone`/`pattern`/`width`/`spacing`), `SectionIntro` (antetítulo +
+titular con `highlight` + bajada), `StatFigure`/`FactGrid` (dato ilustrado) y un paso
+siguiente. Los tokens viven en `src/lib/editorial.ts`; los componentes, en
+`src/components/editorial/`.
+
+Reglas: toda cifra sale del contenido (si el dato no existe, el bloque no se pinta); cero
+JS nuevo —las ilustraciones son SVG generado en build—; el texto visible vive en las
+collections, no en la plantilla. La sección de programas (`ProgramsGrid.astro`,
+`ProgramPathway.astro`, `/programas`) es la referencia a copiar.
+
+Guía completa y estado de la migración por página: `docs/04-sistema-editorial.md`.
 
 ## Analytics — catálogo cerrado, sin PII
 
@@ -132,5 +146,6 @@ Archivos legacy no activos: `netlify.toml`, `wrangler.toml`, `workers/donations/
 - `docs/01-ux-architecture.md` — wireframes, flujos, personas (al implementar UI)
 - `docs/02-technical-architecture.md` — ADRs y configs (al configurar)
 - `docs/03-content-strategy.md` — schemas completos, taxonomía, CMS (al tocar collections)
+- `docs/04-sistema-editorial.md` — **léelo antes de rediseñar cualquier sección o página**
 - `.claude/agents/` — 22 agentes de proyecto organizados como compañía digital (C-suite → engineers → auditors); `.claude/teams/` — 5 teams para workflows multi-departamento
 - `.claude/settings.json` — allowlist de comandos npm/git del proyecto; `rm -rf`, `git push --force` y `git reset --hard` en deny list

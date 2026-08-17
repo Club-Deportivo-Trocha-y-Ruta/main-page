@@ -1,6 +1,7 @@
 ---
 title: "Alto Rendimiento"
 subtitle: "Compitiendo al más alto nivel"
+summary: "Entrenamiento periodizado con pulsómetro y ciclocomputador: el grupo sale junto, pero cada corredor trabaja en sus propias zonas. Aquí se compite representando al club y al Valle."
 icon: "ph:trophy"
 image: "programa-rendimiento-samuel.webp"
 ageRange: "12 años en adelante"

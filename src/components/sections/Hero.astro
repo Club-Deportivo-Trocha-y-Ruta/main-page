@@ -1,16 +1,37 @@
 ---
+/**
+ * Hero de la portada.
+ *
+ * Mantiene su marco propio —vídeo a pantalla completa sobre fondo oscuro— a
+ * propósito: no es una sección del sistema editorial y `SectionShell` no le
+ * sirve. Lo que sí sigue del sistema es la regla de fondo: nada escrito a mano
+ * que el contenido pueda decir.
+ *
+ * Por eso el antetítulo saca el año de `SITE.founded` en vez de repetir "2010"
+ * en el texto, y debajo de los botones va **el pulso del club**: la próxima
+ * fecha real de la temporada, o un aviso distinto si la carrera es hoy. Así la
+ * portada deja de ser un cartel fijo. Si ya corrió toda la temporada, ese
+ * bloque simplemente no se pinta.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 import Button from '@components/common/Button.astro';
 import { getHeroPoster } from '@lib/hero-poster';
+import { heroPulse } from '@lib/home';
+import { SITE } from '@lib/constants';
 
 interface Props {
   title?: string;
+  /** Fragmento exacto del título que va resaltado con el trazo de marca. */
+  highlight?: string;
   subtitle?: string;
   backgroundImage?: string;
 }
 
 const {
   title = 'Formando campeones en la vida y en la pista',
-  subtitle = 'Club Deportivo Trocha y Ruta · Yumbo, Valle del Cauca',
+  highlight = 'en la vida',
+  subtitle = 'Ciclomontañismo para niños desde los 4 años, con pista propia en Yumbo, Valle del Cauca.',
   backgroundImage,
 } = Astro.props;
 
@@ -19,9 +40,22 @@ const VIDEO_START = 5;
 const VIDEO_END = 25;
 
 const poster = await getHeroPoster();
+
+type Event = CollectionEntry<'events'>;
+const events = (await getCollection('events')).filter((event: Event) => !event.data.draft);
+const pulse = heroPulse(events);
+
+// El resaltado se aplica sobre el texto tal cual viene: si el fragmento no
+// aparece en el título, se pinta el título completo sin marcar.
+const cut = highlight ? title.indexOf(highlight) : -1;
+const beforeMark = cut >= 0 ? title.slice(0, cut) : title;
+const afterMark = cut >= 0 && highlight ? title.slice(cut + highlight.length) : '';
 ---
 
-<section class="relative min-h-[60vh] md:min-h-[80vh] flex items-center justify-center bg-surface-dark overflow-hidden">
+<section
+  aria-labelledby="hero-titulo"
+  class="relative min-h-[60vh] md:min-h-[80vh] flex items-center justify-center bg-surface-dark overflow-hidden"
+>
   <!-- Poster image: visible on mobile, fallback on desktop if YouTube fails.
        Queda siempre debajo del video; el iframe solo se revela cuando reproduce. -->
   <img
@@ -58,10 +92,13 @@ const poster = await getHeroPoster();
     <!-- Badge de marca -->
     <div class="inline-flex items-center gap-2 mb-5 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/90 border border-white/20">
       <span class="w-1.5 h-1.5 rounded-full bg-accent inline-block"></span>
-      Yumbo · Valle del Cauca · Desde 2010
+      Yumbo · Valle del Cauca · Desde {SITE.founded}
     </div>
-    <h1 class="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[0.95] tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] uppercase">
-      {title}
+    <h1
+      id="hero-titulo"
+      class="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[0.95] tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] uppercase"
+    >
+      {beforeMark}{cut >= 0 && <span class="editorial-mark editorial-mark--on-dark">{highlight}</span>}{afterMark}
     </h1>
     <p class="mt-5 text-base md:text-xl text-white/85 drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)] max-w-2xl mx-auto">
       {subtitle}
@@ -80,14 +117,49 @@ const poster = await getHeroPoster();
         Conoce más
       </Button>
     </div>
+
+    {/*
+      El pulso del club: lo que está pasando ahora mismo en la temporada. Si ya
+      corrió la última fecha, no se pinta nada.
+    */}
+    {pulse && (
+      <a
+        href="/calendario"
+        class="mt-8 inline-flex max-w-full items-center gap-3 rounded-full border border-white/20 bg-white/10 py-2 pl-3 pr-4 text-left backdrop-blur-sm transition-colors duration-200 hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+      >
+        <span
+          class:list={[
+            'flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider',
+            pulse.today ? 'bg-accent text-surface-dark' : 'bg-white/15 text-accent-light',
+          ]}
+        >
+          {pulse.today && <Icon name="ph:lightning-bold" class="size-3.5" aria-hidden="true" />}
+          {pulse.today ? 'Corremos hoy' : 'Próxima fecha'}
+        </span>
+        <span class="min-w-0 text-sm text-white/90">
+          <span class="font-semibold">{pulse.when}</span>
+          {pulse.where && <span class="text-white/70"> · {pulse.where}</span>}
+        </span>
+        <Icon
+          name="ph:arrow-right-bold"
+          class="size-4 shrink-0 text-white/70"
+          aria-hidden="true"
+        />
+      </a>
+    )}
   </div>
 
-  <!-- Scroll indicator -->
+  <!--
+    Flecha de scroll. Solo cuando no hay pulso: con la tarjeta de la próxima
+    fecha abajo, la flecha se le encima y compiten por la misma mirada.
+  -->
+  {!pulse && (
   <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 motion-safe:animate-bounce" aria-hidden="true">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-white/70" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </div>
+  )}
 </section>
 
 <style>

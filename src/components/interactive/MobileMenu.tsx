@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { isActivePath } from '@lib/navigation';
 
 interface NavItem {
   label: string;
@@ -73,8 +74,8 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
     return () => document.removeEventListener('keydown', handler);
   }, [isOpen]);
 
-  const isActive = (href: string) =>
-    currentPath === href || (href !== '/' && currentPath.startsWith(href));
+  // Misma regla que la cabecera de escritorio, escrita una sola vez.
+  const isActive = (href: string) => isActivePath(currentPath, href);
 
   return (
     <>

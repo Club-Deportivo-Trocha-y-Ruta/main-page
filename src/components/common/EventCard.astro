@@ -1,17 +1,37 @@
 ---
+/**
+ * Fecha del calendario: bloque de día + datos del evento.
+ *
+ * Las etiquetas salen de `@lib/calendar`, no de `getCategoryLabel()` de utils
+ * —esa traduce categorías de corredores y dejaba las de evento en crudo
+ * ("xco" en minúscula)—.
+ */
+import { Icon } from 'astro-icon/components';
+import Badge from '@components/common/Badge.astro';
+import AddToCalendar from '@components/common/AddToCalendar.astro';
+import {
+  dayLabel,
+  monthShort,
+  getEventCategory,
+  getEventLevel,
+  getEventStatusLabel,
+} from '@lib/calendar';
+
 interface Props {
   title: string;
   date: Date;
   endDate?: Date;
   location: string;
+  city?: string;
   category: string;
+  level?: string;
   status: string;
   /** Opcional: sin href el título se renderiza como texto plano (evita
    *  enlaces circulares cuando la card ya está en su página destino). */
   href?: string;
-  /** Crónicas publicadas del evento (solo tiene sentido en eventos pasados). */
+  /** Crónicas publicadas del evento (solo tiene sentido en fechas corridas). */
   chronicles?: { href: string; title: string }[];
-  /** Atenúa la card. Se usa para el bloque de eventos pasados. */
+  /** Atenúa la card. Se usa para el bloque de fechas corridas. */
   muted?: boolean;
 }
 
@@ -20,87 +40,96 @@ const {
   date,
   endDate,
   location,
+  city,
   category,
+  level,
   status,
   href,
   chronicles = [],
   muted = false,
 } = Astro.props;
 
-import { Icon } from 'astro-icon/components';
-import Badge from '@components/common/Badge.astro';
-import AddToCalendar from '@components/common/AddToCalendar.astro';
-import { getCategoryLabel, getEventStatusLabel } from '@lib/utils';
+const categoryStyle = getEventCategory(category);
+const levelLabel = getEventLevel(level);
 
-// Las fechas del frontmatter (YYYY-MM-DD) se parsean como medianoche UTC;
-// formatear en UTC evita que se corran un día en zonas horarias negativas.
-const monthLabel = new Intl.DateTimeFormat('es-CO', {
-  month: 'short',
-  timeZone: 'UTC',
-}).format(date);
-const dayFormatter = new Intl.DateTimeFormat('es-CO', {
-  day: 'numeric',
-  timeZone: 'UTC',
-});
-// Eventos de varios días muestran el rango (ej. "1-2") si caen en el mismo mes.
-const sameMonth =
-  endDate &&
-  endDate.getUTCFullYear() === date.getUTCFullYear() &&
-  endDate.getUTCMonth() === date.getUTCMonth();
-const dayLabel =
-  endDate && sameMonth
-    ? `${dayFormatter.format(date)}-${dayFormatter.format(endDate)}`
-    : dayFormatter.format(date);
-
-const statusVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
-  upcoming: 'primary',
-  past: 'neutral',
-  ongoing: 'cyan',
-  cancelled: 'accent',
-};
+// El estado solo se rotula cuando aporta algo: que una fecha pasada diga
+// "Corrido" es ruido, porque ya va bajo el título de la sección.
+const showStatus = status === 'ongoing' || status === 'cancelled';
 ---
 
 <div
   class:list={[
-    'flex items-start gap-3 sm:gap-4 rounded-xl p-3 sm:p-4 transition-colors hover:bg-surface-muted border-l-4',
+    'flex h-full items-start gap-3 rounded-xl border-l-4 p-3 transition-colors hover:bg-surface-muted sm:gap-4 sm:p-4',
     muted ? 'border-surface-muted' : 'border-primary',
+    status === 'cancelled' && 'opacity-60',
   ]}
 >
-  <div class="min-w-[3.5rem] sm:min-w-[4rem] rounded-lg bg-primary/10 p-2 sm:p-3 text-center shrink-0">
+  <div
+    class:list={[
+      'min-w-[3.5rem] shrink-0 rounded-lg p-2 text-center sm:min-w-[4rem] sm:p-3',
+      muted ? 'bg-black/5' : 'bg-primary/10',
+    ]}
+  >
     <span class="block text-xs font-bold uppercase tracking-wide text-primary-deep">
-      {monthLabel}
+      {monthShort(date)}
     </span>
-    <span class="block font-display text-xl sm:text-2xl font-bold text-primary-deep">
-      {dayLabel}
+    <span class="block font-display text-xl font-bold text-primary-deep sm:text-2xl">
+      {dayLabel(date, endDate)}
     </span>
   </div>
-  <div class="flex flex-col gap-1 min-w-0">
-    <h3 class="font-display font-semibold leading-snug text-text-primary">
+
+  <div class="flex min-w-0 flex-col gap-1">
+    <h3
+      class:list={[
+        'font-display font-semibold leading-snug text-text-primary',
+        status === 'cancelled' && 'line-through',
+      ]}
+    >
       {href ? (
-        <a href={href} class="text-text-primary hover:text-primary-deep transition-colors">
+        <a href={href} class="text-text-primary transition-colors hover:text-primary-deep">
           {title}
         </a>
       ) : (
         title
       )}
     </h3>
-    <p class="text-sm text-text-secondary flex items-center gap-1"><Icon name="ph:map-pin" class="size-4" aria-hidden="true" /> {location}</p>
-    <div class="mt-1 flex flex-wrap gap-1.5 sm:gap-2">
-      <Badge>{getCategoryLabel(category)}</Badge>
-      <Badge variant={statusVariant[status] ?? 'neutral'}>{getEventStatusLabel(status)}</Badge>
+
+    <p class="flex items-start gap-1.5 text-sm text-text-secondary">
+      <Icon name="ph:map-pin-bold" class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+      <span>
+        {location}
+        {city && ` · ${city}`}
+      </span>
+    </p>
+
+    <div class="mt-1 flex flex-wrap items-center gap-1.5 sm:gap-2">
+      <Badge>
+        <span class="inline-flex items-center gap-1">
+          <Icon name={categoryStyle.icon} class="size-3" aria-hidden="true" />
+          {categoryStyle.short}
+        </span>
+      </Badge>
+      {levelLabel && <Badge variant="neutral">{levelLabel}</Badge>}
+      {showStatus && (
+        <Badge variant={status === 'ongoing' ? 'cyan' : 'accent'}>
+          {getEventStatusLabel(status)}
+        </Badge>
+      )}
     </div>
+
     {status === 'upcoming' && (
       <AddToCalendar title={title} date={date} endDate={endDate} location={location} />
     )}
+
     {chronicles.length > 0 && (
-      <ul class="mt-1 space-y-0.5">
+      <ul class="mt-1.5 space-y-0.5">
         {chronicles.map((c) => (
           <li>
             <a
               href={c.href}
               class="inline-flex items-start gap-1 text-sm text-primary-deep hover:underline"
             >
-              <Icon name="ph:newspaper-clipping" class="size-4 shrink-0 mt-0.5" aria-hidden="true" />
+              <Icon name="ph:newspaper-clipping-bold" class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               <span>{c.title}</span>
             </a>
           </li>

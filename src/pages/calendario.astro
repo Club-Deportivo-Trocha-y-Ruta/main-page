@@ -1,201 +1,308 @@
 ---
+/**
+ * Calendario.
+ *
+ * Una familia abre esta página con dos preguntas: cuándo es lo próximo y cómo
+ * va la temporada. La página responde en ese orden —la temporada como
+ * recorrido, la próxima fecha en grande, el resto por venir y lo ya corrido con
+ * su crónica— en vez de tres listas del mismo peso.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md).
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon/components';
-import PageLayout from '@layouts/PageLayout.astro';
-import EventCard from '@components/common/EventCard.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
 import AddToCalendar from '@components/common/AddToCalendar.astro';
-import Badge from '@components/common/Badge.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
+import EventCard from '@components/common/EventCard.astro';
 import ShareButtons from '@components/common/ShareButtons.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import SeasonTrack from '@components/sections/SeasonTrack.astro';
 import { generateEventsListJsonLd } from '@lib/seo';
-import { getCategoryLabel, formatDate } from '@lib/utils';
+import { formatDate } from '@lib/utils';
+import {
+  buildSeason,
+  dayLabel,
+  getEventCategory,
+  getEventLevel,
+  resolveEventStatus,
+} from '@lib/calendar';
 
 type Event = CollectionEntry<'events'>;
 type News = CollectionEntry<'news'>;
 
 const events = (await getCollection('events')).filter((e: Event) => !e.data.draft);
 
-// Crónicas por evento: se derivan de `relatedEvent` en las noticias, que es el
-// campo que los editores llenan de forma consistente.
+// El estado se deriva de la fecha: el del frontmatter se quedaba viejo.
+const withStatus = events.map((event: Event) => ({
+  event,
+  status: resolveEventStatus(event.data),
+}));
+
+const upcoming = withStatus
+  .filter(({ status }) => status === 'upcoming' || status === 'ongoing')
+  .sort((a, b) => a.event.data.date.getTime() - b.event.data.date.getTime());
+
+const past = withStatus
+  .filter(({ status }) => status === 'past')
+  .sort((a, b) => b.event.data.date.getTime() - a.event.data.date.getTime());
+
+const [next, ...restUpcoming] = upcoming;
+
+// Crónicas por evento. Se cruzan las dos direcciones de la relación: la noticia
+// que apunta al evento (`relatedEvent`, el campo que los editores llenan) y el
+// evento que lista sus noticias (`relatedNews`).
 const news = (await getCollection('news')).filter((n: News) => !n.data.draft);
-const chroniclesByEvent = new Map<string, { href: string; title: string }[]>();
-for (const article of news) {
-  const eventId = article.data.relatedEvent;
-  if (!eventId) continue;
-  const list = chroniclesByEvent.get(eventId) ?? [];
-  list.push({ href: `/noticias/${article.id}`, title: article.data.title });
-  chroniclesByEvent.set(eventId, list);
+const newsById = new Map(news.map((article: News) => [article.id, article]));
+
+function chroniclesOf(event: Event) {
+  const found = new Map<string, { href: string; title: string }>();
+  for (const article of news) {
+    if (article.data.relatedEvent === event.id) {
+      found.set(article.id, { href: `/noticias/${article.id}`, title: article.data.title });
+    }
+  }
+  for (const id of event.data.relatedNews) {
+    const article = newsById.get(id);
+    if (article) found.set(id, { href: `/noticias/${id}`, title: article.data.title });
+  }
+  return [...found.values()];
 }
 
-const upcoming = events
-  .filter((e: Event) => e.data.status === 'upcoming' || e.data.status === 'ongoing')
-  .sort((a: Event, b: Event) => a.data.date.getTime() - b.data.date.getTime());
+const season = buildSeason(events);
 
-const past = events
-  .filter((e: Event) => e.data.status === 'past')
-  .sort((a: Event, b: Event) => b.data.date.getTime() - a.data.date.getTime());
-
-// El primero de la lista se destaca como card hero; el resto va en la grilla.
-const [nextEvent, ...restUpcoming] = upcoming;
-
-const allSorted = [...upcoming, ...past];
 const jsonLd = generateEventsListJsonLd(
-  allSorted.map((e: Event) => ({
-    title: e.data.title,
-    date: e.data.date,
+  [...upcoming, ...past].map(({ event }) => ({
+    title: event.data.title,
+    date: event.data.date,
     url: '/calendario',
   }))
 );
 
-const nextDayFormatter = new Intl.DateTimeFormat('es-CO', { day: 'numeric', timeZone: 'UTC' });
-const nextMonthFormatter = new Intl.DateTimeFormat('es-CO', { month: 'long', timeZone: 'UTC' });
+const nextCategory = next ? getEventCategory(next.event.data.category) : null;
+const nextLevel = next ? getEventLevel(next.event.data.level) : null;
+const nextMonth = next
+  ? new Intl.DateTimeFormat('es-CO', { month: 'long', timeZone: 'UTC' }).format(next.event.data.date)
+  : '';
 ---
 
-<PageLayout
+<BaseLayout
   title="Calendario"
-  description="Próximas competencias y eventos del club"
-  breadcrumbs={[{ label: 'Calendario' }]}
+  description="Calendario de competencias del Club Deportivo Trocha y Ruta: Copa Valle XCO, campeonatos departamentales y nacionales."
   jsonLd={jsonLd}
 >
-  <div class="space-y-16">
-    <!-- Compartir -->
-    <div class="flex justify-start">
-      <ShareButtons title="Calendario de Eventos - Trocha y Ruta" />
+  <!-- La temporada de un vistazo -->
+  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="calendario-titulo">
+    <Breadcrumb items={[{ label: 'Calendario' }]} />
+
+    <div class="mt-6 max-w-3xl">
+      <SectionIntro
+        as="h1"
+        id="calendario-titulo"
+        eyebrow="Calendario"
+        eyebrowIcon="ph:calendar-dots-bold"
+        title="La temporada completa, fecha por fecha"
+        highlight="fecha por fecha"
+        lead="Las válidas de la Copa Valle, los campeonatos y las jornadas del club. Cada fecha corrida queda enlazada a su crónica."
+      />
     </div>
 
-    <!-- Proximo evento destacado -->
-    {nextEvent && (
-      <section aria-labelledby="proximo-evento">
-        <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-primary-deep">
-          Próximo evento
-        </p>
-        <article class="reveal overflow-hidden rounded-2xl bg-surface-dark text-white shadow-lg">
-          <div class="grid gap-6 p-6 md:grid-cols-[auto_1fr] md:gap-10 md:p-10">
-            <div class="flex flex-row items-center gap-4 md:flex-col md:items-start md:gap-1">
-              <span class="font-display text-6xl leading-none font-bold text-accent md:text-7xl">
-                {nextEvent.data.endDate &&
-                nextEvent.data.endDate.getUTCMonth() === nextEvent.data.date.getUTCMonth()
-                  ? `${nextDayFormatter.format(nextEvent.data.date)}-${nextDayFormatter.format(nextEvent.data.endDate)}`
-                  : nextDayFormatter.format(nextEvent.data.date)}
-              </span>
-              <span class="text-lg uppercase tracking-widest text-white/70">
-                {nextMonthFormatter.format(nextEvent.data.date)} {nextEvent.data.date.getUTCFullYear()}
-              </span>
+    {season.stops.length > 0 && (
+      <div class="mt-10 rounded-2xl border border-primary/15 bg-surface/70 p-5 backdrop-blur-sm sm:p-7">
+        <SeasonTrack season={season} />
+      </div>
+    )}
+  </SectionShell>
+
+  <!-- La próxima fecha -->
+  {next && (
+    <SectionShell tone="plain" width="wide" spacing="compact" labelledby="proximo-evento">
+      <p class="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-primary-deep">
+        <span class="relative flex size-2">
+          <span class="absolute inline-flex size-full rounded-full bg-accent opacity-75"></span>
+          <span class="relative inline-flex size-2 rounded-full bg-accent-dark"></span>
+        </span>
+        {next.status === 'ongoing' ? 'Sucediendo ahora' : 'La próxima fecha'}
+      </p>
+
+      <article
+        id={`evento-${next.event.id}`}
+        class="reveal mt-5 scroll-mt-24 overflow-hidden rounded-2xl bg-surface-dark text-white shadow-lg"
+      >
+        <div class="grid gap-6 p-6 md:grid-cols-[auto_1fr] md:gap-10 md:p-10">
+          <div class="flex flex-row items-center gap-4 md:flex-col md:items-start md:gap-1">
+            <span class="font-display text-6xl font-bold leading-none text-accent md:text-7xl">
+              {dayLabel(next.event.data.date, next.event.data.endDate)}
+            </span>
+            <span class="text-lg uppercase tracking-widest text-white/70">
+              {nextMonth} {next.event.data.date.getUTCFullYear()}
+            </span>
+          </div>
+
+          <div class="min-w-0">
+            <!-- Etiquetas propias: las de Badge están calibradas para fondos
+                 claros y aquí el fondo es grafito. -->
+            <div class="flex flex-wrap gap-2">
+              {nextCategory && (
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-0.5 text-xs font-bold text-surface-dark">
+                  <Icon name={nextCategory.icon} class="size-3.5" aria-hidden="true" />
+                  {nextCategory.short}
+                </span>
+              )}
+              {nextLevel && (
+                <span class="inline-block rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-medium text-white">
+                  {nextLevel}
+                </span>
+              )}
             </div>
 
-            <div class="min-w-0">
-              <!-- Badges propios: los del componente Badge están calibrados para
-                   fondos claros y aquí el fondo es grafito. -->
-              <div class="flex flex-wrap gap-2">
-                <span class="inline-block rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-surface-dark">
-                  {getCategoryLabel(nextEvent.data.category)}
-                </span>
-                {nextEvent.data.level && (
-                  <span class="inline-block rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-medium capitalize text-white">
-                    {nextEvent.data.level}
-                  </span>
-                )}
-              </div>
+            <h2 id="proximo-evento" class="mt-3 font-display text-2xl font-bold md:text-4xl">
+              {next.event.data.title}
+            </h2>
 
-              <h2 id="proximo-evento" class="mt-3 font-display text-2xl md:text-4xl font-bold">
-                {nextEvent.data.title}
-              </h2>
+            <p class="mt-3 flex items-start gap-2 text-white/80">
+              <Icon name="ph:map-pin-bold" class="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+              <span>
+                {next.event.data.location}
+                {next.event.data.city && ` · ${next.event.data.city}`}
+              </span>
+            </p>
 
-              <p class="mt-3 flex items-start gap-2 text-white/80">
-                <Icon name="ph:map-pin" class="size-5 shrink-0 mt-0.5" aria-hidden="true" />
-                <span>
-                  {nextEvent.data.location}
-                  {nextEvent.data.city && ` · ${nextEvent.data.city}`}
-                </span>
+            {next.event.data.organizer && (
+              <p class="mt-2 flex items-start gap-2 text-white/80">
+                <Icon name="ph:flag-banner-bold" class="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+                <span>Organiza {next.event.data.organizer}</span>
               </p>
+            )}
 
-              {nextEvent.data.registrationDeadline && (
-                <p class="mt-2 flex items-center gap-2 text-white/80">
-                  <Icon name="ph:hourglass-medium" class="size-5 shrink-0" aria-hidden="true" />
-                  <span>Inscripciones hasta el {formatDate(nextEvent.data.registrationDeadline)}</span>
-                </p>
+            {next.event.data.registrationDeadline && (
+              <p class="mt-2 flex items-center gap-2 text-white/80">
+                <Icon name="ph:hourglass-medium-bold" class="size-5 shrink-0" aria-hidden="true" />
+                <span>Inscripciones hasta el {formatDate(next.event.data.registrationDeadline)}</span>
+              </p>
+            )}
+
+            <div class="mt-6 flex flex-wrap items-center gap-3 [&_a]:border-white/40 [&_a]:bg-white/10 [&_a]:text-white [&_a:hover]:bg-white/20">
+              <AddToCalendar
+                title={next.event.data.title}
+                date={next.event.data.date}
+                endDate={next.event.data.endDate}
+                location={next.event.data.location}
+              />
+              {next.event.data.mapUrl && (
+                <a
+                  href={next.event.data.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
+                  <Icon name="ph:navigation-arrow-bold" class="size-4" aria-hidden="true" />
+                  Cómo llegar
+                </a>
               )}
-
-              <div class="mt-6 flex flex-wrap items-center gap-3 [&_a]:border-white/40 [&_a]:bg-white/10 [&_a]:text-white [&_a:hover]:bg-white/20">
-                <AddToCalendar
-                  title={nextEvent.data.title}
-                  date={nextEvent.data.date}
-                  endDate={nextEvent.data.endDate}
-                  location={nextEvent.data.location}
-                />
-                {nextEvent.data.mapUrl && (
-                  <a
-                    href={nextEvent.data.mapUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                  >
-                    <Icon name="ph:navigation-arrow" class="size-4" aria-hidden="true" />
-                    Cómo llegar
-                  </a>
-                )}
-                {nextEvent.data.registrationUrl && (
-                  <a
-                    href={nextEvent.data.registrationUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex min-h-11 items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-sm font-bold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                  >
-                    Inscríbete
-                  </a>
-                )}
-              </div>
+              {next.event.data.registrationUrl && (
+                <a
+                  href={next.event.data.registrationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex min-h-11 items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-sm font-bold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
+                  Inscríbete
+                </a>
+              )}
             </div>
           </div>
-        </article>
-      </section>
-    )}
-
-    <!-- Resto de proximos eventos -->
-    <section>
-      <SectionTitle title={nextEvent ? 'Más eventos por venir' : 'Próximos Eventos'} align="left" />
-
-      {restUpcoming.length > 0 ? (
-        <div class="mt-6 grid gap-2 md:grid-cols-2">
-          {restUpcoming.map((e: Event) => (
-            <EventCard
-              title={e.data.title}
-              date={e.data.date}
-              endDate={e.data.endDate}
-              location={e.data.location}
-              category={e.data.category}
-              status={e.data.status}
-            />
-          ))}
         </div>
-      ) : (
-        <p class="mt-6 text-text-secondary py-4">
-          {nextEvent
-            ? 'Por ahora este es el único evento confirmado. Publicamos las nuevas fechas apenas la Liga las oficializa.'
-            : 'No hay eventos programados por el momento.'}
-        </p>
-      )}
-    </section>
+      </article>
+    </SectionShell>
+  )}
 
-    <!-- Eventos pasados -->
-    {past.length > 0 && (
-      <section>
-        <SectionTitle title="Eventos Pasados" align="left" />
-        <div class="mt-6 grid gap-1 md:grid-cols-2">
-          {past.map((e: Event) => (
+  <!-- Lo que viene después -->
+  <SectionShell tone="muted" width="wide" labelledby="por-venir">
+    <SectionIntro
+      id="por-venir"
+      eyebrow="Por venir"
+      eyebrowIcon="ph:calendar-plus-bold"
+      title={next ? 'Después de esa fecha' : 'Próximas fechas'}
+      lead={
+        restUpcoming.length > 0
+          ? 'Agrégalas al calendario del celular para no quedarte por fuera de la convocatoria.'
+          : undefined
+      }
+      class="max-w-2xl"
+    />
+
+    {restUpcoming.length > 0 ? (
+      <ul class="mt-8 grid gap-3 md:grid-cols-2">
+        {restUpcoming.map(({ event, status }, index) => (
+          <li
+            id={`evento-${event.id}`}
+            class="reveal scroll-mt-24"
+            style={`--stagger:${Math.min(index, 3) * 70}ms`}
+          >
             <EventCard
-              title={e.data.title}
-              date={e.data.date}
-              endDate={e.data.endDate}
-              location={e.data.location}
-              category={e.data.category}
-              status={e.data.status}
-              chronicles={chroniclesByEvent.get(e.id) ?? []}
+              title={event.data.title}
+              date={event.data.date}
+              endDate={event.data.endDate}
+              location={event.data.location}
+              city={event.data.city}
+              category={event.data.category}
+              level={event.data.level}
+              status={status}
+            />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="mt-6 text-text-secondary">
+        {next
+          ? 'Por ahora esta es la única fecha confirmada. Publicamos las nuevas apenas la Liga las oficializa.'
+          : 'No hay fechas programadas por el momento. Publicamos el calendario apenas la Liga lo oficializa.'}
+      </p>
+    )}
+  </SectionShell>
+
+  <!-- Lo ya corrido -->
+  {past.length > 0 && (
+    <SectionShell tone="plain" width="wide" labelledby="ya-corrido">
+      <SectionIntro
+        id="ya-corrido"
+        eyebrow="Ya corrido"
+        eyebrowIcon="ph:flag-checkered-bold"
+        title="Lo que dejó la temporada"
+        highlight="dejó la temporada"
+        lead="Cada fecha con su crónica, cuando la hay: quién corrió y cómo le fue."
+        class="max-w-2xl"
+      />
+
+      <ul class="mt-8 grid gap-3 md:grid-cols-2">
+        {past.map(({ event, status }) => (
+          <li id={`evento-${event.id}`} class="scroll-mt-24">
+            <EventCard
+              title={event.data.title}
+              date={event.data.date}
+              endDate={event.data.endDate}
+              location={event.data.location}
+              city={event.data.city}
+              category={event.data.category}
+              level={event.data.level}
+              status={status}
+              chronicles={chroniclesOf(event)}
               muted
             />
-          ))}
-        </div>
-      </section>
-    )}
-  </div>
-</PageLayout>
+          </li>
+        ))}
+      </ul>
+    </SectionShell>
+  )}
+
+  <SectionShell tone="plain" width="default" spacing="compact" label="Compartir el calendario">
+    <div class="flex flex-col items-center gap-4 border-t border-black/10 pt-8 text-center">
+      <p class="text-text-secondary">
+        ¿Conoces a otra familia que quiera acompañarnos? Comparte el calendario.
+      </p>
+      <ShareButtons title="Calendario de la temporada — Club Trocha y Ruta" />
+    </div>
+  </SectionShell>
+</BaseLayout>

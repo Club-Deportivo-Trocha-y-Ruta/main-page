@@ -1,14 +1,37 @@
 ---
+/**
+ * Detalle de una crónica.
+ *
+ * Una crónica del club no es una entrada de blog suelta: es un capítulo de la
+ * temporada. Por eso la página deja de ser "imagen + título + texto" y sitúa lo
+ * que se lee — de qué carrera habla, qué fotos hay de ese día, si existe otra
+ * crónica de la misma fecha, y qué se publicó antes y después.
+ *
+ * Todo eso ya estaba en el frontmatter sin usarse: nueve de las diez crónicas
+ * declaran `relatedEvent` y nueve `relatedGallery`. Los eslabones se resuelven
+ * contra las colecciones reales en `@lib/chronicle`; si alguno no existe, no se
+ * pinta el bloque en vez de enlazar a una página inexistente.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md).
+ */
 import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
-import Badge from '@components/common/Badge.astro';
+import ShareButtons from '@components/common/ShareButtons.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
 import NewsGallery from '@components/sections/NewsGallery.astro';
 import RaceLineup from '@components/sections/RaceLineup.astro';
+import ChronicleContext from '@components/sections/ChronicleContext.astro';
+import ChronicleAdjacentNav from '@components/sections/ChronicleAdjacentNav.astro';
 import { formatDate } from '@lib/utils';
+import { getCategoryStyle, readingTime } from '@lib/news';
+import { resolveChronicleContext, placeChronicle } from '@lib/chronicle';
 import { generateArticleJsonLd } from '@lib/seo';
 
 type NewsEntry = CollectionEntry<'news'>;
+type EventEntry = CollectionEntry<'events'>;
+type GalleryEntry = CollectionEntry<'gallery'>;
 
 export async function getStaticPaths() {
   const news = await getCollection('news');
@@ -20,18 +43,38 @@ export async function getStaticPaths() {
 const { entry } = Astro.props as { entry: NewsEntry };
 const { Content } = await render(entry);
 
-const { title, date, updatedDate, author, category, excerpt, image, imageLayout, tags, galleryFolder, galleryImages, lineup, seo } = entry.data;
+const {
+  title,
+  date,
+  updatedDate,
+  author,
+  category,
+  excerpt,
+  image,
+  imageLayout,
+  tags,
+  galleryFolder,
+  galleryImages,
+  lineup,
+  seo,
+} = entry.data;
+
 const hasDedicatedOg = Boolean(seo?.ogImage);
 const ogImage = (seo?.ogImage || image) as string;
 const ogImageWidth = hasDedicatedOg ? 1200 : undefined;
 const ogImageHeight = hasDedicatedOg ? 630 : undefined;
 
-const badgeVariant: Record<string, 'primary' | 'accent' | 'neutral'> = {
-  competencias: 'primary',
-  club: 'primary',
-  entrenamiento: 'accent',
-  comunidad: 'neutral',
-};
+// La etiqueta legible de la categoría vive en `@lib/news`. Antes se pintaba el
+// valor crudo del enum ("competencias", en minúscula y plural).
+const categoryStyle = getCategoryStyle(category);
+const minutes = readingTime(entry.body);
+
+const allNews = (await getCollection('news')).filter((n: NewsEntry) => !n.data.draft);
+const events = (await getCollection('events')).filter((e: EventEntry) => !e.data.draft);
+const albums = (await getCollection('gallery')).filter((a: GalleryEntry) => !a.data.draft);
+
+const context = resolveChronicleContext(entry, events, albums, allNews);
+const placement = placeChronicle(allNews, entry.id);
 
 const jsonLd = generateArticleJsonLd({
   title,
@@ -60,50 +103,126 @@ const jsonLd = generateArticleJsonLd({
   articleSection={category}
   articleTags={tags}
 >
-  <article class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
-    <Breadcrumb items={[{ label: 'Noticias', href: '/noticias' }, { label: title }]} />
+  <article>
+    <!-- Cabecera: quién, cuándo y de qué va -->
+    <SectionShell tone="plain" width="wide" spacing="compact" labelledby="cronica-titulo">
+      <Breadcrumb items={[{ label: 'Noticias', href: '/noticias' }, { label: title }]} />
 
-    {image && imageLayout === 'contain' ? (
-      <div class="mb-8 overflow-hidden rounded-xl flex justify-center">
-        <img src={image} alt={entry.data.imageAlt ?? title} class="max-h-[32rem] md:max-h-[40rem] w-auto object-contain" loading="eager" decoding="async" fetchpriority="high" />
-      </div>
-    ) : image ? (
-      <div class="mb-8 overflow-hidden rounded-xl">
-        <img src={image} alt={entry.data.imageAlt ?? title} width="1200" height="675" class="w-full h-64 md:h-96 object-cover" loading="eager" decoding="async" fetchpriority="high" />
-      </div>
-    ) : null}
+      <header class="mx-auto mt-6 max-w-3xl">
+        <p
+          class:list={[
+            'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider',
+            categoryStyle.soft,
+            categoryStyle.text,
+          ]}
+        >
+          <Icon name={categoryStyle.icon} class="size-3.5 shrink-0" aria-hidden="true" />
+          {categoryStyle.label}
+        </p>
 
-    <header class="mb-8 max-w-3xl mx-auto">
-      <Badge variant={badgeVariant[category] ?? 'neutral'}>{category}</Badge>
-      <h1 class="mt-3 text-3xl md:text-4xl lg:text-5xl font-display font-bold leading-tight">
-        {title}
-      </h1>
-      <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text-secondary">
-        <time datetime={date.toISOString()}>{formatDate(date)}</time>
-        <span>&middot;</span>
-        <span>{author}</span>
-      </div>
-    </header>
+        <h1
+          id="cronica-titulo"
+          class="mt-4 text-balance font-display text-3xl font-bold leading-tight text-text-primary md:text-4xl lg:text-5xl"
+        >
+          {title}
+        </h1>
 
-    {lineup && lineup.length > 0 && (
-      <div class="mx-auto max-w-3xl mb-12">
-        <RaceLineup athletes={lineup} />
-      </div>
-    )}
+        <p class="mt-4 max-w-2xl text-lg leading-relaxed text-text-secondary">{excerpt}</p>
 
-    <div class="prose prose-lg mx-auto max-w-3xl">
-      <Content />
-    </div>
+        <div class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text-secondary">
+          <time datetime={date.toISOString()}>{formatDate(date)}</time>
+          <span aria-hidden="true">&middot;</span>
+          <span>{author}</span>
+          {minutes !== null && (
+            <>
+              <span aria-hidden="true">&middot;</span>
+              <span class="inline-flex items-center gap-1">
+                <Icon name="ph:clock-bold" class="size-3.5 shrink-0" aria-hidden="true" />
+                {minutes} min de lectura
+              </span>
+            </>
+          )}
+          {updatedDate && (
+            <>
+              <span aria-hidden="true">&middot;</span>
+              <span>Actualizada el {formatDate(updatedDate)}</span>
+            </>
+          )}
+        </div>
+      </header>
 
-    {galleryFolder && galleryImages.length > 0 && (
-      <div class="mx-auto max-w-3xl mt-8">
-        <NewsGallery
-          imageFolder={galleryFolder}
-          imageFiles={galleryImages}
-          altFallback={title}
-          albumSlug={entry.data.relatedGallery}
-        />
+      {image && (
+        <div
+          class:list={[
+            'mt-8 overflow-hidden rounded-2xl',
+            imageLayout === 'contain' && 'flex justify-center',
+          ]}
+        >
+          <img
+            src={image}
+            alt={entry.data.imageAlt ?? title}
+            width="1200"
+            height="675"
+            class:list={[
+              imageLayout === 'contain'
+                ? 'max-h-[32rem] w-auto object-contain md:max-h-[40rem]'
+                : 'h-64 w-full object-cover md:h-96',
+            ]}
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </div>
+      )}
+    </SectionShell>
+
+    <!-- El cuerpo, con la ficha de la carrera al lado -->
+    <SectionShell tone="plain" width="wide" spacing="compact" label="Cuerpo de la crónica">
+      <div class="mx-auto max-w-3xl">
+        <ChronicleContext context={context} class="mb-10" />
+
+        {lineup && lineup.length > 0 && (
+          <div class="mb-12">
+            <RaceLineup athletes={lineup} eventName={context.race?.title} />
+          </div>
+        )}
+
+        <div class="prose prose-lg max-w-none">
+          <Content />
+        </div>
+
+        {galleryFolder && galleryImages.length > 0 && (
+          <div class="mt-10">
+            <NewsGallery
+              imageFolder={galleryFolder}
+              imageFiles={galleryImages}
+              altFallback={title}
+              albumSlug={context.album?.id}
+            />
+          </div>
+        )}
+
+        <div class="mt-10 border-t border-black/10 pt-6">
+          <ShareButtons title={title} description={excerpt} />
+        </div>
       </div>
+    </SectionShell>
+
+    <!-- Dónde va esta crónica dentro de la temporada -->
+    {(placement.previous || placement.next) && (
+      <SectionShell tone="muted" width="default" spacing="compact" label="Seguir leyendo">
+        <ChronicleAdjacentNav placement={placement} />
+
+        <p class="mt-8 text-center">
+          <a
+            href="/noticias"
+            class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 text-sm font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            Ver todas las crónicas
+            <Icon name="ph:arrow-right-bold" class="size-4 shrink-0" aria-hidden="true" />
+          </a>
+        </p>
+      </SectionShell>
     )}
   </article>
 

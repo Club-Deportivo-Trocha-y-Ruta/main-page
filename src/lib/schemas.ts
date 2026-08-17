@@ -182,6 +182,12 @@ export const resultsSchema = z.object({
 export const programsSchema = z.object({
   title: z.string(),
   subtitle: z.string().optional(),
+  /**
+   * Promesa del programa en una o dos frases: es el texto que se lee en las
+   * tarjetas de inicio y en la página de programas. Sin él, la interfaz cae al
+   * `subtitle`, que es más corto y no alcanza a explicar la etapa.
+   */
+  summary: z.string().optional(),
   icon: z.string(),
   image: z.string().optional(),
   ageRange: z.string(),
@@ -202,30 +208,6 @@ export const programsSchema = z.object({
   order: z.number(),
   draft: z.boolean().default(false),
   seo: seoSchema,
-});
-
-export const testimonialsSchema = z.object({
-  name: z.string(),
-  // type distingue testimonios de familias/corredores vs patrocinadores
-  // Usado para filtrar en páginas de patrocinadores o mostrar secciones separadas
-  type: z.enum(['familia', 'patrocinador']).default('familia'),
-  role: z.enum([
-    'padre-de-familia',
-    'madre-de-familia',
-    'corredor',
-    'corredor-juvenil',
-    'exalumno',
-    'entrenador',
-    'aliado',
-  ]),
-  roleLabel: z.string(),
-  photo: z.string().optional(),
-  quote: z.string(),
-  relatedRider: z.string().optional(),
-  relatedProgram: z.string().optional(),
-  featured: z.boolean().default(false),
-  order: z.number().default(0),
-  draft: z.boolean().default(false),
 });
 
 export const sponsorsSchema = z.object({

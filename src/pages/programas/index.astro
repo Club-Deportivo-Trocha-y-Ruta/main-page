@@ -1,132 +1,279 @@
 ---
+/**
+ * Página de programas.
+ *
+ * Sigue el sistema editorial: una entrada que orienta (perfil de edades +
+ * cifras del contenido) y después una "doble página" por programa con foto,
+ * promesa, datos duros, metodología y objetivos. La página responde en orden
+ * las tres preguntas de una familia: ¿cuál le toca?, ¿qué hace ahí?, ¿cómo
+ * entro?
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import PageLayout from '@layouts/PageLayout.astro';
-import Card from '@components/common/Card.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Badge from '@components/common/Badge.astro';
+import Button from '@components/common/Button.astro';
 import InscriptionCTA from '@components/common/InscriptionCTA.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import FactGrid from '@components/editorial/FactGrid.astro';
+import ProgramPathway from '@components/sections/ProgramPathway.astro';
 import { getRefreshImage } from '@lib/refresh-images';
+import {
+  buildPathway,
+  countWeeklySessions,
+  getLevelStyle,
+  summarizePrograms,
+  toPathwayInput,
+} from '@lib/programs';
 
-const programs: CollectionEntry<'programs'>[] = (await getCollection('programs'))
-  .filter((p: CollectionEntry<'programs'>) => !p.data.draft)
-  .sort((a: CollectionEntry<'programs'>, b: CollectionEntry<'programs'>) => a.data.order - b.data.order);
+type Program = CollectionEntry<'programs'>;
 
-// La foto se resuelve aquí porque el template de Astro no admite cuerpos de bloque en el map.
-const programCards = programs.map((program: CollectionEntry<'programs'>, index: number) => ({
+const programs = (await getCollection('programs'))
+  .filter((p: Program) => !p.data.draft)
+  .sort((a: Program, b: Program) => a.data.order - b.data.order);
+
+const pathwayInput = programs.map(toPathwayInput);
+const stepById = new Map(buildPathway(pathwayInput).stages.map((stage) => [stage.id, stage.step]));
+const totals = summarizePrograms(programs.map((p: Program) => p.data));
+
+const spreads = programs.map((program: Program, index: number) => ({
   program,
   index,
+  level: getLevelStyle(program.data.targetLevel),
+  step: stepById.get(program.id) ?? index + 1,
   photo: getRefreshImage(program.data.image),
+  sessions: countWeeklySessions(program.data.schedule),
 }));
 
-const levelLabels: Record<string, string> = {
-  'iniciación': 'Iniciación',
-  'formación': 'Formación',
-  'competición': 'Competición',
-  'recreativo': 'Recreativo',
-};
+// La edad de entrada sale de la colección, no escrita a mano: estaba repetida
+// tres veces en esta página y se quedó desfasada cuando el club la corrigió.
+const entryAge = Math.min(...programs.map((program: Program) => program.data.ageMin));
+const entryAgeLabel = `a los ${entryAge} años`;
 ---
 
-<PageLayout
+<BaseLayout
   title="Programas"
-  description="Formación integral para cada etapa del ciclomontañismo"
-  breadcrumbs={[{ label: 'Programas' }]}
+  description={`Tres etapas de formación en ciclomontañismo para niños y jóvenes en Yumbo: iniciación desde los ${entryAge} años, formación juvenil y alto rendimiento.`}
 >
-  <div class="space-y-8 mb-12">
-    {programCards.map(({ program, index, photo }) => (
-      <Card class="p-0 overflow-hidden">
-        <div class="flex flex-col md:flex-row gap-6">
-          <div class="relative aspect-video md:aspect-auto md:w-1/3 md:min-h-[16rem] bg-surface-muted rounded-t-xl md:rounded-t-none md:rounded-l-xl overflow-hidden flex items-center justify-center shrink-0">
-            {photo ? (
-              <Image
-                src={photo}
-                alt={`Deportistas del programa ${program.data.title} del Club Trocha y Ruta`}
-                layout="none"
-                widths={[400, 600, 900]}
-                sizes="(min-width: 768px) 33vw, 100vw"
-                loading={index === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-                class="absolute inset-0 h-full w-full object-cover"
-              />
+  <!-- Entrada: orienta antes de mostrar el detalle -->
+  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="programas-titulo">
+    <Breadcrumb items={[{ label: 'Programas' }]} />
+
+    <div class="mt-6 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+      <SectionIntro
+        as="h1"
+        id="programas-titulo"
+        eyebrow="Programas"
+        eyebrowIcon="ph:path-bold"
+        title={`Una ruta de formación que empieza ${entryAgeLabel}`}
+        highlight={entryAgeLabel}
+        lead="No son tres cursos sueltos: son tres tramos encadenados. El niño entra por donde le corresponde su edad y su nivel, y avanza al siguiente cuando está listo — con los mismos entrenadores y la misma pista."
+      />
+
+      {/*
+        `StatFigure` pinta un `<div><p>`, no un par `<dt>/<dd>`: envolverlo en
+        un `<dl>` daba una lista de definición sin términos, marcado inválido.
+      */}
+      <div class="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-2">
+        <StatFigure value={totals.programs} label="Programas activos" icon="ph:path-bold" />
+        {totals.ageRange && (
+          <StatFigure value={totals.ageRange} unit="años" label="Edades que atendemos" icon="ph:user-bold" />
+        )}
+        {totals.weeklySessions !== null && (
+          <StatFigure
+            value={totals.weeklySessions}
+            label="Sesiones cada semana"
+            note="Sumando los tres programas"
+            icon="ph:calendar-dots-bold"
+          />
+        )}
+        {totals.seats !== null && (
+          <StatFigure value={totals.seats} label="Cupos por temporada" icon="ph:users-three-bold" />
+        )}
+      </div>
+    </div>
+
+    <div class="mt-12 rounded-2xl border border-primary/15 bg-surface/70 p-5 backdrop-blur-sm sm:p-7">
+      <p class="text-xs font-semibold uppercase tracking-[0.16em] text-primary-deep">
+        ¿Cuál le corresponde a tu hijo?
+      </p>
+      <ProgramPathway programs={pathwayInput} hrefBase="#programa-" legend class="mt-4" />
+    </div>
+  </SectionShell>
+
+  <!-- Una "doble página" por programa -->
+  {spreads.map(({ program, index, level, step, photo, sessions }) => (
+    <SectionShell
+      id={`programa-${program.id}`}
+      tone={index % 2 === 0 ? 'plain' : 'muted'}
+      width="wide"
+      labelledby={`programa-${program.id}-titulo`}
+      class="scroll-mt-20"
+    >
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+        <div class:list={['relative', index % 2 === 1 && 'lg:order-2']}>
+          <div
+            class="absolute -inset-3 rounded-3xl"
+            style={`background:color-mix(in srgb, ${level.color} 16%, transparent)`}
+            aria-hidden="true"
+          ></div>
+
+          {photo ? (
+            <Image
+              src={photo}
+              alt={`Deportistas del programa ${program.data.title} del Club Trocha y Ruta`}
+              layout="none"
+              widths={[500, 800, 1100]}
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchpriority={index === 0 ? 'high' : undefined}
+              decoding="async"
+              class="relative aspect-[4/3] w-full rounded-2xl object-cover shadow-md"
+            />
+          ) : (
+            <div class="relative flex aspect-[4/3] w-full items-center justify-center rounded-2xl bg-surface-muted">
+              <Icon name={program.data.icon} class="size-20 text-primary/50" aria-hidden="true" />
+            </div>
+          )}
+
+          <span
+            class:list={[
+              'absolute -top-4 -left-1 flex size-14 items-center justify-center rounded-2xl shadow-lg sm:-left-3 sm:-top-5',
+              'font-display text-xl font-extrabold',
+              level.solid,
+              level.ink,
+            ]}
+            aria-hidden="true"
+          >
+            {String(step).padStart(2, '0')}
+          </span>
+        </div>
+
+        <div class:list={[index % 2 === 1 && 'lg:order-1']}>
+          <div class="flex flex-wrap items-center gap-2">
+            <span
+              class:list={[
+                'rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider',
+                level.soft,
+                level.text,
+              ]}
+            >
+              Etapa {step} · {level.label}
+            </span>
+            {program.data.enrollmentOpen ? (
+              <Badge variant="accent">Inscripciones abiertas</Badge>
             ) : (
-              <Icon name="ph:bicycle" class="text-primary size-24" aria-hidden="true" />
+              <Badge variant="neutral">Próximamente</Badge>
             )}
           </div>
-          <div class="flex-1 p-6 md:py-6 md:pr-6 md:pl-0">
-            <div class="flex flex-wrap items-center gap-2 mb-3">
-              <Badge variant="cyan">{levelLabels[program.data.targetLevel] || program.data.targetLevel}</Badge>
-              {program.data.enrollmentOpen ? (
-                <Badge variant="primary">Inscripciones abiertas</Badge>
-              ) : (
-                <Badge variant="neutral">Proximamente</Badge>
-              )}
+
+          <h2
+            id={`programa-${program.id}-titulo`}
+            class="mt-4 font-display text-2xl font-bold text-text-primary sm:text-3xl"
+          >
+            {program.data.title}
+          </h2>
+          {program.data.subtitle && (
+            <p class:list={['mt-1 font-display text-base font-semibold', level.text]}>
+              {program.data.subtitle}
+            </p>
+          )}
+
+          <p class="mt-4 text-base leading-relaxed text-text-secondary">
+            {program.data.summary ?? program.data.subtitle}
+          </p>
+
+          <FactGrid
+            class="mt-6"
+            items={[
+              { icon: 'ph:user-bold', label: 'Edades', value: program.data.ageRange },
+              sessions !== null
+                ? {
+                    icon: 'ph:calendar-dots-bold',
+                    label: 'Frecuencia',
+                    value: `${sessions} ${sessions === 1 ? 'sesión' : 'sesiones'} por semana`,
+                  }
+                : null,
+              { icon: 'ph:clock-bold', label: 'Horario', value: program.data.schedule },
+              program.data.duration
+                ? { icon: 'ph:hourglass-medium-bold', label: 'Duración', value: program.data.duration }
+                : null,
+              program.data.maxStudents
+                ? {
+                    icon: 'ph:users-three-bold',
+                    label: 'Cupo',
+                    value: `${program.data.maxStudents} deportistas`,
+                  }
+                : null,
+              program.data.location
+                ? { icon: 'ph:map-pin-bold', label: 'Dónde', value: program.data.location }
+                : null,
+              program.data.monthlyFee
+                ? {
+                    icon: 'ph:currency-circle-dollar-bold',
+                    label: 'Mensualidad',
+                    value: program.data.monthlyFee,
+                  }
+                : null,
+            ]}
+          />
+
+          {program.data.methodology && (
+            <div
+              class="mt-6 rounded-r-xl border-l-4 bg-black/[0.03] p-4"
+              style={`border-color:${level.color}`}
+            >
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+                Cómo se entrena
+              </p>
+              <p class="mt-1.5 text-sm leading-relaxed text-text-primary">
+                {program.data.methodology}
+              </p>
             </div>
-            <h2 class="text-xl md:text-2xl font-display font-bold text-text-primary">
-              <a href={`/programas/${program.id}`} class="hover:text-primary-deep transition-colors">
-                {program.data.title}
-              </a>
-            </h2>
-            {program.data.subtitle && (
-              <p class="mt-1 text-text-secondary">{program.data.subtitle}</p>
-            )}
-            <!-- Datos de decisión: edad, horario, lugar y mensualidad visibles sin entrar al detalle -->
-            <!-- Cada grupo dt/dd va en un <div> hijo directo del <dl>: es la única
-                 anidación que el HTML permite dentro de una lista de definición. -->
-            <dl class="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2 text-sm">
-              <div>
-                <dt class="flex items-center gap-1.5 text-xs uppercase tracking-wide text-text-secondary">
-                  <Icon name="ph:user-bold" class="size-4 shrink-0 text-primary-deep" aria-hidden="true" />
-                  Edades
-                </dt>
-                <dd class="mt-0.5 font-semibold text-text-primary">{program.data.ageRange}</dd>
-              </div>
-              <div>
-                <dt class="flex items-center gap-1.5 text-xs uppercase tracking-wide text-text-secondary">
-                  <Icon name="ph:clock-bold" class="size-4 shrink-0 text-primary-deep" aria-hidden="true" />
-                  Horario
-                </dt>
-                <dd class="mt-0.5 font-semibold text-text-primary">{program.data.schedule}</dd>
-              </div>
-              {program.data.location && (
-                <div>
-                  <dt class="flex items-center gap-1.5 text-xs uppercase tracking-wide text-text-secondary">
-                    <Icon name="ph:map-pin-bold" class="size-4 shrink-0 text-primary-deep" aria-hidden="true" />
-                    Lugar
-                  </dt>
-                  <dd class="mt-0.5 font-semibold text-text-primary">{program.data.location}</dd>
-                </div>
-              )}
-              {program.data.monthlyFee && (
-                <div>
-                  <dt class="flex items-center gap-1.5 text-xs uppercase tracking-wide text-text-secondary">
-                    <Icon name="ph:currency-circle-dollar-bold" class="size-4 shrink-0 text-primary-deep" aria-hidden="true" />
-                    Mensualidad
-                  </dt>
-                  <dd class="mt-0.5 font-semibold text-text-primary">{program.data.monthlyFee}</dd>
-                </div>
-              )}
-            </dl>
-            {program.data.objectives.length > 0 && (
-              <ul class="mt-4 space-y-1 text-sm text-text-secondary">
-                {program.data.objectives.slice(0, 3).map((obj: string) => (
-                  <li class="flex items-start gap-2">
-                    <span class="text-primary-deep mt-0.5 shrink-0">&#10003;</span>
-                    <span>{obj}</span>
+          )}
+
+          {program.data.objectives.length > 0 && (
+            <div class="mt-6">
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+                Qué se lleva de esta etapa
+              </p>
+              <ul class="mt-3 grid gap-2 sm:grid-cols-2">
+                {program.data.objectives.map((objective: string) => (
+                  <li class="flex items-start gap-2 text-sm leading-snug text-text-secondary">
+                    <Icon
+                      name="ph:check-circle-fill"
+                      class:list={['mt-0.5 size-4 shrink-0', level.text]}
+                      aria-hidden="true"
+                    />
+                    <span>{objective}</span>
                   </li>
                 ))}
               </ul>
-            )}
-            <a
-              href={`/programas/${program.id}`}
-              class="mt-4 inline-flex items-center gap-1 text-primary-deep font-semibold hover:underline"
-            >
-              Ver detalles &rarr;
-            </a>
+            </div>
+          )}
+
+          <div class="mt-7 flex flex-wrap items-center gap-3">
+            <Button variant="outline" href={`/programas/${program.id}`}>
+              Ver programa completo
+            </Button>
+            <Button variant="accent" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
+              Pedir clase de prueba
+            </Button>
           </div>
         </div>
-      </Card>
-    ))}
-  </div>
+      </div>
+    </SectionShell>
+  ))}
 
-  <InscriptionCTA variant="inline" heading="Encuentra el programa ideal para tu hijo" description="Tenemos nivel para cada edad. Primera clase de prueba gratis, sin compromiso." />
-</PageLayout>
+  <SectionShell tone="plain" width="default" spacing="compact" label="Inscripciones">
+    <InscriptionCTA
+      variant="inline"
+      heading="¿Todavía no sabes por dónde empezar?"
+      description="Escríbenos la edad de tu hijo y te decimos en qué etapa encaja. La primera clase es de prueba y no tiene costo."
+    />
+  </SectionShell>
+</BaseLayout>

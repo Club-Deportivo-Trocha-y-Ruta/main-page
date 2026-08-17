@@ -125,7 +125,7 @@ en el párrafo anterior.
 ### 5. Voces (opcional, 1-2 citas)
 Cita textual de un corredor o familiar en `.pull-quote`. Reglas no negociables:
 - **Nunca inventar ni reconstruir de memoria** una cita. Solo textuales recogidas por el club.
-- Menor de edad: citado solo con padre/tutor presente y autorización registrada (mismo flujo de `claudedocs/guia-recoleccion-testimonios.md`: confirmación por WhatsApp basta y queda de registro).
+- Menor de edad: citado solo con padre/tutor presente y autorización registrada (confirmación por WhatsApp basta y queda de registro).
 - Se corrige ortografía, jamás se reescribe la idea. Máximo ~200 caracteres por cita.
 - Si no hay cita real disponible, el bloque se omite — sin excepciones.
 
@@ -396,11 +396,6 @@ Para rama femenina: "Femenina" (no "Damas" ni "Dama"). Ej.: "Prejuvenil A Femeni
 ## Noticias breves no-XCO (`src/content/news/*.md`)
 Para anuncios, eventos sociales, comunidad: 300-600 palabras. Misma estructura de frontmatter y categorías (Competencias, Formación, Club, Comunidad).
 
-## Testimonios (`src/content/testimonials/*.md`)
-- Voz de los padres, primera persona, auténtico.
-- Mencionar programa (Iniciación, Desarrollo, Alto Rendimiento) si aplica.
-- Máx. 150 palabras.
-
 ## Eventos (`src/content/events/*.md`)
 - Descripción atractiva con detalles prácticos (fecha, lugar, categorías).
 - Llamado a la acción: "¡Inscríbete ya!" o "¡Apoya a nuestros ciclistas!"
@@ -437,7 +432,7 @@ Para anuncios, eventos sociales, comunidad: 300-600 palabras. Misma estructura d
 ```
 Lunes:     Motivación semanal / tips entrenamiento
 Miércoles: Resultado evento reciente O preview evento próximo
-Viernes:   Historia de un ciclista / testimonial familia
+Viernes:   Historia de un ciclista
 Eventos:   Cobertura pre (convocatoria), durante (fotos), post (crónica XCO completa)
 ```
 
@@ -449,8 +444,6 @@ src/content/news/2026-08-copa-valle-palmira-gymkanas.md # Crónica modelo día 1
 src/content/news/2026-09-copa-valle-roldanillo-xco.md   # Plantilla v4 con notas de producción (borrador activo)
 src/content/news/2026-05-copa-valle-xco-cali.md         # Crónica modelo (bloque tecnología, lineup frontmatter)
 src/content/news/2026-04-copa-valle-xco-pavas.md        # Crónica modelo (tablas, tendencias, doblete)
-src/content/testimonials/                               # Modelo de voz de familias
-claudedocs/guia-recoleccion-testimonios.md              # Flujo de citas y autorizaciones (aplica a "Voces")
 src/lib/constants.ts                                    # SITE, CONTACT, SOCIAL
 docs/03-content-strategy.md                             # Schemas completos
 claudedocs/research-perfil-redactor-mtb-2026-05-19.md   # Reporte completo de referencia

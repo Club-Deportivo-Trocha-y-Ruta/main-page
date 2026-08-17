@@ -1,173 +1,133 @@
 ---
-import PageLayout from '@layouts/PageLayout.astro';
-import SectionTitle from '@components/common/SectionTitle.astro';
-import Card from '@components/common/Card.astro';
-import { CONTACT, SITE } from '@lib/constants';
+/**
+ * Política Editorial.
+ *
+ * El club es cronista de su propia actividad: no es un medio independiente, y
+ * la página lo dice de frente en vez de disimularlo. Lo que sí puede mostrar
+ * es con qué reglas trabaja — de dónde sale cada dato, qué hace si se
+ * equivoca y qué protocolo sigue con los menores que aparecen en sus fotos—,
+ * respaldado por cifras reales del propio catálogo de estándares.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md), con el mismo
+ * patrón de Transparencia (§9): cada categoría explica a qué pregunta
+ * responde antes de desarrollarla.
+ */
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import EditorialStandards from '@components/sections/EditorialStandards.astro';
+import { CONTACT } from '@lib/constants';
+import {
+  EDITORIAL_STANDARDS,
+  CORRECTION_RESPONSE_HOURS,
+  summarizeStandards,
+} from '@lib/editorial-standards';
 
-const description =
-  'Estándares editoriales, fuentes, política de correcciones y cobertura de menores del Club Deportivo Trocha y Ruta.';
+const summary = summarizeStandards(EDITORIAL_STANDARDS);
+
+const contactSubject = encodeURIComponent('Consulta editorial - Club Trocha y Ruta');
+const whatsappMessage = encodeURIComponent('Hola, quiero consultar sobre una publicación del club');
 ---
 
-<PageLayout
+<BaseLayout
   title="Política Editorial"
-  description={description}
-  breadcrumbs={[{ label: 'Política Editorial' }]}
+  description="Cómo produce y corrige su contenido el Club Deportivo Trocha y Ruta: fuentes, plazo de corrección, conflictos de interés y protocolo de cobertura de menores."
 >
+  <!-- La promesa, respaldada por cifras reales -->
+  <SectionShell
+    tone="tinted"
+    pattern="topo"
+    width="wide"
+    spacing="compact"
+    labelledby="politica-editorial-titulo"
+  >
+    <Breadcrumb items={[{ label: 'Política Editorial' }]} />
 
-  <!-- Introducción -->
-  <section class="mb-12">
-    <div class="mx-auto max-w-3xl text-text-secondary leading-relaxed space-y-4">
-      <p>
-        En el <strong class="text-text-primary">{SITE.name}</strong> publicamos crónicas, resultados
-        y comunicados sobre la actividad de nuestro propio club. Esta página explica cómo trabajamos,
-        de dónde vienen nuestros datos, cómo corregimos errores y cómo protegemos a los menores que
-        aparecen en nuestros contenidos.
-      </p>
+    <div class="mt-6 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+      <SectionIntro
+        as="h1"
+        id="politica-editorial-titulo"
+        eyebrow="Política Editorial"
+        eyebrowIcon="ph:newspaper-bold"
+        title="Contamos la actividad del club, verificada antes de publicarse"
+        highlight="verificada antes de publicarse"
+        lead="Trocha y Ruta es cronista de su propia actividad: no somos un medio independiente, pero cada dato se contrasta con una fuente antes de publicarse, y todo error tiene un canal de corrección con plazo de respuesta."
+      />
+
+      <div class="grid grid-cols-3 gap-6">
+        <StatFigure
+          value={summary.sourcesCount}
+          label="Fuentes primarias declaradas"
+          icon="ph:database-bold"
+        />
+        <StatFigure
+          value={CORRECTION_RESPONSE_HOURS}
+          unit="horas hábiles"
+          label="Plazo de respuesta a correcciones"
+          icon="ph:clock-bold"
+        />
+        <StatFigure
+          value={summary.standardsCount}
+          label="Estándares publicados"
+          icon="ph:list-checks-bold"
+        />
+      </div>
     </div>
-  </section>
+  </SectionShell>
 
-  <!-- Estándares editoriales -->
-  <section class="mb-12">
-    <SectionTitle title="Estándares editoriales" align="left" />
-    <Card class="p-6 md:p-8">
-      <div class="text-text-secondary leading-relaxed space-y-4">
-        <p>
-          Trocha y Ruta actúa como cronista de su propia actividad deportiva. Todo el contenido de
-          la sección de noticias se elabora con observación directa en pista, fuentes propias del
-          club y registros oficiales de competencia.
-        </p>
-        <p>
-          Verificamos los datos antes de publicar: nombres, categorías, tiempos, posiciones y
-          resultados se contrastan con los reportes de jueces, tablas oficiales y la planilla
-          interna del equipo. Cuando un dato no se puede verificar, lo indicamos expresamente o lo
-          omitimos.
-        </p>
+  <!-- El corazón: qué responde cada estándar, antes de desarrollarlo -->
+  <SectionShell tone="muted" width="wide" labelledby="estandares-titulo">
+    <SectionIntro
+      id="estandares-titulo"
+      eyebrow="Cómo trabajamos"
+      eyebrowIcon="ph:compass-bold"
+      title="Qué cubre cada estándar, no solo su nombre"
+      highlight="no solo su nombre"
+      lead="De cómo se produce una crónica a qué protocolo sigue con los menores del club: cinco reglas, cada una explicada antes de desarrollarla."
+      class="max-w-3xl"
+    />
+
+    <EditorialStandards standards={EDITORIAL_STANDARDS} tone="muted" class="mt-10 md:mt-12" />
+  </SectionShell>
+
+  <!-- Cierre: a quién escribirle -->
+  <SectionShell
+    tone="plain"
+    width="default"
+    spacing="compact"
+    labelledby="contacto-editorial-titulo"
+  >
+    <div class="border-primary/15 bg-primary/5 rounded-2xl border p-6 text-center sm:p-8">
+      <h2
+        id="contacto-editorial-titulo"
+        class="font-display text-text-primary text-lg font-bold sm:text-xl"
+      >
+        ¿Encontraste un error o tienes una consulta editorial?
+      </h2>
+      <p class="text-text-secondary mx-auto mt-2 max-w-xl">
+        Escríbenos indicando la URL del contenido y qué habría que corregir.
+      </p>
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href={`mailto:${CONTACT.email}?subject=${contactSubject}`}
+          class="bg-primary text-surface-dark hover:bg-primary-deep focus-visible:outline-primary inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          <Icon name="ph:envelope-bold" class="size-4" aria-hidden="true" />
+          Escribir un correo
+        </a>
+        <a
+          href={`${CONTACT.whatsapp}?text=${whatsappMessage}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border-primary-deep text-primary-deep hover:bg-primary-deep focus-visible:outline-primary inline-flex items-center gap-2 rounded-lg border-2 px-5 py-2.5 text-sm font-semibold transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          <Icon name="ph:whatsapp-logo-bold" class="size-4" aria-hidden="true" />
+          Escribir por WhatsApp
+        </a>
       </div>
-    </Card>
-  </section>
-
-  <!-- Fuentes -->
-  <section class="mb-12">
-    <SectionTitle title="Fuentes" align="left" />
-    <Card class="p-6 md:p-8">
-      <ul class="space-y-3 text-text-secondary leading-relaxed list-disc pl-5">
-        <li>
-          <strong class="text-text-primary">Resultados oficiales</strong> de la Liga Vallecaucana de
-          Ciclismo, la Copa Valle XCO y otras válidas reconocidas por la federación.
-        </li>
-        <li>
-          <strong class="text-text-primary">Cronómetros y planillas propias</strong> del cuerpo
-          técnico del club durante entrenamientos y simulacros de carrera.
-        </li>
-        <li>
-          <strong class="text-text-primary">Testimonios directos</strong> de corredores, familias,
-          entrenadores y directivos del club.
-        </li>
-        <li>
-          <strong class="text-text-primary">Material fotográfico y de video propio</strong>,
-          producido por el equipo del club o por colaboradores debidamente identificados.
-        </li>
-      </ul>
-    </Card>
-  </section>
-
-  <!-- Política de correcciones -->
-  <section class="mb-12">
-    <SectionTitle title="Política de correcciones" align="left" />
-    <Card class="p-6 md:p-8">
-      <div class="text-text-secondary leading-relaxed space-y-4">
-        <p>
-          Si encuentras un error en alguna de nuestras publicaciones (un dato, un nombre, un
-          resultado, una atribución), comunícalo por escrito al correo
-          <a
-            href={`mailto:${CONTACT.email}`}
-            class="font-semibold text-primary transition-colors hover:text-primary-dark"
-          >
-            {CONTACT.email}
-          </a>
-          indicando la URL del contenido y la corrección sugerida.
-        </p>
-        <p>
-          Nos comprometemos a responder en un plazo máximo de <strong class="text-text-primary">48 horas hábiles</strong>.
-          Cuando corresponda, dejaremos constancia visible de la corrección al pie del artículo
-          original con su fecha.
-        </p>
-      </div>
-    </Card>
-  </section>
-
-  <!-- Conflictos de interés -->
-  <section class="mb-12">
-    <SectionTitle title="Conflictos de interés" align="left" />
-    <Card class="p-6 md:p-8">
-      <div class="text-text-secondary leading-relaxed space-y-4">
-        <p>
-          El club informa sobre sus propios corredores, eventos y resultados. No pretendemos
-          imparcialidad respecto a otros clubes ni nos presentamos como medio independiente: somos
-          una organización deportiva que comunica su actividad.
-        </p>
-        <p>
-          Lo que sí nos comprometemos a sostener es la
-          <strong class="text-text-primary">transparencia</strong>: distinguimos claramente entre
-          crónica deportiva, comunicado institucional y mensaje publicitario o de patrocinio. Cuando
-          un contenido esté asociado a un patrocinador o convenio, lo identificamos de forma
-          visible.
-        </p>
-      </div>
-    </Card>
-  </section>
-
-  <!-- Cobertura de menores -->
-  <section class="mb-12">
-    <SectionTitle title="Cobertura de menores" align="left" />
-    <Card class="p-6 md:p-8">
-      <div class="text-text-secondary leading-relaxed space-y-4">
-        <p>
-          La mayoría de nuestros corredores son menores de edad. Por eso aplicamos un protocolo
-          específico de cobertura:
-        </p>
-        <ul class="space-y-2 list-disc pl-5">
-          <li>
-            Toda publicación de imágenes de menores requiere
-            <strong class="text-text-primary">autorización previa por escrito</strong> firmada por
-            la madre, padre o representante legal.
-          </li>
-          <li>
-            Las fotografías se toman en contextos deportivos públicos (entrenamientos, válidas,
-            premiaciones) y siempre con criterio de respeto a la dignidad del menor.
-          </li>
-          <li>
-            No publicamos datos sensibles de menores (dirección, colegio, rutinas privadas) más allá
-            de la información estrictamente deportiva.
-          </li>
-          <li>
-            Las familias pueden ejercer el
-            <strong class="text-text-primary">derecho al retiro</strong> de contenido en cualquier
-            momento escribiendo al correo del club, sin necesidad de justificar el motivo.
-          </li>
-        </ul>
-      </div>
-    </Card>
-  </section>
-
-  <!-- Contacto editorial -->
-  <section class="mb-4">
-    <SectionTitle title="Contacto editorial" align="left" />
-    <Card class="p-6 md:p-8">
-      <div class="text-text-secondary leading-relaxed space-y-3">
-        <p>
-          Para correcciones, solicitudes de retiro de contenido o cualquier consulta editorial,
-          escríbenos a:
-        </p>
-        <p class="text-lg">
-          <a
-            href={`mailto:${CONTACT.email}`}
-            class="font-semibold text-primary transition-colors hover:text-primary-dark"
-          >
-            {CONTACT.email}
-          </a>
-        </p>
-      </div>
-    </Card>
-  </section>
-</PageLayout>
+    </div>
+  </SectionShell>
+</BaseLayout>

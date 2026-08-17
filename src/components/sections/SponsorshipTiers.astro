@@ -1,119 +1,147 @@
 ---
+/**
+ * Niveles de patrocinio, como una progresión — el mismo movimiento que
+ * `ProgramPathway` hizo con los programas: cuatro opciones sueltas se leen
+ * peor que cuatro escalones de un mismo camino. Se lee de izquierda a
+ * derecha, de menor a mayor inversión, y el nivel principal cierra la fila
+ * porque es el que debe mandar visualmente sobre los demás.
+ *
+ * Los beneficios de cada nivel viven en `@lib/sponsors` (no aquí): esta
+ * plantilla solo los pinta.
+ */
+import { Icon } from 'astro-icon/components';
 import { CONTACT } from '@lib/constants';
+import { SPONSOR_LEVELS, SPONSOR_LEVEL_ORDER, type SponsorLevel } from '@lib/sponsors';
 
-const tiers = [
-  {
-    name: 'Principal',
-    icon: '🏆',
-    highlighted: true,
-    benefits: [
-      'Logo destacado en uniforme oficial',
-      'Presencia en todos los eventos',
-      'Logo prominente en sitio web',
-      'Menciones en redes sociales',
-      'Banner en competencias',
-      'Reportes de impacto trimestrales',
-    ],
-  },
-  {
-    name: 'Oficial',
-    icon: '🥇',
-    highlighted: false,
-    benefits: [
-      'Logo en sitio web',
-      'Presencia en eventos principales',
-      'Menciones en redes sociales',
-      'Logo en material promocional',
-    ],
-  },
-  {
-    name: 'Aliado',
-    icon: '🤝',
-    highlighted: false,
-    benefits: [
-      'Logo en sitio web',
-      'Mención en redes sociales',
-      'Logo en material impreso',
-    ],
-  },
-  {
-    name: 'Proveedor',
-    icon: '🔧',
-    highlighted: false,
-    benefits: [
-      'Reconocimiento como proveedor oficial',
-      'Logo en sección de proveedores',
-      'Mención en eventos relevantes',
-    ],
-  },
-];
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+// De entrada a protagonista: se invierte el orden jerárquico (que va del más
+// alto al más bajo) para que la fila se lea como una escalera que sube.
+const levels = [...SPONSOR_LEVEL_ORDER].reverse().map((id) => SPONSOR_LEVELS[id]);
+
+// Alto de la barra decorativa de cada escalón: crece en el mismo orden que
+// las tarjetas de abajo, para que la escalera y las tarjetas cuenten la
+// misma historia.
+const BAR_HEIGHT: Record<SponsorLevel, string> = {
+  proveedor: '2rem',
+  aliado: '3rem',
+  oficial: '4.25rem',
+  principal: '5.5rem',
+};
 ---
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-  {tiers.map((tier) => {
-    const whatsappMsg = encodeURIComponent(`Hola, quiero información sobre el patrocinio nivel ${tier.name}`);
-    const whatsappUrl = `${CONTACT.whatsapp}?text=${whatsappMsg}`;
-
-    return (
-      <div
-        class={[
-          'rounded-xl border p-6 bg-white shadow-sm flex flex-col',
-          tier.highlighted
-            ? 'border-primary ring-2 ring-primary/20 relative'
-            : 'border-surface-muted',
-        ].join(' ')}
-      >
-        {tier.highlighted && (
-          <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
-            Mas popular
-          </span>
-        )}
-
-        <div class="text-center mb-5">
-          <span class="text-4xl" role="img" aria-label={`Nivel ${tier.name}`}>
-            {tier.icon}
-          </span>
-          <h3 class="mt-3 text-xl font-display font-bold text-text-primary">
-            {tier.name}
-          </h3>
-        </div>
-
-        <ul class="flex-1 space-y-2.5 mb-6" role="list">
-          {tier.benefits.map((benefit) => (
-            <li class="flex items-start gap-2 text-sm text-text-secondary">
-              <svg
-                class="w-4 h-4 text-accent shrink-0 mt-0.5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span>{benefit}</span>
-            </li>
-          ))}
-        </ul>
-
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          class={[
-            'block w-full text-center rounded-lg font-semibold text-sm py-2.5 px-4',
-            'transition-colors duration-200',
-            'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
-            tier.highlighted
-              ? 'bg-primary text-white hover:bg-primary-dark'
-              : 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
-          ].join(' ')}
+<div class:list={['not-prose', className]}>
+  <!-- Escalera: puramente decorativa, el dato equivalente son los rótulos
+       (reales, no aria-hidden) que van justo debajo. -->
+  <div class="mx-auto grid max-w-2xl grid-cols-4 items-end gap-3 sm:gap-5" aria-hidden="true">
+    {
+      levels.map((level) => (
+        <div class:list={['rounded-t-lg', level.solid]} style={`height:${BAR_HEIGHT[level.id]}`} />
+      ))
+    }
+  </div>
+  <div class="mx-auto grid max-w-2xl grid-cols-4 gap-3 sm:gap-5">
+    {
+      levels.map((level) => (
+        <span
+          class:list={[
+            'block text-center text-[11px] font-bold tracking-wide uppercase sm:text-xs',
+            level.text,
+          ]}
         >
-          Quiero ser {tier.name}
-        </a>
-      </div>
-    );
-  })}
+          {level.label}
+        </span>
+      ))
+    }
+  </div>
+
+  <ol class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4" role="list">
+    {
+      levels.map((level) => {
+        const isPrincipal = level.id === 'principal';
+        const whatsappMsg = encodeURIComponent(
+          `Hola, quiero información sobre el patrocinio nivel ${level.label}`,
+        );
+        const whatsappUrl = `${CONTACT.whatsapp}?text=${whatsappMsg}`;
+        const ctaClass = isPrincipal
+          ? `${level.solid} ${level.ink} hover:brightness-95`
+          : `border-2 ${level.border} ${level.text} hover:bg-black/[0.03]`;
+
+        return (
+          <li
+            class:list={[
+              'bg-surface relative flex flex-col rounded-2xl border p-6 shadow-sm transition-shadow duration-300 hover:shadow-md',
+              isPrincipal
+                ? 'border-primary-deep ring-primary-deep/20 ring-2 lg:-translate-y-2 lg:shadow-lg'
+                : 'border-black/10',
+            ]}
+          >
+            {isPrincipal && (
+              <span
+                class:list={[
+                  'absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-bold whitespace-nowrap',
+                  level.solid,
+                  level.ink,
+                ]}
+              >
+                Más popular
+              </span>
+            )}
+
+            <div class="flex items-center gap-3">
+              <span
+                class:list={[
+                  'flex shrink-0 items-center justify-center rounded-xl',
+                  level.solid,
+                  level.ink,
+                  isPrincipal ? 'size-12' : 'size-10',
+                ]}
+              >
+                <Icon
+                  name={level.icon}
+                  class:list={[isPrincipal ? 'size-6' : 'size-5']}
+                  aria-hidden="true"
+                />
+              </span>
+              <h3 class="font-display text-text-primary text-xl font-bold">{level.label}</h3>
+            </div>
+
+            <p class="text-text-secondary mt-3 text-sm leading-snug">{level.tagline}</p>
+
+            <ul class="mt-5 flex-1 space-y-2.5" role="list">
+              {level.benefits.map((benefit) => (
+                <li class="text-text-secondary flex items-start gap-2 text-sm">
+                  <Icon
+                    name="ph:check-circle-fill"
+                    class:list={['mt-0.5 size-4 shrink-0', level.text]}
+                    aria-hidden="true"
+                  />
+                  <span>{benefit}</span>
+                </li>
+              ))}
+            </ul>
+
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-analytics-event="whatsapp_click"
+              class:list={[
+                'mt-6 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-center text-sm font-semibold',
+                'focus-visible:outline-primary transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2',
+                ctaClass,
+              ]}
+            >
+              <Icon name="ph:whatsapp-logo-bold" class="size-4" aria-hidden="true" />
+              Quiero ser {level.label}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ol>
 </div>

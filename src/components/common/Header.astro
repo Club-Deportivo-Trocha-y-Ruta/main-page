@@ -1,10 +1,41 @@
 ---
+/**
+ * Cabecera del sitio.
+ *
+ * Aparece en las 144 páginas, así que cualquier cosa que se le añada se paga
+ * 144 veces: se mantiene delgada y sin JavaScript nuevo.
+ *
+ * Dos arreglos de fondo:
+ *
+ * 1. **Las secciones secundarias no se podían alcanzar desde escritorio.**
+ *    Galería, Trocha Verde, preguntas frecuentes, patrocinadores,
+ *    transparencia, política editorial y contacto solo vivían en el menú móvil
+ *    y en el pie: siete secciones invisibles para quien navega en pantalla
+ *    grande. Ahora hay un desplegable "Más", hecho con `<details>` nativo: sin
+ *    JavaScript, y el teclado ya lo maneja —Enter y Espacio lo abren y lo
+ *    cierran, y el foco entra al panel con Tab—.
+ *
+ *    Lo que `<details>` **no** hace es cerrarse con Escape ni al hacer clic
+ *    fuera: eso es propio de `<dialog>` o del atributo `popover`, y `popover`
+ *    necesita posicionamiento por anclaje (CSS anchor) que todavía no está en
+ *    todos los navegadores. Para un desplegable de navegación el patrón de
+ *    divulgación es suficiente y se cierra al navegar; conseguir Escape
+ *    costaría JavaScript en las 144 páginas y no compensa.
+ * 2. **La regla de sección activa** estaba escrita aquí y otra vez en
+ *    `MobileMenu`. Vive en `@lib/navigation`, probada.
+ */
 import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
 import logo from '@assets/images/logo.webp';
 import { NAV_ITEMS, SECONDARY_NAV } from '@lib/constants';
+import { isActivePath } from '@lib/navigation';
 import MobileMenu from '../interactive/MobileMenu';
 
 const currentPath = Astro.url.pathname;
+
+// Si la página actual es una de las secundarias, el propio botón "Más" se
+// marca como activo: si no, la cabecera no daría ninguna pista de dónde estás.
+const inSecondary = SECONDARY_NAV.some((item) => isActivePath(currentPath, item.href));
 ---
 
 <header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-sm shadow-sm">
@@ -23,18 +54,21 @@ const currentPath = Astro.url.pathname;
         />
       </a>
 
-      <!-- Nav desktop -->
-      <nav class="hidden lg:flex items-center bg-surface-muted/60 backdrop-blur-sm rounded-full px-2 py-1 gap-0.5" aria-label="Navegación principal">
+      <!-- Nav escritorio -->
+      <nav
+        class="hidden items-center gap-0.5 rounded-full bg-surface-muted/60 px-2 py-1 backdrop-blur-sm lg:flex"
+        aria-label="Navegación principal"
+      >
         {NAV_ITEMS.map((item) => {
-          const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
+          const isActive = isActivePath(currentPath, item.href);
           return (
             <a
               href={item.href}
               class:list={[
-                'px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200',
+                'rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200',
                 isActive
-                  ? 'bg-surface text-primary-deep font-semibold shadow-sm'
-                  : 'text-text-secondary hover:text-primary-deep hover:bg-surface/60',
+                  ? 'bg-surface font-semibold text-primary-deep shadow-sm'
+                  : 'text-text-secondary hover:bg-surface/60 hover:text-primary-deep',
               ]}
               {...(isActive ? { 'aria-current': 'page' } : {})}
             >
@@ -42,24 +76,74 @@ const currentPath = Astro.url.pathname;
             </a>
           );
         })}
+
+        <!--
+          Resto de secciones. `<details>` es el desplegable nativo: no necesita
+          JavaScript y el teclado ya lo maneja. Se cierra con Escape (nativo) o
+          al volver a pulsar el botón.
+        -->
+        <details class="nav-more relative">
+          <summary
+            class:list={[
+              'flex cursor-pointer list-none items-center gap-1 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 select-none [&::-webkit-details-marker]:hidden',
+              inSecondary
+                ? 'bg-surface font-semibold text-primary-deep shadow-sm'
+                : 'text-text-secondary hover:bg-surface/60 hover:text-primary-deep',
+            ]}
+          >
+            Más
+            <Icon
+              name="ph:caret-down-bold"
+              class="nav-more__caret size-3 transition-transform duration-200"
+              aria-hidden="true"
+            />
+          </summary>
+
+          <div
+            class="absolute right-0 top-[calc(100%+0.6rem)] w-60 rounded-2xl border border-black/10 bg-surface p-2 shadow-lg"
+          >
+            <ul>
+              {SECONDARY_NAV.map((item) => {
+                const isActive = isActivePath(currentPath, item.href);
+                return (
+                  <li>
+                    <a
+                      href={item.href}
+                      class:list={[
+                        'block rounded-xl px-3 py-2 text-sm transition-colors duration-200',
+                        isActive
+                          ? 'bg-primary/10 font-semibold text-primary-deep'
+                          : 'text-text-secondary hover:bg-surface-muted/60 hover:text-primary-deep',
+                      ]}
+                      {...(isActive ? { 'aria-current': 'page' } : {})}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </details>
       </nav>
 
       <!-- CTA + hamburguesa -->
       <div class="flex items-center gap-3">
         <a
           href="/inscripciones"
-          class="hidden sm:inline-flex items-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          data-analytics-event="cta_inscripcion_click"
+          class="hidden items-center gap-1 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:inline-flex"
         >
           Preinscríbete
-          <svg class="ml-1 w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          <Icon name="ph:arrow-up-right-bold" class="size-3.5 shrink-0" aria-hidden="true" />
         </a>
 
-        <!-- Mobile menu (React Island) -->
+        <!-- Menú móvil (isla React) -->
         <div class="lg:hidden">
           <MobileMenu
             client:visible
-            navItems={NAV_ITEMS.map(i => ({ label: i.label, href: i.href }))}
-            secondaryNavItems={SECONDARY_NAV.map(i => ({ label: i.label, href: i.href }))}
+            navItems={NAV_ITEMS.map((i) => ({ label: i.label, href: i.href }))}
+            secondaryNavItems={SECONDARY_NAV.map((i) => ({ label: i.label, href: i.href }))}
             currentPath={currentPath}
           />
         </div>
@@ -67,3 +151,9 @@ const currentPath = Astro.url.pathname;
     </div>
   </div>
 </header>
+
+<style>
+  .nav-more[open] .nav-more__caret {
+    transform: rotate(180deg);
+  }
+</style>

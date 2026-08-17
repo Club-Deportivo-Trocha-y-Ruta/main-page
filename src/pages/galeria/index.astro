@@ -1,66 +1,190 @@
 ---
+/**
+ * Galería.
+ *
+ * Siete álbumes muy desiguales en tamaño (de 3 a 45 fotos) merecen jerarquía,
+ * no una rejilla de tarjetas idénticas: la portada abre con el álbum
+ * destacado —marcado a mano por el club o, en su defecto, el más grande— y
+ * baja al resto en una rejilla secundaria. Cada tarjeta dice cuántas fotos
+ * trae, algo que antes solo se sabía entrando al álbum.
+ *
+ * El hilo más valioso: seis de los siete álbumes están enlazados a un evento
+ * del calendario, y ese evento puede tener crónicas publicadas. El álbum
+ * destacado lo muestra con `AlbumEventContext`, el mismo bloque que reutiliza
+ * el detalle de cada álbum.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md).
+ */
 import { getCollection, type CollectionEntry } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
-import Card from '@components/common/Card.astro';
-import Badge from '@components/common/Badge.astro';
-import { formatDate } from '@lib/utils';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import AlbumCard from '@components/common/AlbumCard.astro';
+import AlbumEventContext from '@components/common/AlbumEventContext.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import {
+  sortAlbumsByDate,
+  summarizeGallery,
+  selectFeaturedAlbum,
+  resolveAlbumContext,
+  type AlbumContext,
+} from '@lib/gallery';
 
 type Gallery = CollectionEntry<'gallery'>;
+type Event = CollectionEntry<'events'>;
+type News = CollectionEntry<'news'>;
 
-const galleries = (await getCollection('gallery'))
-  .filter((g: Gallery) => !g.data.draft)
-  .sort((a: Gallery, b: Gallery) => b.data.date.getTime() - a.data.date.getTime());
+const galleries = (await getCollection('gallery')).filter((g: Gallery) => !g.data.draft);
+const events = (await getCollection('events')).filter((e: Event) => !e.data.draft);
+const news = (await getCollection('news')).filter((n: News) => !n.data.draft);
 
-const categoryVariant: Record<string, 'primary' | 'accent' | 'cyan' | 'neutral'> = {
-  competencia: 'primary',
-  entrenamiento: 'accent',
-  social: 'cyan',
-  institucional: 'neutral',
-};
+const sorted = sortAlbumsByDate(galleries);
+const summary = summarizeGallery(galleries);
+const featured = selectFeaturedAlbum(galleries);
+const secondary = sorted.filter((album: Gallery) => album.id !== featured?.id);
+
+const featuredContext: AlbumContext = featured
+  ? resolveAlbumContext(featured, events, news)
+  : { event: null, chronicles: [] };
+
+const coverAlt = (album: Gallery) => album.data.coverAlt ?? `Portada del álbum ${album.data.title}`;
 ---
 
-<PageLayout
+<BaseLayout
   title="Galería"
-  description="Momentos que nos inspiran"
-  breadcrumbs={[{ label: 'Galería' }]}
+  description={`Fotos de cada carrera del Club Deportivo Trocha y Ruta: ${summary.totalPhotos} fotos en ${summary.totalAlbums} álbumes, de la Copa Valle a los campeonatos nacionales.`}
 >
-  {galleries.length > 0 ? (
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {galleries.map((album: Gallery, index: number) => (
-        <Card href={`/galeria/${album.id}`}>
-          <div class="relative aspect-video bg-surface-muted rounded-t-xl overflow-hidden">
-            <img
-              src={album.data.cover}
-              alt={album.data.coverAlt ?? `Portada del álbum ${album.data.title}`}
-              width="800"
-              height="450"
-              loading={index < 3 ? 'eager' : 'lazy'}
-              decoding="async"
-              class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="galeria-titulo">
+    <Breadcrumb items={[{ label: 'Galería' }]} />
+
+    <div class="mt-6 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+      <SectionIntro
+        as="h1"
+        id="galeria-titulo"
+        eyebrow="Galería"
+        eyebrowIcon="ph:images-bold"
+        title="Cada carrera, capturada de salida a podio"
+        highlight="de salida a podio"
+        lead={`Salidas, podios y el barro de cada circuito: ${summary.totalPhotos} fotos repartidas en ${summary.totalAlbums} álbumes de la temporada.`}
+      />
+
+      {summary.totalAlbums > 0 && (
+        <div class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-2">
+          <StatFigure value={summary.totalAlbums} label="Álbumes publicados" icon="ph:images-square-bold" />
+          <StatFigure value={summary.totalPhotos} label="Fotos en total" icon="ph:image-bold" />
+          {summary.span && (
+            <StatFigure
+              value={summary.span}
+              label="Periodo cubierto"
+              icon="ph:calendar-dots-bold"
+              size="sm"
+              class="col-span-2 sm:col-span-1 lg:col-span-2"
             />
-            <span class="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
-              {album.data.images.length} fotos
-            </span>
-          </div>
-          <div class="p-5">
-            <h3 class="text-lg font-display font-bold text-text-primary line-clamp-2">
-              {album.data.title}
-            </h3>
-            <div class="mt-2 flex items-center gap-3 text-sm text-text-secondary">
-              <time datetime={album.data.date.toISOString()}>
-                {formatDate(album.data.date)}
-              </time>
-              <Badge variant={categoryVariant[album.data.category] ?? 'neutral'} size="sm">
-                {album.data.category}
-              </Badge>
-            </div>
-          </div>
-        </Card>
-      ))}
+          )}
+        </div>
+      )}
     </div>
+  </SectionShell>
+
+  {galleries.length > 0 ? (
+    <>
+      <!-- Álbum destacado -->
+      {featured && (
+        <SectionShell tone="plain" width="wide" spacing="compact" labelledby="destacado-titulo">
+          <h2
+            id="destacado-titulo"
+            class="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-primary-deep"
+          >
+            <Icon name="ph:sparkle-bold" class="size-4" aria-hidden="true" />
+            Álbum destacado
+          </h2>
+
+          <AlbumCard
+            class="mt-5"
+            variant="featured"
+            eager
+            href={`/galeria/${featured.id}`}
+            title={featured.data.title}
+            date={featured.data.date}
+            category={featured.data.category}
+            photoCount={featured.data.images.length}
+            cover={featured.data.cover}
+            coverAlt={coverAlt(featured)}
+            description={featured.data.description}
+          >
+            <AlbumEventContext
+              class="mt-5"
+              event={featuredContext.event}
+              chronicles={featuredContext.chronicles}
+            />
+          </AlbumCard>
+        </SectionShell>
+      )}
+
+      <!-- El resto de la temporada -->
+      {secondary.length > 0 && (
+        <SectionShell tone="muted" width="wide" labelledby="mas-albumes-titulo">
+          <SectionIntro
+            id="mas-albumes-titulo"
+            eyebrow="Todos los álbumes"
+            eyebrowIcon="ph:images-square-bold"
+            title="Cada válida tiene su propio álbum"
+            highlight="su propio álbum"
+            lead="De la fecha más reciente a la primera de la temporada."
+            class="max-w-2xl"
+          />
+
+          <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
+            {secondary.map((album: Gallery, index: number) => (
+              <li class="reveal" style={`--stagger:${Math.min(index, 3) * 70}ms`}>
+                <AlbumCard
+                  href={`/galeria/${album.id}`}
+                  title={album.data.title}
+                  date={album.data.date}
+                  category={album.data.category}
+                  photoCount={album.data.images.length}
+                  cover={album.data.cover}
+                  coverAlt={coverAlt(album)}
+                  description={album.data.description}
+                />
+              </li>
+            ))}
+          </ul>
+        </SectionShell>
+      )}
+    </>
   ) : (
-    <p class="text-center text-text-secondary py-12">
-      No hay álbumes publicados aún.
-    </p>
+    <SectionShell tone="plain" width="default" label="Sin álbumes">
+      <p class="py-12 text-center text-text-secondary">No hay álbumes publicados aún.</p>
+    </SectionShell>
   )}
-</PageLayout>
+
+  <SectionShell tone="plain" width="default" spacing="compact" label="Seguir al club">
+    <div class="rounded-2xl border border-primary/20 bg-primary/5 px-6 py-8 text-center sm:px-10">
+      <h2 class="font-display text-xl font-bold text-text-primary sm:text-2xl">
+        ¿Quieres leer cómo le fue al club en cada carrera?
+      </h2>
+      <p class="mx-auto mt-2 max-w-xl text-text-secondary">
+        El calendario tiene las fechas de toda la temporada, y las noticias, la crónica completa de cada válida.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a
+          href="/calendario"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white"
+        >
+          <Icon name="ph:calendar-dots-bold" class="size-4" aria-hidden="true" />
+          Ver el calendario
+        </a>
+        <a
+          href="/noticias"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white"
+        >
+          <Icon name="ph:newspaper-bold" class="size-4" aria-hidden="true" />
+          Leer las noticias
+        </a>
+      </div>
+    </div>
+  </SectionShell>
+</BaseLayout>
