@@ -104,3 +104,70 @@ describe('Convenciones de contenido', () => {
     expect(draftCount).toBeLessThan(allMdFiles.length / 2);
   });
 });
+
+// ============================================================
+// Referencias cruzadas entre colecciones
+// ============================================================
+
+/**
+ * Las relaciones del contenido se escriben a mano en el CMS y se pudren en
+ * silencio: el álbum de Ginebra apuntaba a un evento inexistente y la crónica
+ * de Roldanillo a un álbum que no existía. Ninguna de las dos rompía el build
+ * —el bloque simplemente no se pintaba—, así que nadie se enteraba.
+ *
+ * Se validan también los borradores: una referencia rota en un `draft` es
+ * justo la que se publica sin que nadie la revise.
+ *
+ * `trees.species` queda fuera a propósito: referencia por nombre común y no
+ * por id, y hay especies sembradas sin ficha propia (Abano, Lengua de suegra).
+ * Eso está contemplado en `/trocha-verde`, que no las enlaza.
+ */
+describe('Referencias cruzadas', () => {
+  function idsOf(collection: string): Set<string> {
+    return new Set(
+      fg.sync(`${CONTENT_DIR}/${collection}/**/*.md`).map((file) => basename(file, '.md'))
+    );
+  }
+
+  const ids = {
+    events: idsOf('events'),
+    gallery: idsOf('gallery'),
+    news: idsOf('news'),
+    programs: idsOf('programs'),
+  };
+
+  /** [colección de origen, campo, colección destino] */
+  const references: [string, string, keyof typeof ids][] = [
+    ['news', 'relatedEvent', 'events'],
+    ['news', 'relatedGallery', 'gallery'],
+    ['gallery', 'relatedEvent', 'events'],
+    ['events', 'relatedGallery', 'gallery'],
+    ['events', 'relatedNews', 'news'],
+    ['social-initiatives', 'relatedGallery', 'gallery'],
+    ['social-initiatives', 'relatedNews', 'news'],
+    ['riders', 'program', 'programs'],
+  ];
+
+  for (const [collection, field, target] of references) {
+    const files = fg.sync(`${CONTENT_DIR}/${collection}/**/*.md`);
+    if (files.length === 0) continue;
+
+    it(`${collection}.${field} apunta siempre a un ${target} que existe`, () => {
+      const broken: string[] = [];
+
+      for (const filePath of files) {
+        const { data } = parseFile(filePath);
+        const value = data[field];
+        if (value === undefined || value === null) continue;
+
+        for (const ref of Array.isArray(value) ? value : [value]) {
+          if (typeof ref === 'string' && ref && !ids[target].has(ref)) {
+            broken.push(`${basename(filePath, '.md')} → ${field}: "${ref}"`);
+          }
+        }
+      }
+
+      expect(broken).toEqual([]);
+    });
+  }
+});

@@ -76,24 +76,24 @@ describe('seasonProgress', () => {
 
 describe('linktreeStats', () => {
   it('arma las tres cifras reales', () => {
-    expect(linktreeStats({ years: 16, riders: 80, trees: 77 })).toEqual([
+    expect(linktreeStats({ years: 16, programs: 3, trees: 77 })).toEqual([
       { value: 16, label: 'años formando' },
-      { value: 80, unit: '+', label: 'corredores' },
+      { value: 3, label: 'programas' },
       { value: 77, label: 'árboles sembrados' },
     ]);
   });
 
   it('omite la cifra que no se puede calcular, sin rellenarla', () => {
-    const stats = linktreeStats({ years: 16, riders: null, trees: 0 });
+    const stats = linktreeStats({ years: 16, programs: null, trees: 0 });
     expect(stats.map((s) => s.label)).toEqual(['años formando']);
   });
 
   it('devuelve lista vacía cuando no hay ninguna', () => {
-    expect(linktreeStats({ years: null, riders: null, trees: null })).toEqual([]);
+    expect(linktreeStats({ years: null, programs: null, trees: null })).toEqual([]);
   });
 
   it('concuerda el singular', () => {
-    const stats = linktreeStats({ years: 1, riders: null, trees: 1 });
-    expect(stats.map((s) => s.label)).toEqual(['año formando', 'árbol sembrado']);
+    const stats = linktreeStats({ years: 1, programs: 1, trees: 1 });
+    expect(stats.map((s) => s.label)).toEqual(['año formando', 'programa', 'árbol sembrado']);
   });
 });

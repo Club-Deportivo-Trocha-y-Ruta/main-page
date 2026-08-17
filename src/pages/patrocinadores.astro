@@ -19,7 +19,8 @@ import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
 import StatFigure from '@components/editorial/StatFigure.astro';
 import SponsorshipTiers from '@components/sections/SponsorshipTiers.astro';
-import { CONTACT, CLUB_STATS, getYearsActive } from '@lib/constants';
+import { CONTACT, getYearsActive } from '@lib/constants';
+import { summarizePrograms } from '@lib/programs';
 import { getTreeStats } from '@lib/trocha-verde';
 import {
   isPublishableSponsor,
@@ -103,6 +104,15 @@ const evidenceCards = rawEvidenceCards.filter((card): card is EvidenceCard => ca
 
 const yearsActive = getYearsActive();
 
+// Alcance real de la escuela, en vez de las antiguas cifras sin fuente
+// ("80+ formados", "50+ competencias", "100+ medallas"). Las fechas, las
+// crónicas y los árboles no se repiten aquí: son las tarjetas de evidencia.
+const programTotals = summarizePrograms(
+  (await getCollection('programs'))
+    .filter((p: CollectionEntry<'programs'>) => !p.data.draft && p.data.active)
+    .map((p: CollectionEntry<'programs'>) => p.data)
+);
+
 const whatsappPatrocinio = `${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, quiero información sobre patrocinio del Club Deportivo Trocha y Ruta')}`;
 const mailtoPatrocinio = `mailto:${CONTACT.email}?subject=${encodeURIComponent('Consulta sobre patrocinio - Club Trocha y Ruta')}`;
 ---
@@ -132,24 +142,30 @@ const mailtoPatrocinio = `mailto:${CONTACT.email}?subject=${encodeURIComponent('
         lead="Cada válida, cada crónica publicada y cada árbol sembrado por Trocha Verde llevan también el nombre de quienes acompañan al club. Así se hace visible tu inversión."
       />
 
-      <dl class="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-2">
+      <div class="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-2">
         <StatFigure value={yearsActive} label="Años de trayectoria" icon="ph:calendar-heart-bold" />
         <StatFigure
-          value={`${CLUB_STATS.ridersTrained}+`}
-          label="Niños y jóvenes formados"
-          icon="ph:person-simple-bike-bold"
+          value={programTotals.programs}
+          label="Programas de formación"
+          note={programTotals.ageRange ? `Desde los ${programTotals.ageRange.replace('+', '')} años` : undefined}
+          icon="ph:path-bold"
         />
-        <StatFigure
-          value={`${CLUB_STATS.competitions}+`}
-          label="Competencias disputadas"
-          icon="ph:flag-checkered-bold"
-        />
-        <StatFigure
-          value={`${CLUB_STATS.medals}+`}
-          label="Medallas conquistadas"
-          icon="ph:medal-bold"
-        />
-      </dl>
+        {programTotals.seats !== null && (
+          <StatFigure
+            value={programTotals.seats}
+            label="Cupos de entrenamiento"
+            note="Capacidad publicada de los tres programas"
+            icon="ph:person-simple-bike-bold"
+          />
+        )}
+        {sponsorsSummary.total > 0 && (
+          <StatFigure
+            value={sponsorsSummary.total}
+            label="Marcas ya vinculadas"
+            icon="ph:handshake-bold"
+          />
+        )}
+      </div>
     </div>
   </SectionShell>
 

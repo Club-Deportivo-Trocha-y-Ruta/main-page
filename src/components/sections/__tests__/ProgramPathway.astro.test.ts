@@ -12,8 +12,8 @@ const programs: PathwayInput[] = [
   {
     id: 'escuela-de-iniciacion',
     title: 'Escuela de Iniciación',
-    ageRange: '3 a 5 años',
-    ageMin: 3,
+    ageRange: '4 a 5 años',
+    ageMin: 4,
     ageMax: 5,
     targetLevel: 'iniciación',
   },
@@ -55,7 +55,7 @@ describe('ProgramPathway', () => {
     const bands = [...doc.querySelectorAll('ol > li a')];
     expect(bands).toHaveLength(3);
     expect(bands.map((a) => a.querySelector('span')?.textContent?.trim())).toEqual([
-      '3–5',
+      '4–5',
       '6–11',
       '12+',
     ]);
@@ -66,7 +66,7 @@ describe('ProgramPathway', () => {
     const first = doc.querySelector('ol > li') as HTMLElement;
     // Los 3 primeros años de un recorrido de 16 → arranca en 0 y ocupa 18.75%
     expect(first.getAttribute('style')).toContain('left:0%');
-    expect(first.getAttribute('style')).toContain('width:18.75%');
+    expect(first.getAttribute('style')).toContain('width:13.33%');
   });
 
   it('enlaza cada tramo al programa con el prefijo que se le pase', async () => {
@@ -82,7 +82,7 @@ describe('ProgramPathway', () => {
   it('nombra cada tramo para lectores de pantalla', async () => {
     const doc = await render({ programs });
     const labels = [...doc.querySelectorAll('ol > li a')].map((a) => a.getAttribute('aria-label'));
-    expect(labels[0]).toBe('Etapa 1: Escuela de Iniciación, 3 a 5 años');
+    expect(labels[0]).toBe('Etapa 1: Escuela de Iniciación, 4 a 5 años');
     expect(labels[2]).toBe('Etapa 3: Alto Rendimiento, 12 años en adelante');
   });
 

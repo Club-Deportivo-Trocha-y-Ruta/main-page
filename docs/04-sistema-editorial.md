@@ -763,9 +763,7 @@ de la sección que sigue.
 
 **Lo que no se tocó.** El vídeo de YouTube del hero: carga la API de terceros en
 escritorio y pesa sobre el LCP, pero quitarlo es una decisión de producto, no
-de migración. Y ninguna edad mínima nueva en el texto: la colección `programs`
-arranca en 3 y las FAQ y `constants.ts` dicen 4, así que la portada describe la
-ruta sin zanjar la cifra.
+de migración.
 
 ---
 
@@ -821,3 +819,59 @@ vocabulario controlado —el mismo motivo que en la galería—, buena parte son
 nombres de menores del club (`samuel-ortiz`, `isabel-quinones`, …). Convertirlos
 en fichas destacadas es una decisión que le corresponde al club, no a la
 plantilla, y choca con su propia política de protección infantil.
+
+---
+
+## 21. Dos decisiones de contenido que atraviesan todo el sitio
+
+### La edad mínima es 4
+
+La colección `programs` arrancaba en 3 mientras las FAQ, `constants.ts` y el
+`CLAUDE.md` decían 4. El club confirmó que **son 4**, así que la Escuela de
+Iniciación pasa a `ageMin: 4` / `ageRange: "4 a 5 años"` y con eso se corrige
+sola toda la cadena derivada: la regla de edades, la ruta de formación, el
+JSON-LD y las cifras de cabecera.
+
+`/programas` repetía la edad **tres veces escrita a mano** (meta description,
+titular y fragmento resaltado) y por eso se quedó desfasada. Ahora sale de
+`Math.min(...ageMin)`: si el club la vuelve a cambiar, basta con tocar el
+contenido.
+
+### Se eliminaron las cifras sin fuente de verdad
+
+`CLUB_STATS` —80 niños formados, 50 competencias, 100 medallas— desaparece del
+sitio. Eran números redondos que cuatro páginas repetían como si fueran datos,
+y el propio comentario del archivo admitía que estaban "pendientes de
+confirmación oficial". Mismo criterio que con los testimonios inventados y la
+estimación de CO₂ de Trocha Verde.
+
+Lo que se muestra en su lugar sale del contenido y se puede comprobar:
+
+| Dónde | Antes | Ahora |
+|-------|-------|-------|
+| Portada (`AboutPreview`) | 80+ formados · 100+ medallas · árboles | Sin fila de cifras: la banda de credibilidad ya está arriba |
+| `/quienes-somos` | 80+ formados · 100+ medallas | Programas y **cupos** (suma de `maxStudents`) |
+| `/patrocinadores` | 80+ · 50+ · 100+ | Programas, cupos y marcas vinculadas |
+| `/enlaces` | 80+ corredores | Programas publicados |
+
+**Cupos** es el sustituto honesto de "niños formados": no es una afirmación
+histórica sin respaldo, es la capacidad que el propio club publica en cada
+programa. Si algún día confirma las cifras históricas, vuelven a
+`constants.ts` como fuente única — nunca escritas en una plantilla.
+
+### Un guardarraíl para las referencias cruzadas
+
+Dos veces se encontró la misma clase de error: el álbum de Ginebra apuntaba a
+un evento inexistente y la crónica de Roldanillo a un álbum que no existía.
+Ninguna rompía el build —el bloque simplemente no se pintaba—, así que nadie se
+enteraba.
+
+`content-validation.test.ts` valida ahora que **toda** relación entre
+colecciones (`relatedEvent`, `relatedGallery`, `relatedNews`, `program`)
+apunte a un archivo que existe, **incluidos los borradores**: una referencia
+rota en un `draft` es justo la que se publica sin que nadie la revise. El test
+nombra el archivo y el campo exactos cuando falla.
+
+Queda fuera `trees.species`, que referencia por nombre común y no por id: hay
+especies sembradas sin ficha propia y `/trocha-verde` ya lo contempla no
+enlazándolas.

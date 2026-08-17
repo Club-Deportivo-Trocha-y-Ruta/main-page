@@ -87,8 +87,8 @@ export interface LinktreeStat {
 export interface LinktreeStatsInput {
   /** Años cumplidos del club (`getYearsActive()`). */
   years: number | null;
-  /** Corredores formados (`CLUB_STATS.ridersTrained`). */
-  riders: number | null;
+  /** Programas de formación publicados. */
+  programs: number | null;
   /** Árboles sembrados (`summarizeTrees()`). */
   trees: number | null;
 }
@@ -98,14 +98,14 @@ export interface LinktreeStatsInput {
  * cifra que no se puede calcular no se rellena con texto, se cae y quedan las
  * demás.
  */
-export function linktreeStats({ years, riders, trees }: LinktreeStatsInput): LinktreeStat[] {
+export function linktreeStats({ years, programs, trees }: LinktreeStatsInput): LinktreeStat[] {
   const stats: LinktreeStat[] = [];
 
   if (years !== null && years > 0) {
     stats.push({ value: years, label: years === 1 ? 'año formando' : 'años formando' });
   }
-  if (riders !== null && riders > 0) {
-    stats.push({ value: riders, unit: '+', label: 'corredores' });
+  if (programs !== null && programs > 0) {
+    stats.push({ value: programs, label: programs === 1 ? 'programa' : 'programas' });
   }
   if (trees !== null && trees > 0) {
     stats.push({ value: trees, label: trees === 1 ? 'árbol sembrado' : 'árboles sembrados' });

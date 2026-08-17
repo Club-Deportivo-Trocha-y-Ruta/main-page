@@ -16,13 +16,14 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import LinktreeLayout from '@layouts/LinktreeLayout.astro';
-import { SITE, CONTACT, SOCIAL, CLUB_STATS, getYearsActive } from '@lib/constants';
+import { SITE, CONTACT, SOCIAL, getYearsActive } from '@lib/constants';
 import { nextRace, seasonProgress, linktreeStats } from '@lib/linktree';
 import { summarizeTrees } from '@lib/trocha-verde';
 import logo from '@assets/images/logo.webp';
 
 type Event = CollectionEntry<'events'>;
 type Tree = CollectionEntry<'trees'>;
+type Program = CollectionEntry<'programs'>;
 
 const UTM_QUERY = 'utm_source=qr&utm_medium=offline&utm_campaign=enlaces';
 
@@ -38,13 +39,16 @@ const whatsappHref = `${CONTACT.whatsapp}?text=${whatsappMessage}`;
 
 const events = (await getCollection('events')).filter((event: Event) => !event.data.draft);
 const trees = (await getCollection('trees')).filter((tree: Tree) => !tree.data.draft);
+const programs = (await getCollection('programs')).filter(
+  (program: Program) => !program.data.draft && program.data.active
+);
 
 const race = nextRace(events);
 const season = seasonProgress(events);
 
 const stats = linktreeStats({
   years: getYearsActive(),
-  riders: CLUB_STATS.ridersTrained,
+  programs: programs.length,
   trees: summarizeTrees(trees.map((tree: Tree) => tree.data)).totalTrees,
 });
 

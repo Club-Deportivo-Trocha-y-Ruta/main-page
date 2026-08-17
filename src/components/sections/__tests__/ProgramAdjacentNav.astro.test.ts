@@ -11,8 +11,8 @@ function parseHtml(html: string) {
 const escuela: PathwayInput = {
   id: 'escuela-de-iniciacion',
   title: 'Escuela de Iniciación',
-  ageRange: '3 a 5 años',
-  ageMin: 3,
+  ageRange: '4 a 5 años',
+  ageMin: 4,
   ageMax: 5,
   targetLevel: 'iniciación',
 };
@@ -69,7 +69,7 @@ describe('ProgramAdjacentNav', () => {
     const doc = await render({ previous: escuela, next: formacion });
     const links = [...doc.querySelectorAll('nav a')];
     expect(links[0].getAttribute('aria-label')).toBe(
-      'Etapa anterior: Escuela de Iniciación, 3 a 5 años'
+      'Etapa anterior: Escuela de Iniciación, 4 a 5 años'
     );
     expect(links[1].getAttribute('aria-label')).toBe(
       'Siguiente etapa: Formación Juvenil, 6 a 11 años'

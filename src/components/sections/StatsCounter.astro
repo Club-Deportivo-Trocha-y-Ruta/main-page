@@ -3,15 +3,15 @@
  * La banda de credibilidad de la portada.
  *
  * Antes mostraba cuatro cifras que decían venir de las collections y no venían:
- * calculaba `Math.max(CLUB_STATS.x, conteo)`, pero los cinco corredores están
+ * calculaba `Math.max(<constante>, conteo)`, pero los cinco corredores están
  * en `draft`, así que el conteo era 0 y la constante ganaba siempre. Y dos de
  * esas cifras —niños formados y medallas— se repetían más abajo, en
- * `AboutPreview`.
+ * `AboutPreview`, y ninguna de las dos tenía fuente de verdad.
  *
  * Ahora enseña solo lo que el sitio puede probar, y cada cifra dice de dónde
  * sale y enlaza a la página donde se comprueba: la regla del sistema —toda
  * cifra sale del contenido— convertida en algo que el lector puede verificar.
- * Las afirmaciones históricas del club siguen en `AboutPreview`, su sitio.
+ * Las cifras sin respaldo se eliminaron del sitio entero.
  *
  * El contador sigue animándose al entrar en pantalla, y respeta
  * `prefers-reduced-motion`.

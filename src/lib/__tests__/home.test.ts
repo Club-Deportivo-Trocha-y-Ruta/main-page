@@ -17,7 +17,7 @@ const TEMPORADA = [
 
 // Los tres programas reales del club.
 const PROGRAMAS = [
-  { ageMin: 3, ageMax: 5, schedule: 'Martes y viernes 4:30 - 6:00 PM', maxStudents: 20 },
+  { ageMin: 4, ageMax: 5, schedule: 'Martes y viernes 4:30 - 6:00 PM', maxStudents: 20 },
   { ageMin: 6, ageMax: 11, schedule: 'Lunes a viernes 4:00 - 6:00 PM', maxStudents: 25 },
   { ageMin: 12, ageMax: 99, schedule: 'Sáb 7-9 AM', maxStudents: 10 },
 ];
@@ -60,17 +60,10 @@ describe('buildClubFigures', () => {
     expect(programs.note).toBe('8 sesiones a la semana entre todos');
   });
 
-  it('no afirma una edad mínima mientras el contenido se contradiga', () => {
-    // `programs` arranca en 3; las FAQ y `constants.ts` dicen 4. La portada no
-    // zanja esa discusión: describe la ruta sin dar la cifra.
-    const programs = buildClubFigures(COMPLETO).find((f) => f.id === 'programs')!;
-    expect(programs.note).not.toMatch(/\b[34] años\b/);
-  });
-
   it('cae a describir la ruta cuando ningún horario es legible', () => {
     const figures = buildClubFigures({
       ...COMPLETO,
-      programs: [{ ageMin: 3, ageMax: 5, schedule: 'A convenir' }],
+      programs: [{ ageMin: 4, ageMax: 5, schedule: 'A convenir' }],
     });
     expect(figures.find((f) => f.id === 'programs')!.note).toBe(
       'De la iniciación al alto rendimiento'

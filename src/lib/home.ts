@@ -4,21 +4,20 @@
  * La portada tenía dos problemas de datos, no de diseño:
  *
  * 1. La banda de cifras decía ser dinámica y no lo era. Calculaba
- *    `Math.max(CLUB_STATS.x, conteoDeLaColección)`, pero los cinco corredores
+ *    `Math.max(<constante>, conteoDeLaColección)`, pero los cinco corredores
  *    están en `draft`, así que el conteo era 0 y la constante ganaba siempre.
  *    Código muerto disfrazado de dato vivo.
  * 2. Esa banda repetía dos cifras que `AboutPreview` ya mostraba más abajo
- *    —niños formados y medallas—: la misma afirmación, dos veces en la misma
- *    página.
+ *    —niños formados y medallas—: la misma afirmación sin respaldo, dos veces
+ *    en la misma página.
  *
  * Aquí se arma lo que la portada sí puede sostener: cifras que salen del
  * contenido del sitio y que el lector puede comprobar haciendo clic. Cada una
  * viaja con su procedencia (`note`), que es la regla del sistema —toda cifra
  * sale del contenido— hecha visible.
  *
- * Las cifras históricas del club (`CLUB_STATS.ridersTrained`, `medals`) no
- * viven aquí: son afirmaciones institucionales sin dataset detrás y se quedan
- * en `AboutPreview`, que es su sitio.
+ * Las cifras históricas del club —80 niños formados, 100 medallas— se
+ * eliminaron del sitio entero: no tenían fuente de verdad.
  *
  * Puro: sin `node:fs` y sin importar `astro:content`. Recibe los datos por
  * parámetro, igual que `gallery.ts` o `contact.ts`.
@@ -97,9 +96,9 @@ export function buildClubFigures({
       id: 'programs',
       value: totals.programs,
       label: totals.programs === 1 ? 'programa de formación' : 'programas de formación',
-      // Deliberadamente sin edad mínima: la colección `programs` arranca en 3
-      // y las FAQ y `constants.ts` dicen 4. Mientras el contenido no se ponga
-      // de acuerdo, la portada describe la ruta y no zanja la cifra.
+      // La edad de entrada (4 años) ya la dan el hero y `/programas`, derivada
+      // de la colección. Aquí la nota aporta lo que no se dice en otro sitio:
+      // cuántas sesiones semanales suman los tres programas.
       note:
         totals.weeklySessions !== null
           ? `${totals.weeklySessions} sesiones a la semana entre todos`

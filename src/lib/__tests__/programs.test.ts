@@ -19,8 +19,8 @@ const REAL_PROGRAMS: PathwayInput[] = [
   {
     id: 'escuela-de-iniciacion',
     title: 'Escuela de Iniciación',
-    ageRange: '3 a 5 años',
-    ageMin: 3,
+    ageRange: '4 a 5 años',
+    ageMin: 4,
     ageMax: 5,
     targetLevel: 'iniciación',
   },
@@ -206,19 +206,19 @@ describe('buildPathway', () => {
   it('encadena los tramos sin huecos ni solapes', () => {
     const { stages, domain } = buildPathway(REAL_PROGRAMS);
     expect(stages.map((s) => [s.from, s.to])).toEqual([
-      [3, 6],
+      [4, 6],
       [6, 12],
       [12, 19],
     ]);
-    expect(domain).toEqual({ from: 3, to: 19 });
+    expect(domain).toEqual({ from: 4, to: 19 });
   });
 
   it('reparte el ancho en proporción a los años de cada tramo', () => {
     const { stages } = buildPathway(REAL_PROGRAMS);
     expect(stages[0].startPct).toBe(0);
-    // 3 de 16 años ≈ 18.75%
-    expect(stages[0].widthPct).toBeCloseTo(18.75, 2);
-    expect(stages[1].widthPct).toBeCloseTo(37.5, 2);
+    // La regla cubre 15 años (de 4 a 19): la Escuela ocupa 2 y la Formación 6.
+    expect(stages[0].widthPct).toBeCloseTo((2 / 15) * 100, 2);
+    expect(stages[1].widthPct).toBeCloseTo((6 / 15) * 100, 2);
     const total = stages.reduce((sum, s) => sum + s.widthPct, 0);
     expect(total).toBeCloseTo(100, 1);
   });
@@ -228,7 +228,7 @@ describe('buildPathway', () => {
     expect(stages[2].openEnded).toBe(true);
     expect(stages[2].shortAge).toBe('12+');
     expect(stages[0].openEnded).toBe(false);
-    expect(stages[0].shortAge).toBe('3–5');
+    expect(stages[0].shortAge).toBe('4–5');
   });
 
   it('recorta el tramo que se pisa con el siguiente', () => {
@@ -252,8 +252,8 @@ describe('buildPathway', () => {
 
   it('marca como mayores solo las marcas donde arranca una etapa', () => {
     const { ticks } = buildPathway(REAL_PROGRAMS);
-    expect(ticks).toHaveLength(17); // de los 3 a los 19 años
-    expect(ticks.filter((t) => t.major).map((t) => t.age)).toEqual([3, 6, 12]);
+    expect(ticks).toHaveLength(16); // de los 4 a los 19 años
+    expect(ticks.filter((t) => t.major).map((t) => t.age)).toEqual([4, 6, 12]);
     expect(ticks[0].pct).toBe(0);
     expect(ticks[ticks.length - 1].pct).toBe(100);
   });
@@ -282,8 +282,8 @@ describe('toPathwayInput', () => {
         id: 'escuela-de-iniciacion',
         data: {
           title: 'Escuela de Iniciación',
-          ageRange: '3 a 5 años',
-          ageMin: 3,
+          ageRange: '4 a 5 años',
+          ageMin: 4,
           ageMax: 5,
           targetLevel: 'iniciación',
         },
@@ -298,7 +298,7 @@ describe('toPathwayInput', () => {
 
 describe('summarizePrograms', () => {
   const withSchedules = [
-    { ageMin: 3, ageMax: 5, schedule: 'Martes y viernes 4:30 PM', maxStudents: 20 },
+    { ageMin: 4, ageMax: 5, schedule: 'Martes y viernes 4:30 PM', maxStudents: 20 },
     { ageMin: 6, ageMax: 11, schedule: 'Lunes a viernes 4:00 PM', maxStudents: 25 },
     { ageMin: 12, ageMax: 99, schedule: 'Mar/Jue · Mié · Sáb · Dom', maxStudents: 10 },
   ];
@@ -311,13 +311,13 @@ describe('summarizePrograms', () => {
   });
 
   it('abre el rango de edades cuando el último programa no tiene techo', () => {
-    expect(summarizePrograms(withSchedules).ageRange).toBe('3+');
+    expect(summarizePrograms(withSchedules).ageRange).toBe('4+');
     expect(summarizePrograms([{ ageMin: 3, ageMax: 17 }]).ageRange).toBe('3–17');
     expect(OPEN_ENDED_AGE).toBeGreaterThan(17);
   });
 
   it('deja en null los datos que el contenido no respalda', () => {
-    const totals = summarizePrograms([{ ageMin: 3, ageMax: 5 }]);
+    const totals = summarizePrograms([{ ageMin: 4, ageMax: 5 }]);
     expect(totals.weeklySessions).toBeNull();
     expect(totals.seats).toBeNull();
   });

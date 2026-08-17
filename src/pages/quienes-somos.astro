@@ -20,7 +20,8 @@ import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
 import StatFigure from '@components/editorial/StatFigure.astro';
 import Timeline, { type TimelineItem } from '@components/editorial/Timeline.astro';
-import { SITE, CLUB_STATS, CHILD_SAFETY, getYearsActive } from '@lib/constants';
+import { SITE, CHILD_SAFETY, getYearsActive } from '@lib/constants';
+import { summarizePrograms } from '@lib/programs';
 import { generateSportsClubJsonLd } from '@lib/seo';
 import { getTreeStats } from '@lib/trocha-verde';
 
@@ -36,8 +37,17 @@ const sportsClubJsonLd = generateSportsClubJsonLd();
 const yearsActive = getYearsActive();
 const treeStats = await getTreeStats();
 
-// Cifras de cabecera. Fuente única: constants.ts + collections, para no
-// contradecir lo que dicen las otras páginas.
+// Capacidad real de la escuela: la suma de los `maxStudents` publicados.
+// Sustituye a la antigua cifra de "niños formados", que no tenía respaldo.
+const programTotals = summarizePrograms(
+  (await getCollection('programs'))
+    .filter((p: CollectionEntry<'programs'>) => !p.data.draft && p.data.active)
+    .map((p: CollectionEntry<'programs'>) => p.data)
+);
+
+// Cifras de cabecera. Todas salen del contenido y se pueden comprobar: aquí
+// vivían "80+ niños formados" y "100+ medallas", que no tenían fuente de
+// verdad y se eliminaron del sitio.
 const figures = [
   {
     value: yearsActive,
@@ -46,14 +56,16 @@ const figures = [
     icon: 'ph:calendar-heart-bold',
   },
   {
-    value: `${CLUB_STATS.ridersTrained}+`,
-    label: 'Niños y jóvenes formados',
-    icon: 'ph:person-simple-bike-bold',
+    value: programTotals.programs,
+    label: 'Programas de formación',
+    note: programTotals.ageRange ? `Desde los ${programTotals.ageRange.replace('+', '')} años` : undefined,
+    icon: 'ph:path-bold',
   },
   {
-    value: `${CLUB_STATS.medals}+`,
-    label: 'Medallas departamentales y nacionales',
-    icon: 'ph:medal-bold',
+    value: programTotals.seats ?? 0,
+    label: 'Cupos de entrenamiento',
+    note: 'Capacidad publicada de los tres programas',
+    icon: 'ph:person-simple-bike-bold',
   },
   {
     value: treeStats.totalTrees,
@@ -84,7 +96,7 @@ const milestones: TimelineItem[] = [
   {
     label: 'Hoy',
     title: 'Del barrio al calendario nacional',
-    body: `${CLUB_STATS.medals}+ medallas después, el club compite cada válida de la Copa Valle y lleva corredores a campeonatos departamentales y nacionales.`,
+    body: 'El club compite cada válida de la Copa Valle y lleva corredores a campeonatos departamentales y nacionales.',
     icon: 'ph:trophy-bold',
     image: comunidadCircuito,
     imageAlt: 'Corredora del club atacando una subida técnica en un circuito de XCO',
@@ -199,7 +211,11 @@ const albums = (await getCollection('gallery'))
       />
     </div>
 
-    <dl class="mt-12 grid grid-cols-2 gap-6 border-t border-primary/15 pt-8 lg:grid-cols-4">
+    {/*
+      `StatFigure` pinta un `<div><p>`, no un par `<dt>/<dd>`: envolverlo en
+      un `<dl>` daba una lista de definición sin términos, marcado inválido.
+    */}
+    <div class="mt-12 grid grid-cols-2 gap-6 border-t border-primary/15 pt-8 lg:grid-cols-4">
       {figures.map((figure) => (
         <StatFigure
           value={figure.value}
@@ -208,7 +224,7 @@ const albums = (await getCollection('gallery'))
           icon={figure.icon}
         />
       ))}
-    </dl>
+    </div>
   </SectionShell>
 
   <!-- El recorrido -->

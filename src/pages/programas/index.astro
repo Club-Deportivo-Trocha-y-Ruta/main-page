@@ -48,11 +48,16 @@ const spreads = programs.map((program: Program, index: number) => ({
   photo: getRefreshImage(program.data.image),
   sessions: countWeeklySessions(program.data.schedule),
 }));
+
+// La edad de entrada sale de la colección, no escrita a mano: estaba repetida
+// tres veces en esta página y se quedó desfasada cuando el club la corrigió.
+const entryAge = Math.min(...programs.map((program: Program) => program.data.ageMin));
+const entryAgeLabel = `a los ${entryAge} años`;
 ---
 
 <BaseLayout
   title="Programas"
-  description="Tres etapas de formación en ciclomontañismo para niños y jóvenes en Yumbo: iniciación desde los 3 años, formación juvenil y alto rendimiento."
+  description={`Tres etapas de formación en ciclomontañismo para niños y jóvenes en Yumbo: iniciación desde los ${entryAge} años, formación juvenil y alto rendimiento.`}
 >
   <!-- Entrada: orienta antes de mostrar el detalle -->
   <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="programas-titulo">
@@ -64,12 +69,16 @@ const spreads = programs.map((program: Program, index: number) => ({
         id="programas-titulo"
         eyebrow="Programas"
         eyebrowIcon="ph:path-bold"
-        title="Una ruta de formación que empieza a los 3 años"
-        highlight="a los 3 años"
+        title={`Una ruta de formación que empieza ${entryAgeLabel}`}
+        highlight={entryAgeLabel}
         lead="No son tres cursos sueltos: son tres tramos encadenados. El niño entra por donde le corresponde su edad y su nivel, y avanza al siguiente cuando está listo — con los mismos entrenadores y la misma pista."
       />
 
-      <dl class="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-2">
+      {/*
+        `StatFigure` pinta un `<div><p>`, no un par `<dt>/<dd>`: envolverlo en
+        un `<dl>` daba una lista de definición sin términos, marcado inválido.
+      */}
+      <div class="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-2">
         <StatFigure value={totals.programs} label="Programas activos" icon="ph:path-bold" />
         {totals.ageRange && (
           <StatFigure value={totals.ageRange} unit="años" label="Edades que atendemos" icon="ph:user-bold" />
@@ -85,7 +94,7 @@ const spreads = programs.map((program: Program, index: number) => ({
         {totals.seats !== null && (
           <StatFigure value={totals.seats} label="Cupos por temporada" icon="ph:users-three-bold" />
         )}
-      </dl>
+      </div>
     </div>
 
     <div class="mt-12 rounded-2xl border border-primary/15 bg-surface/70 p-5 backdrop-blur-sm sm:p-7">
