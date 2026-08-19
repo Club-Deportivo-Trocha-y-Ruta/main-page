@@ -21,15 +21,12 @@ import SectionIntro from '@components/editorial/SectionIntro.astro';
 import StatFigure from '@components/editorial/StatFigure.astro';
 import Timeline, { type TimelineItem } from '@components/editorial/Timeline.astro';
 import { SITE, getYearsActive } from '@lib/constants';
+import { buildMilestoneItems } from '@lib/milestones';
 import { summarizePrograms } from '@lib/programs';
 import { generateSportsClubJsonLd } from '@lib/seo';
 import { getTreeStats } from '@lib/trocha-verde';
 
-import historiaPista from '@assets/images/refresh/historia-pista.webp';
-import historiaEquipoGinebra from '@assets/images/refresh/historia-equipo-ginebra.webp';
-import historiaSiembra from '@assets/images/refresh/historia-siembra.webp';
 import historiaEquipoPalmira from '@assets/images/refresh/historia-equipo-palmira.webp';
-import comunidadCircuito from '@assets/images/refresh/comunidad-circuito.webp';
 
 type Gallery = CollectionEntry<'gallery'>;
 
@@ -75,42 +72,20 @@ const figures = [
   },
 ];
 
-const milestones: TimelineItem[] = [
+// El recorrido del club vive en la collection `milestones`: los textos los
+// edita el club desde el CMS y las cifras que cambian solas ({{trees}},
+// {{founded}}) se resuelven aquí contra la fuente de verdad.
+const milestones: TimelineItem[] = buildMilestoneItems(
+  (await getCollection('milestones')).map(
+    (entry: CollectionEntry<'milestones'>) => entry.data
+  ),
   {
-    label: `${SITE.founded}`,
-    title: 'De Ciclo Yumbo a Trocha y Ruta',
-    body: `El 1 de mayo de ${SITE.founded}, la reestructuración del antiguo Club Ciclo Yumbo da origen a ${SITE.name}, con la formación de niños y jóvenes en ciclomontañismo como propósito.`,
-    icon: 'ph:flag-bold',
-    image: historiaEquipoGinebra,
-    imageAlt:
-      'Deportistas del Club Trocha y Ruta reunidos antes de la salida de una competencia',
-  },
-  {
-    label: 'La casa',
-    title: 'Pista XCO Carlos Castro',
-    body: 'La pista de ciclomontañismo Carlos Castro, en Yumbo, es donde los "teteros" dan sus primeros pedalazos y donde el club entrena semana a semana.',
-    icon: 'ph:map-pin-bold',
-    image: historiaPista,
-    imageAlt: 'Valla de la Pista XCO Carlos Castro de Yumbo en día de competencia',
-  },
-  {
-    label: 'Hoy',
-    title: 'Del barrio al calendario nacional',
-    body: 'El club compite cada válida de la Copa Valle y lleva corredores a campeonatos departamentales y nacionales.',
-    icon: 'ph:trophy-bold',
-    image: comunidadCircuito,
-    imageAlt: 'Corredora del club atacando una subida técnica en un circuito de XCO',
-  },
-  {
-    label: '2026',
-    title: 'Trocha Verde',
-    body: `La pista también se siembra: ${treeStats.totalTrees} árboles plantados con llantas recicladas como protectores, junto a familias, vecinos y aliados ambientales.`,
-    icon: 'ph:leaf-bold',
-    image: historiaSiembra,
-    imageAlt:
-      'Niño del club regando un árbol recién sembrado en la pista durante la Sembratón',
-  },
-];
+    founded: SITE.founded,
+    club: SITE.name,
+    years: yearsActive,
+    trees: treeStats.totalTrees,
+  }
+);
 
 // Los valores estaban en una sola frase separada por comas: partidos en piezas
 // se pueden leer de un vistazo.
@@ -221,14 +196,20 @@ const albums = (await getCollection('gallery'))
   </SectionShell>
 
   <!-- El recorrido -->
-  <SectionShell tone="plain" width="wide" labelledby="recorrido-titulo">
+  <SectionShell
+    tone="plain"
+    pattern="topo"
+    scrollDriven
+    width="wide"
+    labelledby="recorrido-titulo"
+  >
     <SectionIntro
       id="recorrido-titulo"
       eyebrow="El recorrido"
       eyebrowIcon="ph:path-bold"
       title="De unas salidas de domingo a una escuela con pista propia"
       highlight="pista propia"
-      lead="Cuatro paradas que explican dónde está hoy el club."
+      lead="Las paradas que explican dónde está hoy el club."
       align="center"
       class="mx-auto max-w-3xl"
     />

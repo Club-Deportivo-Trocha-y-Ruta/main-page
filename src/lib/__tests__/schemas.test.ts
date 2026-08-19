@@ -13,6 +13,7 @@ import {
   rutasSchema,
   faqsSchema,
   pagesSchema,
+  milestonesSchema,
 } from '../schemas';
 
 // ============================================================
@@ -391,5 +392,53 @@ describe('pagesSchema', () => {
     expect(() =>
       pagesSchema.parse({ title: 'Test', layout: 'sidebar' })
     ).toThrow();
+  });
+});
+
+// ============================================================
+// milestonesSchema
+// ============================================================
+
+describe('milestonesSchema', () => {
+  const valid = {
+    label: '2010',
+    title: 'De Ciclo Yumbo a Trocha y Ruta',
+    body: 'El 1 de mayo de {{founded}} nace el club.',
+  };
+
+  it('acepta hito válido con defaults', () => {
+    const result = milestonesSchema.parse(valid);
+    expect(result.order).toBe(0);
+    expect(result.draft).toBe(false);
+    expect(result.image).toBeUndefined();
+  });
+
+  it('acepta hito con imagen y su alt', () => {
+    const result = milestonesSchema.parse({
+      ...valid,
+      image: 'historia-pista.webp',
+      imageAlt: 'Valla de la pista',
+    });
+    expect(result.image).toBe('historia-pista.webp');
+  });
+
+  it('rechaza imagen sin alt', () => {
+    expect(() =>
+      milestonesSchema.parse({ ...valid, image: 'historia-pista.webp' })
+    ).toThrow();
+  });
+
+  it('rechaza imagen con alt en blanco', () => {
+    expect(() =>
+      milestonesSchema.parse({
+        ...valid,
+        image: 'historia-pista.webp',
+        imageAlt: '   ',
+      })
+    ).toThrow();
+  });
+
+  it('rechaza hito sin título', () => {
+    expect(() => milestonesSchema.parse({ label: '2010', body: 'x' })).toThrow();
   });
 });

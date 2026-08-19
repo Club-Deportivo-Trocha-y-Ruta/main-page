@@ -35,6 +35,18 @@ interface Props {
   class?: string;
   /** Clases extra para el contenedor interno. */
   innerClass?: string;
+  /**
+   * Habilita animaciones ligadas al scroll dentro de la sección.
+   *
+   * Hace dos cosas: recorta con `overflow-clip` en vez de `overflow-hidden`
+   * —`hidden` crea un contenedor de scroll y `view()` se ancla a él en vez de
+   * al viewport, dejando cualquier animación congelada— y le da deriva vertical
+   * a la textura de fondo cuando hay `pattern="topo"`.
+   *
+   * Es opt-in y decorativo: sin soporte de scroll-driven animations o con
+   * `prefers-reduced-motion`, todo queda quieto y en su sitio.
+   */
+  scrollDriven?: boolean;
 }
 
 const {
@@ -47,6 +59,7 @@ const {
   label,
   class: className,
   innerClass,
+  scrollDriven = false,
 } = Astro.props;
 
 const tokens = getTone(tone);
@@ -57,11 +70,25 @@ const patternId = uniqueSvgId('topo');
   id={id}
   aria-labelledby={labelledby}
   aria-label={label}
-  class:list={['relative isolate overflow-hidden', tokens.surface, getSpacing(spacing), className]}
+  class:list={[
+    'relative isolate',
+    scrollDriven ? 'overflow-clip' : 'overflow-hidden',
+    tokens.surface,
+    getSpacing(spacing),
+    className,
+  ]}
 >
   {pattern === 'topo' && (
     <svg
-      class:list={['pointer-events-none absolute inset-0 -z-10 h-full w-full', tokens.pattern]}
+      class:list={[
+        'pointer-events-none absolute -z-10 w-full',
+        tokens.pattern,
+        // Con deriva la textura se pinta más alta que la sección para que el
+        // desplazamiento nunca descubra una franja sin patrón.
+        scrollDriven
+          ? 'sda-parallax-slow inset-x-0 -top-8 h-[calc(100%+4rem)]'
+          : 'inset-0 h-full',
+      ]}
       aria-hidden="true"
       focusable="false"
       style="mask-image: linear-gradient(to bottom, black, transparent 78%);"

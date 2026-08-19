@@ -47,6 +47,29 @@ const tokens = getTone(tone);
       aria-hidden="true"
     ></div>
 
+    <!--
+      El trazo recorrido: se dibuja encima del punteado a medida que se baja,
+      como marcar en un mapa por dónde ya se pasó. Es CSS puro (scroll-driven);
+      si el navegador no lo soporta o el usuario pidió menos movimiento, no se
+      pinta y queda solo el punteado. El wrapper carga el desplazamiento
+      horizontal para que la animación pueda usar `transform` sin pisarlo.
+
+      Requisito: ningún ancestro puede ser contenedor de scroll (`overflow:
+      hidden` lo es), o `view()` se ancla a él y el trazo queda congelado. En
+      `SectionShell` eso se resuelve con la prop `scrollDriven`.
+    -->
+    <div
+      class="pointer-events-none absolute inset-y-2 left-4 md:left-1/2 md:-translate-x-px"
+      aria-hidden="true"
+    >
+      <div
+        class:list={[
+          'timeline-progress h-full border-l-2',
+          tone === 'dark' ? 'border-accent' : 'border-primary',
+        ]}
+      ></div>
+    </div>
+
     {items.map((item, index) => (
       <li
         class:list={[

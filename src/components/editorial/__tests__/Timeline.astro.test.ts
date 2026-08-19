@@ -92,4 +92,30 @@ describe('Timeline', () => {
     const oscuro = await render({ items, tone: 'dark' });
     expect(oscuro.querySelector('ol > div')?.className).toContain('border-white/25');
   });
+
+  it('pinta el trazo de progreso como decorativo y sin capturar el puntero', async () => {
+    const doc = await render({ items });
+    const trazo = doc.querySelector('.timeline-progress');
+    expect(trazo).not.toBeNull();
+
+    const wrapper = trazo?.parentElement;
+    expect(wrapper?.getAttribute('aria-hidden')).toBe('true');
+    expect(wrapper?.className).toContain('pointer-events-none');
+  });
+
+  it('deja el trazo sin utilidades de transform, que pisarían la animación', async () => {
+    const doc = await render({ items });
+    const trazo = doc.querySelector('.timeline-progress');
+    expect(trazo?.className).not.toMatch(/translate|scale|rotate/);
+    // El desplazamiento horizontal lo carga el wrapper
+    expect(trazo?.parentElement?.className).toContain('md:-translate-x-px');
+  });
+
+  it('adapta el color del trazo al tono', async () => {
+    const claro = await render({ items });
+    expect(claro.querySelector('.timeline-progress')?.className).toContain('border-primary');
+
+    const oscuro = await render({ items, tone: 'dark' });
+    expect(oscuro.querySelector('.timeline-progress')?.className).toContain('border-accent');
+  });
 });

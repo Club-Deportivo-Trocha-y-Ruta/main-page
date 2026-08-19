@@ -759,4 +759,34 @@ collections:
       - { label: "Usos", name: "uses", widget: "list", required: false }
       - { label: "Borrador", name: "draft", widget: "boolean", default: false }
       - { label: "Contenido", name: "body", widget: "markdown", required: false }
-          - { label: "Google Maps embed URL", name: "mapEmbedUrl", widget: "string", required: false }
+
+  # ----------------------------------------------------------
+  # HISTORIA DEL CLUB — HITOS DE LA LÍNEA DE TIEMPO
+  # ----------------------------------------------------------
+  - name: "milestones"
+    label: "Historia del Club"
+    label_singular: "Hito"
+    folder: "src/content/milestones"
+    create: true
+    slug: "{{fields.title}}"
+    sortable_fields: ["order", "title"]
+    fields:
+      - { label: "Marca (año o etapa)", name: "label", widget: "string", hint: "Ej: 2010, La casa, Hoy" }
+      - { label: "Título", name: "title", widget: "string" }
+      - {
+          label: "Texto",
+          name: "body",
+          widget: "text",
+          hint: "Puedes usar {{trees}}, {{founded}}, {{years}} y {{club}}: se reemplazan solos por la cifra real del sitio.",
+        }
+      - { label: "Icono", name: "icon", widget: "string", required: false, hint: "Icono Phosphor, ej: ph:flag-bold" }
+      - {
+          label: "Foto",
+          name: "image",
+          widget: "string",
+          required: false,
+          hint: "Nombre del archivo dentro de src/assets/images/refresh/, ej: historia-pista.webp",
+        }
+      - { label: "Alt de la foto", name: "imageAlt", widget: "string", required: false, hint: "Obligatorio si hay foto" }
+      - { label: "Orden", name: "order", widget: "number", default: 0, value_type: "int" }
+      - { label: "Borrador", name: "draft", widget: "boolean", default: false }

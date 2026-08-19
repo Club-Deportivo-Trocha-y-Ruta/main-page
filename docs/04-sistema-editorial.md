@@ -57,6 +57,7 @@ Toda sección se arma con las mismas cuatro piezas, en este orden:
 | `width` | `narrow`, `default`, `wide` | El marco siempre es de ancho completo |
 | `spacing` | `none`, `compact`, `default`, `spacious` | |
 | `labelledby` / `label` | id del titular / nombre | Una de las dos, siempre |
+| `scrollDriven` | booleano | Habilita animaciones ligadas al scroll dentro de la sección. Ver 2.5 |
 
 Los tokens de cada tono viven en `src/lib/editorial.ts`. **No se escriben clases de fondo
 a mano en las secciones**: si hace falta un fondo nuevo, se agrega un tono.
@@ -103,6 +104,32 @@ Ninguna sección termina en punto muerto. Enlace al detalle, CTA de inscripción
 WhatsApp — pero siempre algo.
 
 ---
+
+### 2.5 Animación ligada al scroll — `scrollDriven`
+
+Las animaciones de scroll del sitio son **CSS puro** (`animation-timeline: view()`), sin
+una línea de JS. Las utilidades viven en `src/styles/global.css`, bajo
+`@supports (animation-timeline: view())` anidado en `prefers-reduced-motion: no-preference`:
+si el navegador no lo soporta o el usuario pidió menos movimiento, el contenido queda en su
+estado final visible. Solo se animan `transform` y `opacity`.
+
+| Clase | Para qué |
+|-------|----------|
+| `.timeline-progress` | Trazo del sendero de `Timeline` que se dibuja al bajar |
+| `.sda-parallax-slow` / `.sda-parallax-fast` | Deriva vertical de capas decorativas |
+
+Dos trampas que ya costaron una sesión de depuración:
+
+1. **`overflow: hidden` crea un contenedor de scroll.** Si un ancestro lo tiene, `view()` se
+   ancla a él en vez de al viewport y la animación queda congelada en un valor fijo. Por eso
+   `scrollDriven` hace que `SectionShell` recorte con `overflow-clip`, que clipea sin ser
+   scrollable. Cualquier sección que contenga animación de scroll necesita esa prop.
+2. **No usar el shorthand `animation`.** Lightning CSS mete `view()` dentro del shorthand
+   (`animation: linear both x view()`), forma que los navegadores descartan entera. Hay que
+   escribir `animation-name`, `animation-timing-function` y `animation-fill-mode` por
+   separado.
+
+Nada de esto reemplaza a `.reveal` (IntersectionObserver, en `BaseLayout`): conviven.
 
 ## 3. Reglas que no se negocian
 

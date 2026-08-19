@@ -108,6 +108,85 @@
   }
 }
 
+/* ============================================================
+   Scroll-driven animations (CSS puro, cero JS)
+
+   Mejora progresiva: todo va dentro de `@supports (animation-timeline: view())`
+   y de `prefers-reduced-motion: no-preference`. Si el navegador no lo soporta o
+   el usuario pidió menos movimiento, el contenido queda en su estado final
+   visible — nunca oculto a la espera de una animación que no va a correr.
+
+   Solo se animan `transform` y `opacity`: nada que dispare layout (CLS < 0.05).
+   Convive con `.reveal` (IntersectionObserver), no lo reemplaza.
+   ============================================================ */
+
+/* Estado sin soporte: el trazo de progreso simplemente no se pinta y queda el
+   sendero punteado de base. */
+.timeline-progress {
+  display: none;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes sda-grow-line {
+      from {
+        transform: scaleY(0);
+      }
+      to {
+        transform: scaleY(1);
+      }
+    }
+
+    @keyframes sda-drift {
+      from {
+        transform: translateY(var(--sda-drift-from, -12px));
+      }
+      to {
+        transform: translateY(var(--sda-drift-to, 12px));
+      }
+    }
+
+    /* Sendero de la línea de tiempo que se dibuja conforme se baja. El rango
+       por defecto de `view()` (todo el tiempo que el elemento es visible) se
+       recorta al 85% para que el trazo llegue al final antes de que la sección
+       termine de salir de pantalla. */
+    .timeline-progress {
+      display: block;
+      transform-origin: top;
+      /* Longhands a propósito: con el shorthand `animation`, Lightning CSS
+         mete `view()` dentro de él y los navegadores descartan la regla entera
+         (el shorthand no acepta `animation-timeline`). */
+      animation-name: sda-grow-line;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 85%;
+    }
+
+    /* Deriva vertical para capas decorativas (patrones, fondos). Nunca sobre
+       texto de lectura ni sobre el elemento LCP. */
+    .sda-parallax-slow,
+    .sda-parallax-fast {
+      animation-name: sda-drift;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+      will-change: transform;
+    }
+
+    .sda-parallax-slow {
+      --sda-drift-from: -10px;
+      --sda-drift-to: 10px;
+    }
+
+    .sda-parallax-fast {
+      --sda-drift-from: -28px;
+      --sda-drift-to: 28px;
+    }
+  }
+}
+
 /* Navigation progress bar */
 #nav-progress {
   position: fixed;

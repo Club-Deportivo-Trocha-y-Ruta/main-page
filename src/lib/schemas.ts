@@ -377,3 +377,33 @@ export const treesSchema = z.object({
   order: z.number().default(0),
   seo: seoSchema.optional(),
 });
+
+// ============================================================
+// HITOS DE LA HISTORIA DEL CLUB (línea de tiempo)
+// ============================================================
+
+/**
+ * Un hito del recorrido del club. `label` no siempre es un año ("La casa",
+ * "Hoy"), así que el orden lo manda `order` y no la fecha.
+ *
+ * `body` admite marcadores `{{clave}}` que se resuelven en build contra las
+ * cifras vivas del sitio (ver `renderMilestoneText` en `src/lib/milestones.ts`),
+ * para que un dato como el número de árboles no quede congelado en el texto.
+ *
+ * `image` es el nombre del archivo dentro de `src/assets/images/refresh/`.
+ */
+export const milestonesSchema = z
+  .object({
+    label: z.string(),
+    title: z.string(),
+    body: z.string(),
+    icon: z.string().optional(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    order: z.number().default(0),
+    draft: z.boolean().default(false),
+  })
+  .refine((data) => !data.image || Boolean(data.imageAlt?.trim()), {
+    message: 'imageAlt es obligatorio cuando el hito tiene image',
+    path: ['imageAlt'],
+  });
