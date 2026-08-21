@@ -12,8 +12,12 @@ draft: false
 plural: "Guayacanes Azules"
 ---
 
-Aunque es nativa del Caribe colombiano (no del Valle del Cauca), la Guayacán Azul se cultiva como especie ornamental en todo el país por su valor decorativo y ecológico.
+Un Guayacán Azul se sembró el 22 de abril de 2026 en la Pista de Ciclomontañismo Carlos Castro, durante la Sembratón del Día de la Tierra. Lo protege una llanta de bicicleta reciclada.
 
-El guayacán azul (*Guaiacum officinale*), conocido internacionalmente como *Lignum vitae* (madera de vida), produce la madera natural más densa del mundo —tan pesada que se hunde en el agua. Esta propiedad lo hizo codiciado durante siglos para fabricar cojinetes de los ejes de barcos y molinos, llevándolo a una extracción masiva que lo puso en peligro de extinción. Hoy está protegido internacionalmente por la Convención CITES.
+Fue donado por los amigos de Óscar Eduardo Ortiz. Pertenece a una especie en preocupación de conservación.
 
-Sus flores azul-violáceas, que contrastan con el follaje verde brillante, lo convierten en uno de los árboles más bellos del bosque seco tropical. La resina de su tronco fue usada históricamente en medicina para tratar enfermedades reumáticas. Sembrar un guayacán azul en la pista Carlos Castro es un acto de conservación de una especie que los niños de Trocha y Ruta ayudan a preservar para las generaciones futuras.
+## Sobre la especie
+
+El guayacán azul (*Guaiacum officinale*), conocido internacionalmente como *Lignum vitae* —madera de vida—, produce la madera natural más densa del mundo: tan pesada que se hunde en el agua. Esa propiedad lo hizo codiciado durante siglos para fabricar los cojinetes de los ejes de barcos y molinos, y lo llevó a una extracción tan intensa que hoy está protegido por la Convención CITES.
+
+Es nativo del Caribe colombiano, Venezuela, Centroamérica y las Antillas y, aunque no lo es del Valle del Cauca, se cultiva en el país como especie ornamental por sus flores azul-violáceas contra el follaje verde brillante. La resina de su tronco tuvo, además, uso histórico en el tratamiento de enfermedades reumáticas.

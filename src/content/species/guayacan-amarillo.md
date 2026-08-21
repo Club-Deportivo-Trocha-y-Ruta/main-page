@@ -12,6 +12,12 @@ draft: false
 plural: "Guayacanes Amarillos"
 ---
 
-El guayacán amarillo (*Handroanthus chrysanthus*) es sinónimo del Valle del Cauca. Sus flores de un amarillo luminoso que cubren la copa antes que las hojas lo convierten en el protagonista del florecimiento masivo que cada año entre enero y febrero tiñe de amarillo los cerros del municipio de El Dovio y otras zonas del departamento, en un espectáculo que convoca a miles de visitantes cada año.
+Un Guayacán Amarillo se sembró el 22 de abril de 2026 en la Pista de Ciclomontañismo Carlos Castro, durante la Sembratón del Día de la Tierra. Lo protege una llanta de bicicleta reciclada.
 
-Su presencia en arborización urbana y bordes de carreteras del Valle del Cauca es frecuente; cada árbol que florece trae alegría a quienes pasan cerca. En la pista Carlos Castro, los guayacanes amarillos sembrados en el programa Trocha Verde serán, en pocos años, los encargados de dar la bienvenida de colores a cada entrenamiento de los ciclistas del club.
+Fue donado por los amigos de Óscar Eduardo Ortiz. Le aporta al conjunto de nativos sembrados en la pista el árbol nacional de Colombia.
+
+## Sobre la especie
+
+El guayacán amarillo (*Handroanthus chrysanthus*) es sinónimo del Valle del Cauca. Sus flores de un amarillo luminoso cubren la copa antes de que salgan las hojas y son las protagonistas del florecimiento masivo que cada año, entre enero y febrero, tiñe los cerros del municipio de El Dovio y de otras zonas del departamento, en un espectáculo que convoca a miles de visitantes.
+
+Es habitual en la arborización urbana y en los bordes de carretera del Valle; cada ejemplar que florece trae alegría a quien pasa cerca. Cuando el de la pista Carlos Castro llegue a esa edad, será él quien dé la bienvenida de colores en la temporada de floración.

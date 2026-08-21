@@ -11,6 +11,10 @@ uses: ["frutal", "alimentación", "sombrío"]
 draft: false
 ---
 
-El aguacate (*Persea americana*) es un árbol frutal de la familia Lauraceae originario de Mesoamérica que los españoles introdujeron al resto del mundo en el siglo XVI. En Colombia se cultiva ampliamente en climas medios entre 1.000 y 2.200 metros de altitud, y el Valle del Cauca produce variedades como Hass, Lorena y Papelillo con exportación creciente.
+El Aguacate crece en la pista Carlos Castro, protegido con una llanta de bicicleta reciclada. Se sembró el 22 de abril de 2026, durante la Sembratón del Día de la Tierra.
 
-En la pista Carlos Castro, los aguacates sembrados por los niños de Trocha y Ruta cumplirán una doble función: brindar sombra durante los entrenamientos y producir frutos que los propios corredores podrán cosechar en pocos años. Una lección viva de paciencia y recompensa que el ciclomontañismo y la naturaleza comparten.
+Tiene padrino: lo donaron los amigos de Óscar Eduardo Ortiz para sumar diversidad de frutos a la pista. Un frutal más para la pista, con la idea de que con los años dé sombra y fruta a los corredores.
+
+## Sobre la especie
+
+El aguacate (*Persea americana*) es un árbol frutal de la familia Lauraceae originario de Mesoamérica que los españoles introdujeron al resto del mundo en el siglo XVI. En Colombia se cultiva ampliamente en climas medios, entre 1.000 y 2.200 metros de altitud, y el Valle del Cauca produce variedades como Hass, Lorena y Papelillo con exportación creciente. Colombia es hoy el cuarto productor mundial.

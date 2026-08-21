@@ -12,6 +12,9 @@ import {
   treeDisplayLabel,
   summarizeSpeciesTrees,
   speciesGrammar,
+  speciesHeadline,
+  commonPlace,
+  placeWithArticle,
   categoryLabels,
   categoryColors,
   journeyLabels,
@@ -344,5 +347,143 @@ describe('speciesGrammar', () => {
   it('arma el plural con commonName + "s" cuando el contenido no trae plural', () => {
     // "Mango" es uno de los 8 species/*.md reales sin campo `plural`.
     expect(speciesGrammar({ commonName: 'Mango' }).plural).toBe('Mangos');
+  });
+});
+
+describe('speciesHeadline', () => {
+  const mangoTommy = {
+    commonName: 'Mango Tommy',
+    plural: 'Mangos Tommy',
+    description: 'Variedad comercial de mango de frutos grandes, líder de exportación colombiana.',
+  };
+
+  const stats = (over: Partial<ReturnType<typeof summarizeSpeciesTrees>> = {}) => ({
+    total: 3,
+    firstPlanted: new Date(Date.UTC(2026, 3, 12)),
+    lastPlanted: new Date(Date.UTC(2026, 4, 3)),
+    sponsored: 2,
+    protectors: [{ protector: 'llanta-bicicleta', count: 3 }],
+    ...over,
+  });
+
+  // El motivo del reenfoque: el titular ya no puede ser el nombre de la especie
+  // a secas, que es lo que hacía competir la página con búsquedas botánicas.
+  it('el encabezado habla de los ejemplares del club, no de la especie', () => {
+    const h = speciesHeadline(mangoTommy, stats() as never);
+    expect(h.heading).toBe('Nuestros 3 Mangos Tommy');
+    expect(h.heading).not.toBe(mangoTommy.commonName);
+  });
+
+  it('en singular omite el número y concuerda el posesivo', () => {
+    const h = speciesHeadline(mangoTommy, stats({ total: 1 }) as never);
+    expect(h.heading).toBe('Nuestro Mango Tommy');
+  });
+
+  it('concuerda en femenino', () => {
+    const h = speciesHeadline(
+      { commonName: 'Ixora', plural: 'Ixoras', feminine: true, description: 'Arbusto ornamental.' },
+      stats({ total: 4 }) as never
+    );
+    expect(h.heading).toBe('Nuestras 4 Ixoras');
+    expect(h.seoTitle).toContain('sembradas');
+  });
+
+  it('el título SEO nombra al club y cabe holgado en un resultado de búsqueda', () => {
+    const h = speciesHeadline(mangoTommy, stats() as never);
+    expect(h.seoTitle).toBe('3 Mangos Tommy sembrados por Trocha y Ruta');
+    expect(h.seoTitle.length).toBeLessThanOrEqual(70);
+  });
+
+  it('la bajada sale del inventario: cantidad, lugar, periodo y padrinos', () => {
+    const h = speciesHeadline(mangoTommy, stats() as never, 'Pista de Ciclomontañismo Carlos Castro');
+    expect(h.lead).toContain('3 Mangos Tommy sembrados');
+    expect(h.lead).toContain('en la Pista de Ciclomontañismo Carlos Castro');
+    expect(h.lead).toContain('2026');
+    expect(h.lead).toContain('2 tienen padrino o madrina');
+  });
+
+  it('omite la mención de padrinos cuando no hay ninguno', () => {
+    const h = speciesHeadline(mangoTommy, stats({ sponsored: 0 }) as never);
+    expect(h.lead).not.toContain('padrino');
+  });
+
+  it('usa el singular del verbo con un solo padrino', () => {
+    const h = speciesHeadline(mangoTommy, stats({ sponsored: 1 }) as never);
+    expect(h.lead).toContain('1 tiene padrino o madrina');
+  });
+
+  // Bajar la inicial del nombre dejaba "guayacán Azul", con el adjetivo
+  // capitalizado a mitad de frase.
+  it('no altera la capitalización de nombres con adjetivo', () => {
+    const h = speciesHeadline(
+      { commonName: 'Guayacán Azul', plural: 'Guayacanes Azules', description: 'Árbol nativo.' },
+      stats({ total: 1 }) as never
+    );
+    expect(h.heading).toBe('Nuestro Guayacán Azul');
+  });
+
+  it('sin ejemplares cae al texto botánico, que es lo único cierto', () => {
+    const h = speciesHeadline(mangoTommy, null);
+    expect(h.heading).toBe('Mango Tommy');
+    expect(h.lead).toBe(mangoTommy.description);
+    expect(h.seoDescription).toBe(mangoTommy.description);
+  });
+
+  it('omite el lugar si el inventario no lo declara', () => {
+    const h = speciesHeadline(mangoTommy, stats() as never);
+    expect(h.lead).not.toContain(' en ,');
+    expect(h.seoDescription).toContain('por el Club Deportivo Trocha y Ruta');
+  });
+});
+
+describe('commonPlace', () => {
+  const arbol = (location?: string) => ({ data: { location } });
+
+  it('devuelve la ubicación declarada por la mayoría', () => {
+    expect(
+      commonPlace([arbol('Pista Carlos Castro'), arbol('Pista Carlos Castro'), arbol('Parque central')])
+    ).toBe('Pista Carlos Castro');
+  });
+
+  it('ignora ubicaciones vacías o en blanco', () => {
+    expect(commonPlace([arbol(undefined), arbol('   '), arbol('Pista Carlos Castro')])).toBe(
+      'Pista Carlos Castro'
+    );
+  });
+
+  it('devuelve undefined si ningún árbol declara ubicación', () => {
+    expect(commonPlace([arbol(undefined), arbol('')])).toBeUndefined();
+  });
+
+  it('devuelve undefined con la lista vacía', () => {
+    expect(commonPlace([])).toBeUndefined();
+  });
+});
+
+describe('placeWithArticle', () => {
+  it('antepone el artículo femenino a los lugares conocidos', () => {
+    expect(placeWithArticle('Pista de Ciclomontañismo Carlos Castro')).toBe(
+      'la Pista de Ciclomontañismo Carlos Castro'
+    );
+    expect(placeWithArticle('Escuela Rural Guabinas')).toBe('la Escuela Rural Guabinas');
+  });
+
+  it('antepone el artículo masculino cuando corresponde', () => {
+    expect(placeWithArticle('Parque Central')).toBe('el Parque Central');
+  });
+
+  it('respeta el artículo que ya trae el contenido', () => {
+    expect(placeWithArticle('la pista Carlos Castro')).toBe('la pista Carlos Castro');
+    expect(placeWithArticle('El Vergel')).toBe('El Vergel');
+  });
+
+  // Preferimos un nombre sin artículo a inventar un género equivocado.
+  it('deja el nombre intacto si no puede determinar el género', () => {
+    expect(placeWithArticle('Km 4 vía Dapa')).toBe('Km 4 vía Dapa');
+  });
+
+  it('tolera espacios sobrantes y cadenas vacías', () => {
+    expect(placeWithArticle('  Pista Carlos Castro  ')).toBe('la Pista Carlos Castro');
+    expect(placeWithArticle('   ')).toBe('');
   });
 });

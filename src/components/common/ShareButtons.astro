@@ -1,4 +1,6 @@
 ---
+import { shareUrl } from '@lib/utm';
+
 interface Props {
   title: string;
   url?: string;
@@ -7,12 +9,21 @@ interface Props {
 
 const { title, url = Astro.url.href, description } = Astro.props;
 
+/*
+ * Cada canal comparte la URL con su propio UTM. Sin esto todo el tráfico
+ * reenviado llega como «Direct» —WhatsApp no manda `referer`— y es
+ * indistinguible del que teclea el dominio a mano: en el trimestre mayo-agosto
+ * de 2026 eso era la mitad de las sesiones del sitio.
+ */
 const encodedTitle = encodeURIComponent(title);
-const encodedUrl = encodeURIComponent(url);
 
-const whatsappUrl = `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`;
-const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+const whatsappUrl = `https://wa.me/?text=${encodedTitle}%20${encodeURIComponent(shareUrl(url, 'whatsapp'))}`;
+const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl(url, 'facebook'))}`;
+const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodeURIComponent(shareUrl(url, 'twitter'))}`;
+
+// El destino del compartir nativo lo elige el sistema operativo, así que su UTM
+// solo puede decir que salió de aquí.
+const nativeShareUrl = shareUrl(url, 'native');
 ---
 
 <div class="flex items-center gap-2" id="share-container">
@@ -24,7 +35,7 @@ const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${
     type="button"
     aria-label="Compartir esta página"
     data-title={title}
-    data-url={url}
+    data-url={nativeShareUrl}
     data-description={description}
     class="hidden size-9 rounded-full flex items-center justify-center transition-colors bg-primary/10 text-primary hover:bg-primary/20 cursor-pointer"
   >

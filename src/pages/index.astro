@@ -15,8 +15,13 @@
  * Ver docs/04-sistema-editorial.md.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
+import ScrollDepth from '@components/common/ScrollDepth.astro';
 import { SITE } from '@lib/constants';
-import { generateOrganizationJsonLd, generateWebSiteJsonLd } from '@lib/seo';
+import {
+  generateOrganizationJsonLd,
+  generateWebSiteJsonLd,
+  generateNewsMediaOrganizationJsonLd,
+} from '@lib/seo';
 
 import Hero from '@components/sections/Hero.astro';
 import StatsCounter from '@components/sections/StatsCounter.astro';
@@ -30,7 +35,13 @@ import SectionShell from '@components/editorial/SectionShell.astro';
 import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 import WaveSeparator from '@components/common/WaveSeparator.astro';
 
-const jsonLd = [generateOrganizationJsonLd(), generateWebSiteJsonLd()];
+const jsonLd = [
+  generateOrganizationJsonLd(),
+  generateWebSiteJsonLd(),
+  // El editor de las noticias, declarado una vez a nivel de sitio. Las
+  // crónicas lo repiten inline para ser autocontenidas.
+  { '@context': 'https://schema.org', ...generateNewsMediaOrganizationJsonLd() },
+];
 ---
 
 <BaseLayout title={SITE.name} description={SITE.description} jsonLd={jsonLd}>
@@ -98,4 +109,5 @@ const jsonLd = [generateOrganizationJsonLd(), generateWebSiteJsonLd()];
       description="Escríbenos y te decimos a qué grupo entra según su edad. La primera clase es de prueba."
     />
   </div>
+  <ScrollDepth target="main" />
 </BaseLayout>

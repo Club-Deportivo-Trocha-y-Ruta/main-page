@@ -72,7 +72,17 @@ const jsonLdItems = jsonLd
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
-<meta name="robots" content={noindex ? "noindex, nofollow" : "max-image-preview:large"} />
+<!--
+  `max-snippet:-1` y `max-video-preview:-1` levantan el límite de longitud que
+  Google aplica por defecto al fragmento. Sin ellos, una crónica compite en
+  Noticias y Discover con un extracto recortado.
+-->
+<meta
+  name="robots"
+  content={noindex
+    ? 'noindex, nofollow'
+    : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'}
+/>
 
 <!-- Open Graph -->
 <meta property="og:type" content={ogType} />

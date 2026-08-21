@@ -147,5 +147,6 @@ Archivos legacy no activos: `netlify.toml`, `wrangler.toml`, `workers/donations/
 - `docs/02-technical-architecture.md` — ADRs y configs (al configurar)
 - `docs/03-content-strategy.md` — schemas completos, taxonomía, CMS (al tocar collections)
 - `docs/04-sistema-editorial.md` — **léelo antes de rediseñar cualquier sección o página**
+- `docs/05-convencion-utm.md` — etiquetado de enlaces compartidos (al preparar difusión en redes/WhatsApp)
 - `.claude/agents/` — 22 agentes de proyecto organizados como compañía digital (C-suite → engineers → auditors); `.claude/teams/` — 5 teams para workflows multi-departamento
 - `.claude/settings.json` — allowlist de comandos npm/git del proyecto; `rm -rf`, `git push --force` y `git reset --hard` en deny list

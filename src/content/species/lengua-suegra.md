@@ -13,6 +13,14 @@ plural: "Lenguas de suegra"
 feminine: true
 ---
 
-La lengua de suegra (*Dracaena trifasciata*, antes *Sansevieria trifasciata*), también llamada espada de San Jorge o lengua de tigre, es una planta suculenta originaria de África occidental. Sus hojas rígidas, lanceoladas y con vetas amarillas en los bordes pueden alcanzar hasta un metro de altura. Es extremadamente resistente: tolera la sequía, la poca luz y los suelos pobres, lo que la convierte en una de las plantas ornamentales más populares del mundo.
+El club tiene hoy cuatro Lenguas de suegra, todas en el vivero a la espera de siembra. Llegaron el mismo día, el 18 de mayo de 2026, como cuatro hojas de una misma donación que se propagarán por esqueje antes de pasar a jardinera o cubresuelo.
 
-Una de sus cualidades más valoradas es su capacidad de purificar el aire. Estudios de la NASA la identificaron entre las plantas que eliminan toxinas como el formaldehído y el benceno del ambiente. Además, a diferencia de la mayoría de plantas, libera oxígeno durante la noche, lo que la hace ideal para dormitorios. Es muy fácil de propagar a partir de hojas o rizomas, por lo que las cuatro hojas donadas darán origen a nuevas plantas que decorarán el espacio del club.
+Las cuatro las donó la señora Olga Hernández, abuela del deportista Kevin Parea. En vez de un ejemplar único, entregó las hojas para que cada una diera origen a una planta nueva.
+
+Cuando estén listas, aportarán verdor de bajo mantenimiento, sin exigir riego constante ni cuidados sofisticados.
+
+## Sobre la especie
+
+La lengua de suegra (*Dracaena trifasciata*, antes *Sansevieria trifasciata*), también llamada espada de San Jorge o lengua de tigre, es una suculenta originaria de África occidental. Sus hojas rígidas y lanceoladas, con vetas amarillas en los bordes, pueden alcanzar un metro de altura. Tolera la sequía, la poca luz y los suelos pobres, y por eso es una de las ornamentales más difundidas del mundo.
+
+También es célebre por purificar el aire: estudios de la NASA la identificaron entre las plantas que eliminan toxinas como el formaldehído y el benceno, y a diferencia de casi todas, libera oxígeno durante la noche. Se propaga con facilidad a partir de hojas o rizomas, que es justamente el camino que van a seguir las cuatro del club.

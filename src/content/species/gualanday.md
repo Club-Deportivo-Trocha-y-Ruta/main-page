@@ -11,6 +11,12 @@ uses: ["ornamental", "reforestación", "sombrío", "medicinal"]
 draft: false
 ---
 
-El gualanday (*Jacaranda caucana*) es una especie endémica del suroccidente colombiano que pertenece a la familia Bignoniaceae. A diferencia de la jacaranda africana y brasileña ampliamente cultivada en ciudades del mundo, esta especie es propia de los bosques secos tropicales del Valle del Cauca y el Cauca, donde florece con una explosión de color malva-violáceo que cubre toda la copa antes de que aparezcan las hojas.
+Un Gualanday joven crece en la Pista de Ciclomontañismo Carlos Castro, protegido con una llanta de bicicleta reciclada. Se sembró el 3 de mayo de 2026 durante una de las jornadas del programa Trocha Verde.
 
-En el trópico colombiano, el gualanday crece en zonas con estaciones secas marcadas y suelos bien drenados, exactamente las condiciones de los cerros que rodean Yumbo. Su presencia en la pista Carlos Castro restaura un elemento nativo del paisaje original del Valle y ofrece cada año un espectáculo visual que los ciclistas del club disfrutarán mientras entrenan.
+Lo donó Helmut Ortiz, presidente del club. Le aporta al programa el componente nativo endémico del Valle del Cauca.
+
+## Sobre la especie
+
+El gualanday (*Jacaranda caucana*) es una especie endémica del suroccidente colombiano, de la familia Bignoniaceae. A diferencia de la jacaranda africana y brasileña, tan común en la arborización urbana del mundo, esta es propia de los bosques secos del Valle del Cauca y del Cauca. Cuando florece, cubre toda la copa con un manto malva-violáceo antes de que aparezcan las hojas.
+
+Crece bien en zonas con estaciones secas marcadas y suelos bien drenados, condiciones parecidas a las de los cerros que rodean Yumbo. Tenerlo en la pista Carlos Castro es recuperar un pedazo del paisaje original del Valle.

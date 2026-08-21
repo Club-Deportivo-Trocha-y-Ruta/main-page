@@ -126,6 +126,21 @@ describe('MobileMenu', () => {
     expect(screen.getByText('Preinscríbete')).toBeInTheDocument();
   });
 
+  // El CTA del header es `hidden sm:inline-flex`, así que en móvil este es el único
+  // botón de preinscripción. Sin `data-analytics-event` el clic delegado de
+  // `Analytics.astro` no lo registra y `cta_inscripcion_click` queda en cero pese a
+  // haber tráfico: exactamente lo que ocurrió entre mayo y agosto de 2026, con el
+  // 82% de las sesiones llegando desde móvil.
+  it('el CTA móvil está instrumentado para analítica', async () => {
+    const user = userEvent.setup();
+    render(<MobileMenu {...defaultProps} />);
+    await user.click(screen.getByLabelText('Abrir menú de navegación'));
+
+    const cta = screen.getByText('Preinscríbete').closest('a');
+    expect(cta).toHaveAttribute('href', '/inscripciones');
+    expect(cta).toHaveAttribute('data-analytics-event', 'cta_inscripcion_click');
+  });
+
   // ─── Accesibilidad ───────────────────────────────────────
 
   it('aria-expanded se actualiza correctamente', async () => {

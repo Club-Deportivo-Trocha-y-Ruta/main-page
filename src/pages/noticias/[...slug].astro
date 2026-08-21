@@ -19,6 +19,8 @@ import { Icon } from 'astro-icon/components';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
 import ShareButtons from '@components/common/ShareButtons.astro';
+import ScrollDepth from '@components/common/ScrollDepth.astro';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
 import NewsGallery from '@components/sections/NewsGallery.astro';
 import RaceLineup from '@components/sections/RaceLineup.astro';
@@ -27,7 +29,7 @@ import ChronicleAdjacentNav from '@components/sections/ChronicleAdjacentNav.astr
 import { formatDate } from '@lib/utils';
 import { getCategoryStyle, readingTime } from '@lib/news';
 import { resolveChronicleContext, placeChronicle } from '@lib/chronicle';
-import { generateArticleJsonLd } from '@lib/seo';
+import { generateArticleJsonLd, toColombiaIso } from '@lib/seo';
 
 type NewsEntry = CollectionEntry<'news'>;
 type EventEntry = CollectionEntry<'events'>;
@@ -97,8 +99,8 @@ const jsonLd = generateArticleJsonLd({
   ogImageHeight={ogImageHeight}
   jsonLd={jsonLd}
   ogType="article"
-  articlePublishedTime={date.toISOString()}
-  articleModifiedTime={(updatedDate ?? date).toISOString()}
+  articlePublishedTime={toColombiaIso(date)}
+  articleModifiedTime={toColombiaIso(updatedDate ?? date)}
   articleAuthor={author}
   articleSection={category}
   articleTags={tags}
@@ -130,7 +132,7 @@ const jsonLd = generateArticleJsonLd({
         <p class="mt-4 max-w-2xl text-lg leading-relaxed text-text-secondary">{excerpt}</p>
 
         <div class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text-secondary">
-          <time datetime={date.toISOString()}>{formatDate(date)}</time>
+          <time datetime={toColombiaIso(date)}>{formatDate(date)}</time>
           <span aria-hidden="true">&middot;</span>
           <span>{author}</span>
           {minutes !== null && (
@@ -202,6 +204,20 @@ const jsonLd = generateArticleJsonLd({
           </div>
         )}
 
+        {/*
+          Salida hacia la inscripción. Las crónicas son el 59% de las páginas vistas y
+          lo único que atrae tráfico nuevo —la de Ginebra retuvo 65 minutos de lectura—,
+          pero hasta agosto de 2026 terminaban en "ver todas las crónicas" y no ofrecían
+          ningún paso siguiente medible. Va antes de compartir: primero la acción, luego
+          la difusión.
+        */}
+        <div class="mt-12">
+          <InscriptionCTA
+            heading="¿A tu hijo le brillaron los ojos leyendo esto?"
+            description="En el club se empieza desde los 4 años, sin experiencia previa. La primera clase de prueba es gratis."
+          />
+        </div>
+
         <div class="mt-10 border-t border-black/10 pt-6">
           <ShareButtons title={title} description={excerpt} />
         </div>
@@ -226,47 +242,5 @@ const jsonLd = generateArticleJsonLd({
     )}
   </article>
 
-  <script is:inline>
-    (function () {
-      function initScrollDepth() {
-        const article = document.querySelector('article');
-        if (!article) return;
-        const fired = new Set();
-        const depths = [25, 50, 75, 100];
-
-        function check() {
-          const rect = article.getBoundingClientRect();
-          const total = rect.height;
-          if (total <= 0) return;
-          const scrolled = Math.min(Math.max(-rect.top + window.innerHeight, 0), total);
-          const pct = Math.round((scrolled / total) * 100);
-          for (const d of depths) {
-            if (pct >= d && !fired.has(d)) {
-              fired.add(d);
-              if (typeof window.__trochaEmit === 'function') {
-                window.__trochaEmit('scroll_depth', { depth: d });
-              }
-            }
-          }
-          if (fired.size === depths.length) {
-            window.removeEventListener('scroll', onScroll);
-          }
-        }
-
-        let ticking = false;
-        function onScroll() {
-          if (ticking) return;
-          ticking = true;
-          requestAnimationFrame(function () {
-            check();
-            ticking = false;
-          });
-        }
-        window.addEventListener('scroll', onScroll, { passive: true });
-        check();
-      }
-      initScrollDepth();
-      document.addEventListener('astro:page-load', initScrollDepth);
-    })();
-  </script>
+  <ScrollDepth target="article" />
 </BaseLayout>

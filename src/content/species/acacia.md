@@ -13,6 +13,14 @@ plural: "Acacias"
 feminine: true
 ---
 
-Las acacias (*Acacia* y géneros relacionados como *Vachellia* y *Senegalia*) forman una familia diversa dentro de las leguminosas, con más de 1300 especies distribuidas en zonas tropicales y subtropicales del planeta. En el Valle del Cauca se encuentran tanto especies nativas como cultivadas, todas reconocibles por sus hojas compuestas finamente divididas y, en muchos casos, espinas en el tronco.
+El club tiene dos Acacias, ambas todavía en el vivero a la espera de siembra en la pista Carlos Castro. Llegaron juntas el 18 de mayo de 2026 y esperan trasplante dentro de llantas de bicicleta recicladas. La especie exacta está por confirmar: se sabe que son del género *Acacia*, pero no cuál dentro de las más de mil trescientas posibles.
 
-Su gran valor ecológico radica en la capacidad de fijar nitrógeno atmosférico en el suelo gracias a la simbiosis con bacterias en sus raíces. Esto las convierte en plantas regeneradoras de suelos degradados y excelentes compañeras para huertas y bosques en formación. En la pista Carlos Castro, las acacias donadas por la familia Parea aportarán sombra ligera, atraerán polinizadores y enriquecerán la tierra para las generaciones de árboles que vendrán.
+Las dos las donó la señora Olga Hernández, abuela del deportista Kevin Parea, en la misma jornada en que entregó las cuatro hojas de Lengua de suegra. Fue una donación de familia, silenciosa, que abrió una especie nueva para el inventario de Trocha Verde.
+
+Cuando pasen a la pista, aportarán sombra ligera y atraerán polinizadores, pero su función principal es de fondo: fertilizar el suelo para las generaciones de árboles que se sembrarán al lado. La acacia trabaja para lo que viene después de ella.
+
+## Sobre la especie
+
+Las acacias (*Acacia* y géneros relacionados como *Vachellia* y *Senegalia*) forman una familia diversa dentro de las leguminosas, con más de 1300 especies en zonas tropicales y subtropicales. En el Valle del Cauca conviven especies nativas y cultivadas, todas reconocibles por sus hojas compuestas finamente divididas y, en muchos casos, espinas en el tronco.
+
+Su valor ecológico está en la capacidad de fijar nitrógeno atmosférico en el suelo, gracias a la simbiosis con bacterias en sus raíces. Eso las convierte en regeneradoras de suelos degradados y en excelentes compañeras para huertas y bosques en formación.

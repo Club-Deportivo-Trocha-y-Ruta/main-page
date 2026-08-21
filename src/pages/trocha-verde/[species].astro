@@ -32,6 +32,8 @@ import {
   speciesGrammar,
   plantingSpan,
   describeProtectorMix,
+  speciesHeadline,
+  commonPlace,
 } from '@lib/tree-utils';
 
 type SpeciesEntry = CollectionEntry<'species'>;
@@ -53,6 +55,11 @@ const speciesTrees = treesOfSpecies(allTrees, sp);
 const stats = summarizeSpeciesTrees(speciesTrees);
 const grammar = speciesGrammar(sp.data);
 
+// El titular y los metadatos hablan de los ejemplares del club, no de la especie
+// en abstracto: ver la nota en `speciesHeadline` para el porqué.
+const place = commonPlace(speciesTrees);
+const headline = speciesHeadline(sp.data, stats, place);
+
 const catColors = categoryColors[sp.data.category] ?? categoryColors.nativo;
 const catLabel = categoryLabels[sp.data.category] ?? sp.data.category;
 
@@ -66,8 +73,8 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
 ---
 
 <BaseLayout
-  title={`${sp.data.commonName} | Trocha Verde`}
-  description={sp.data.description}
+  title={headline.seoTitle}
+  description={headline.seoDescription}
   ogImage={sp.data.heroImage}
 >
   <!-- La especie como protagonista -->
@@ -86,8 +93,8 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
         id="especie-titulo"
         eyebrow="Trocha Verde"
         eyebrowIcon="ph:tree-bold"
-        title={sp.data.commonName}
-        lead={sp.data.description}
+        title={headline.heading}
+        lead={headline.lead}
       >
         <div class="mt-3 flex flex-wrap items-center gap-3">
           {sp.data.scientificName && (
@@ -99,19 +106,6 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
             {catLabel}
           </span>
         </div>
-
-        <FactGrid
-          class="mt-6"
-          columns={2}
-          items={[
-            sp.data.origin
-              ? { icon: 'ph:globe-hemisphere-west-bold', label: 'De dónde viene', value: sp.data.origin }
-              : null,
-            sp.data.uses && sp.data.uses.length > 0
-              ? { icon: 'ph:leaf-bold', label: 'Para qué se usa', value: sp.data.uses.join(', ') }
-              : null,
-          ]}
-        />
       </SectionIntro>
 
       <img
@@ -212,10 +206,23 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
       id="sobre-titulo"
       eyebrow="Sobre la especie"
       eyebrowIcon="ph:info-bold"
-      title="Una especie con historia propia"
-      highlight="historia propia"
-      lead="De dónde viene, cómo crece y qué representa para el club."
+      title="Cómo llegaron a la pista"
+      highlight="a la pista"
+      lead="Quién los sembró, de dónde viene la especie y qué hacen aquí."
       class="max-w-2xl"
+    />
+
+    <FactGrid
+      class="mt-8 max-w-3xl"
+      columns={2}
+      items={[
+        sp.data.origin
+          ? { icon: 'ph:globe-hemisphere-west-bold', label: 'De dónde viene', value: sp.data.origin }
+          : null,
+        sp.data.uses && sp.data.uses.length > 0
+          ? { icon: 'ph:leaf-bold', label: 'Para qué se usa', value: sp.data.uses.join(', ') }
+          : null,
+      ]}
     />
 
     <div class="prose prose-lg mt-8 max-w-3xl">
@@ -223,7 +230,7 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
     </div>
 
     <div class="mt-8 max-w-3xl border-t border-black/10 pt-6">
-      <ShareButtons title={sp.data.commonName} description={sp.data.description} />
+      <ShareButtons title={headline.heading} description={headline.seoDescription} />
     </div>
   </SectionShell>
 

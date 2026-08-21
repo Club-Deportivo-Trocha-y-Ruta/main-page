@@ -1,6 +1,7 @@
 import type { APIContext } from 'astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SITE } from '../lib/constants';
+import { toColombiaIso } from '../lib/seo';
 
 type NewsEntry = CollectionEntry<'news'>;
 
@@ -46,7 +47,7 @@ export async function GET(_context: APIContext) {
         <news:name>${escapeXml(SITE.name)}</news:name>
         <news:language>es</news:language>
       </news:publication>
-      <news:publication_date>${n.data.date.toISOString()}</news:publication_date>
+      <news:publication_date>${toColombiaIso(n.data.date)}</news:publication_date>
       <news:title>${escapeXml(n.data.title)}</news:title>
     </news:news>
   </url>`

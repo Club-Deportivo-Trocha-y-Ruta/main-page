@@ -174,9 +174,17 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
               </ul>
 
               <div className="mt-6">
+                {/*
+                  El CTA del header (`Header.astro`) es `hidden sm:inline-flex`, así que en
+                  móvil —el 82% del tráfico— este es el único botón de preinscripción visible.
+                  Sin `data-analytics-event` el clic delegado de `Analytics.astro` no lo ve y
+                  `cta_inscripcion_click` queda en cero, que es justo lo que pasó entre mayo y
+                  agosto de 2026.
+                */}
                 <a
                   href="/inscripciones"
                   onClick={close}
+                  data-analytics-event="cta_inscripcion_click"
                   className="flex w-full items-center justify-center rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                   Preinscríbete

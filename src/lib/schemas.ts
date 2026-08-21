@@ -92,6 +92,13 @@ export const directivosSchema = z.object({
 
 export const newsSchema = z.object({
   title: z.string(),
+  /**
+   * Acepta fecha sola (`2026-08-02`) u hora completa con offset colombiano
+   * (`2026-08-02T18:30:00-05:00`). Google News ordena por frescura usando la
+   * marca de tiempo, así que la hora real vale para una crónica publicada el
+   * mismo día de la válida; sin ella se asume medianoche de Bogotá.
+   * La conversión a ISO con offset vive en `toColombiaIso` (`src/lib/seo.ts`).
+   */
   date: z.coerce.date(),
   updatedDate: z.coerce.date().optional(),
   author: z.string().default('Club Trocha y Ruta'),

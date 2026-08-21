@@ -10,6 +10,8 @@ import {
   generateCourseJsonLd,
   generateGalleryJsonLd,
   generateBreadcrumbJsonLd,
+  generateNewsMediaOrganizationJsonLd,
+  toColombiaIso,
 } from '../seo';
 import { SITE, SOCIAL } from '../constants';
 
@@ -258,6 +260,90 @@ describe('generateArticleJsonLd', () => {
     });
     expect(result.keywords).toBe('xco, resultados');
   });
+
+  it('acredita a una persona cuando el byline no es el club', () => {
+    const result = generateArticleJsonLd({ ...baseArticle, author: 'Juan Diego García' });
+    const author = result.author as Record<string, unknown>;
+    expect(author['@type']).toBe('Person');
+    expect(author.name).toBe('Juan Diego García');
+    expect(author.worksFor).toMatchObject({ '@id': `${SITE.url}/#organization` });
+  });
+
+  it('acredita a la organización cuando el byline es el club', () => {
+    const result = generateArticleJsonLd({ ...baseArticle, author: 'Club Trocha y Ruta' });
+    const author = result.author as Record<string, unknown>;
+    expect(author['@type']).toBe('Organization');
+    expect(author['@id']).toBe(`${SITE.url}/#organization`);
+  });
+
+  it('emite el editor inline como NewsMediaOrganization, no como referencia', () => {
+    const publisher = generateArticleJsonLd(baseArticle).publisher as Record<string, unknown>;
+    // Autocontenido: el nodo `#publisher` sólo existe en la home, así que una
+    // noticia no puede limitarse a referenciarlo.
+    expect(publisher['@type']).toBe('NewsMediaOrganization');
+    expect(publisher.correctionsPolicy).toBe(`${SITE.url}/politica-editorial/`);
+  });
+
+  it('usa URLs de página con barra final, iguales al canonical', () => {
+    const result = generateArticleJsonLd(baseArticle);
+    expect(result.url).toBe(`${SITE.url}/noticias/victoria-copa/`);
+    expect(result.mainEntityOfPage).toMatchObject({
+      '@id': `${SITE.url}/noticias/victoria-copa/`,
+    });
+  });
+
+  it('fecha las noticias con el offset de Colombia, no con Z', () => {
+    const result = generateArticleJsonLd(baseArticle);
+    expect(result.datePublished).toBe('2026-03-15T00:00:00-05:00');
+  });
+});
+
+// ============================================================
+// toColombiaIso
+// ============================================================
+
+describe('toColombiaIso', () => {
+  it('conserva el día del calendario cuando el frontmatter no trae hora', () => {
+    // `z.coerce.date()` interpreta `2026-08-02` como medianoche UTC. Emitirla
+    // tal cual dejaría la noticia fechada a las 19:00 del 1 de agosto en hora
+    // local, un día antes del que escribió el club.
+    expect(toColombiaIso(new Date('2026-08-02'))).toBe('2026-08-02T00:00:00-05:00');
+  });
+
+  it('reexpresa una hora explícita en componentes locales de Bogotá', () => {
+    expect(toColombiaIso(new Date('2026-08-02T18:30:00-05:00'))).toBe(
+      '2026-08-02T18:30:00-05:00'
+    );
+  });
+
+  it('convierte una hora dada en UTC a la hora local equivalente', () => {
+    expect(toColombiaIso(new Date('2026-08-02T23:30:00Z'))).toBe('2026-08-02T18:30:00-05:00');
+  });
+});
+
+// ============================================================
+// generateNewsMediaOrganizationJsonLd
+// ============================================================
+
+describe('generateNewsMediaOrganizationJsonLd', () => {
+  it('declara las políticas de transparencia que Google News evalúa', () => {
+    const result = generateNewsMediaOrganizationJsonLd();
+    const policy = `${SITE.url}/politica-editorial/`;
+
+    expect(result['@type']).toBe('NewsMediaOrganization');
+    expect(result['@id']).toBe(`${SITE.url}/#publisher`);
+    expect(result.ethicsPolicy).toBe(policy);
+    expect(result.publishingPrinciples).toBe(policy);
+    expect(result.correctionsPolicy).toBe(policy);
+    expect(result.verificationFactCheckingPolicy).toBe(policy);
+    expect(result.actionableFeedbackPolicy).toBe(policy);
+  });
+
+  it('no declara políticas que el club no tiene escritas', () => {
+    const result = generateNewsMediaOrganizationJsonLd();
+    expect(result).not.toHaveProperty('diversityPolicy');
+    expect(result).not.toHaveProperty('unnamedSourcesPolicy');
+  });
 });
 
 // ============================================================
@@ -360,11 +446,11 @@ describe('generateBreadcrumbJsonLd', () => {
     expect(items[2].position).toBe(3);
   });
 
-  it('genera URLs absolutas para paths relativos', () => {
+  it('genera URLs absolutas con barra final, igual que el canonical', () => {
     const result = generateBreadcrumbJsonLd([
       { name: 'Equipo', url: '/equipo' },
     ]);
     const items = result.itemListElement as Array<Record<string, unknown>>;
-    expect(items[0].item).toBe(`${SITE.url}/equipo`);
+    expect(items[0].item).toBe(`${SITE.url}/equipo/`);
   });
 });

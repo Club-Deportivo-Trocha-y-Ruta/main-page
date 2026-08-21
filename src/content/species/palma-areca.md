@@ -13,6 +13,14 @@ plural: "Palmas Areca"
 feminine: true
 ---
 
-La palma areca (*Dypsis lutescens*), también llamada palma bambú o palma dorada, es una de las palmas ornamentales más populares del mundo tropical y subtropical. Sus cañas múltiples de color amarillo-verdoso y sus frondes arqueadas de folíolos estrechos le dan un aspecto liviano y tropical muy apreciado en el paisajismo contemporáneo. Originaria de Madagascar, fue llevada a los trópicos de todo el mundo y hoy es cultivada en Colombia desde la costa hasta los valles medios.
+Ocho Palmas Areca crecen hoy en la pista Carlos Castro, todas sembradas el mismo día: el 3 de mayo de 2026. Cada una está protegida por una llanta de bicicleta reciclada, y juntas conforman el grupo más grande de palmas ornamentales del proyecto. La idea era clara desde el principio: no plantar una palma suelta, sino un conjunto que con el tiempo se leyera como un solo gesto en el paisaje de la pista.
 
-Su capacidad para crecer en penumbra parcial la hace versátil para interior y exterior. En espacios abiertos como la pista Carlos Castro, la palma areca se desarrolla con mayor vigor bajo pleno sol, produciendo nuevos vástagos que con el tiempo forman grupos multitroncales de gran efecto visual. Es una especie de bajo mantenimiento que añade carácter tropical al espacio de entrenamiento del club.
+Las ocho fueron donadas por Helmut Ortiz, presidente del club. Sembradas en la misma jornada, con el mismo protector y en la misma zona, funcionan como un corredor ornamental antes que como ejemplares individuales: el efecto viene de verlas juntas.
+
+Con los años, cada una de estas palmas producirá nuevos vástagos y formará grupos multitroncales. Lo que hoy son ocho plantones jóvenes tenderá a leerse como una franja tropical continua a lo largo del recorrido, un fondo verde para el entrenamiento diario del club.
+
+## Sobre la especie
+
+La palma areca (*Dypsis lutescens*), también llamada palma bambú o palma dorada, es una de las palmas ornamentales más cultivadas del mundo tropical. Sus cañas múltiples amarillo-verdosas y sus frondes arqueadas de folíolos estrechos le dan un aspecto liviano muy apreciado en el paisajismo contemporáneo.
+
+Es originaria de Madagascar y llegó a los trópicos del resto del mundo como planta de jardín; en Colombia se cultiva desde la costa hasta los valles medios. Tolera penumbra parcial, pero a pleno sol —como en la pista Carlos Castro— se desarrolla con más vigor y produce con mayor rapidez los vástagos que le dan su forma multitroncal característica. Es una especie de bajo mantenimiento, lo que la hace apta para un espacio de entrenamiento donde el cuidado depende de las jornadas del club.

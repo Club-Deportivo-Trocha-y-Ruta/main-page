@@ -12,6 +12,10 @@ draft: false
 plural: "Chambimbes"
 ---
 
-El chambimbe (*Sapindus saponaria*), también llamado jaboncillo, es un árbol de la familia Sapindaceae que produce frutos carnosos con un alto contenido de saponinas —compuestos que forman espuma en contacto con el agua. Durante siglos, comunidades indígenas y campesinas del Valle del Cauca utilizaron estos frutos para lavar ropa, vajilla y el cabello, sin contaminar fuentes de agua.
+El Chambimbe se sembró el 1 de abril de 2026 en la pista Carlos Castro, protegido con una llanta de bicicleta pintada de verde y amarillo. Los abuelos lo conocían como el "árbol del jabón", y ahora crece en la pista donde entrena el club.
 
-Es un árbol de tamaño mediano (10-15 m) con copa redondeada y follaje caducifolio en época seca. Su importancia ecológica es doble: produce frutos que alimentan a diversas aves y actúa como especie pionera en procesos de restauración. Sembrar chambimbes en la pista Carlos Castro es traer de vuelta un árbol que cuenta la historia de Yumbo antes de la industrialización.
+## Sobre la especie
+
+El chambimbe (*Sapindus saponaria*), también llamado jaboncillo, es un árbol de la familia Sapindaceae que produce frutos carnosos con alto contenido de saponinas —compuestos que forman espuma en contacto con el agua. Durante siglos, comunidades indígenas y campesinas del Valle del Cauca usaron estos frutos para lavar ropa, vajilla y cabello sin contaminar fuentes de agua.
+
+Es un árbol de tamaño mediano (10-15 m), con copa redondeada y follaje caducifolio en época seca. Sus frutos alimentan diversas aves y actúa como especie pionera en procesos de restauración; sus semillas negras y redondas son apreciadas en artesanías locales.

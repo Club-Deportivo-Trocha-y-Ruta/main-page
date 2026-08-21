@@ -12,6 +12,10 @@ draft: false
 plural: "Guayacanes Blancos"
 ---
 
-El guayacán blanco (*Handroanthus roseus*) comparte con su primo amarillo la capacidad de florecer masivamente antes de brotar las hojas, pero sus flores son de color rosado suave a blanco cremoso, creando un efecto visual diferente y complementario. En el Valle del Cauca crece en zonas con mayor humedad que el guayacán amarillo, adaptándose a suelos de los valles aluviales y faldas de montaña.
+Un Guayacán Blanco se sembró el 1 de abril de 2026 en la Pista de Ciclomontañismo Carlos Castro. Lo protege una llanta de bicicleta reciclada, pintada de rosado.
 
-Es un árbol de la familia Bignoniaceae que puede alcanzar los 20 metros de altura, con madera resistente y copa frondosa. Su floración, aunque menos celebrada que la del guayacán amarillo, es igualmente espectacular en los jardines y zonas arboladas donde se cultiva. En la pista Carlos Castro, el guayacán blanco amplía la paleta de colores del programa Trocha Verde con sus tonos rosados primaverales.
+## Sobre la especie
+
+El guayacán blanco (*Handroanthus roseus*) comparte con su primo amarillo la capacidad de florecer masivamente antes de brotar las hojas, pero lo hace con flores de color rosado suave a blanco cremoso —de ahí lo confuso del nombre—, en un efecto visual distinto y complementario. En el Valle del Cauca crece en zonas con más humedad que el amarillo y se adapta bien a los suelos de los valles aluviales y las faldas de montaña.
+
+Es de la familia Bignoniaceae, puede alcanzar los 20 metros de altura y tiene madera resistente y copa frondosa. Su floración, menos celebrada que la del amarillo, es igual de espectacular donde se cultiva. En la pista Carlos Castro amplía la paleta de colores del programa Trocha Verde con sus tonos rosados.

@@ -11,6 +11,12 @@ uses: ["maderero", "reforestación", "sombra"]
 draft: false
 ---
 
-El habano (*Cabralea canjerana*) es un árbol de la familia Meliaceae que crece en bosques húmedos andinos entre 1.000 y 2.500 metros de altitud. En el Valle del Cauca se le encuentra en zonas de ladera, donde sus raíces profundas contribuyen a la estabilización de suelos y la regulación hídrica de microcuencas.
+Un Habano se sembró el 22 de abril de 2026 en el Pump Track de la Pista de Ciclomontañismo Carlos Castro, durante la Sembratón del Día de la Tierra. Lo protege una llanta de bicicleta reciclada.
 
-Su copa amplia y follaje verde oscuro lo convierten en un excelente árbol de sombra, y su madera de color rojizo fue históricamente utilizada en ebanistería fina. Sembrar habanos en la pista Carlos Castro significa devolver a Yumbo un árbol que perteneció a estos paisajes mucho antes de que llegaran las especies introducidas.
+Fue donado por los amigos de Óscar Eduardo Ortiz. Aporta cobertura vegetal nativa al Pump Track.
+
+## Sobre la especie
+
+El habano (*Cabralea canjerana*) es un árbol de la familia Meliaceae que crece en los bosques húmedos andinos entre los 1.000 y los 2.500 metros de altitud. En el Valle del Cauca se le encuentra en zonas de ladera, donde sus raíces profundas contribuyen a la estabilización de suelos y a la regulación hídrica de las microcuencas.
+
+Tiene copa amplia y follaje verde oscuro, lo que lo convierte en un buen árbol de sombra, y su madera rojiza fue muy utilizada en ebanistería fina. Devolver un habano al paisaje de Yumbo es sembrar un árbol que perteneció a estos cerros mucho antes de que llegaran las especies introducidas.

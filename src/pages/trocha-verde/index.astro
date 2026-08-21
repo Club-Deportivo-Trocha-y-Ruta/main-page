@@ -16,6 +16,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import BaseLayout from '@layouts/BaseLayout.astro';
+import ScrollDepth from '@components/common/ScrollDepth.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Button from '@components/common/Button.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
@@ -511,6 +512,7 @@ const processSteps = [
       </div>
     </div>
   </SectionShell>
+  <ScrollDepth target="main" />
 </BaseLayout>
 
 <script>

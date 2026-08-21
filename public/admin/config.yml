@@ -62,8 +62,11 @@ collections:
     summary: "{{date | date('YYYY-MM-DD')}} — {{title}}"
     fields:
       - { label: "Título", name: "title", widget: "string", required: true }
-      - { label: "Fecha", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
-      - { label: "Fecha de actualización", name: "updatedDate", widget: "datetime", required: false, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      # Con hora: Google News ordena las noticias por marca de tiempo, y una
+      # crónica publicada el mismo día de la válida compite por frescura.
+      # El offset `-05:00` lo escribe el widget a partir de `picker_utc: false`.
+      - { label: "Fecha y hora de publicación", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DDTHH:mm:ssZ", date_format: "DD/MM/YYYY", time_format: "HH:mm", picker_utc: false }
+      - { label: "Fecha y hora de actualización", name: "updatedDate", widget: "datetime", required: false, format: "YYYY-MM-DDTHH:mm:ssZ", date_format: "DD/MM/YYYY", time_format: "HH:mm", picker_utc: false }
       - { label: "Autor", name: "author", widget: "string", default: "Juan Diego García" }
       - label: "Categoría"
         name: "category"
