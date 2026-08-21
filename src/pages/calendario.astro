@@ -48,6 +48,14 @@ const past = withStatus
   .filter(({ status }) => status === 'past')
   .sort((a, b) => b.event.data.date.getTime() - a.event.data.date.getTime());
 
+// Las canceladas no compiten por ser "la próxima fecha" ni se mezclan con las
+// que vienen —una cancelada puede caer antes que la próxima y el orden se lee
+// torcido—, pero tampoco pueden desaparecer: la familia que ya la tenía anotada
+// necesita ver que se cayó. Van en su propio bloque mientras no pase la fecha.
+const cancelled = withStatus
+  .filter(({ status, event }) => status === 'cancelled' && event.data.date.getTime() >= Date.now())
+  .sort((a, b) => a.event.data.date.getTime() - b.event.data.date.getTime());
+
 const [next, ...restUpcoming] = upcoming;
 
 // Crónicas por evento. Se cruzan las dos direcciones de la relación: la noticia
@@ -73,7 +81,7 @@ function chroniclesOf(event: Event) {
 const season = buildSeason(events);
 
 const jsonLd = generateEventsListJsonLd(
-  [...upcoming, ...past].map(({ event }) => ({
+  [...upcoming, ...cancelled, ...past].map(({ event }) => ({
     title: event.data.title,
     date: event.data.date,
     url: '/calendario',
@@ -262,6 +270,46 @@ const nextMonth = next
       </p>
     )}
   </SectionShell>
+
+  <!-- Lo que se cayó -->
+  {cancelled.length > 0 && (
+    <SectionShell tone="plain" width="wide" spacing="compact" labelledby="canceladas">
+      <SectionIntro
+        id="canceladas"
+        eyebrow="Sin efecto"
+        eyebrowIcon="ph:x-circle-bold"
+        title={cancelled.length === 1 ? 'Una fecha se cayó' : 'Fechas que se cayeron'}
+        lead={
+          cancelled.length === 1
+            ? 'La organización la canceló después de publicarla. La dejamos a la vista para que nadie viaje en vano; si se reprograma, la nueva fecha aparece arriba.'
+            : 'La organización las canceló después de publicarlas. Las dejamos a la vista para que nadie viaje en vano; si se reprograman, las nuevas fechas aparecen arriba.'
+        }
+        class="max-w-2xl"
+      />
+
+      <ul class="mt-8 grid gap-3 md:grid-cols-2">
+        {cancelled.map(({ event, status }, index) => (
+          <li
+            id={`evento-${event.id}`}
+            class="reveal scroll-mt-24"
+            style={`--stagger:${Math.min(index, 3) * 70}ms`}
+          >
+            <EventCard
+              title={event.data.title}
+              date={event.data.date}
+              endDate={event.data.endDate}
+              location={event.data.location}
+              city={event.data.city}
+              category={event.data.category}
+              level={event.data.level}
+              status={status}
+              muted
+            />
+          </li>
+        ))}
+      </ul>
+    </SectionShell>
+  )}
 
   <!-- Lo ya corrido -->
   {past.length > 0 && (

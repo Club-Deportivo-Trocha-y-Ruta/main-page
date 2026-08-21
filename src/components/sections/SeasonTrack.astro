@@ -28,12 +28,13 @@ const dot: Record<string, string> = {
   past: 'size-3 bg-primary-deep/50',
   ongoing: 'size-5 bg-accent ring-4 ring-accent/30',
   upcoming: 'size-3.5 bg-surface ring-2 ring-primary-deep/40',
-  cancelled: 'size-3 bg-surface-muted ring-2 ring-black/10',
+  cancelled: 'size-3.5 bg-surface ring-2 ring-black/20',
 };
 
 type Stop = SeasonStop<{ id: string; data: { title: string } }>;
 
 const isNext = (stop: Stop) => season.next?.id === stop.id;
+const isCancelled = (stop: Stop) => stop.status === 'cancelled';
 
 // La próxima fecha lleva el mismo punto que una en curso: es el "vas aquí".
 const dotFor = (stop: Stop) =>
@@ -44,6 +45,8 @@ const dotFor = (stop: Stop) =>
   <figure class:list={['not-prose', className]}>
     <figcaption class="sr-only">
       Temporada {season.year}: {season.completed} de {season.total} fechas corridas.
+      {season.cancelled > 0 &&
+        ` ${season.cancelled === 1 ? 'Una fecha cancelada' : `${season.cancelled} fechas canceladas`}.`}
       {season.next && ` La próxima es en ${season.next.label}.`}
     </figcaption>
 
@@ -54,6 +57,12 @@ const dotFor = (stop: Stop) =>
       <p class="text-xs text-text-secondary">
         <span class="font-bold text-text-primary">{season.completed}</span> de {season.total} fechas
         corridas
+        {season.cancelled > 0 && (
+          <span class="whitespace-nowrap">
+            {' · '}
+            {season.cancelled === 1 ? '1 cancelada' : `${season.cancelled} canceladas`}
+          </span>
+        )}
       </p>
     </div>
 
@@ -76,15 +85,24 @@ const dotFor = (stop: Stop) =>
               <a
                 href={`${hrefBase}${stop.id}`}
                 class="group flex w-full flex-col items-center rounded-lg pt-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                aria-label={`${stop.event.data.title} — ${stop.day} de ${stop.month}`}
+                aria-label={`${stop.event.data.title} — ${stop.day} de ${stop.month}${
+                  isCancelled(stop) ? ' — cancelada' : ''
+                }`}
               >
                 <span class="flex size-5 shrink-0 items-center justify-center" aria-hidden="true">
-                  <span
-                    class:list={[
-                      'block rounded-full transition-transform duration-200 group-hover:scale-125',
-                      dotFor(stop),
-                    ]}
-                  ></span>
+                  {isCancelled(stop) ? (
+                    <Icon
+                      name="ph:x-circle-fill"
+                      class="size-5 text-text-secondary/60 transition-transform duration-200 group-hover:scale-125"
+                    />
+                  ) : (
+                    <span
+                      class:list={[
+                        'block rounded-full transition-transform duration-200 group-hover:scale-125',
+                        dotFor(stop),
+                      ]}
+                    ></span>
+                  )}
                 </span>
 
                 <span
@@ -103,10 +121,17 @@ const dotFor = (stop: Stop) =>
                   class:list={[
                     'mt-1.5 line-clamp-2 text-xs leading-tight',
                     isNext(stop) ? 'font-bold text-accent-deep' : 'text-text-secondary',
+                    isCancelled(stop) && 'line-through decoration-1',
                   ]}
                 >
                   {stop.label}
                 </span>
+
+                {isCancelled(stop) && (
+                  <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-black/[0.06] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-text-secondary">
+                    Cancelada
+                  </span>
+                )}
 
                 {isNext(stop) && (
                   <span class="mt-1 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-accent-deep">

@@ -87,6 +87,45 @@ describe('SeasonTrack', () => {
     expect(caption?.textContent).toContain('Roldanillo');
   });
 
+  describe('fecha cancelada', () => {
+    const conCancelada = [
+      ...events.slice(0, 2),
+      { ...events[2], data: { ...events[2].data, status: 'cancelled' } },
+      events[3],
+    ];
+    const seasonCancelada = buildSeason(conCancelada, hoy);
+
+    it('la deja en el riel, rotulada y tachada', async () => {
+      const doc = await render({ season: seasonCancelada });
+      const parada = [...doc.querySelectorAll('ol > li')][2];
+      expect(parada.textContent).toContain('Roldanillo');
+      expect(parada.textContent).toContain('Cancelada');
+      expect(parada.innerHTML).toContain('line-through');
+    });
+
+    it('no la anuncia como la próxima: esa pasa a ser la siguiente en pie', async () => {
+      const doc = await render({ season: seasonCancelada });
+      const marcas = [...doc.querySelectorAll('ol > li')].filter((li) =>
+        li.textContent?.includes('Sigue')
+      );
+      expect(marcas).toHaveLength(1);
+      expect(marcas[0].textContent).toContain('Yumbo');
+    });
+
+    it('la nombra como cancelada para lectores de pantalla', async () => {
+      const doc = await render({ season: seasonCancelada });
+      const label = [...doc.querySelectorAll('ol > li a')][2].getAttribute('aria-label');
+      expect(label).toContain('Roldanillo');
+      expect(label).toContain('cancelada');
+    });
+
+    it('la descuenta en el conteo visible y en el figcaption', async () => {
+      const doc = await render({ season: seasonCancelada });
+      expect(doc.body.textContent).toContain('1 cancelada');
+      expect(doc.querySelector('figcaption')?.textContent).toContain('Una fecha cancelada');
+    });
+  });
+
   it('deja el riel lleno cuando ya no queda nada por correr', async () => {
     const doc = await render({ season: buildSeason(events, new Date('2026-12-01T17:00:00Z')) });
     expect(doc.body.textContent).not.toContain('Sigue');

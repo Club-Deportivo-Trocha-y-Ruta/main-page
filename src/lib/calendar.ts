@@ -177,6 +177,8 @@ export interface Season<T> {
   /** Fechas ya corridas (incluye la que está en curso). */
   completed: number;
   total: number;
+  /** Fechas del calendario que se cayeron. Se siguen pintando, pero no se corren. */
+  cancelled: number;
   /** Avance de la temporada en %, para pintar la barra. */
   progressPct: number;
   next: SeasonStop<T> | null;
@@ -217,12 +219,14 @@ export function buildSeason<T extends SeasonInput>(events: T[], now: Date = new 
   }));
 
   const completed = stops.filter((s) => s.status === 'past' || s.status === 'ongoing').length;
+  const cancelled = stops.filter((s) => s.status === 'cancelled').length;
 
   return {
     year,
     stops,
     completed,
     total: stops.length,
+    cancelled,
     progressPct: stops.length === 0 ? 0 : Math.round((completed / stops.length) * 10000) / 100,
     next: stops.find((s) => s.status === 'upcoming' || s.status === 'ongoing') ?? null,
   };

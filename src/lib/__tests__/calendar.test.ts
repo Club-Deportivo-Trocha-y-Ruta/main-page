@@ -174,6 +174,24 @@ describe('buildSeason', () => {
     expect(season.stops).toHaveLength(4);
   });
 
+  it('cuenta las canceladas aparte, sin sacarlas del riel', () => {
+    const conCancelada = [
+      ...temporada.slice(0, 3),
+      evento('roldanillo', '2026-09-26', { city: 'Roldanillo', status: 'cancelled' }),
+    ];
+    const season = buildSeason(conCancelada, hoy);
+    expect(season.cancelled).toBe(1);
+    // Sigue siendo una parada del riel: la fecha existió y la gente la tenía anotada.
+    expect(season.stops).toHaveLength(4);
+    expect(season.stops[3].status).toBe('cancelled');
+    // Y no puede ser "la próxima": esa fecha ya no se corre.
+    expect(season.next).toBeNull();
+  });
+
+  it('no cuenta canceladas cuando no las hay', () => {
+    expect(buildSeason(temporada, hoy).cancelled).toBe(0);
+  });
+
   it('no se cae sin eventos', () => {
     const season = buildSeason([], hoy);
     expect(season.stops).toEqual([]);
