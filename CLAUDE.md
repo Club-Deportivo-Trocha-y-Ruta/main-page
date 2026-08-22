@@ -11,9 +11,10 @@ Sitio web estático del **Club Deportivo Trocha y Ruta** — club de ciclomonta�
 ```bash
 npm run dev          # Dev server en localhost:4321
 npm run build        # astro check + astro build + pagefind --site dist → dist/
+npm run build:only   # astro build + pagefind, sin astro check (lo usa el job deploy de develop)
 npm run preview      # Preview del build local
 npm run typecheck    # astro check
-npm run lint         # ESLint (src, .ts/.tsx/.astro)
+npm run lint         # ESLint (eslint src)
 npm run lint:fix     # ESLint con auto-fix
 npm run format       # Prettier (escribe)
 npm run format:check # Prettier (solo verifica)
@@ -29,13 +30,13 @@ npx vitest run --project react src/components/interactive/__tests__/ContactForm.
 npx vitest run --project astro src/lib/__tests__/utils.test.ts
 ```
 
-Node >= 20 requerido (CI usa Node 22).
+Node >= 22.12 requerido (engines en `package.json`; CI usa Node 22).
 
 ## Stack
 
 | Capa | Tecnología | Notas críticas |
 |------|-----------|----------------|
-| Framework | Astro ^5.17 | `output: 'static'`. **NO adoptar v6** sin validar breaking changes |
+| Framework | Astro ^7.1 | `output: 'static'`. No saltar de major sin validar breaking changes |
 | Estilos | Tailwind CSS 4 | Via `@tailwindcss/vite`. **NO existe config JS** — tokens en `@theme {}` de `src/styles/global.css` |
 | Islands | React 19 | Solo 6 componentes en `src/components/interactive/` |
 | CMS | Sveltia CMS | Estático, sin npm. `public/admin/` (index.html + config.yml) |
@@ -128,7 +129,7 @@ Coverage (solo `src/lib/**` y `src/components/interactive/**`): global 70/75/70/
 ## CI/CD
 
 Dos workflows en `.github/workflows/`:
-- `deploy.yml` (push a `develop`): job `ci` (typecheck + `npm test`) como **gate** → job `deploy` (build + lftp a Hostinger, environment `develop`)
+- `deploy.yml` (push a `develop`): job `ci` (typecheck + `npm test`) como **gate** → job `deploy` (`build:only` —sin astro check, el typecheck ya corrió en `ci`— + lftp a Hostinger, environment `develop`)
 - `deploy-prod.yml` (push a `main`): build + deploy directo, **sin tests** — asume que el código ya pasó el gate en develop
 
 Deploy usa **lftp** con reintentos (FTP-Deploy-Action fallaba con ECONNRESET contra Hostinger). Variables públicas (`PUBLIC_*`) van como Variables del Environment; credenciales FTP como Secrets. Flujo de trabajo: feature branch → `develop` (QA) → `main` (producción).

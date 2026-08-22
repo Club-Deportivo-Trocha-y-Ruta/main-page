@@ -106,10 +106,12 @@ jobs:
         run: npm ci
 
       # ── 4. Build Astro ────────────────────────────────────
-      # astro check + astro build. Genera el directorio dist/
-      # con el sitio estático listo para subir a Hostinger.
+      # astro build + pagefind, sin astro check: el typecheck
+      # ya corrió como gate en el job ci, no se repite aquí.
+      # Genera el directorio dist/ con el sitio estático
+      # listo para subir a Hostinger.
       - name: Build Astro (QA)
-        run: npm run build
+        run: npm run build:only
         env:
           # Variables públicas incrustadas en el HTML durante el build.
           # Se configuran como "Variables" (no Secrets) en el Environment develop
