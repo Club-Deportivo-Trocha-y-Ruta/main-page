@@ -790,9 +790,14 @@ de la sección que sigue.
 - La sección de Trocha Verde pintaba con `emerald-*` de Tailwind, un verde que no
   está en la paleta del club. Pasa a los tokens de marca.
 
-**Lo que no se tocó.** El vídeo de YouTube del hero: carga la API de terceros en
-escritorio y pesa sobre el LCP, pero quitarlo es una decisión de producto, no
-de migración.
+**El vídeo de YouTube se retiró.** Cargaba la API de terceros en escritorio y
+pesaba sobre el LCP; se documentó antes como decisión de producto pendiente,
+pero el movimiento que aportaba ya lo cubre lo que el hero pinta sin coste:
+la textura topo (`TOPO_PATHS` de `@lib/editorial`, la única pieza del sistema
+que el hero reutiliza) con su deriva de scroll, más un resplandor teal propio
+—un `radial-gradient` escrito en el mismo `Hero.astro`, no un token del sistema:
+`SectionShell` no tiene resplandores—. El hero queda con el poster estático como
+único elemento LCP.
 
 ---
 
@@ -1068,3 +1073,67 @@ la política general de protección infantil que se eliminó en el §23: esa
 afirmaba un comité y canales de reporte que no existían en la práctica. Aun
 así, no está de más que el club confirme que este protocolo sí se aplica,
 igual que confirmó la edad mínima del §21.
+
+---
+
+## 26. Referencia del tablero de la temporada
+
+**Qué muestra.** `SeasonStandings.astro`, al cierre de `/noticias`, es la
+general del club contada como barras: una fila por corredor con su nombre, su
+categoría, su puesto y cómo se movió respecto de la válida anterior. Responde
+la pregunta que ninguna crónica suelta responde —*¿y cómo va el año?*— y que el
+club ya venía contando **a mano** dentro de una crónica, con las clases
+`.standings-board` de `global.css` y los puntos escritos literal en el
+markdown. La sección habla ese mismo idioma visual, pero derivado de datos: los
+estilos son propios del componente porque aquellas clases están acotadas a
+`.prose` y tocarlas cambiaría lo ya publicado.
+
+**De dónde salen las cifras.** De `summarizeStandings()` (`@lib/results`),
+sobre la colección `results` —una válida, una categoría, un archivo— y sobre
+`events`:
+
+| Marca de la pista | Qué es | De dónde sale |
+|-------------------|--------|---------------|
+| Barra teal profundo | Puntos acumulados en la temporada | Suma de `points` por corredor |
+| Tramo teal claro | Lo que sumó en la última válida | `points` de la válida de fecha más reciente |
+| Línea punteada | Puntos del 3.º de su categoría | Total del tercer puesto de la general |
+| Zona rayada | Puntos todavía en juego | Válidas que faltan × mejor puntaje observado |
+| Fila en lima | Corredor en zona de podio | Puesto ≤ 3 de su categoría |
+
+Las válidas que faltan salen de `buildSeason()` —la misma derivación de
+`/calendario`, `/enlaces` y la portada, así que ninguna se contradice— y las
+fechas canceladas no cuentan: siguen en el calendario, pero no reparten puntos.
+Si ningún resultado trae `points`, la escala cae en el puntaje de referencia
+(40, el que ya usaban las crónicas). `results.ts` es puro: recibe los dos
+arreglos por parámetro, como `calendar.ts` o `sponsors.ts`.
+
+**Sin datos no se pinta.** Hoy `src/content/results/` solo tiene su `README.md`
+—que el loader no carga, porque solo lee `yaml`/`yml`/`json`—, así que
+`summarizeStandings()` devuelve `null` y la sección **no existe** en el HTML:
+`/noticias` se construye exactamente igual que antes de que el componente
+existiera. No hay tablero "próximamente" ni fila de ejemplo, la misma regla que
+ya aplican `summarizePrograms()` o `summarizeDocuments()`. Lo mismo pasa hacia
+adentro: sin tercer corredor no hay línea de podio, y con la temporada corrida
+desaparece la zona rayada.
+
+**Dos decisiones que conviene tener escritas.** El titular no afirma una copa
+que no conste: el nombre de la serie se deriva del tramo común a los nombres de
+todas las válidas (*I Válida Copa Valle 2026 – Ginebra* + *VI Válida Copa Valle
+2026 – Roldanillo* → **Copa Valle**) y, con una sola válida cargada, la sección
+habla de "la temporada". Y el empate se rompe por puestos de llegada: dos
+corredores con los mismos puntos no valen lo mismo si uno los hizo con dos
+segundos y el otro con un primero y un quinto.
+
+**Los nombres de los menores los decide el club.** Igual que con los `tags` de
+las crónicas (§20), la plantilla no toma esa decisión: publica lo que el club
+cargue en `results` y nada más. Si hay duda sobre un corredor, la llegada no se
+carga —el README de la colección lo dice antes que cualquier otra cosa, y los
+ejemplos de ahí y de los tests son nombres ficticios a propósito.
+
+**Accesibilidad.** La pista es decorativa (`aria-hidden`) y todo el dato vive en
+texto: total, "+N en esta" y el movimiento como **flecha + verbo** —▲ Sube 2
+puestos, ▼ Baja 1 puesto, — Mantiene, ＋ Nuevo—, nunca solo por color. Cada
+categoría es una `<section>` con su `aria-labelledby`, y el rojo y el azul de
+estado (6,2:1 y 6,3:1 sobre blanco) viven en el componente porque solo los usa
+él. Cero JavaScript: los anchos los calcula el CSS desde las custom properties
+de cada fila.
