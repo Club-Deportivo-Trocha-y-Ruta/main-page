@@ -21,7 +21,7 @@
  * `padding-bottom` de abajo—, hay que actualizar esa reserva.
  */
 import { Icon } from 'astro-icon/components';
-import { CONTACT } from '@lib/constants';
+import { CONTACT, CTA_TRIAL_LABEL } from '@lib/constants';
 
 const pathname = Astro.url.pathname;
 const hiddenPaths = ['/contacto', '/inscripciones'];
@@ -56,7 +56,7 @@ const whatsappHref = `${CONTACT.whatsapp}?text=Hola%2C%20quiero%20informaci%C3%B
         data-analytics-event="cta_inscripcion_click"
         class="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-4 text-base font-semibold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-deep"
       >
-        Clase de prueba gratis
+        {CTA_TRIAL_LABEL}
         <Icon name="ph:arrow-up-right-bold" class="size-4 shrink-0" aria-hidden="true" />
       </a>
       <a

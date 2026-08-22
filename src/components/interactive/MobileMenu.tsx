@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { CTA_TRIAL_LABEL } from '@lib/constants';
 import { isActivePath } from '@lib/navigation';
 
 interface NavItem {
@@ -86,7 +87,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
         aria-label="Abrir menú de navegación"
-        className="inline-flex items-center justify-center rounded-md p-2.5 text-text-secondary hover:bg-gray-100 hover:text-primary-deep transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="inline-flex items-center justify-center rounded-md p-2.5 text-text-secondary hover:bg-surface-tint hover:text-primary-deep transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <line x1="3" y1="6" x2="21" y2="6" />
@@ -122,7 +123,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
               <button
                 onClick={close}
                 aria-label="Cerrar menú"
-                className="rounded-md p-2 text-text-secondary hover:bg-gray-100 hover:text-primary-deep transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="rounded-md p-2 text-text-secondary hover:bg-surface-tint hover:text-primary-deep transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <line x1="18" y1="6" x2="6" y2="18" />
@@ -143,7 +144,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
                       className={`block rounded-md px-3 py-3 text-sm font-medium transition-colors ${
                         isActive(item.href)
                           ? 'bg-primary/10 text-primary-deep font-semibold'
-                          : 'text-text-secondary hover:bg-gray-50 hover:text-primary-deep'
+                          : 'text-text-secondary hover:bg-surface-tint hover:text-primary-deep'
                       }`}
                     >
                       {item.label}
@@ -164,7 +165,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
                       className={`block rounded-md px-3 py-3 text-sm transition-colors ${
                         isActive(item.href)
                           ? 'text-primary-deep font-semibold'
-                          : 'text-text-secondary hover:bg-gray-50 hover:text-primary-deep'
+                          : 'text-text-secondary hover:bg-surface-tint hover:text-primary-deep'
                       }`}
                     >
                       {item.label}
@@ -175,11 +176,17 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
 
               <div className="mt-6">
                 {/*
-                  El CTA del header (`Header.astro`) es `hidden sm:inline-flex`, así que en
-                  móvil —el 82% del tráfico— este es el único botón de preinscripción visible.
-                  Sin `data-analytics-event` el clic delegado de `Analytics.astro` no lo ve y
-                  `cta_inscripcion_click` queda en cero, que es justo lo que pasó entre mayo y
-                  agosto de 2026.
+                  El CTA del header ya no está oculto en móvil, pero este sigue siendo el que
+                  ve quien abre el menú, y el 82% del tráfico llega desde móvil. Dice lo mismo
+                  que el resto del sitio (`CTA_TRIAL_LABEL`): el botón se llamaba
+                  "Preinscríbete" aquí y "Clase de prueba gratis" en hero y banners, así que
+                  `cta_inscripcion_click` mezclaba dos promesas distintas.
+
+                  El `data-analytics-event` funciona pese al portal: el listener de
+                  `Analytics.astro` es un `click` delegado en `document` con `closest()`, y el
+                  drawer se monta en `document.body`, dentro del árbol que ese listener observa.
+                  Sin el atributo, el clic no se ve y el evento queda en cero — es justo lo que
+                  pasó entre mayo y agosto de 2026.
                 */}
                 <a
                   href="/inscripciones"
@@ -187,7 +194,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
                   data-analytics-event="cta_inscripcion_click"
                   className="flex w-full items-center justify-center rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
-                  Preinscríbete
+                  {CTA_TRIAL_LABEL}
                 </a>
               </div>
             </nav>

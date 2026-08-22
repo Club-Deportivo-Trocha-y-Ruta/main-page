@@ -55,11 +55,31 @@ export const SOCIAL = {
   strava: 'https://www.strava.com/clubs/326554',
 } as const;
 
+/**
+ * Etiqueta única del CTA de inscripción.
+ *
+ * Convivían tres textos para la misma acción —"Preinscríbete" en la cabecera,
+ * "Clase de prueba gratis" en el hero y los banners, "Pedir clase de prueba"
+ * en programas—, así que el mismo botón se llamaba distinto según la página y
+ * la métrica `cta_inscripcion_click` mezclaba promesas diferentes. Gana el
+ * texto que comunica el costo cero.
+ *
+ * `SHORT` existe solo por espacio: en la cabecera bajo 640px el CTA convive
+ * con logo, buscador y hamburguesa. No es un texto alternativo libre — es el
+ * mismo mensaje recortado, y el nombre accesible del enlace en esa talla es
+ * exactamente lo que se ve (WCAG 2.5.3, "Label in Name"), por eso el botón no
+ * lleva `aria-label`.
+ *
+ * Cualquier botón que apunte a `/inscripciones` usa una de las dos.
+ */
+export const CTA_TRIAL_LABEL = 'Clase de prueba gratis';
+export const CTA_TRIAL_LABEL_SHORT = 'Clase gratis';
+
 export const NAV_ITEMS = [
   { label: 'Inicio', href: '/' },
   { label: 'Quiénes Somos', href: '/quienes-somos' },
   { label: 'Programas', href: '/programas' },
-  // { label: 'Equipo', href: '/equipo' }, // TODO: habilitar cuando se implemente la sección de equipo
+  // { label: 'Equipo', href: '/equipo' }, // TODO: /equipo ya existe como página oculta (noindex + fuera del sitemap); falta autorización de imágenes para publicarla
   { label: 'Noticias', href: '/noticias' },
   { label: 'Calendario', href: '/calendario' },
 ] as const;

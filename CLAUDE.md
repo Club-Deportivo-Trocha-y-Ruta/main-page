@@ -52,7 +52,7 @@ Aliases TS (tsconfig): `@components/*`, `@layouts/*`, `@lib/*`, `@assets/*`, `@t
 
 ### Tailwind 4 — tokens en CSS
 
-Design tokens en `src/styles/global.css` dentro de `@theme {}` (primary teal `#20b7c9`, accent lima `#8be000`, surface, text). Importante: existen variantes `--color-primary-deep` / `--color-accent-deep` para **texto** teal/lima sobre fondos claros — los tonos base no cumplen contraste WCAG AA como texto. Fuentes locales (Inter Variable, Plus Jakarta Sans) en `public/fonts/` via `@font-face`.
+Design tokens en `src/styles/global.css` dentro de `@theme {}` (primary teal `#20b7c9`, accent lima `#8be000`, surface, text). Importante: existen variantes `--color-primary-deep` / `--color-accent-deep` para **texto** teal/lima sobre fondos claros — los tonos base no cumplen contraste WCAG AA como texto. También hay tokens de radio (`--radius-chip/control/card/pill`) y de sombra (`--shadow-card/raised/overlay`) con nombres propios a propósito: usar `--radius-sm/md/lg/xl/2xl` o `--shadow-sm/md/lg` sobrescribiría la escala por defecto de Tailwind 4 y cambiaría todos los `rounded-*`/`shadow-*` existentes del sitio. Fuentes locales (Inter Variable, Plus Jakarta Sans) en `public/fonts/` via `@font-face`.
 
 ### React Islands — uso mínimo
 

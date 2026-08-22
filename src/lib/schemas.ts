@@ -88,6 +88,12 @@ export const directivosSchema = z.object({
   yearJoined: z.number().optional(),
   active: z.boolean().default(true),
   order: z.number().default(0),
+  /**
+   * Mismo interruptor que el resto de colecciones: una ficha a medio cargar
+   * —o sin autorización de imagen firmada— se guarda sin publicarse. Aditivo:
+   * las fichas que no lo declaren siguen siendo publicables.
+   */
+  draft: z.boolean().default(false),
 });
 
 export const newsSchema = z.object({

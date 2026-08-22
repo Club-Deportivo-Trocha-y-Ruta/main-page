@@ -1,4 +1,7 @@
-import { experimental_AstroContainer as AstroContainer } from 'astro/container';
+import {
+  experimental_AstroContainer as AstroContainer,
+  type AstroContainerOptions,
+} from 'astro/container';
 import { JSDOM } from 'jsdom';
 import { describe, it, expect, beforeAll } from 'vitest';
 import Breadcrumb from '../Breadcrumb.astro';
@@ -10,6 +13,9 @@ import Breadcrumb from '../Breadcrumb.astro';
  * URLs absolutas para evitar el error ERR_INVALID_URL.
  */
 
+/** El manifest que acepta el Container API (SSRManifest completo). */
+type ContainerManifest = NonNullable<AstroContainerOptions['manifest']>;
+
 function parseHtml(html: string) {
   return new JSDOM(html).window.document;
 }
@@ -20,10 +26,13 @@ describe('Breadcrumb', () => {
   beforeAll(async () => {
     // Pasa manifest.site para que Astro.site esté disponible en el componente.
     // Breadcrumb usa new URL(item.href, Astro.site) para generar el JSON-LD.
-    // El cast "as any" es necesario porque AstroContainerOptions es un tipo
-    // parcial que no expone todas las propiedades del manifest interno.
+    // Solo se declara `site`: el resto del SSRManifest no lo toca el render del
+    // componente, así que se arma como Partial y se afirma al tipo completo.
+    const manifest: Partial<ContainerManifest> = {
+      site: 'https://clubdeportivotrochayruta.org',
+    };
     container = await AstroContainer.create({
-      manifest: { site: 'https://clubdeportivotrochayruta.org' } as any,
+      manifest: manifest as ContainerManifest,
     });
   });
 
