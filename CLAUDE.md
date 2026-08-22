@@ -151,5 +151,7 @@ Archivos legacy no activos: `netlify.toml`, `wrangler.toml`, `workers/donations/
 - `docs/03-content-strategy.md` — schemas completos, taxonomía, CMS (al tocar collections)
 - `docs/04-sistema-editorial.md` — **léelo antes de rediseñar cualquier sección o página**
 - `docs/05-convencion-utm.md` — etiquetado de enlaces compartidos (al preparar difusión en redes/WhatsApp)
+- `docs/06-plan-animaciones.md` — plan retomable de micro-interacciones y scroll-driven (CSS puro, sin runtimes)
+- `docs/07-plan-la-pista.md` — plan retomable de la página `/la-pista` (colección `obstaculos`, flipbook CSS de los saltos, mapa SVG); bloqueado por insumos del club
 - `.claude/agents/` — 22 agentes de proyecto organizados como compañía digital (C-suite → engineers → auditors); `.claude/teams/` — 5 teams para workflows multi-departamento
 - `.claude/settings.json` — allowlist de comandos npm/git del proyecto; `rm -rf`, `git push --force` y `git reset --hard` en deny list

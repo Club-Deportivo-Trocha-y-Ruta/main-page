@@ -108,6 +108,23 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
         </div>
       </SectionIntro>
 
+      {/*
+        Contraparte del morph de la tarjeta de especie del índice de Trocha
+        Verde: mismo `species-img-{id}`, derivado del id de la ficha —que es
+        también el que arma la URL—, así que no puede desincronizarse del
+        origen. Ojo: la miniatura del índice es la foto del primer árbol de la
+        especie, no siempre este `heroImage` (en 8 de las 28 especies enlazadas
+        son archivos distintos). Cuando coinciden el morph es literal; cuando no,
+        queda un fundido cruzado en el sitio correcto, que sigue encadenando
+        tarjeta y ficha.
+
+        Del lado de la tarjeta el nombre va como propiedad CSS en línea; aquí se
+        mantiene la directiva. Hay una sola imagen destacada por ficha, así que
+        los ~2,4 KB de `<style>` que emite por elemento nombrado no escalan, y
+        son estas reglas —no las del listado— las que animan el par: al navegar,
+        `ClientRouter` reemplaza el `<head>` dentro del callback de
+        `startViewTransition`.
+      */}
       <img
         src={sp.data.heroImage}
         alt={sp.data.heroImageAlt}
@@ -116,6 +133,7 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
         decoding="async"
         width="800"
         height="600"
+        transition:name={`species-img-${sp.id}`}
         class="aspect-[4/3] w-full rounded-2xl object-cover shadow-md"
       />
     </div>

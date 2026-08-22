@@ -76,6 +76,10 @@ const speciesPages = new Map(
     .filter((s: CollectionEntry<'species'>) => !s.data.draft)
     .map((s: CollectionEntry<'species'>) => [s.data.commonName.toLowerCase(), s.id])
 );
+// Fichas de especie que ya llevan el morph de la rejilla (ver el guarda dentro
+// del map): `view-transition-name` tiene que ser único por página.
+const morphedSpecies = new Set<string>();
+
 const donors = summarizeDonors(treeInputs);
 const timeline = buildPlantingTimeline(treeInputs);
 const mapReadiness = checkMapReadiness(treeInputs);
@@ -266,6 +270,26 @@ const processSteps = [
         const speciesSlug = speciesPages.get(sp.commonName.toLowerCase()) ?? null;
         // Sin ficha de especie la tarjeta se pinta igual, pero sin enlace.
         const Tag = speciesSlug ? 'a' : 'div';
+        // Morph hacia la ficha de especie: el mismo `species-img-{id}` que
+        // lleva su imagen destacada. Solo la primera tarjeta de cada ficha lo
+        // lleva porque un `view-transition-name` repetido cancela la
+        // transición de la página entera, y el inventario agrupa por nombre
+        // científico: dos entradas distintas pueden caer en la misma ficha si
+        // sus árboles declaran nombres científicos distintos para el mismo
+        // nombre común. Hoy no ocurre; el guarda evita que un árbol nuevo
+        // apague las transiciones de toda la página sin que nadie lo note.
+        // El nombre se escribe como propiedad CSS en línea y no con la
+        // directiva `transition:name`: la view transition empareja por nombre,
+        // pero la directiva además mete en el `<head>` un `<style>` de ~2,4 KB
+        // por elemento nombrado y sin deduplicar. Con las 28 especies del
+        // inventario eran ~70 KB de CSS que bloquea render en una página que el
+        // `.htaccess` sirve con `max-age=0` (sin caché entre visitas). La
+        // animación no cambia: `ClientRouter` reemplaza el `<head>` dentro del
+        // callback de `startViewTransition`, así que las reglas que animan el
+        // par son las de la ficha de destino, que sí conserva su directiva.
+        const canMorph = speciesSlug !== null && !morphedSpecies.has(speciesSlug);
+        if (canMorph) morphedSpecies.add(speciesSlug);
+        const morphStyle = canMorph ? `view-transition-name: species-img-${speciesSlug}` : undefined;
         return (
           <li>
             <Tag
@@ -280,7 +304,15 @@ const processSteps = [
               data-species={sp.commonName}
               data-tree-id={speciesSlug}
             >
-              <div class="aspect-square overflow-hidden bg-surface-muted">
+              {/*
+                El nombre del morph va en el recuadro y no en la miniatura: el
+                recuadro recorta el `group-hover:scale-105`, así que la
+                instantánea de salida es exactamente lo que se ve al hacer clic.
+                Sin ficha de especie no hay destino, `morphStyle` queda sin
+                definir y el recuadro no recibe nombre: la tarjeta se funde con
+                la página junto al resto del contenido.
+              */}
+              <div class="aspect-square overflow-hidden bg-surface-muted" style={morphStyle}>
                 {/* Miniaturas servidas desde Cloudinary (URL remota) — <img> con lazy + dims */}
                 <img
                   src={sp.thumbnail}

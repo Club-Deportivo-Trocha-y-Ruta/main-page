@@ -9,6 +9,11 @@
  *
  * El perfil se estira con `preserveAspectRatio="none"`, así que dentro del SVG
  * no van ni círculos ni texto: los marcadores son HTML posicionado encima.
+ *
+ * La ruta se traza sola conforme la sección entra en pantalla (`.sda-trail` en
+ * `global.css`, CSS puro). La sección que lo contenga necesita `scrollDriven`
+ * en su `SectionShell`: con `overflow-hidden` la línea de tiempo se ancla a la
+ * sección en vez de al viewport y el trazo se queda a medias.
  */
 import { Icon } from 'astro-icon/components';
 import { elevationProfile, elevationPointAt, uniqueSvgId } from '@lib/editorial';
@@ -80,7 +85,7 @@ const band = (startPct: number, widthPct: number) => ({
     </div>
 
     <!-- Perfil de elevación -->
-    <div class="relative mt-3 h-28 sm:h-36 md:h-44">
+    <div class="sda-trail relative mt-3 h-28 sm:h-36 md:h-44">
       <svg
         class="absolute inset-0 h-full w-full text-black/15"
         viewBox="0 0 1000 260"
@@ -94,16 +99,29 @@ const band = (startPct: number, widthPct: number) => ({
               <rect y="0" height="260" {...band(stage.startPct, stage.widthPct)} />
             </clipPath>
           ))}
+
+          <!-- Barrido que traza la ruta al entrar en pantalla: quieto cubre
+               todo el viewBox, así que sin animación el perfil se ve entero -->
+          <clipPath id={`${uid}-draw`}>
+            <rect class="sda-trail-sweep" x="0" y="0" width="1000" height="260" />
+          </clipPath>
         </defs>
 
+        <!-- El terreno de cada etapa: siempre visible, es el fondo del trazo -->
         {stages.map((stage, index) => (
-          <g clip-path={`url(#${uid}-band-${index})`}>
-            <path
-              d={profile.area}
-              style={`fill:${stage.level.color};opacity:${stage.id === activeId ? 0.34 : 0.18}`}
-            />
+          <path
+            d={profile.area}
+            clip-path={`url(#${uid}-band-${index})`}
+            style={`fill:${stage.level.color};opacity:${stage.id === activeId ? 0.34 : 0.18}`}
+          />
+        ))}
+
+        <!-- La ruta en sí, la que se dibuja -->
+        <g clip-path={`url(#${uid}-draw)`}>
+          {stages.map((stage, index) => (
             <path
               d={profile.line}
+              clip-path={`url(#${uid}-band-${index})`}
               fill="none"
               stroke-width={stage.id === activeId ? 4 : 2.5}
               stroke-linejoin="round"
@@ -111,8 +129,8 @@ const band = (startPct: number, widthPct: number) => ({
               vector-effect="non-scaling-stroke"
               style={`stroke:${stage.level.color}`}
             />
-          </g>
-        ))}
+          ))}
+        </g>
 
         <!-- Cambios de etapa -->
         {stages.slice(1).map((stage) => (

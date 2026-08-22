@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { PUBLIC_WEB3FORMS_KEY } from 'astro:env/client';
 import { CONTACT } from '@lib/constants';
 import { trackEvent, ageBucket } from '@lib/analytics';
+import SuccessConfetti from './SuccessConfetti';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -139,7 +140,7 @@ export default function InscriptionForm({ programs }: Props) {
     reset,
     getValues,
     setFocus,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useForm<InscriptionData>({
     resolver: zodResolver(inscriptionSchema),
     mode: 'onTouched',
@@ -163,6 +164,36 @@ export default function InscriptionForm({ programs }: Props) {
       acceptDataPolicy: undefined as unknown as true,
     },
   });
+
+  // ─── Shake de error (estilo Duolingo) ───────────────────────────────────
+  // Un solo Set con los nombres de campo que están agitando ahora mismo. La
+  // clase `field-shake` NUNCA se ata directo a `errors[name]` (eso sigue
+  // gobernando solo el borde/estilo de error) para no tener dos fuentes de
+  // verdad compitiendo por la misma clase.
+  const [shakingFields, setShakingFields] = useState<Set<string>>(new Set());
+  const prevErrorFieldsRef = useRef<Set<string>>(new Set());
+
+  function triggerShake(fields: string[]) {
+    if (fields.length === 0) return;
+    setShakingFields((prev) => {
+      const next = new Set(prev);
+      fields.forEach((f) => next.delete(f));
+      return next;
+    });
+    requestAnimationFrame(() => {
+      setShakingFields((prev) => new Set([...prev, ...fields]));
+    });
+  }
+
+  // Un campo que ACABA de entrar en error (p. ej. al perder el foco) agita de
+  // inmediato. Los reintentos con el campo ya inválido se agitan explícitamente
+  // desde `handleNext`/`onInvalidSubmit`, que conocen el error fresco tras el intento.
+  useEffect(() => {
+    const currentErrorFields = new Set(Object.keys(errors));
+    const newlyErrored = [...currentErrorFields].filter((f) => !prevErrorFieldsRef.current.has(f));
+    prevErrorFieldsRef.current = currentErrorFields;
+    if (newlyErrored.length > 0) triggerShake(newlyErrored);
+  }, [errors]);
 
   // Restore saved data on mount
   useEffect(() => {
@@ -197,10 +228,12 @@ export default function InscriptionForm({ programs }: Props) {
     if (valid) {
       setCurrentStep((s) => Math.min(s + 1, 3));
     } else {
-      // Mover foco al primer campo con error de este paso
-      const firstErrorField = (fields as readonly string[]).find(
+      const erroredFields = (fields as readonly string[]).filter(
         (f) => (errors as Record<string, unknown>)[f],
       );
+      triggerShake(erroredFields);
+      // Mover foco al primer campo con error de este paso
+      const firstErrorField = erroredFields[0];
       if (firstErrorField) {
         try {
           setFocus(firstErrorField as keyof InscriptionData);
@@ -216,6 +249,7 @@ export default function InscriptionForm({ programs }: Props) {
   };
 
   const onInvalidSubmit = (formErrors: Record<string, unknown>) => {
+    triggerShake(Object.keys(formErrors));
     // Mover foco al primer campo con error
     const orderedFields = [
       ...step1Fields,
@@ -292,7 +326,12 @@ export default function InscriptionForm({ programs }: Props) {
 
   if (submitStatus === 'success') {
     return (
-      <div className="mx-auto max-w-2xl rounded-2xl bg-white p-8 text-center shadow-lg">
+      <div className="relative mx-auto max-w-2xl rounded-2xl bg-white p-8 text-center shadow-lg">
+        {/* Celebración de la conversión principal. Decorativa y recortada a la
+            tarjeta: `pointer-events-none` + `aria-hidden`, así que no tapa ni
+            bloquea el mensaje ni los CTA de abajo. Con
+            `prefers-reduced-motion: reduce` no se monta nada. */}
+        <SuccessConfetti />
         <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
           <svg className="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -371,10 +410,14 @@ export default function InscriptionForm({ programs }: Props) {
             return (
               <li key={step.label} className={`flex items-center ${idx < STEPS.length - 1 ? 'flex-1' : ''}`}>
                 <div className="flex flex-col items-center">
+                  {/* `if-step-pop` / `if-step-check`: celebración del paso completado
+                      (keyframes en global.css, solo con prefers-reduced-motion:
+                      no-preference). El estado completado se sigue leyendo sin
+                      animación por color de fondo + icono. */}
                   <span
                     className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-xs sm:text-sm font-bold transition-colors ${
                       isCompleted
-                        ? 'bg-primary text-white'
+                        ? 'bg-primary text-white if-step-pop'
                         : isCurrent
                           ? 'border-2 border-primary bg-white text-primary'
                           : 'border-2 border-surface-muted bg-white text-gray-400'
@@ -383,7 +426,7 @@ export default function InscriptionForm({ programs }: Props) {
                   >
                     {isCompleted ? (
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        <path className="if-step-check" strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
                       idx + 1
@@ -398,12 +441,16 @@ export default function InscriptionForm({ programs }: Props) {
                   </span>
                 </div>
                 {idx < STEPS.length - 1 && (
-                  <div
-                    className={`mx-2 h-0.5 flex-1 transition-colors ${
-                      idx < currentStep ? 'bg-primary' : 'bg-surface-muted'
-                    }`}
-                    aria-hidden="true"
-                  />
+                  /* Riel del progreso: el relleno se anima con scaleX (nunca con
+                     width — dispararía layout y CLS). `overflow-hidden` recorta el
+                     overshoot de `ease-pop`, que pasa de 1 antes de asentar. */
+                  <div className="mx-2 h-0.5 flex-1 overflow-hidden bg-surface-muted" aria-hidden="true">
+                    <span
+                      className={`block h-full w-full origin-left bg-primary transition-transform duration-[var(--duration-celebration)] ease-pop motion-reduce:transition-none ${
+                        idx < currentStep ? 'scale-x-100' : 'scale-x-0'
+                      }`}
+                    />
+                  </div>
                 )}
               </li>
             );
@@ -431,7 +478,7 @@ export default function InscriptionForm({ programs }: Props) {
                 Elige el programa que mejor se ajuste a la edad y nivel de tu hijo/a.
               </p>
 
-              <div className="mt-6 space-y-3">
+              <div className={`mt-6 space-y-3 ${shakingFields.has('programId') ? 'field-shake' : ''}`}>
                 {programs.map((program) => (
                   <label
                     key={program.id}
@@ -465,7 +512,7 @@ export default function InscriptionForm({ programs }: Props) {
                 <select
                   id="riderAge"
                   {...register('riderAge')}
-                  className="mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                  className={`mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('riderAge') ? 'field-shake' : ''}`}
                 >
                   <option value="">Seleccionar edad</option>
                   {Array.from({ length: 48 }, (_, i) => i + 3).map((age) => (
@@ -497,13 +544,16 @@ export default function InscriptionForm({ programs }: Props) {
                   <label htmlFor="riderName" className="block text-sm font-medium text-text-primary">
                     Nombre completo <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    id="riderName"
-                    type="text"
-                    {...register('riderName')}
-                    autoComplete="name"
-                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
-                  />
+                  <div className="relative mt-1">
+                    <input
+                      id="riderName"
+                      type="text"
+                      {...register('riderName')}
+                      autoComplete="name"
+                      className={`block w-full rounded-lg border border-surface-muted pl-3 pr-10 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('riderName') ? 'field-shake' : ''}`}
+                    />
+                    {touchedFields.riderName && !errors.riderName && <ValidCheckmark />}
+                  </div>
                   {errors.riderName && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.riderName.message}</p>
                   )}
@@ -514,7 +564,13 @@ export default function InscriptionForm({ programs }: Props) {
                   <span className="block text-sm font-medium text-text-primary">
                     Fecha de nacimiento <span className="text-red-500">*</span>
                   </span>
-                  <div className="mt-1 grid grid-cols-3 gap-3">
+                  <div
+                    className={`mt-1 grid grid-cols-3 gap-3 ${
+                      shakingFields.has('birthDay') || shakingFields.has('birthMonth') || shakingFields.has('birthYear')
+                        ? 'field-shake'
+                        : ''
+                    }`}
+                  >
                     <div>
                       <label htmlFor="birthDay" className="sr-only">Dia</label>
                       <select
@@ -568,7 +624,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <select
                     id="gender"
                     {...register('gender')}
-                    className="mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className={`mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('gender') ? 'field-shake' : ''}`}
                   >
                     <option value="">Seleccionar</option>
                     <option value="masculino">Masculino</option>
@@ -584,7 +640,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <span className="block text-sm font-medium text-text-primary">
                     Talla de camiseta <span className="text-red-500">*</span>
                   </span>
-                  <div className="mt-2 flex gap-4">
+                  <div className={`mt-2 flex gap-4 ${shakingFields.has('shirtSize') ? 'field-shake' : ''}`}>
                     {SHIRT_SIZES.map((size) => (
                       <label
                         key={size}
@@ -614,7 +670,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <span className="block text-sm font-medium text-text-primary">
                     Experiencia previa <span className="text-red-500">*</span>
                   </span>
-                  <div className="mt-2 space-y-2">
+                  <div className={`mt-2 space-y-2 ${shakingFields.has('experience') ? 'field-shake' : ''}`}>
                     {EXPERIENCE_LEVELS.map((level) => (
                       <label
                         key={level.value}
@@ -657,13 +713,16 @@ export default function InscriptionForm({ programs }: Props) {
                   <label htmlFor="guardianName" className="block text-sm font-medium text-text-primary">
                     Nombre completo del acudiente / contacto de emergencia <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    id="guardianName"
-                    type="text"
-                    {...register('guardianName')}
-                    autoComplete="name"
-                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
-                  />
+                  <div className="relative mt-1">
+                    <input
+                      id="guardianName"
+                      type="text"
+                      {...register('guardianName')}
+                      autoComplete="name"
+                      className={`block w-full rounded-lg border border-surface-muted pl-3 pr-10 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('guardianName') ? 'field-shake' : ''}`}
+                    />
+                    {touchedFields.guardianName && !errors.guardianName && <ValidCheckmark />}
+                  </div>
                   {errors.guardianName && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianName.message}</p>
                   )}
@@ -673,14 +732,17 @@ export default function InscriptionForm({ programs }: Props) {
                   <label htmlFor="guardianPhone" className="block text-sm font-medium text-text-primary">
                     Celular <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    id="guardianPhone"
-                    type="tel"
-                    {...register('guardianPhone')}
-                    placeholder="3001234567"
-                    autoComplete="tel"
-                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
-                  />
+                  <div className="relative mt-1">
+                    <input
+                      id="guardianPhone"
+                      type="tel"
+                      {...register('guardianPhone')}
+                      placeholder="3001234567"
+                      autoComplete="tel"
+                      className={`block w-full rounded-lg border border-surface-muted pl-3 pr-10 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('guardianPhone') ? 'field-shake' : ''}`}
+                    />
+                    {touchedFields.guardianPhone && !errors.guardianPhone && <ValidCheckmark />}
+                  </div>
                   {errors.guardianPhone && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianPhone.message}</p>
                   )}
@@ -690,13 +752,16 @@ export default function InscriptionForm({ programs }: Props) {
                   <label htmlFor="guardianEmail" className="block text-sm font-medium text-text-primary">
                     Email <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    id="guardianEmail"
-                    type="email"
-                    {...register('guardianEmail')}
-                    autoComplete="email"
-                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
-                  />
+                  <div className="relative mt-1">
+                    <input
+                      id="guardianEmail"
+                      type="email"
+                      {...register('guardianEmail')}
+                      autoComplete="email"
+                      className={`block w-full rounded-lg border border-surface-muted pl-3 pr-10 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('guardianEmail') ? 'field-shake' : ''}`}
+                    />
+                    {touchedFields.guardianEmail && !errors.guardianEmail && <ValidCheckmark />}
+                  </div>
                   {errors.guardianEmail && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianEmail.message}</p>
                   )}
@@ -719,12 +784,15 @@ export default function InscriptionForm({ programs }: Props) {
                   <label htmlFor="riderEps" className="block text-sm font-medium text-text-primary">
                     EPS del nino/a <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    id="riderEps"
-                    type="text"
-                    {...register('riderEps')}
-                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
-                  />
+                  <div className="relative mt-1">
+                    <input
+                      id="riderEps"
+                      type="text"
+                      {...register('riderEps')}
+                      className={`block w-full rounded-lg border border-surface-muted pl-3 pr-10 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('riderEps') ? 'field-shake' : ''}`}
+                    />
+                    {touchedFields.riderEps && !errors.riderEps && <ValidCheckmark />}
+                  </div>
                   {errors.riderEps && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.riderEps.message}</p>
                   )}
@@ -737,7 +805,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <select
                     id="relationship"
                     {...register('relationship')}
-                    className="mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className={`mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('relationship') ? 'field-shake' : ''}`}
                   >
                     <option value="">Seleccionar</option>
                     {RELATIONSHIPS.map((r) => (
@@ -803,7 +871,7 @@ export default function InscriptionForm({ programs }: Props) {
 
               {/* Checkboxes */}
               <div className="mt-6 space-y-4">
-                <label className="flex items-center gap-3 py-1">
+                <label className={`flex items-center gap-3 py-1 ${shakingFields.has('acceptTerms') ? 'field-shake' : ''}`}>
                   <input
                     type="checkbox"
                     {...register('acceptTerms')}
@@ -817,7 +885,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <p className="text-sm text-red-600" role="alert">{errors.acceptTerms.message}</p>
                 )}
 
-                <label className="flex items-center gap-3 py-1">
+                <label className={`flex items-center gap-3 py-1 ${shakingFields.has('acceptDataPolicy') ? 'field-shake' : ''}`}>
                   <input
                     type="checkbox"
                     {...register('acceptDataPolicy')}
@@ -891,6 +959,26 @@ export default function InscriptionForm({ programs }: Props) {
         </div>
       </form>
     </div>
+  );
+}
+
+// ─── Valid Checkmark ──────────────────────────────────────────────────────────
+// Checkmark de campo válido (tocado + sin error): puramente decorativo, el
+// mensaje de error visible ya comunica el estado real. `field-pop` solo
+// existe dentro de `prefers-reduced-motion: no-preference` (global.css); sin
+// esa preferencia el ícono se pinta directo en su estado final (sin animar).
+
+function ValidCheckmark() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="field-pop pointer-events-none absolute right-3 top-3 h-5 w-5 text-green-600"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+    </svg>
   );
 }
 

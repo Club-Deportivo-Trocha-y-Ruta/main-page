@@ -36,7 +36,9 @@ const cards = programs.map((program: Program) => ({
 }));
 ---
 
-<SectionShell tone="muted" pattern="topo" width="wide" labelledby="programas-heading">
+<!-- `scrollDriven`: el perfil de `ProgramPathway` se traza al hacer scroll y
+     `overflow-hidden` le anclaría la línea de tiempo a esta sección -->
+<SectionShell tone="muted" pattern="topo" width="wide" labelledby="programas-heading" scrollDriven>
   <SectionIntro
     id="programas-heading"
     eyebrow="Programas"

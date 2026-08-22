@@ -117,8 +117,16 @@ estado final visible. Solo se animan `transform` y `opacity`.
 |-------|----------|
 | `.timeline-progress` | Trazo del sendero de `Timeline` que se dibuja al bajar |
 | `.sda-parallax-slow` / `.sda-parallax-fast` | Deriva vertical de capas decorativas |
+| `.sda-trail` + `.sda-trail-sweep` | Perfil de elevación que se traza al entrar en pantalla |
 
-Dos trampas que ya costaron una sesión de depuración:
+El perfil se traza con un `<rect>` dentro de un `<clipPath>` que crece de `scaleX(0)` a
+`scaleX(1)`: el recorte descubre el trazo de izquierda a derecha. `.sda-trail` va en el
+recuadro del perfil (declara la línea de tiempo con nombre; el `view()` anónimo necesita
+una caja CSS y los elementos SVG no la tienen) y `.sda-trail-sweep`, en el `<rect>`.
+Quieto, el rectángulo cubre el viewBox entero: el estado por defecto del marcado es el
+perfil completo. Solo se barren los trazos, nunca los rellenos del terreno.
+
+Tres trampas que ya costaron una sesión de depuración cada una:
 
 1. **`overflow: hidden` crea un contenedor de scroll.** Si un ancestro lo tiene, `view()` se
    ancla a él en vez de al viewport y la animación queda congelada en un valor fijo. Por eso
@@ -128,6 +136,12 @@ Dos trampas que ya costaron una sesión de depuración:
    (`animation: linear both x view()`), forma que los navegadores descartan entera. Hay que
    escribir `animation-name`, `animation-timing-function` y `animation-fill-mode` por
    separado.
+3. **`stroke-dashoffset` no sirve para dibujar estos trazos.** Los perfiles llevan
+   `vector-effect="non-scaling-stroke"`, y ahí el patrón de guiones se mide en el espacio de
+   pantalla mientras `pathLength` normaliza sobre la geometría sin transformar. Con el SVG
+   estirado (`preserveAspectRatio="none"`) las dos longitudes no coinciden: medido en Chrome,
+   a 1160×176 el trazo pierde su último 12% con `stroke-dashoffset: 0` y asoma un trozo suelto
+   con `1`. El barrido por recorte no depende de longitudes, solo de la caja.
 
 Nada de esto reemplaza a `.reveal` (IntersectionObserver, en `BaseLayout`): conviven.
 
@@ -649,6 +663,9 @@ terreno se pinta apagado, un ciclista queda fuera de la traza unido a ella por
 una línea punteada, y el tramo que lleva de vuelta va resaltado en lima hasta
 el marcador «Inicio», que es un enlace real y no un adorno. Cero JS: SVG
 generado en build, con el detalle narrado en un `figcaption` en `sr-only`.
+Los dos senderos se trazan al entrar en pantalla (`.sda-trail`, §2.5); el
+ciclista **no** viaja por la traza a propósito —está fuera de ruta, que es lo
+que cuenta la página— y su único movimiento sigue siendo el bamboleo idle.
 
 **Los datos.** `buildControlPoints()` (`@lib/not-found`) arma los cuatro puntos
 reutilizando derivaciones que ya existían —`buildSeason()`, `summarizePrograms()`,

@@ -167,6 +167,20 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
         />
       </SectionIntro>
 
+      {/*
+        Contraparte del morph de `TreeCard`: mismo `tree-img-{id}` que lleva el
+        recuadro de la miniatura, así que la tarjeta que se acaba de tocar
+        aterriza aquí en vez de fundirse con el resto de la página. Es la misma
+        foto en los dos lados (`tree.data.image`), solo cambia el encuadre —
+        cuadrado en la rejilla, 4:3 aquí—, que es justo lo que anima el morph.
+
+        Del lado de `TreeCard` el nombre va como propiedad CSS en línea; aquí se
+        mantiene la directiva. Hay una sola imagen destacada por ficha, así que
+        los ~2,4 KB de `<style>` que emite por elemento nombrado no escalan, y
+        son estas reglas —no las de la rejilla— las que animan el par: al
+        navegar, `ClientRouter` reemplaza el `<head>` dentro del callback de
+        `startViewTransition`.
+      */}
       <img
         src={tree.data.image}
         alt={tree.data.imageAlt}
@@ -175,6 +189,7 @@ const whatsappApadrinar = `${CONTACT.whatsapp}?text=${encodeURIComponent(
         decoding="async"
         width="800"
         height="600"
+        transition:name={`tree-img-${tree.id}`}
         class="aspect-[4/3] w-full rounded-2xl object-cover shadow-md"
       />
     </div>

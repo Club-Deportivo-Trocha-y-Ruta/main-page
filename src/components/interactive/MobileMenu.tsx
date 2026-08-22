@@ -102,20 +102,22 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
           {/* Overlay */}
           {isOpen && (
             <div
-              className="fixed inset-0 z-40 bg-black/50 transition-opacity"
+              className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-[var(--duration-micro)] ease-spring starting:opacity-0 motion-reduce:transition-none"
               onClick={close}
               aria-hidden="true"
             />
           )}
 
-          {/* Drawer */}
+          {/* Drawer: desliza por el mismo mecanismo de siempre (translate-x-full/0 vía
+              clase condicional, no montaje condicional), solo con el vocabulario de
+              motion del plan — ease-spring y duration-micro en vez de ease-in-out/300ms. */}
           <div
             ref={menuRef}
             id="mobile-menu"
             role="dialog"
             aria-modal="true"
             aria-label="Menú de navegación"
-            className={`fixed top-0 right-0 z-50 h-full w-72 max-w-[85vw] bg-white shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+            className={`fixed top-0 right-0 z-50 h-full w-72 max-w-[85vw] bg-white shadow-xl flex flex-col transform transition-transform duration-[var(--duration-micro)] ease-spring motion-reduce:transition-none ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
           >
             {/* Close button */}
             <div className="flex items-center justify-between p-4 border-b border-gray-100 shrink-0">

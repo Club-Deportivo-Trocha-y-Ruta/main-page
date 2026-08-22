@@ -160,11 +160,32 @@ const jsonLd = generateArticleJsonLd({
             imageLayout === 'contain' && 'flex justify-center',
           ]}
         >
+          {/*
+            Contraparte del morph de `NewsCard`: mismo `news-img-{id}` que lleva
+            el recuadro de la portada en el listado, así que la tarjeta que se
+            acaba de tocar aterriza aquí en vez de fundirse con la página. Va en
+            el `<img>` y no en su contenedor porque con `imageLayout: contain`
+            —nueve de las diez crónicas son afiches— el contenedor es una franja
+            del ancho de la columna con el afiche centrado: terminar el morph
+            ahí dejaría el afiche creciendo dentro de una caja casi vacía. En el
+            `<img>` la animación aterriza exactamente sobre el afiche.
+
+            Aquí sí se usa la directiva `transition:name`, mientras que en la
+            tarjeta el nombre va como propiedad CSS en línea. Dos razones: hay
+            una sola imagen destacada por crónica, así que los ~2,4 KB de
+            `<style>` que la directiva emite por elemento nombrado no escalan; y
+            son justamente estas reglas las que animan el par, porque
+            `ClientRouter` reemplaza el `<head>` dentro del callback de
+            `startViewTransition` y las del listado se van con él. Quitarla
+            también aquí cambiaría el fundido de Astro (180 ms,
+            `mix-blend-mode: plus-lighter`) por el del navegador.
+          */}
           <img
             src={image}
             alt={entry.data.imageAlt ?? title}
             width="1200"
             height="675"
+            transition:name={`news-img-${entry.id}`}
             class:list={[
               imageLayout === 'contain'
                 ? 'max-h-[32rem] w-auto object-contain md:max-h-[40rem]'

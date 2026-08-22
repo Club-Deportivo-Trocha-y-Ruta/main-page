@@ -466,14 +466,18 @@ export default function SiteSearch({
               }
             `}</style>
 
-            <div className="absolute inset-0 bg-black/50" onClick={close} aria-hidden="true" />
+            <div
+              className="ease-spring absolute inset-0 bg-black/50 transition-opacity duration-[var(--duration-micro)] motion-reduce:transition-none starting:opacity-0"
+              onClick={close}
+              aria-hidden="true"
+            />
 
             <div
               ref={panelRef}
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
-              className="relative flex max-h-[80vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
+              className="ease-spring relative flex max-h-[80vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl transition-[opacity,scale] duration-[var(--duration-micro)] motion-reduce:transition-none starting:scale-95 starting:opacity-0"
             >
               <h2 id={titleId} className="sr-only">
                 Buscar en el sitio

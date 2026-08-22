@@ -5,6 +5,36 @@
  * Un solo enlace por tarjeta (la etiqueta, con `after:absolute after:inset-0`
  * para que toda la tarjeta sea clicable) — no el doble enlace imagen+"Ver
  * ficha" de la rejilla anterior. Mismo patrón que `NewsCard.astro`.
+ *
+ * **Morph hacia la ficha** (`view-transition-name`): el recuadro de la foto
+ * lleva `tree-img-{id}`, el mismo nombre que la imagen destacada de
+ * `/trocha-verde/arboles/{id}`, así que al abrir la tarjeta bajo `ClientRouter`
+ * la miniatura vuela hasta su sitio en la ficha en vez de fundirse con la
+ * página. El nombre sale del `id` —que es también el que arma la URL—, de modo
+ * que no puede desincronizarse del destino.
+ *
+ * El nombre va como propiedad CSS en línea y **no** con la directiva
+ * `transition:name` de Astro: la view transition empareja por nombre, mientras
+ * que la directiva añade al `<head>` un `<style>` de ~2,4 KB por elemento
+ * nombrado y sin deduplicar. En una rejilla de árboles eso son decenas de KB de
+ * CSS que bloquea render y que el `.htaccess` sirve con `max-age=0`, o sea sin
+ * caché entre visitas. La animación no cambia: `ClientRouter` reemplaza el
+ * `<head>` dentro del callback de `startViewTransition`, así que las reglas
+ * `::view-transition-old/new(tree-img-…)` que gobiernan el morph son las de la
+ * ficha de destino, que sí conserva su directiva.
+ *
+ * El nombre va en el recuadro y no en el `<img>` a propósito: el recuadro
+ * recorta (`overflow-hidden`) el `group-hover:scale-105` de la foto, así que la
+ * instantánea es exactamente lo que se ve; nombrando la foto, el zoom del hover
+ * —activo justo al hacer clic— se capturaría sin recorte y la imagen daría un
+ * salto al arrancar la transición. El recuadro ya es `relative`, así que ganar
+ * un `view-transition-name` no cambia de dónde cuelga el badge de estado.
+ *
+ * `view-transition-name` debe ser único por página: dos tarjetas del mismo
+ * árbol en la misma rejilla cancelarían la transición entera. Las dos rejillas
+ * que montan esta tarjeta listan cada árbol una sola vez y la ficha excluye al
+ * protagonista de sus hermanos, así que la condición se cumple por
+ * construcción.
  */
 import { Icon } from 'astro-icon/components';
 import { formatDate } from '@lib/utils';
@@ -40,7 +70,10 @@ const statusLabel = statusLabels[status] ?? status;
     className,
   ]}
 >
-  <div class="relative aspect-square overflow-hidden bg-surface-muted">
+  <div
+    class="relative aspect-square overflow-hidden bg-surface-muted"
+    style={`view-transition-name: tree-img-${id}`}
+  >
     <img
       src={image}
       alt={imageAlt}

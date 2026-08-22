@@ -98,11 +98,18 @@ const competitions = summary.byCategory.find((c) => c.category === 'competencias
           Lo último
         </h2>
 
+        {/*
+          `transitionName` encadena la portada con la imagen destacada de la
+          crónica al abrirla. El archivo de abajo no repite esta nota porque
+          `groupByMonth(rest)` ya excluye a `latest`: ningún id aparece dos
+          veces en la página, que es lo que exige `view-transition-name`.
+        */}
         <NewsCard
           class="mt-5"
           variant="lead"
           eager
           href={`/noticias/${latest.id}`}
+          transitionName={`news-img-${latest.id}`}
           title={latest.data.title}
           date={latest.data.date}
           category={latest.data.category}
@@ -150,6 +157,7 @@ const competitions = summary.byCategory.find((c) => c.category === 'competencias
                         <NewsCard
                           as="h4"
                           href={`/noticias/${post.id}`}
+                          transitionName={`news-img-${post.id}`}
                           title={post.data.title}
                           date={post.data.date}
                           category={post.data.category}

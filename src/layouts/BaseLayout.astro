@@ -94,10 +94,25 @@ const heroPoster = isHome ? await getHeroPoster() : null;
       la que una página oculta —hoy `/equipo`— reaparecería en la cabecera.
       Mismo recurso que ya usa `LinktreeLayout` para `/enlaces`.
     -->
+    <!--
+      El nombre de la transición del cuerpo va escrito, no autogenerado. Con
+      solo `transition:animate`, Astro nombra el grupo con el número de orden en
+      que se renderiza (`astro-{hash}-{n}`), y ese número cuenta *todos* los
+      elementos con directiva `transition:*` de la página, así que basta una
+      directiva de más para que `main` se llame distinto en esa ruta. Dos
+      nombres distintos no emparejan: el fundido deja de ser una sola transición
+      y pasa a ser dos grupos sueltos. `/politica-de-tratamiento-de-datos`, que
+      monta un `<h1>` con `transition:animate`, ya sacaba otro número. Con el
+      nombre escrito el emparejamiento no depende del orden; por eso las
+      tarjetas de los listados pueden declarar su `view-transition-name` como
+      propiedad CSS en línea, sin directiva, sin afectar a nadie al mover el
+      contador.
+    -->
     <main
       id="main-content"
       class="flex-1"
       transition:animate="fade"
+      transition:name="page-main"
       data-pagefind-body={noindex ? undefined : true}
       data-pagefind-ignore={noindex ? 'all' : undefined}
     >

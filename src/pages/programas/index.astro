@@ -62,7 +62,14 @@ const entryAgeLabel = `a los ${entryAge} años`;
   description={`Tres etapas de formación en ciclomontañismo para niños y jóvenes en Yumbo: iniciación desde los ${entryAge} años, formación juvenil y alto rendimiento.`}
 >
   <!-- Entrada: orienta antes de mostrar el detalle -->
-  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="programas-titulo">
+  <SectionShell
+    tone="tinted"
+    pattern="topo"
+    width="wide"
+    spacing="compact"
+    labelledby="programas-titulo"
+    scrollDriven
+  >
     <Breadcrumb items={[{ label: 'Programas' }]} />
 
     <div class="mt-6 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
