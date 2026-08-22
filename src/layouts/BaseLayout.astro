@@ -5,7 +5,7 @@ import AnnouncementBar from '@components/common/AnnouncementBar.astro';
 import Header from '@components/common/Header.astro';
 import Footer from '@components/common/Footer.astro';
 import NavigationProgress from '@components/common/NavigationProgress.astro';
-import WhatsAppButton from '@components/common/WhatsAppButton.astro';
+import ConversionBar from '@components/common/ConversionBar.astro';
 import Analytics from '@components/common/Analytics.astro';
 import ConsentBanner from '@components/common/ConsentBanner.astro';
 import { getHeroPoster } from '@lib/hero-poster';
@@ -77,11 +77,17 @@ const heroPoster = isHome ? await getHeroPoster() : null;
     </a>
     <AnnouncementBar />
     <Header transition:persist />
-    <main id="main-content" class="flex-1" transition:animate="fade">
+    <!--
+      `data-pagefind-body` acota el índice del buscador al contenido de la
+      página: en cuanto existe una sola marca, Pagefind indexa únicamente lo
+      marcado, así que cabecera, cinta de anuncio y pie —idénticos en las 146
+      páginas— dejan de aparecer en cada resultado.
+    -->
+    <main id="main-content" class="flex-1" transition:animate="fade" data-pagefind-body>
       <slot />
     </main>
     <Footer />
-    <WhatsAppButton />
+    <ConversionBar />
     <!-- Scroll-reveal observer (compatible with View Transitions) -->
     <!-- Header height tracker: sets --header-h so sticky sub-navs (e.g. TrochaVerdeNav)
          can use top-[var(--header-h)] regardless of whether AnnouncementBar is visible. -->

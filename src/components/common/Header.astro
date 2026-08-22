@@ -23,6 +23,10 @@
  *    costaría JavaScript en las 144 páginas y no compensa.
  * 2. **La regla de sección activa** estaba escrita aquí y otra vez en
  *    `MobileMenu`. Vive en `@lib/navigation`, probada.
+ * 3. **No había forma de buscar** entre las ~146 páginas —77 árboles y 32
+ *    especies incluidos—. `SiteSearch` es la única pieza nueva con
+ *    JavaScript: se hidrata con `client:visible` y ni siquiera entonces
+ *    descarga el motor, que se pide al abrir el diálogo (ver `SiteSearch.tsx`).
  */
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
@@ -30,6 +34,7 @@ import logo from '@assets/images/logo.webp';
 import { NAV_ITEMS, SECONDARY_NAV } from '@lib/constants';
 import { isActivePath } from '@lib/navigation';
 import MobileMenu from '../interactive/MobileMenu';
+import SiteSearch from '../interactive/SiteSearch';
 
 const currentPath = Astro.url.pathname;
 
@@ -127,8 +132,15 @@ const inSecondary = SECONDARY_NAV.some((item) => isActivePath(currentPath, item.
         </details>
       </nav>
 
-      <!-- CTA + hamburguesa -->
-      <div class="flex items-center gap-3">
+      <!-- Buscador + CTA + hamburguesa -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!--
+          Buscador del sitio (isla React). Visible en todas las tallas: en móvil
+          queda junto a la hamburguesa. `client:visible` y, además, Pagefind solo
+          se descarga cuando alguien abre el diálogo — ver `SiteSearch.tsx`.
+        -->
+        <SiteSearch client:visible />
+
         <a
           href="/inscripciones"
           data-analytics-event="cta_inscripcion_click"

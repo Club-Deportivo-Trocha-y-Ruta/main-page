@@ -29,7 +29,11 @@ const { title, description, ogImage } = Astro.props;
     <ClientRouter />
   </head>
   <body class="min-h-screen bg-surface-dark text-text-primary font-sans antialiased">
-    <main class="relative min-h-screen overflow-hidden">
+    <!--
+      `/enlaces` es `noindex` y solo repite enlaces que ya viven en el resto del
+      sitio: fuera del buscador, igual que está fuera del sitemap.
+    -->
+    <main class="relative min-h-screen overflow-hidden" data-pagefind-ignore="all">
       <div
         class="pointer-events-none absolute inset-0 bg-gradient-to-b from-surface-dark via-primary-dark to-surface-dark"
         aria-hidden="true"

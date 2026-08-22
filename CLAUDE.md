@@ -10,7 +10,7 @@ Sitio web estático del **Club Deportivo Trocha y Ruta** — club de ciclomonta�
 
 ```bash
 npm run dev          # Dev server en localhost:4321
-npm run build        # astro check + astro build → dist/
+npm run build        # astro check + astro build + pagefind --site dist → dist/
 npm run preview      # Preview del build local
 npm run typecheck    # astro check
 npm run lint         # ESLint (src, .ts/.tsx/.astro)
@@ -45,6 +45,7 @@ Node >= 20 requerido (CI usa Node 22).
 | Imágenes | astro:assets + Cloudinary | Dominio `res.cloudinary.com` habilitado. `PUBLIC_CLOUDINARY_CLOUD_NAME` |
 | Iconos | astro-icon + Phosphor | `ph:*` incluido completo |
 | Mapas | Leaflet | Solo en TrochaVerdeMap island |
+| Buscador | Pagefind | Índice estático generado al final del `build` (`pagefind --site dist`); el island lo carga solo al abrir el diálogo |
 | Forms/validación | react-hook-form + zod | Zod también define los schemas de contenido |
 
 Aliases TS (tsconfig): `@components/*`, `@layouts/*`, `@lib/*`, `@assets/*`, `@types/*`.
@@ -55,7 +56,7 @@ Design tokens en `src/styles/global.css` dentro de `@theme {}` (primary teal `#2
 
 ### React Islands — uso mínimo
 
-Astro genera zero-JS por defecto. Solo estos 5 componentes hidratan:
+Astro genera zero-JS por defecto. Solo estos 6 componentes hidratan:
 
 | Componente | Directiva |
 |-----------|-----------|
@@ -64,6 +65,7 @@ Astro genera zero-JS por defecto. Solo estos 5 componentes hidratan:
 | `InscriptionForm.tsx` (4 pasos, localStorage 48h TTL) | `client:visible` |
 | `ImageLightbox.tsx` | `client:visible` |
 | `TrochaVerdeMap.tsx` (Leaflet) | `client:visible` |
+| `SiteSearch.tsx` (Pagefind, en la cabecera) | `client:visible` |
 
 **Regla**: nunca `client:load` salvo MobileMenu; no agregar `client:*` a componentes que no requieran interactividad.
 
@@ -71,7 +73,7 @@ Astro genera zero-JS por defecto. Solo estos 5 componentes hidratan:
 
 Las colecciones se definen en `src/content.config.ts` (raíz de src, no `src/content/config.ts`) con glob loaders; **todos los schemas Zod viven centralizados en `src/lib/schemas.ts`** y se testean en `src/lib/__tests__/schemas.test.ts`.
 
-14 colecciones definidas; 10 con directorio y contenido: `events`, `faqs`, `gallery`, `news`, `programs`, `riders`, `social-initiatives`, `species` (~32), `sponsors`, `trees` (~77). Otras 4 están en config pero **sin directorio aún**: `directivos`, `results`, `rutas`, `pages` — si trabajas con ellas, crea primero el directorio.
+14 colecciones definidas; 10 con directorio y contenido: `events`, `faqs`, `gallery`, `news`, `programs`, `riders`, `social-initiatives`, `species` (~32), `sponsors`, `trees` (~77). `results` ya tiene directorio (`src/content/results/`) pero **sin datos todavía**: solo su `README.md`, que documenta el formato y que el loader ignora porque lee `yaml`/`yml`/`json`. Sin archivos, el tablero de la temporada de `/noticias` no se pinta. Otras 3 están en config pero **sin directorio aún**: `directivos`, `rutas`, `pages` — si trabajas con ellas, crea primero el directorio.
 
 Relaciones por referencia en frontmatter: evento→galería (`relatedGallery`), evento→noticias (`relatedNews`), noticia→galería (`relatedGallery`/`galleryFolder`), rider→programa (`program`), árbol→especie.
 

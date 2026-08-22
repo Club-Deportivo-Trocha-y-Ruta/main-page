@@ -2,9 +2,10 @@
 /**
  * Hero de la portada.
  *
- * Mantiene su marco propio —vídeo a pantalla completa sobre fondo oscuro— a
+ * Mantiene su marco propio —imagen a pantalla completa sobre fondo oscuro— a
  * propósito: no es una sección del sistema editorial y `SectionShell` no le
- * sirve. Lo que sí sigue del sistema es la regla de fondo: nada escrito a mano
+ * sirve. Lo que sí toma prestado del sistema es la textura topo (`TOPO_PATHS`
+ * / `TOPO_TILE` de `@lib/editorial`) y la regla de fondo: nada escrito a mano
  * que el contenido pueda decir.
  *
  * Por eso el antetítulo saca el año de `SITE.founded` en vez de repetir "2010"
@@ -19,6 +20,7 @@ import Button from '@components/common/Button.astro';
 import { getHeroPoster } from '@lib/hero-poster';
 import { heroPulse } from '@lib/home';
 import { SITE } from '@lib/constants';
+import { TOPO_PATHS, TOPO_TILE, uniqueSvgId } from '@lib/editorial';
 
 interface Props {
   title?: string;
@@ -35,11 +37,8 @@ const {
   backgroundImage,
 } = Astro.props;
 
-const YOUTUBE_VIDEO_ID = 'rz0QLMHpMVM';
-const VIDEO_START = 5;
-const VIDEO_END = 25;
-
 const poster = await getHeroPoster();
+const topoPatternId = uniqueSvgId('hero-topo');
 
 type Event = CollectionEntry<'events'>;
 const events = (await getCollection('events')).filter((event: Event) => !event.data.draft);
@@ -54,10 +53,9 @@ const afterMark = cut >= 0 && highlight ? title.slice(cut + highlight.length) : 
 
 <section
   aria-labelledby="hero-titulo"
-  class="relative min-h-[60vh] md:min-h-[80vh] flex items-center justify-center bg-surface-dark overflow-hidden"
+  class="relative min-h-[60vh] md:min-h-[80vh] flex items-center justify-center bg-surface-dark overflow-clip"
 >
-  <!-- Poster image: visible on mobile, fallback on desktop if YouTube fails.
-       Queda siempre debajo del video; el iframe solo se revela cuando reproduce. -->
+  <!-- Poster: fondo estático y elemento LCP de la portada. -->
   <img
     src={poster.src}
     srcset={poster.srcSet.attribute || undefined}
@@ -72,11 +70,6 @@ const afterMark = cut >= 0 && highlight ? title.slice(cut + highlight.length) : 
     aria-hidden="true"
   />
 
-  <!-- YouTube video background: only on desktop -->
-  <div class="hero-video-wrapper absolute inset-0 pointer-events-none hidden md:block" aria-hidden="true">
-    <div id="hero-yt-player"></div>
-  </div>
-
   {backgroundImage && (
     <img
       src={backgroundImage}
@@ -87,7 +80,43 @@ const afterMark = cut >= 0 && highlight ? title.slice(cut + highlight.length) : 
       fetchpriority="high"
     />
   )}
-  <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-primary-dark/15 z-[1]"></div>
+
+  <!-- Curvas topo decorativas con deriva ligada al scroll. Sobredimensionada
+       verticalmente (30px arriba y abajo) para que la deriva nunca descubra
+       un borde sin patrón.
+
+       El trazo va en blanco al 15%, no en el teal de marca: es lo que el
+       sistema fija para el patrón sobre fondo oscuro (`SECTION_TONES.dark.pattern`
+       = `text-white/15` en `@lib/editorial`), y así el hero se lee igual que
+       las demás secciones oscuras del sitio. -->
+  <svg
+    class="hero-topo sda-parallax-slow pointer-events-none absolute inset-x-0 -top-[30px] -bottom-[30px] h-[calc(100%+60px)] w-full text-white opacity-[0.15] z-[1]"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <defs>
+      <pattern
+        id={topoPatternId}
+        width={TOPO_TILE}
+        height={TOPO_TILE}
+        patternUnits="userSpaceOnUse"
+      >
+        {TOPO_PATHS.map((d) => (
+          <path d={d} fill="none" stroke="currentColor" stroke-width="1.25" />
+        ))}
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill={`url(#${topoPatternId})`} />
+  </svg>
+
+  <!-- Resplandor teal sutil hacia la esquina superior derecha, debajo del degradado oscuro. -->
+  <div
+    class="absolute inset-0 z-[1]"
+    style="background: radial-gradient(circle at top right, rgba(32, 183, 201, 0.28), transparent 60%);"
+    aria-hidden="true"
+  >
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-primary-dark/15 z-[2]"></div>
   <div class="relative z-10 mx-auto max-w-5xl px-4 text-center text-white">
     <!-- Badge de marca -->
     <div class="inline-flex items-center gap-2 mb-5 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/90 border border-white/20">
@@ -161,166 +190,3 @@ const afterMark = cut >= 0 && highlight ? title.slice(cut + highlight.length) : 
   </div>
   )}
 </section>
-
-<style>
-  .hero-video-wrapper {
-    overflow: hidden;
-    /* Oculto hasta que el reproductor emite PLAYING: el iframe pinta negro
-       antes del primer frame y tapaba el poster durante 2-5 s. */
-    opacity: 0;
-    transition: opacity 500ms ease-in;
-  }
-
-  .hero-video-wrapper.video-ready {
-    opacity: 1;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-video-wrapper {
-      transition: none;
-    }
-  }
-
-  .hero-video-wrapper :global(iframe) {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 120vw;
-    height: 120vh;
-    min-width: 120%;
-    min-height: 120%;
-    transform: translate(-50%, -50%);
-    object-fit: cover;
-  }
-
-  /* Hide video when user prefers reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    .hero-video-wrapper {
-      display: none !important;
-    }
-  }
-</style>
-
-<script define:vars={{ YOUTUBE_VIDEO_ID, VIDEO_START, VIDEO_END }}>
-  const DESKTOP_BREAKPOINT = 768;
-  // Si el video no llega a reproducir en este lapso, el hero se queda con el
-  // poster: preferible a un rectángulo negro esperando a YouTube.
-  const VIDEO_REVEAL_TIMEOUT = 6000;
-  let player;
-  let loopInterval;
-  let revealTimeout;
-
-  function videoWrapper() {
-    return document.querySelector('.hero-video-wrapper');
-  }
-
-  function revealVideo() {
-    if (revealTimeout) clearTimeout(revealTimeout);
-    const wrapper = videoWrapper();
-    if (wrapper) wrapper.classList.add('video-ready');
-  }
-
-  function hideVideo() {
-    if (revealTimeout) clearTimeout(revealTimeout);
-    const wrapper = videoWrapper();
-    if (wrapper) wrapper.classList.remove('video-ready');
-  }
-
-  function isDesktop() {
-    return window.innerWidth >= DESKTOP_BREAKPOINT;
-  }
-
-  function prefersReducedMotion() {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }
-
-  function initYouTubePlayer() {
-    // Skip on mobile or if user prefers reduced motion
-    if (!isDesktop() || prefersReducedMotion()) return;
-
-    const container = document.getElementById('hero-yt-player');
-    if (!container) return;
-
-    player = new YT.Player('hero-yt-player', {
-      videoId: YOUTUBE_VIDEO_ID,
-      playerVars: {
-        autoplay: 1,
-        mute: 1,
-        controls: 0,
-        showinfo: 0,
-        rel: 0,
-        modestbranding: 1,
-        playsinline: 1,
-        start: VIDEO_START,
-        end: VIDEO_END,
-        disablekb: 1,
-        fs: 0,
-        iv_load_policy: 3,
-      },
-      events: {
-        onReady: onPlayerReady,
-        onStateChange: onPlayerStateChange,
-        onError: hideVideo,
-      },
-    });
-  }
-
-  function onPlayerReady(event) {
-    event.target.mute();
-    event.target.playVideo();
-    startLoopCheck();
-    if (revealTimeout) clearTimeout(revealTimeout);
-    revealTimeout = setTimeout(hideVideo, VIDEO_REVEAL_TIMEOUT);
-  }
-
-  function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.PLAYING) {
-      revealVideo();
-    }
-    if (event.data === YT.PlayerState.ENDED) {
-      player.seekTo(VIDEO_START, true);
-      player.playVideo();
-    }
-  }
-
-  function startLoopCheck() {
-    if (loopInterval) clearInterval(loopInterval);
-    loopInterval = setInterval(() => {
-      if (player && player.getCurrentTime) {
-        const currentTime = player.getCurrentTime();
-        if (currentTime >= VIDEO_END || currentTime < VIDEO_START) {
-          player.seekTo(VIDEO_START, true);
-        }
-      }
-    }, 500);
-  }
-
-  // Cleanup on View Transitions navigation
-  document.addEventListener('astro:before-swap', () => {
-    if (loopInterval) clearInterval(loopInterval);
-    if (revealTimeout) clearTimeout(revealTimeout);
-    if (player && player.destroy) player.destroy();
-  }, { once: true });
-
-  // Re-initialize on View Transitions back-navigation
-  document.addEventListener('astro:after-swap', () => {
-    hideVideo();
-    if (isDesktop() && !prefersReducedMotion()) {
-      if (window.YT && window.YT.Player) {
-        initYouTubePlayer();
-      }
-    }
-  });
-
-  // Load YouTube IFrame API only on desktop
-  if (isDesktop() && !prefersReducedMotion()) {
-    if (!window.YT) {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      document.head.appendChild(tag);
-      window.onYouTubeIframeAPIReady = initYouTubePlayer;
-    } else {
-      initYouTubePlayer();
-    }
-  }
-</script>

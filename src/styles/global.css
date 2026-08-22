@@ -187,6 +187,57 @@
   }
 }
 
+/* Barra de conversión móvil (`ConversionBar.astro`): aparece al pasar el
+   hero, ligada al scroll del documento —no al de un elemento— por eso usa
+   `scroll()` y no `view()` como el resto de animaciones de esta sección.
+   Mejora progresiva igual que arriba: sin soporte o con menos movimiento la
+   barra queda visible fija desde el primer render (el markup base no trae
+   transform ni opacity propios). */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes sda-conversion-bar-in {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .conversion-bar {
+      /* Longhands a propósito: ver la nota de más arriba sobre el shorthand
+         `animation` y Lightning CSS. */
+      animation-name: sda-conversion-bar-in;
+      animation-timing-function: ease-out;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 480px;
+    }
+  }
+}
+
+/* La barra de conversión y el banner de consentimiento
+   (`ConsentBanner.astro`) se anclan los dos al borde inferior, y el banner va
+   por encima (`z-[60]` contra `z-40`): en la primera visita —el caso más
+   común, y el de más valor— la tarjeta de cookies taparía justo la CTA de
+   inscripción. Se resuelve reservándole al banner el alto exacto de la barra,
+   así conviven apilados en vez de encimarse.
+
+   Alto de la barra = `pt-3` (12px) + botón `h-12` (48px) + su
+   `padding-bottom: max(12px, env(safe-area-inset-bottom))`.
+
+   El selector es de hermano posterior porque `BaseLayout.astro` pinta
+   `<ConversionBar />` antes que `<ConsentBanner />`; si algún día cambia ese
+   orden, hay que revisar esta regla. Fuera de `md` la barra no se pinta
+   (`md:hidden`) y el banner no necesita reserva. */
+@media (width < 48rem) {
+  .conversion-bar ~ #consent-banner {
+    padding-bottom: calc(60px + max(12px, env(safe-area-inset-bottom)));
+  }
+}
+
 /* Navigation progress bar */
 #nav-progress {
   position: fixed;

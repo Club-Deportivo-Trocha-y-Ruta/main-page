@@ -81,7 +81,12 @@ for (const [collection, schema] of Object.entries(collectionSchemas)) {
 // ============================================================
 
 describe('Convenciones de contenido', () => {
-  const allMdFiles = fg.sync(`${CONTENT_DIR}/**/*.md`);
+  // Un README dentro de una colección es documentación para quien carga el
+  // contenido, no una ficha: no lo carga ningún loader (`results` solo lee
+  // yaml/yml/json) y no tiene por qué traer frontmatter ni slug en kebab-case.
+  const allMdFiles = fg
+    .sync(`${CONTENT_DIR}/**/*.md`)
+    .filter((filePath) => basename(filePath).toLowerCase() !== 'readme.md');
 
   it.each(allMdFiles)('%s tiene slug en kebab-case sin acentos', (filePath) => {
     const slug = basename(filePath, '.md');
