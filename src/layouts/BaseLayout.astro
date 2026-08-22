@@ -18,6 +18,12 @@ interface Props {
   ogImageHeight?: number;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   ogType?: string;
+  /**
+   * Marca la página como `noindex, nofollow`. Lo usa `/equipo`, que existe y se
+   * construye pero todavía no es pública: se acompaña de su exclusión del
+   * sitemap en `astro.config.mjs`.
+   */
+  noindex?: boolean;
   articlePublishedTime?: string;
   articleModifiedTime?: string;
   articleAuthor?: string;
@@ -25,7 +31,7 @@ interface Props {
   articleTags?: string[];
 }
 
-const { title, description, ogImage, ogImageWidth, ogImageHeight, jsonLd, ogType, articlePublishedTime, articleModifiedTime, articleAuthor, articleSection, articleTags } = Astro.props;
+const { title, description, ogImage, ogImageWidth, ogImageHeight, jsonLd, ogType, noindex, articlePublishedTime, articleModifiedTime, articleAuthor, articleSection, articleTags } = Astro.props;
 
 // El poster del hero solo existe en la home: preloadearlo en las 27 páginas
 // competía con el LCP real del resto del sitio.
@@ -64,7 +70,7 @@ const heroPoster = isHome ? await getHeroPoster() : null;
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
     <!-- Theme color -->
     <meta name="theme-color" content="#20b7c9" />
-    <SEOHead title={title} description={description} ogImage={ogImage} ogImageWidth={ogImageWidth} ogImageHeight={ogImageHeight} jsonLd={jsonLd} ogType={ogType} articlePublishedTime={articlePublishedTime} articleModifiedTime={articleModifiedTime} articleAuthor={articleAuthor} articleSection={articleSection} articleTags={articleTags} />
+    <SEOHead title={title} description={description} ogImage={ogImage} ogImageWidth={ogImageWidth} ogImageHeight={ogImageHeight} jsonLd={jsonLd} ogType={ogType} noindex={noindex} articlePublishedTime={articlePublishedTime} articleModifiedTime={articleModifiedTime} articleAuthor={articleAuthor} articleSection={articleSection} articleTags={articleTags} />
     <ClientRouter />
   </head>
   <body class="min-h-screen flex flex-col bg-surface text-text-primary font-sans antialiased">
@@ -83,7 +89,18 @@ const heroPoster = isHome ? await getHeroPoster() : null;
       marcado, así que cabecera, cinta de anuncio y pie —idénticos en las 146
       páginas— dejan de aparecer en cada resultado.
     -->
-    <main id="main-content" class="flex-1" transition:animate="fade" data-pagefind-body>
+    <!--
+      Una página `noindex` tampoco entra al buscador del sitio: sería la vía por
+      la que una página oculta —hoy `/equipo`— reaparecería en la cabecera.
+      Mismo recurso que ya usa `LinktreeLayout` para `/enlaces`.
+    -->
+    <main
+      id="main-content"
+      class="flex-1"
+      transition:animate="fade"
+      data-pagefind-body={noindex ? undefined : true}
+      data-pagefind-ignore={noindex ? 'all' : undefined}
+    >
       <slot />
     </main>
     <Footer />

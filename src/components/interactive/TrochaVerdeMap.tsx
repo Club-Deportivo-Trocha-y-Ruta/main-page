@@ -150,8 +150,8 @@ export default function TrochaVerdeMap({ trees }: TrochaVerdeMapProps) {
       leafletRef.current = null;
       layerGroupRef.current = null;
     };
-    // trees es estático (generado en build), no cambia en runtime
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Deps vacías a propósito: el mapa se inicializa una sola vez. `trees` es
+    // estático (generado en build) y no cambia en runtime.
   }, []);
 
   // Actualizar marcadores cuando cambia el filtro

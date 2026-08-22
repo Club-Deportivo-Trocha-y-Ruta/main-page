@@ -23,8 +23,10 @@ const riders = defineCollection({
   schema: ridersSchema,
 });
 
+// El README de la carpeta documenta el formato para quien cargue fichas a mano;
+// el patrón lo excluye para que el loader no intente validarlo como una ficha.
 const directivos = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: 'src/content/directivos' }),
+  loader: glob({ pattern: ['**/*.md', '!README.md'], base: 'src/content/directivos' }),
   schema: directivosSchema,
 });
 

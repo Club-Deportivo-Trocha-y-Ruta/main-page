@@ -181,6 +181,7 @@ Nada de esto reemplaza a `.reveal` (IntersectionObserver, en `BaseLayout`): conv
 | Portada (`/`) | ✅ Migrada |
 | Preguntas frecuentes (`/preguntas-frecuentes`) | ✅ Migrada |
 | Política editorial (`/politica-editorial`) | ✅ Migrada |
+| Equipo (`/equipo`) | ✅ Construida — **oculta al público**, ver §27 |
 
 ---
 
@@ -1137,3 +1138,51 @@ categoría es una `<section>` con su `aria-labelledby`, y el rojo y el azul de
 estado (6,2:1 y 6,3:1 sobre blanco) viven en el componente porque solo los usa
 él. Cero JavaScript: los anchos los calcula el CSS desde las custom properties
 de cada fila.
+
+---
+
+## 27. Referencia de Equipo — una página construida y oculta
+
+**Por qué está oculta.** `/equipo` era el único TODO real del código: un ítem de
+navegación comentado en `constants.ts` y dos `.astro.bak` de perfiles de
+corredores. La página ya existe y se construye, pero **el club todavía no tiene
+firmadas las autorizaciones de uso de imagen**, así que no se publica. El
+ocultamiento va en cuatro frentes a la vez, no en uno:
+
+| Frente | Cómo |
+|--------|------|
+| Navegación | El ítem sigue comentado en `NAV_ITEMS` (`src/lib/constants.ts`) |
+| Buscadores | `noindex, nofollow` vía el prop `noindex` de `BaseLayout` → `SEOHead` |
+| Sitemap | El filtro de `astro.config.mjs` excluye `/equipo`, como ya excluía `/enlaces` |
+| Buscador del sitio | Una página `noindex` cambia `data-pagefind-body` por `data-pagefind-ignore="all"` en `BaseLayout` — si no, Pagefind la devolvería desde la cabecera |
+
+Ese último punto es el que se olvida: sin él la página oculta reaparece en el
+buscador interno, que es exactamente por donde la encontraría una familia.
+
+**Solo adultos, y dicho en la propia página.** La bajada del `h1` declara que
+ahí aparecen únicamente personas mayores de edad y que los perfiles de los
+deportistas —niños y jóvenes— no se publican. Es la misma decisión que ya
+tomaron los `tags` de las crónicas (§20) y el tablero de la temporada (§26),
+esta vez escrita donde el lector la ve.
+
+**Sin datos, la página se sostiene igual.** `src/content/directivos/` existe con
+solo su `README.md` —excluido del loader con un patrón negativo, porque la
+colección carga `**/*.md` y ahí un README sí entraría—, así que hoy
+`summarizeStaff()` devuelve `null`, `groupStaffByArea()` devuelve `[]` y lo que
+se pinta es la entrada y el paso siguiente a `/programas`. Ni una tarjeta de
+ejemplo, ni un "próximamente", ni un nombre inventado: la misma regla de
+`summarizePrograms()` y `summarizeStandings()`.
+
+**El vocabulario.** `STAFF_AREAS` (`src/lib/staff.ts`) reparte los doce roles
+del schema en dos áreas con orden de lectura —quién responde legalmente por el
+club, y quién está en la pista— y declara para cada una a qué pregunta responde,
+igual que `DOCUMENT_CATEGORIES` en Transparencia. Un rol que el vocabulario no
+conozca cae en el cuerpo técnico en vez de perder a la persona, y el área que
+nadie ocupa no se pinta.
+
+**El schema ganó `draft`, nada más.** `directivosSchema` ya cubría nombre, rol,
+credenciales, orden y foto opcional. Solo faltaba el interruptor que el resto de
+colecciones sí tiene: `draft` (por defecto `false`, así que ninguna ficha
+existente cambia de comportamiento) para guardar una ficha sin publicarla
+mientras no haya autorización de imagen. Se replicó en el `config.yml` de
+Sveltia, como exige `CLAUDE.md`.

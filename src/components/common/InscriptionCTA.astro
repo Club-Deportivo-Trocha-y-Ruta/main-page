@@ -1,6 +1,6 @@
 ---
 import Button from '@components/common/Button.astro';
-import { CONTACT } from '@lib/constants';
+import { CONTACT, CTA_TRIAL_LABEL } from '@lib/constants';
 import { uniqueSvgId } from '@lib/editorial';
 
 interface Props {
@@ -37,7 +37,7 @@ const headingId = uniqueSvgId('cta-inscripcion');
       </p>
       <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
         <Button variant="accent" size="lg" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
-          Clase de prueba gratis
+          {CTA_TRIAL_LABEL}
         </Button>
         <a
           href={`${CONTACT.whatsapp}?text=Hola%2C%20quiero%20inscribir%20a%20mi%20hijo%20en%20el%20club`}
@@ -64,7 +64,7 @@ const headingId = uniqueSvgId('cta-inscripcion');
       </div>
       <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
         <Button variant="accent" size="md" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
-          Clase de prueba gratis
+          {CTA_TRIAL_LABEL}
         </Button>
         <a
           href={`${CONTACT.whatsapp}?text=Hola%2C%20quiero%20inscribir%20a%20mi%20hijo%20en%20el%20club`}

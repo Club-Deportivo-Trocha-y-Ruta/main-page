@@ -19,7 +19,7 @@ import { Icon } from 'astro-icon/components';
 import Button from '@components/common/Button.astro';
 import { getHeroPoster } from '@lib/hero-poster';
 import { heroPulse } from '@lib/home';
-import { SITE } from '@lib/constants';
+import { CTA_TRIAL_LABEL, SITE } from '@lib/constants';
 import { TOPO_PATHS, TOPO_TILE, uniqueSvgId } from '@lib/editorial';
 
 interface Props {
@@ -134,7 +134,7 @@ const afterMark = cut >= 0 && highlight ? title.slice(cut + highlight.length) : 
     </p>
     <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
       <Button variant="accent" size="lg" href="/inscripciones">
-        Clase de prueba gratis
+        {CTA_TRIAL_LABEL}
         <svg class="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </Button>
       <Button

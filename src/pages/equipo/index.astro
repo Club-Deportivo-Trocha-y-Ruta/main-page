@@ -1,0 +1,210 @@
+---
+/**
+ * `/equipo` — el equipo adulto del club.
+ *
+ * Página **oculta a propósito**: existe, se construye y se puede visitar por
+ * URL, pero no está en el menú, va con `noindex` y queda fuera del sitemap
+ * (ver el filtro de `astro.config.mjs`). El club todavía no tiene firmadas las
+ * autorizaciones de imagen, así que la estructura se deja lista y la
+ * publicación se decide después.
+ *
+ * Sigue el sistema editorial (docs/04-sistema-editorial.md): marco `muted` con
+ * textura topo, entrada narrativa, y una sección por área que solo se pinta si
+ * hay fichas cargadas. Con la colección vacía —hoy— quedan la entrada y el
+ * paso siguiente: ninguna cifra, ninguna tarjeta y ningún nombre inventado.
+ *
+ * Aquí solo aparecen personas adultas. Los deportistas del club son menores y
+ * sus perfiles no se publican, la misma decisión que ya documentan los §20 y
+ * §26 del sistema editorial.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import Button from '@components/common/Button.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import {
+  groupStaffByArea,
+  isPublishableStaff,
+  summarizeStaff,
+  type StaffMember,
+} from '@lib/staff';
+
+type Directivo = CollectionEntry<'directivos'>;
+
+const members: StaffMember[] = (await getCollection('directivos')).map((entry: Directivo) => ({
+  id: entry.id,
+  name: entry.data.name,
+  role: entry.data.role,
+  roleLabel: entry.data.roleLabel,
+  photo: entry.data.photo,
+  bio: entry.data.bio,
+  certifications: entry.data.certifications,
+  yearJoined: entry.data.yearJoined,
+  active: entry.data.active,
+  order: entry.data.order,
+  draft: entry.data.draft,
+}));
+
+const published = members.filter(isPublishableStaff);
+const groups = groupStaffByArea(published);
+const totals = summarizeStaff(published);
+---
+
+<BaseLayout
+  title="Equipo"
+  description="Junta directiva y cuerpo técnico del Club Deportivo Trocha y Ruta: las personas adultas que responden por el club y acompañan cada entrenamiento en Yumbo."
+  noindex={true}
+>
+  <!-- Entrada: quién aparece aquí y quién no -->
+  <SectionShell tone="muted" pattern="topo" width="wide" spacing="compact" labelledby="equipo-titulo">
+    <Breadcrumb items={[{ label: 'Equipo' }]} />
+
+    <div class="mt-6 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+      <SectionIntro
+        as="h1"
+        id="equipo-titulo"
+        eyebrow="El club"
+        eyebrowIcon="ph:users-three-bold"
+        title="Detrás de cada entrenamiento hay un equipo adulto"
+        highlight="un equipo adulto"
+        tone="muted"
+        lead="Esta página presenta únicamente a las personas mayores de edad del club: la junta directiva que responde legalmente y el cuerpo técnico que dirige la pista. Los deportistas son niños y jóvenes, y sus perfiles no se publican."
+      />
+
+      {/*
+        `StatFigure` pinta un `<div><p>`: va en una rejilla normal, no en un
+        `<dl>`. Y toda la rejilla desaparece si no hay fichas cargadas.
+      */}
+      {totals && (
+        <div class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-2">
+          <StatFigure
+            value={totals.people}
+            label="Personas en el equipo"
+            icon="ph:users-three-bold"
+            tone="muted"
+          />
+          <StatFigure value={totals.areas} label="Áreas del club" icon="ph:squares-four-bold" tone="muted" />
+          {totals.certifications !== null && (
+            <StatFigure
+              value={totals.certifications}
+              label="Credenciales declaradas"
+              note="Certificaciones cargadas en las fichas"
+              icon="ph:certificate-bold"
+              tone="muted"
+            />
+          )}
+          {totals.sinceYear !== null && (
+            <StatFigure
+              value={totals.sinceYear}
+              label="Acompañando desde"
+              note="Año de ingreso más antiguo del equipo"
+              icon="ph:calendar-check-bold"
+              tone="muted"
+            />
+          )}
+        </div>
+      )}
+    </div>
+  </SectionShell>
+
+  <!-- Un bloque por área: el área que nadie ocupa no se pinta -->
+  {groups.map((group, index) => (
+    <SectionShell
+      id={`area-${group.area.id}`}
+      tone={index % 2 === 0 ? 'plain' : 'muted'}
+      width="wide"
+      labelledby={`area-${group.area.id}-titulo`}
+      class="scroll-mt-20"
+    >
+      <SectionIntro
+        id={`area-${group.area.id}-titulo`}
+        eyebrow={group.area.eyebrow}
+        eyebrowIcon={group.area.icon}
+        title={group.area.label}
+        lead={group.area.purpose}
+        tone={index % 2 === 0 ? 'plain' : 'muted'}
+      />
+
+      <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
+        {group.members.map((member) => (
+          <li class="flex h-full flex-col rounded-2xl border border-primary/15 bg-surface p-5 shadow-sm">
+            <div class="flex items-center gap-4">
+              <div class="relative size-16 shrink-0 overflow-hidden rounded-full bg-surface-muted">
+                {member.photo ? (
+                  <img
+                    src={member.photo}
+                    alt={`Retrato de ${member.name}, ${member.roleLabel} del Club Trocha y Ruta`}
+                    loading="lazy"
+                    decoding="async"
+                    class="absolute inset-0 size-full object-cover"
+                  />
+                ) : (
+                  <Icon
+                    name="ph:user-bold"
+                    class="absolute inset-0 m-auto size-7 text-primary-deep/60"
+                    aria-hidden="true"
+                  />
+                )}
+              </div>
+
+              <div class="min-w-0">
+                <h3 class="font-display text-lg font-bold leading-tight text-text-primary">
+                  {member.name}
+                </h3>
+                <p class="mt-0.5 text-sm font-semibold text-primary-deep">{member.roleLabel}</p>
+              </div>
+            </div>
+
+            {member.bio && (
+              <p class="mt-4 text-sm leading-relaxed text-text-secondary">{member.bio}</p>
+            )}
+
+            {member.certifications.length > 0 && (
+              <div class="mt-4">
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
+                  Credenciales
+                </p>
+                <ul class="mt-2 flex flex-wrap gap-1.5" role="list">
+                  {member.certifications.map((certification) => (
+                    <li class="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary-deep">
+                      {certification}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {member.yearJoined !== undefined && (
+              <p class="mt-auto pt-4 text-xs font-medium text-text-secondary">
+                <Icon name="ph:calendar-check-bold" class="mr-1 inline size-3.5" aria-hidden="true" />
+                En el club desde {member.yearJoined}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </SectionShell>
+  ))}
+
+  <!-- Paso siguiente: lo que este equipo dirige -->
+  <SectionShell tone="tinted" width="default" spacing="compact" labelledby="equipo-siguiente-titulo">
+    <SectionIntro
+      id="equipo-siguiente-titulo"
+      eyebrow="Paso siguiente"
+      eyebrowIcon="ph:path-bold"
+      title="Lo que este equipo dirige, semana a semana"
+      highlight="semana a semana"
+      tone="tinted"
+      lead="Tres etapas encadenadas, con los mismos entrenadores y la misma pista. Ahí se ve el trabajo de este equipo en concreto: edades, horarios y cupos de cada programa."
+      align="center"
+    />
+
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <Button variant="accent" href="/programas">Ver los programas</Button>
+      <Button variant="outline" href="/quienes-somos">Conocer la historia del club</Button>
+    </div>
+  </SectionShell>
+</BaseLayout>

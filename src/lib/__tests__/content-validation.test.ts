@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fg from 'fast-glob';
 import matter from 'gray-matter';
 import { readFileSync } from 'fs';
-import { basename, dirname } from 'path';
+import { basename } from 'path';
 import {
   ridersSchema,
   newsSchema,

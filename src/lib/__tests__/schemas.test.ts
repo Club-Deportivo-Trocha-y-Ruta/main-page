@@ -259,6 +259,39 @@ describe('directivosSchema', () => {
     expect(result.certifications).toEqual([]);
   });
 
+  it('una ficha sin draft sigue siendo publicable', () => {
+    const result = directivosSchema.parse({
+      name: 'Director',
+      role: 'presidente',
+      roleLabel: 'Presidente',
+    });
+    expect(result.draft).toBe(false);
+  });
+
+  it('acepta draft: true para una ficha guardada sin publicar', () => {
+    const result = directivosSchema.parse({
+      name: 'Director',
+      role: 'presidente',
+      roleLabel: 'Presidente',
+      draft: true,
+    });
+    expect(result.draft).toBe(true);
+  });
+
+  it('conserva las credenciales y el año de ingreso que alimentan /equipo', () => {
+    const result = directivosSchema.parse({
+      name: 'Entrenadora',
+      role: 'entrenador-principal',
+      roleLabel: 'Directora Técnica',
+      certifications: ['Licencia UCI nivel 1', 'Primeros auxilios'],
+      yearJoined: 2018,
+      order: 2,
+    });
+    expect(result.certifications).toHaveLength(2);
+    expect(result.yearJoined).toBe(2018);
+    expect(result.order).toBe(2);
+  });
+
   it('rechaza email inválido', () => {
     expect(() =>
       directivosSchema.parse({

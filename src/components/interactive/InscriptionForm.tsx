@@ -170,7 +170,9 @@ export default function InscriptionForm({ programs }: Props) {
     if (saved) {
       reset({ ...getValues(), ...saved });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Deps vacías a propósito: la restauración corre una sola vez al montar.
+    // `reset` y `getValues` son estables (react-hook-form) y añadirlas volvería
+    // a pisar lo que el usuario esté escribiendo.
   }, []);
 
   // Save data on change
@@ -339,7 +341,7 @@ export default function InscriptionForm({ programs }: Props) {
           </a>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-6 py-3 text-sm font-semibold text-text-primary transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="inline-flex items-center justify-center rounded-lg border border-surface-muted px-6 py-3 text-sm font-semibold text-text-primary transition-colors hover:bg-surface-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             Volver al inicio
           </a>
@@ -375,7 +377,7 @@ export default function InscriptionForm({ programs }: Props) {
                         ? 'bg-primary text-white'
                         : isCurrent
                           ? 'border-2 border-primary bg-white text-primary'
-                          : 'border-2 border-gray-300 bg-white text-gray-400'
+                          : 'border-2 border-surface-muted bg-white text-gray-400'
                     }`}
                     aria-current={isCurrent ? 'step' : undefined}
                   >
@@ -398,7 +400,7 @@ export default function InscriptionForm({ programs }: Props) {
                 {idx < STEPS.length - 1 && (
                   <div
                     className={`mx-2 h-0.5 flex-1 transition-colors ${
-                      idx < currentStep ? 'bg-primary' : 'bg-gray-300'
+                      idx < currentStep ? 'bg-primary' : 'bg-surface-muted'
                     }`}
                     aria-hidden="true"
                   />
@@ -436,14 +438,14 @@ export default function InscriptionForm({ programs }: Props) {
                     className={`flex cursor-pointer items-center gap-4 rounded-xl border-2 p-4 transition-colors ${
                       values.programId === program.id
                         ? 'border-primary bg-primary/5'
-                        : 'border-gray-200 hover:border-gray-300'
+                        : 'border-gray-200 hover:border-surface-muted'
                     }`}
                   >
                     <input
                       type="radio"
                       value={program.id}
                       {...register('programId')}
-                      className="h-11 w-11 shrink-0 border-gray-300 text-primary focus:ring-primary"
+                      className="h-11 w-11 shrink-0 border-surface-muted text-primary focus:ring-primary"
                     />
                     <div>
                       <span className="font-semibold text-text-primary">{program.title}</span>
@@ -463,7 +465,7 @@ export default function InscriptionForm({ programs }: Props) {
                 <select
                   id="riderAge"
                   {...register('riderAge')}
-                  className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                  className="mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                 >
                   <option value="">Seleccionar edad</option>
                   {Array.from({ length: 48 }, (_, i) => i + 3).map((age) => (
@@ -500,7 +502,7 @@ export default function InscriptionForm({ programs }: Props) {
                     type="text"
                     {...register('riderName')}
                     autoComplete="name"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                   {errors.riderName && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.riderName.message}</p>
@@ -518,7 +520,7 @@ export default function InscriptionForm({ programs }: Props) {
                       <select
                         id="birthDay"
                         {...register('birthDay')}
-                        className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                       >
                         <option value="">Dia</option>
                         {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
@@ -531,7 +533,7 @@ export default function InscriptionForm({ programs }: Props) {
                       <select
                         id="birthMonth"
                         {...register('birthMonth')}
-                        className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                       >
                         <option value="">Mes</option>
                         {MONTHS.map((m, i) => (
@@ -544,7 +546,7 @@ export default function InscriptionForm({ programs }: Props) {
                       <select
                         id="birthYear"
                         {...register('birthYear')}
-                        className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                       >
                         <option value="">Año</option>
                         {Array.from({ length: 51 }, (_, i) => new Date().getFullYear() - i).map((y) => (
@@ -566,7 +568,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <select
                     id="gender"
                     {...register('gender')}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   >
                     <option value="">Seleccionar</option>
                     <option value="masculino">Masculino</option>
@@ -589,7 +591,7 @@ export default function InscriptionForm({ programs }: Props) {
                         className={`flex cursor-pointer items-center justify-center rounded-lg border-2 px-4 py-3 text-sm font-medium transition-colors ${
                           values.shirtSize === size
                             ? 'border-primary bg-primary/5 text-primary'
-                            : 'border-gray-200 text-text-secondary hover:border-gray-300'
+                            : 'border-gray-200 text-text-secondary hover:border-surface-muted'
                         }`}
                       >
                         <input
@@ -619,14 +621,14 @@ export default function InscriptionForm({ programs }: Props) {
                         className={`flex cursor-pointer items-center gap-3 rounded-lg border-2 px-4 py-3 transition-colors ${
                           values.experience === level.value
                             ? 'border-primary bg-primary/5'
-                            : 'border-gray-200 hover:border-gray-300'
+                            : 'border-gray-200 hover:border-surface-muted'
                         }`}
                       >
                         <input
                           type="radio"
                           value={level.value}
                           {...register('experience')}
-                          className="h-11 w-11 shrink-0 border-gray-300 text-primary focus:ring-primary"
+                          className="h-11 w-11 shrink-0 border-surface-muted text-primary focus:ring-primary"
                         />
                         <span className="text-sm text-text-primary">{level.label}</span>
                       </label>
@@ -660,7 +662,7 @@ export default function InscriptionForm({ programs }: Props) {
                     type="text"
                     {...register('guardianName')}
                     autoComplete="name"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                   {errors.guardianName && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianName.message}</p>
@@ -677,7 +679,7 @@ export default function InscriptionForm({ programs }: Props) {
                     {...register('guardianPhone')}
                     placeholder="3001234567"
                     autoComplete="tel"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                   {errors.guardianPhone && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianPhone.message}</p>
@@ -693,7 +695,7 @@ export default function InscriptionForm({ programs }: Props) {
                     type="email"
                     {...register('guardianEmail')}
                     autoComplete="email"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                   {errors.guardianEmail && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianEmail.message}</p>
@@ -709,7 +711,7 @@ export default function InscriptionForm({ programs }: Props) {
                     type="text"
                     {...register('guardianAddress')}
                     autoComplete="street-address"
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                 </div>
 
@@ -721,7 +723,7 @@ export default function InscriptionForm({ programs }: Props) {
                     id="riderEps"
                     type="text"
                     {...register('riderEps')}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-surface-muted px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   />
                   {errors.riderEps && (
                     <p className="mt-1 text-sm text-red-600" role="alert">{errors.riderEps.message}</p>
@@ -735,7 +737,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <select
                     id="relationship"
                     {...register('relationship')}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                    className="mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                   >
                     <option value="">Seleccionar</option>
                     {RELATIONSHIPS.map((r) => (
@@ -805,7 +807,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <input
                     type="checkbox"
                     {...register('acceptTerms')}
-                    className="h-11 w-11 shrink-0 rounded border-gray-300 text-primary focus:ring-primary"
+                    className="h-11 w-11 shrink-0 rounded border-surface-muted text-primary focus:ring-primary"
                   />
                   <span className="text-sm text-text-secondary">
                     Acepto los terminos y condiciones del Club Deportivo Trocha y Ruta <span className="text-red-500">*</span>
@@ -819,7 +821,7 @@ export default function InscriptionForm({ programs }: Props) {
                   <input
                     type="checkbox"
                     {...register('acceptDataPolicy')}
-                    className="h-11 w-11 shrink-0 rounded border-gray-300 text-primary focus:ring-primary"
+                    className="h-11 w-11 shrink-0 rounded border-surface-muted text-primary focus:ring-primary"
                   />
                   <span className="text-sm text-text-secondary">
                     Autorizo el tratamiento de datos personales segun la Ley 1581 de 2012 <span className="text-red-500">*</span>
@@ -845,7 +847,7 @@ export default function InscriptionForm({ programs }: Props) {
             <button
               type="button"
               onClick={handleBack}
-              className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg border border-surface-muted px-5 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-surface-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

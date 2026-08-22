@@ -61,10 +61,10 @@ const showBanner = Boolean(ga4Id);
         banner.setAttribute('aria-hidden', 'true');
       }
       function persist(value) {
-        try { localStorage.setItem(STORAGE_KEY, value); } catch (e) {}
+        try { localStorage.setItem(STORAGE_KEY, value); } catch {}
       }
       function read() {
-        try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
+        try { return localStorage.getItem(STORAGE_KEY); } catch { return null; }
       }
       function pushConsent(status) {
         if (typeof window.gtag === 'function') {
@@ -75,7 +75,7 @@ const showBanner = Boolean(ga4Id);
         var state = window.__trochaAnalytics;
         if (state && state.providers) {
           for (var i = 0; i < state.providers.length; i++) {
-            try { state.providers[i].setConsent(status); } catch (e) {}
+            try { state.providers[i].setConsent(status); } catch {}
           }
         }
       }
