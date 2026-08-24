@@ -94,6 +94,10 @@ Ilustraciones disponibles en `src/lib/editorial.ts`:
 - `SeasonTrack.astro` + `buildSeason()` — riel horizontal con una parada por
   fecha y la barra llena hasta donde va el año. Sirve para cualquier secuencia
   con un "vas aquí".
+- `SeasonRail.astro` — la versión de una línea del riel, para cuando no cabe el
+  recorrido navegable: sin enlaces, sin texto sobre las paradas y con el dibujo
+  `aria-hidden`, porque el dato equivalente viaja en un resumen `sr-only`. La
+  usa la tarjeta de temporada del hero de la portada.
 
 El SVG se estira con `preserveAspectRatio="none"`, así que **dentro del SVG no va texto ni
 círculos**: los marcadores se dibujan en HTML encima del recuadro.
@@ -784,18 +788,40 @@ verificable por el lector. Las afirmaciones históricas del club
 (`CLUB_STATS.ridersTrained`, `medals`), que no tienen dataset detrás, se
 quedan solo en `AboutPreview`.
 
-**El pulso del hero.** El hero era un cartel fijo. Ahora, debajo de los
-botones, muestra la próxima fecha real de la temporada vía `heroPulse()`, que
+**El hero dejó de ser un cartel.** Era una foto a pantalla completa con el
+texto encima, en blanco sobre degradados oscuros, y una flecha de scroll. Ahora
+es claro y a dos columnas —texto a la izquierda, foto a la derecha—, sobre la
+cadena del tono `tinted` (`getTone('tinted')` de `@lib/editorial`, no clases
+escritas a mano) y con la textura topo del sistema. Marco propio, sí, pero nada
+de fondos inventados.
+
+Lo que estaba escondido en un chip subió a **tarjeta de temporada**: el riel
+compacto (`SeasonRail`, §2.3) más la próxima fecha real vía `heroPulse()`, que
 sale de `buildSeason()` — la misma derivación de `/calendario` y `/enlaces`, así
 que las tres nunca se contradicen. Si la carrera es hoy, el aviso cambia. Si ya
-corrió toda la temporada, no se pinta nada. Cuando hay pulso, la flecha de
-scroll se oculta: dos señales compitiendo por la misma mirada.
+corrió toda la temporada, la tarjeta no se pinta y no la reemplaza nada.
+
+**Cada cifra, en un solo sitio.** La tarjeta del hero no escribe el conteo de
+fechas corridas ni los años del club: esas dos cifras las publica la banda de
+credibilidad, que va justo debajo y es la que viaja con procedencia y con
+enlace para comprobarlas. Repetirlas a un scroll de distancia es el mismo
+defecto que este rediseño corrigió arriba, con otros números. El hero aporta lo
+que la banda no dice: el dibujo del riel y cuál es la próxima fecha.
+
+**El reparto de secciones.** El recorrido es: hero → cifras comprobables →
+programas → el club **con la clase de prueba dentro** (`AboutPreview` incrusta
+`InscriptionCTA variant="inline"` con `headingLevel="h3"`, porque el `h2` de la
+sección ya lo puso `SectionIntro`) → la temporada → Trocha Verde →
+patrocinadores → el cierre. El calendario y las crónicas, que eran dos secciones
+seguidas contando el mismo año, son una sola a dos columnas: `SeasonOverview`
+—lo que sigue a la izquierda, lo ya contado a la derecha—. `UpcomingEvents` y
+`NewsPreview` se borraron con esa fusión.
 
 **El ritmo.** Los tonos alternan `plain` / `muted` de arriba abajo para que dos
 secciones seguidas nunca compartan fondo, con dos excepciones deliberadas:
 Trocha Verde usa `tinted` porque cambia de registro, y el cierre usa el fondo
-de marca. `WaveSeparator` apunta ahora a `fill-surface`, que es el fondo real
-de la sección que sigue.
+de marca. El hero entrega limpio al blanco de las cifras, así que no hay ola de
+corte: `WaveSeparator` salió de la portada.
 
 **Correcciones de accesibilidad y marcado.**
 
@@ -810,12 +836,46 @@ de la sección que sigue.
 
 **El vídeo de YouTube se retiró.** Cargaba la API de terceros en escritorio y
 pesaba sobre el LCP; se documentó antes como decisión de producto pendiente,
-pero el movimiento que aportaba ya lo cubre lo que el hero pinta sin coste:
-la textura topo (`TOPO_PATHS` de `@lib/editorial`, la única pieza del sistema
-que el hero reutiliza) con su deriva de scroll, más un resplandor teal propio
-—un `radial-gradient` escrito en el mismo `Hero.astro`, no un token del sistema:
-`SectionShell` no tiene resplandores—. El hero queda con el poster estático como
-único elemento LCP.
+pero el movimiento que aportaba ya lo cubre lo que el hero pinta sin coste: la
+textura topo (`TOPO_PATHS` de `@lib/editorial`) con su deriva de scroll. El
+poster queda como único elemento LCP; su `sizes` y el `imagesizes` del
+`<link rel="preload">` de `BaseLayout.astro` describen la columna real y tienen
+que cambiar juntos.
+
+### Rediseño «Bitácora de temporada»
+
+**El hero cambia de registro.** Deja de ser un cartel oscuro a pantalla
+completa y pasa a un marco claro sobre la cadena del tono `tinted`: el mismo
+criterio de contraste que rige el resto del sistema, no un fondo inventado
+para el hero. La foto deja de ser el lienzo de fondo y pasa a tarjeta
+lateral —sigue siendo el elemento LCP, con `loading="eager"` y
+`fetchpriority="high"`—, y lo que antes vivía en un chip escondido sube a
+tarjeta propia: el riel compacto (`SeasonRail`) más el pulso de la próxima
+fecha, los dos derivados de `buildSeason()` — la misma función que arma
+`/calendario` y `/enlaces`, así que las tres páginas nunca cuentan una
+temporada distinta.
+
+**La conversión deja de ser una parada suelta.** El bloque de la clase de
+prueba que antes vivía como sección aparte, entre dos secciones, se funde
+dentro de `AboutPreview` —`InscriptionCTA` en su variante `inline`, con
+`headingLevel="h3"` porque el `h2` de la sección ya lo puso `SectionIntro`—: el
+porqué es ofrecer la prueba justo donde el lector ya se creyó la historia del
+club, no antes. El bloque suelto desaparece y la portada queda con un solo
+momento de conversión en el scroll, más el cierre.
+
+**El calendario y las crónicas se funden en `SeasonOverview`.**
+`UpcomingEvents` y `NewsPreview` —dos secciones seguidas contando el mismo
+año— se reemplazan en la portada por una sola sección a dos columnas: lo que
+sigue a la izquierda, lo último en carrera a la derecha. Las válidas
+canceladas se mantienen visibles y en texto —no solo como ausencia en la lista
+de próximas fechas—, porque una fecha que desaparece sin explicación se lee
+como un error del sitio, no como una decisión de la organización.
+
+**El ritmo de tonos que queda.** `tinted` (hero) → `plain` (cifras) → `muted`
+(programas) → `plain` (el club) → `muted` (la temporada) → `tinted` (Trocha
+Verde) → `plain` (patrocinadores) → el teal de marca (cierre). Ninguna sección
+consecutiva comparte fondo, y `WaveSeparator` ya no se usa en la portada: el
+hero entrega directo al blanco de las cifras, sin ola de corte de por medio.
 
 ---
 

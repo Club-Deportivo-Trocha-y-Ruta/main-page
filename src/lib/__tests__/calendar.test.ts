@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   resolveEventStatus,
   buildSeason,
+  cancelledAhead,
   clubToday,
   eventDay,
   dayLabel,
@@ -52,7 +53,7 @@ describe('resolveEventStatus', () => {
 
   it('respeta cancelado, que no se puede deducir de la fecha', () => {
     expect(resolveEventStatus({ date: at('2026-09-26'), status: 'cancelled' }, hoy)).toBe(
-      'cancelled'
+      'cancelled',
     );
   });
 
@@ -197,5 +198,47 @@ describe('buildSeason', () => {
     expect(season.stops).toEqual([]);
     expect(season.progressPct).toBe(0);
     expect(season.next).toBeNull();
+  });
+});
+
+// ============================================================
+// Canceladas que todavía no pasaron
+// ============================================================
+
+describe('cancelledAhead', () => {
+  const hoy = new Date('2026-08-15T17:00:00Z');
+  const eventos = [
+    evento('sevilla', '2026-01-31', { city: 'Sevilla' }),
+    evento('cali', '2026-05-10', { city: 'Cali', status: 'cancelled' }),
+    evento('palmira', '2026-08-01', { city: 'Palmira' }),
+    evento('roldanillo', '2026-09-26', { city: 'Roldanillo', status: 'cancelled' }),
+  ];
+
+  it('deja solo las canceladas que faltan, en orden', () => {
+    expect(cancelledAhead(eventos, hoy).map((e) => e.id)).toEqual(['roldanillo']);
+  });
+
+  it('conserva la cancelada del día mismo hasta que termine el día del club', () => {
+    // 2026-09-26T00:00Z ya es "pasado" según Date.now() desde las 7 p.m. del
+    // 25 en Bogotá: el corte va por día, no por milisegundos.
+    const enLaNoche = new Date('2026-09-26T02:00:00Z');
+    expect(cancelledAhead(eventos, enLaNoche).map((e) => e.id)).toEqual(['roldanillo']);
+    expect(cancelledAhead(eventos, new Date('2026-09-27T17:00:00Z'))).toEqual([]);
+  });
+
+  it('respeta la fecha de cierre de las canceladas de varios días', () => {
+    const larga = [
+      evento('nacional', '2026-08-14', { endDate: at('2026-08-16'), status: 'cancelled' }),
+    ];
+    expect(cancelledAhead(larga, hoy)).toHaveLength(1);
+  });
+
+  it('no se limita al año de la temporada en curso', () => {
+    const otroAno = [evento('2027', '2027-03-01', { status: 'cancelled' })];
+    expect(cancelledAhead(otroAno, hoy)).toHaveLength(1);
+  });
+
+  it('no devuelve nada sin canceladas', () => {
+    expect(cancelledAhead([evento('palmira', '2026-09-01')], hoy)).toEqual([]);
   });
 });

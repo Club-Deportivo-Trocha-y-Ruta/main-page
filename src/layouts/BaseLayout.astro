@@ -31,7 +31,21 @@ interface Props {
   articleTags?: string[];
 }
 
-const { title, description, ogImage, ogImageWidth, ogImageHeight, jsonLd, ogType, noindex, articlePublishedTime, articleModifiedTime, articleAuthor, articleSection, articleTags } = Astro.props;
+const {
+  title,
+  description,
+  ogImage,
+  ogImageWidth,
+  ogImageHeight,
+  jsonLd,
+  ogType,
+  noindex,
+  articlePublishedTime,
+  articleModifiedTime,
+  articleAuthor,
+  articleSection,
+  articleTags,
+} = Astro.props;
 
 // El poster del hero solo existe en la home: preloadearlo en las 27 páginas
 // competía con el LCP real del resto del sitio.
@@ -50,19 +64,30 @@ const heroPoster = isHome ? await getHeroPoster() : null;
     <link rel="manifest" href="/site.webmanifest" />
     <!-- Font preloading -->
     <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/PlusJakartaSans-Variable.woff2" as="font" type="font/woff2" crossorigin />
-    <!-- Hero poster preload (LCP candidate on homepage) -->
-    {heroPoster && (
-      <link
-        rel="preload"
-        as="image"
-        href={heroPoster.src}
-        imagesrcset={heroPoster.srcSet.attribute || undefined}
-        imagesizes="100vw"
-        type="image/webp"
-        fetchpriority="high"
-      />
-    )}
+    <link
+      rel="preload"
+      href="/fonts/PlusJakartaSans-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <!-- Hero poster preload (LCP candidate on homepage).
+         `imagesizes` tiene que ser idéntico al `sizes` del <img> en
+         Hero.astro: el poster ya no es un fondo a pantalla completa, vive en
+         una columna de ~5/12 desde lg. -->
+    {
+      heroPoster && (
+        <link
+          rel="preload"
+          as="image"
+          href={heroPoster.src}
+          imagesrcset={heroPoster.srcSet.attribute || undefined}
+          imagesizes="(min-width: 1024px) 30rem, 100vw"
+          type="image/webp"
+          fetchpriority="high"
+        />
+      )
+    }
     <!-- Preconnect / DNS prefetch -->
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />
@@ -70,14 +95,28 @@ const heroPoster = isHome ? await getHeroPoster() : null;
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
     <!-- Theme color -->
     <meta name="theme-color" content="#20b7c9" />
-    <SEOHead title={title} description={description} ogImage={ogImage} ogImageWidth={ogImageWidth} ogImageHeight={ogImageHeight} jsonLd={jsonLd} ogType={ogType} noindex={noindex} articlePublishedTime={articlePublishedTime} articleModifiedTime={articleModifiedTime} articleAuthor={articleAuthor} articleSection={articleSection} articleTags={articleTags} />
+    <SEOHead
+      title={title}
+      description={description}
+      ogImage={ogImage}
+      ogImageWidth={ogImageWidth}
+      ogImageHeight={ogImageHeight}
+      jsonLd={jsonLd}
+      ogType={ogType}
+      noindex={noindex}
+      articlePublishedTime={articlePublishedTime}
+      articleModifiedTime={articleModifiedTime}
+      articleAuthor={articleAuthor}
+      articleSection={articleSection}
+      articleTags={articleTags}
+    />
     <ClientRouter />
   </head>
-  <body class="min-h-screen flex flex-col bg-surface text-text-primary font-sans antialiased">
+  <body class="bg-surface text-text-primary flex min-h-screen flex-col font-sans antialiased">
     <NavigationProgress />
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:p-4 focus:bg-primary focus:text-white focus:shadow-lg"
+      class="focus:bg-primary sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:p-4 focus:text-white focus:shadow-lg"
     >
       Saltar al contenido principal
     </a>
@@ -141,26 +180,37 @@ const heroPoster = isHome ? await getHeroPoster() : null;
 
       // Re-sync when AnnouncementBar is dismissed (bar.remove() fires no event,
       // so we piggyback on the close button click via event delegation).
-      document.addEventListener('click', function(e) {
-        if (e.target && e.target.closest('#close-announcement')) {
-          // rAF ensures the element is removed before we measure
-          requestAnimationFrame(syncHeaderHeight);
-        }
-      }, { capture: true });
+      document.addEventListener(
+        'click',
+        function (e) {
+          if (e.target && e.target.closest('#close-announcement')) {
+            // rAF ensures the element is removed before we measure
+            requestAnimationFrame(syncHeaderHeight);
+          }
+        },
+        { capture: true },
+      );
 
       function initReveal() {
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('revealed');
-                observer.unobserve(entry.target);
-              }
-            });
-          }, { threshold: 0.1 });
-          document.querySelectorAll('.reveal:not(.revealed)').forEach(function(el) { observer.observe(el); });
+          var observer = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('revealed');
+                  observer.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.1 },
+          );
+          document.querySelectorAll('.reveal:not(.revealed)').forEach(function (el) {
+            observer.observe(el);
+          });
         } else {
-          document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('revealed'); });
+          document.querySelectorAll('.reveal').forEach(function (el) {
+            el.classList.add('revealed');
+          });
         }
       }
       initReveal();
