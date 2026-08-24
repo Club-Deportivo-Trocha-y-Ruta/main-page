@@ -4,18 +4,41 @@ const ga4Id = PUBLIC_GA4_MEASUREMENT_ID;
 const enableGA4 = Boolean(ga4Id);
 ---
 
+{/*
+  GA4 se carga en el hilo principal, con `async`, NO a través de Partytown.
+
+  Hasta el 12 de agosto de 2026 el tag iba dentro de un web worker con
+  `type="text/partytown"`. Ese día se desplegó la migración a Astro 7 y la
+  medición se apagó en seco: Astro 7 reescribe cualquier script con
+  `define:vars` para inyectar las variables y **descarta sus atributos** en el
+  proceso, así que el bloque de consentimiento y `config` perdió su
+  `type="text/partytown"` y pasó a ejecutarse en el hilo principal, donde
+  sobrescribía el puente `window.gtag` que Partytown deja para reenviar al
+  worker. Resultado: ni un solo hit llegó a Google durante dos semanas, sin
+  error visible en consola.
+
+  Por eso el orden de abajo importa y por eso no se usa `define:vars` en el
+  script que lleva atributos (`src`/`async`). Ver también
+  `ScrollDepth.astro`, que ya tropezó con lo mismo perdiendo `data-astro-rerun`.
+
+  Google tampoco soporta oficialmente gtag.js dentro de un web worker, y el
+  Consent Mode v2 depende de un orden de ejecución síncrono que un worker no
+  garantiza. La carga directa con `async` es la configuración que Google
+  documenta.
+*/}
 {enableGA4 && (
   <>
-    <script
-      type="text/partytown"
-      is:inline
-      src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}
-      async
-    ></script>
-    <script type="text/partytown" is:inline define:vars={{ ga4Id }}>
+    {/*
+      1. Bootstrap síncrono: dataLayer, stub de gtag y consentimiento por
+         defecto ANTES de que gtag.js se ejecute (requisito de Consent Mode v2).
+         `define:vars` es seguro aquí solo porque este script no lleva ningún
+         atributo que deba sobrevivir. No añadas atributos a este bloque.
+    */}
+    <script is:inline define:vars={{ ga4Id }}>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){ dataLayer.push(arguments); }
+      function gtag() { window.dataLayer.push(arguments); }
       window.gtag = gtag;
+
       gtag('consent', 'default', {
         ad_storage: 'denied',
         ad_user_data: 'denied',
@@ -23,16 +46,29 @@ const enableGA4 = Boolean(ga4Id);
         analytics_storage: 'denied',
         wait_for_update: 500,
       });
+
       try {
-        var stored = localStorage.getItem('trocha-analytics-consent');
-        if (stored === 'granted') {
+        if (localStorage.getItem('trocha-analytics-consent') === 'granted') {
           gtag('consent', 'update', { analytics_storage: 'granted' });
         }
       } catch {}
+
       gtag('js', new Date());
       gtag('config', ga4Id, { anonymize_ip: true, send_page_view: true });
     </script>
 
+    {/*
+      2. gtag.js. Sin `define:vars`: sus atributos (`src`, `async`) tienen que
+         llegar intactos al HTML.
+    */}
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}></script>
+
+    {/*
+      3. Puente provider-neutral: catálogo cerrado de eventos y pageviews de
+         navegación SPA. `window.gtag` ya existe (lo define el script 1, que
+         corre antes en el mismo documento), así que no hace falta la cola de
+         espera que exigía el puente asíncrono de Partytown.
+    */}
     <script is:inline define:vars={{ ga4Id }}>
       (function () {
         if (window.__trochaAnalyticsBootstrapped) return;
@@ -65,52 +101,16 @@ const enableGA4 = Boolean(ga4Id);
           }
         }
 
-        // `window.gtag` no lo define este script: lo crea el snippet de forward de
-        // Partytown, y el orden respecto a este bloque no está garantizado. Antes se
-        // hacía `if (typeof window.gtag !== 'function') return`, así que cualquier
-        // interacción temprana —un clic en el CTA nada más cargar— se descartaba en
-        // silencio. Ahora se retiene y se drena en cuanto el puente existe. El techo
-        // de 10 s evita dejar un intervalo vivo si Partytown nunca llega a cargar.
-        const pendingCalls = [];
-        let drainTimer = null;
-        let drainAttempts = 0;
-
-        function stopDraining() {
-          if (drainTimer === null) return;
-          clearInterval(drainTimer);
-          drainTimer = null;
-        }
-
-        function drainPending() {
-          if (typeof window.gtag !== 'function') {
-            drainAttempts += 1;
-            if (drainAttempts > 100) {
-              pendingCalls.length = 0;
-              stopDraining();
-            }
-            return;
-          }
-          stopDraining();
-          while (pendingCalls.length > 0) {
-            const call = pendingCalls.shift();
-            try { call(); } catch {}
-          }
-        }
-
-        function withGtag(call) {
-          if (typeof window.gtag === 'function') {
-            try { call(); } catch {}
-            return;
-          }
-          pendingCalls.push(call);
-          if (drainTimer === null) drainTimer = setInterval(drainPending, 100);
+        function callGtag(fn) {
+          if (typeof window.gtag !== 'function') return;
+          try { fn(); } catch {}
         }
 
         registerProvider({
           id: 'ga4',
           init() {},
           trackPageview(path, title) {
-            withGtag(function () {
+            callGtag(function () {
               window.gtag('event', 'page_view', {
                 page_path: path,
                 page_title: title,
@@ -119,12 +119,12 @@ const enableGA4 = Boolean(ga4Id);
             });
           },
           trackEvent(event) {
-            withGtag(function () {
+            callGtag(function () {
               window.gtag('event', event.name, event.params || {});
             });
           },
           setConsent(status) {
-            withGtag(function () {
+            callGtag(function () {
               window.gtag('consent', 'update', { analytics_storage: status });
             });
           },
@@ -180,8 +180,8 @@ const enableGA4 = Boolean(ga4Id);
         }
         document.addEventListener('click', handleDelegatedClick);
 
-        // Primer page_load lo manda GA4 con send_page_view: true.
-        // Solo emitimos pageviews posteriores tras navegación SPA.
+        // El primer page_view lo manda gtag.js con send_page_view: true.
+        // Aquí solo se emiten los pageviews de navegaciones posteriores (ClientRouter).
         let initialLoadHandled = false;
         document.addEventListener('astro:page-load', function () {
           if (!initialLoadHandled) {

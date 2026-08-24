@@ -550,11 +550,11 @@ const processSteps = [
 <script>
   /**
    * GA4 custom events — Trocha Verde
-   * Requires gtag() available via @astrojs/partytown + consent mode v2.
+   * Requiere gtag() disponible (Analytics.astro carga gtag.js con async) + consent mode v2.
    * No PII in any parameter.
    */
 
-  // Declaración de tipo para gtag en window (puede no estar disponible si partytown no cargó)
+  // Declaración de tipo para gtag en window (puede no estar disponible: bloqueadores, sin consentimiento)
   declare function gtag(...args: unknown[]): void;
 
   function sendEvent(name: string, params: Record<string, string>) {

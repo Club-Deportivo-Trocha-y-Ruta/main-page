@@ -1,7 +1,6 @@
 import { defineConfig, envField } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
-import partytown from '@astrojs/partytown';
 import tailwindcss from '@tailwindcss/vite';
 import icon from 'astro-icon';
 
@@ -16,11 +15,6 @@ export default defineConfig({
       // publicar mientras el club no tenga firmadas las autorizaciones de
       // imagen. Ambas llevan además `noindex`.
       filter: (page) => !page.includes('/enlaces') && !page.includes('/equipo'),
-    }),
-    partytown({
-      config: {
-        forward: ['dataLayer.push', 'gtag'],
-      },
     }),
     icon({
       include: {

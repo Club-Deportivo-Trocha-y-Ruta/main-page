@@ -42,7 +42,7 @@ Node >= 22.12 requerido (engines en `package.json`; CI usa Node 22).
 | CMS | Sveltia CMS | Estático, sin npm. `public/admin/` (index.html + config.yml) |
 | Hosting | Hostinger (FTPS) | Deploy via GitHub Actions + **lftp** (no FTP-Deploy-Action) |
 | Formularios | Web3Forms | `PUBLIC_WEB3FORMS_KEY` |
-| Analytics | GA4 + Partytown | Consent Mode v2, banner custom. `PUBLIC_GA4_MEASUREMENT_ID` |
+| Analytics | GA4 (gtag.js `async`) | Consent Mode v2, banner custom. `PUBLIC_GA4_MEASUREMENT_ID`. **Sin Partytown** — ver nota abajo |
 | Imágenes | astro:assets + Cloudinary | Dominio `res.cloudinary.com` habilitado. `PUBLIC_CLOUDINARY_CLOUD_NAME` |
 | Iconos | astro-icon + Phosphor | `ph:*` incluido completo |
 | Mapas | Leaflet | Solo en TrochaVerdeMap island |
@@ -108,10 +108,22 @@ Guía completa y estado de la migración por página: `docs/04-sistema-editorial
 Arquitectura provider-neutral en `src/lib/`:
 - `events.ts` — catálogo cerrado `EVENT_NAMES` + whitelist `ALLOWED_PARAM_KEYS`. Todo evento/param fuera de lista se descarta en sanitización. **Prohibido agregar params con PII** (nombre, email, teléfono, fecha nacimiento, EPS, dirección)
 - `analytics.ts` — interfaz neutral de tracking
-- `analytics/providers/ga4.ts` — implementación GA4 (via Partytown)
+- `analytics/providers/ga4.ts` — implementación GA4 (gtag.js en el hilo principal)
 - `ConsentBanner.astro` + `Analytics.astro` en components/common
 
 Para agregar un evento: declararlo en `EVENT_NAMES`, y su param (si es nuevo) en la whitelist.
+
+**No devolver GA4 a Partytown.** Entre el 12 y el 24 de agosto de 2026 el sitio no midió nada:
+el tag vivía en un web worker con `type="text/partytown"` y el deploy de Astro 7 lo apagó en
+seco. Astro 7 reescribe todo script con `define:vars` para inyectar las variables y **descarta
+sus atributos** en el proceso, así que el bloque de consentimiento perdió su
+`type="text/partytown"`, pasó a correr en el hilo principal y sobrescribió el puente
+`window.gtag` de Partytown. Cero hits, cero errores en consola. Reglas que quedan:
+
+- En `Analytics.astro`, el script que lleva atributos (`src`/`async`) **no** usa `define:vars`.
+- El consentimiento por defecto se declara **antes** de cargar gtag.js (Consent Mode v2).
+- `Analytics.astro.test.ts` fija ambas condiciones; si alguien vuelve a mover el tag a un
+  worker, el test falla.
 
 ## Testing
 
