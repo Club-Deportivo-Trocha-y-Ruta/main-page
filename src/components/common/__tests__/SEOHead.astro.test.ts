@@ -166,14 +166,18 @@ describe('SEOHead', () => {
 
   // ─── noindex ──────────────────────────────────────────────
 
-  it('incluye max-image-preview:large en meta robots por defecto', async () => {
+  it('levanta los límites de preview en meta robots por defecto', async () => {
     const html = await container.renderToString(SEOHead, {
       props: { title: 'Test' },
     });
     const doc = parseHtml(html);
     const robots = doc.querySelector('meta[name="robots"]');
     expect(robots).not.toBeNull();
-    expect(robots?.getAttribute('content')).toBe('max-image-preview:large');
+    // Sin `max-snippet:-1` Google recorta el fragmento, y una crónica compite
+    // en Noticias y Discover con un extracto truncado.
+    expect(robots?.getAttribute('content')).toBe(
+      'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+    );
   });
 
   it('incluye meta robots noindex cuando noindex=true', async () => {

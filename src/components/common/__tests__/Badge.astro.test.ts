@@ -62,7 +62,7 @@ describe('Badge', () => {
     });
     const doc = parseHtml(html);
     const span = doc.querySelector('span')!;
-    expect(span.className).toContain('bg-gray-100');
+    expect(span.className).toContain('bg-surface-tint');
     expect(span.className).toContain('text-text-secondary');
   });
 

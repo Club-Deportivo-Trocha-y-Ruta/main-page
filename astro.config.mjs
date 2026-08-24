@@ -11,7 +11,11 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
-      filter: (page) => !page.includes('/enlaces'),
+      // Páginas que existen pero no son públicas: `/enlaces` es el linktree del
+      // QR (no es una sección del sitio) y `/equipo` está construida pero sin
+      // publicar mientras el club no tenga firmadas las autorizaciones de
+      // imagen. Ambas llevan además `noindex`.
+      filter: (page) => !page.includes('/enlaces') && !page.includes('/equipo'),
     }),
     partytown({
       config: {

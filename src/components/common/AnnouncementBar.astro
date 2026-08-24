@@ -5,7 +5,11 @@ const allEvents = await getCollection('events');
 const now = new Date();
 
 const upcomingEvents = allEvents
-  .filter((e: CollectionEntry<'events'>) => !e.data.draft && new Date(e.data.date) >= now)
+  // Una válida cancelada no puede seguir anunciándose como "próximo evento".
+  .filter(
+    (e: CollectionEntry<'events'>) =>
+      !e.data.draft && e.data.status !== 'cancelled' && new Date(e.data.date) >= now
+  )
   .sort((a: CollectionEntry<'events'>, b: CollectionEntry<'events'>) =>
     new Date(a.data.date).getTime() - new Date(b.data.date).getTime()
   );

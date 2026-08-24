@@ -97,10 +97,27 @@ describe('ProgramPathway', () => {
   it('pinta un tramo del perfil por etapa, recortado a su rango', async () => {
     const doc = await render({ programs });
     const clips = [...doc.querySelectorAll('clipPath')];
-    expect(clips).toHaveLength(3);
+    // Una banda por etapa más el barrido que traza la ruta al hacer scroll.
+    expect(clips).toHaveLength(4);
     // Ids únicos: dos rutas en la misma página no pueden compartir el clip.
-    expect(new Set(clips.map((c) => c.id)).size).toBe(3);
-    expect(doc.querySelectorAll('g[clip-path]')).toHaveLength(3);
+    expect(new Set(clips.map((c) => c.id)).size).toBe(4);
+    // El terreno de cada etapa va suelto; su trazo, dentro del barrido.
+    expect(doc.querySelectorAll('svg > path[clip-path]')).toHaveLength(3);
+    expect(doc.querySelectorAll('svg > g[clip-path] > path[clip-path]')).toHaveLength(3);
+  });
+
+  it('deja el barrido del trazado cubriendo el perfil entero sin animación', async () => {
+    const doc = await render({ programs });
+
+    // Sin scroll-driven animations el recorte no se mueve: el perfil completo
+    // es el estado por defecto del marcado, no un fallback aparte.
+    const sweep = doc.querySelector('rect.sda-trail-sweep');
+    expect(sweep?.getAttribute('width')).toBe('1000');
+    expect(sweep?.getAttribute('height')).toBe('260');
+
+    // La línea de tiempo se declara en el recuadro del perfil, que sí tiene
+    // caja CSS; los elementos del SVG no la tienen.
+    expect(doc.querySelector('.sda-trail')?.tagName.toLowerCase()).toBe('div');
   });
 
   it('marca los cambios de etapa, no el arranque del recorrido', async () => {

@@ -13,6 +13,14 @@ plural: "Guanábanas"
 feminine: true
 ---
 
+Tres Guanábanas crecen hoy en la Pista de Ciclomontañismo Carlos Castro. Las tres se sembraron el mismo día, el 3 de mayo de 2026, protegidas con llantas de bicicleta recicladas.
+
+Las tres las donó Helmut Ortiz, presidente del club. En vez de un ejemplar único, aportó el trío completo para multiplicar la producción de frutos para toda la comunidad del club.
+
+En unos años, esas tres copas irán dando sombra a los ciclistas y frutos cosechables a los niños que entrenan en la pista. Es la lógica de fondo de Trocha Verde: sembrar hoy comida que se recogerá cuando los actuales corredores pequeños ya no lo sean tanto.
+
+## Sobre la especie
+
 La guanábana (*Annona muricata*) es un árbol de la familia Annonaceae de tamaño mediano (5-8 m) que produce algunos de los frutos más grandes de los trópicos americanos. Su pulpa blanca, fibrosa y de sabor agridulce es base de jugos, helados, sorbetes y panes en toda Colombia; el Valle del Cauca tiene una larga tradición en su cultivo a pequeña escala.
 
-Las hojas de guanábana han sido utilizadas en medicina tradicional como antiespasmódico y calmante; investigaciones actuales estudian sus compuestos acetogeninas por sus propiedades bioactivas. En la pista Carlos Castro, este árbol dará sombra a los ciclistas en pocos años y producirá frutos que los niños del club podrán cosechar, conectando el entrenamiento físico con el disfrute de los alimentos que la tierra provee.
+Las hojas se han usado en medicina tradicional como antiespasmódico y calmante, y hoy se estudian sus acetogeninas por sus propiedades bioactivas. Es un árbol pariente del anón y la chirimoya, con el que comparte esa pulpa cremosa característica de la familia.

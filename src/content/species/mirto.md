@@ -12,6 +12,14 @@ draft: false
 plural: "Mirtos"
 ---
 
-El mirto (*Myrcianthes leucoxyla*) es botánicamente la misma especie que el arrayán, compartiendo el nombre científico pero siendo popularmente diferenciado en algunas regiones colombianas por variaciones en el porte y hábitat. En el Valle del Cauca, el término "mirto" se usa frecuentemente para referirse a los individuos de menor porte encontrados en zonas urbanas y bordes de camino, mientras que "arrayán" denomina a los ejemplares de montaña.
+Dos Mirtos crecen hoy en la Pista de Ciclomontañismo Carlos Castro. Los dos se sembraron el mismo día, el 9 de abril de 2026, pero en condiciones distintas. El primero está dentro de una llanta de moto reciclada pintada de rosado, con un tutor azul que lo guía hacia arriba y una piedra naranja pintada a mano que lo señaliza. El segundo se plantó directamente en la tierra, sin llanta protectora, identificado también por una piedra naranja artesanal; sus hojas pequeñas y delicadas ya empiezan a brotar.
 
-Su relevancia ecológica es destacada: los frutos negros alimentan a tangaras, mirlas, torcazas y pequeños mamíferos frugívoros, convirtiéndolo en una especie clave en redes tróficas del bosque andino. En la restauración de corredores ribereños, el mirto es frecuentemente la primera especie nativa que se planta por su adaptabilidad y rápido crecimiento inicial.
+Ninguno de los dos tiene padrino: son parte del bosque común que el club fue armando con las especies nativas del programa Trocha Verde.
+
+Con el mirto entra al inventario una especie nativa del Valle del Cauca, apreciada por su madera fina y sus pequeños frutos comestibles, que fortalece la biodiversidad de la pista.
+
+## Sobre la especie
+
+El mirto (*Myrcianthes leucoxyla*) es botánicamente la misma especie que el arrayán: comparten nombre científico pero se distinguen en algunas regiones colombianas por variaciones de porte y hábitat. En el Valle del Cauca, "mirto" suele usarse para los ejemplares de menor porte en zonas urbanas y bordes de camino, mientras "arrayán" nombra a los de montaña.
+
+Su relevancia ecológica es alta: los frutos negros alimentan tangaras, mirlas, torcazas y pequeños mamíferos frugívoros, y por eso es una especie clave en las redes tróficas del bosque andino. En la restauración de corredores ribereños suele ser la primera nativa que se planta, por su adaptabilidad y su rápido crecimiento inicial.

@@ -25,6 +25,7 @@ import StatFigure from '@components/editorial/StatFigure.astro';
 import FactGrid from '@components/editorial/FactGrid.astro';
 import ProgramPathway from '@components/sections/ProgramPathway.astro';
 import ProgramAdjacentNav from '@components/sections/ProgramAdjacentNav.astro';
+import { CTA_TRIAL_LABEL } from '@lib/constants';
 import { getRefreshImage } from '@lib/refresh-images';
 import { generateCourseJsonLd } from '@lib/seo';
 import { ENROLLMENT_POLICY } from '@lib/enrollment';
@@ -116,7 +117,7 @@ const jsonLd = generateCourseJsonLd({
             <Badge variant="neutral">Próximamente</Badge>
           )}
           <Button variant="accent" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
-            Preinscríbete
+            {CTA_TRIAL_LABEL}
           </Button>
         </div>
       </div>
@@ -185,7 +186,7 @@ const jsonLd = generateCourseJsonLd({
   </SectionShell>
 
   <!-- La ruta completa: de dónde viene y hacia dónde sigue -->
-  <SectionShell tone="muted" width="wide" labelledby="ruta-titulo">
+  <SectionShell tone="muted" width="wide" labelledby="ruta-titulo" scrollDriven>
     <SectionIntro
       id="ruta-titulo"
       eyebrow="La ruta completa"

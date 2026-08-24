@@ -62,8 +62,11 @@ collections:
     summary: "{{date | date('YYYY-MM-DD')}} — {{title}}"
     fields:
       - { label: "Título", name: "title", widget: "string", required: true }
-      - { label: "Fecha", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
-      - { label: "Fecha de actualización", name: "updatedDate", widget: "datetime", required: false, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      # Con hora: Google News ordena las noticias por marca de tiempo, y una
+      # crónica publicada el mismo día de la válida compite por frescura.
+      # El offset `-05:00` lo escribe el widget a partir de `picker_utc: false`.
+      - { label: "Fecha y hora de publicación", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DDTHH:mm:ssZ", date_format: "DD/MM/YYYY", time_format: "HH:mm", picker_utc: false }
+      - { label: "Fecha y hora de actualización", name: "updatedDate", widget: "datetime", required: false, format: "YYYY-MM-DDTHH:mm:ssZ", date_format: "DD/MM/YYYY", time_format: "HH:mm", picker_utc: false }
       - { label: "Autor", name: "author", widget: "string", default: "Juan Diego García" }
       - label: "Categoría"
         name: "category"
@@ -316,6 +319,7 @@ collections:
       - { label: "Certificaciones", name: "certifications", widget: "list", required: false }
       - { label: "Año de ingreso", name: "yearJoined", widget: "number", required: false }
       - { label: "Activo", name: "active", widget: "boolean", default: true }
+      - { label: "Borrador", name: "draft", widget: "boolean", default: false, hint: "En borrador la ficha no se publica. Úsalo mientras no haya autorización de imagen firmada." }
       - { label: "Orden", name: "order", widget: "number", default: 0 }
       - { label: "Biografía", name: "body", widget: "markdown", required: false }
 
@@ -544,34 +548,52 @@ collections:
 
   # ----------------------------------------------------------
   # RESULTADOS (archivo de datos)
+  #
+  # Un archivo por válida y categoría. De aquí sale el tablero de la
+  # general que se pinta en /noticias (SeasonStandings.astro): mientras
+  # no haya archivos, el tablero no se pinta.
+  #
+  # Los corredores son menores: qué nombre se publica lo decide el club.
+  # Ante la duda, no se carga la llegada.
   # ----------------------------------------------------------
   - name: "results"
     label: "Resultados"
     label_singular: "Resultado"
     folder: "src/content/results"
     create: true
-    slug: "{{slug}}"
+    # El evento ya lleva la fecha adelante y la categoría cierra el nombre:
+    # así dos categorías de la misma válida no chocan.
+    identifier_field: "eventName"
+    slug: "{{fields.event}}-{{fields.category}}"
     extension: "yml"
     format: "yaml"
-    sortable_fields: ["date", "eventName"]
-    summary: "{{date}} — {{eventName}}"
+    sortable_fields: ["date", "eventName", "category"]
+    view_groups:
+      - label: "Categoría"
+        field: category
+      - label: "Año"
+        field: date
+        pattern: '\d{4}'
+    summary: "{{date | date('YYYY-MM-DD')}} — {{eventName}} · {{category}}"
     fields:
-      - { label: "Evento (slug)", name: "event", widget: "string", required: true }
-      - { label: "Nombre del evento", name: "eventName", widget: "string", required: true }
-      - { label: "Fecha", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
-      - { label: "Categoría de carrera", name: "category", widget: "string", required: true }
+      - { label: "Evento (slug)", name: "event", widget: "string", required: true, hint: "Slug del evento en Eventos, ej: 2026-03-copa-valle-i-ginebra. Es lo que junta las categorías de una misma válida en el tablero" }
+      - { label: "Nombre del evento", name: "eventName", widget: "string", required: true, hint: "Como lo publica el organizador, ej: I Válida Copa Valle 2026 - Ginebra" }
+      - { label: "Fecha", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, hint: "Día de la carrera. Ordena las válidas: la más reciente es la que el tablero marca como 'esta válida'" }
+      - { label: "Categoría de carrera", name: "category", widget: "string", required: true, hint: "Tal como la publica el organizador, ej: Infantil A. Escríbela IGUAL en todas las válidas: el tablero agrupa por nombre + categoría" }
       - label: "Posiciones"
         name: "positions"
         widget: "list"
         required: true
+        summary: "{{fields.position}}. {{fields.riderName}} ({{fields.points}} pts)"
+        hint: "Llegada por llegada, de la primera posición a la última"
         fields:
-          - { label: "Posición", name: "position", widget: "number" }
-          - { label: "Corredor (slug)", name: "rider", widget: "string", required: false }
-          - { label: "Nombre del corredor", name: "riderName", widget: "string" }
-          - { label: "Tiempo", name: "time", widget: "string", required: false }
-          - { label: "Puntos", name: "points", widget: "number", required: false }
-      - { label: "Destacados del club", name: "clubHighlights", widget: "text", required: false }
-      - { label: "Total participantes", name: "totalParticipants", widget: "number", required: false }
+          - { label: "Posición", name: "position", widget: "number", value_type: "int", min: 1, hint: "Puesto de llegada. Desempata la general: con el mismo total va primero quien acumule mejores puestos" }
+          - { label: "Corredor (slug)", name: "rider", widget: "string", required: false, hint: "Identificador en Corredores, ej: ana-ejemplo. Opcional" }
+          - { label: "Nombre del corredor", name: "riderName", widget: "string", hint: "Como debe aparecer publicado" }
+          - { label: "Tiempo", name: "time", widget: "string", required: false, hint: "Ej: 0:42:15" }
+          - { label: "Puntos", name: "points", widget: "number", required: false, value_type: "int", min: 0, hint: "Puntos de la válida. Si se deja vacío suma 0 y el corredor sigue en la general" }
+      - { label: "Destacados del club", name: "clubHighlights", widget: "text", required: false, hint: "Qué contar de esta carrera, en una o dos frases" }
+      - { label: "Total participantes", name: "totalParticipants", widget: "number", required: false, value_type: "int", min: 0, hint: "Cuántos largaron en la categoría" }
 
   # ----------------------------------------------------------
   # RUTAS
@@ -759,4 +781,34 @@ collections:
       - { label: "Usos", name: "uses", widget: "list", required: false }
       - { label: "Borrador", name: "draft", widget: "boolean", default: false }
       - { label: "Contenido", name: "body", widget: "markdown", required: false }
-          - { label: "Google Maps embed URL", name: "mapEmbedUrl", widget: "string", required: false }
+
+  # ----------------------------------------------------------
+  # HISTORIA DEL CLUB — HITOS DE LA LÍNEA DE TIEMPO
+  # ----------------------------------------------------------
+  - name: "milestones"
+    label: "Historia del Club"
+    label_singular: "Hito"
+    folder: "src/content/milestones"
+    create: true
+    slug: "{{fields.title}}"
+    sortable_fields: ["order", "title"]
+    fields:
+      - { label: "Marca (año o etapa)", name: "label", widget: "string", hint: "Ej: 2010, La casa, Hoy" }
+      - { label: "Título", name: "title", widget: "string" }
+      - {
+          label: "Texto",
+          name: "body",
+          widget: "text",
+          hint: "Puedes usar {{trees}}, {{founded}}, {{years}} y {{club}}: se reemplazan solos por la cifra real del sitio.",
+        }
+      - { label: "Icono", name: "icon", widget: "string", required: false, hint: "Icono Phosphor, ej: ph:flag-bold" }
+      - {
+          label: "Foto",
+          name: "image",
+          widget: "string",
+          required: false,
+          hint: "Nombre del archivo dentro de src/assets/images/refresh/, ej: historia-pista.webp",
+        }
+      - { label: "Alt de la foto", name: "imageAlt", widget: "string", required: false, hint: "Obligatorio si hay foto" }
+      - { label: "Orden", name: "order", widget: "number", default: 0, value_type: "int" }
+      - { label: "Borrador", name: "draft", widget: "boolean", default: false }

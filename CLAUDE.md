@@ -10,10 +10,11 @@ Sitio web estático del **Club Deportivo Trocha y Ruta** — club de ciclomonta�
 
 ```bash
 npm run dev          # Dev server en localhost:4321
-npm run build        # astro check + astro build → dist/
+npm run build        # astro check + astro build + pagefind --site dist → dist/
+npm run build:only   # astro build + pagefind, sin astro check (lo usa el job deploy de develop)
 npm run preview      # Preview del build local
 npm run typecheck    # astro check
-npm run lint         # ESLint (src, .ts/.tsx/.astro)
+npm run lint         # ESLint (eslint src)
 npm run lint:fix     # ESLint con auto-fix
 npm run format       # Prettier (escribe)
 npm run format:check # Prettier (solo verifica)
@@ -29,13 +30,13 @@ npx vitest run --project react src/components/interactive/__tests__/ContactForm.
 npx vitest run --project astro src/lib/__tests__/utils.test.ts
 ```
 
-Node >= 20 requerido (CI usa Node 22).
+Node >= 22.12 requerido (engines en `package.json`; CI usa Node 22).
 
 ## Stack
 
 | Capa | Tecnología | Notas críticas |
 |------|-----------|----------------|
-| Framework | Astro ^5.17 | `output: 'static'`. **NO adoptar v6** sin validar breaking changes |
+| Framework | Astro ^7.1 | `output: 'static'`. No saltar de major sin validar breaking changes |
 | Estilos | Tailwind CSS 4 | Via `@tailwindcss/vite`. **NO existe config JS** — tokens en `@theme {}` de `src/styles/global.css` |
 | Islands | React 19 | Solo 6 componentes en `src/components/interactive/` |
 | CMS | Sveltia CMS | Estático, sin npm. `public/admin/` (index.html + config.yml) |
@@ -45,17 +46,18 @@ Node >= 20 requerido (CI usa Node 22).
 | Imágenes | astro:assets + Cloudinary | Dominio `res.cloudinary.com` habilitado. `PUBLIC_CLOUDINARY_CLOUD_NAME` |
 | Iconos | astro-icon + Phosphor | `ph:*` incluido completo |
 | Mapas | Leaflet | Solo en TrochaVerdeMap island |
+| Buscador | Pagefind | Índice estático generado al final del `build` (`pagefind --site dist`); el island lo carga solo al abrir el diálogo |
 | Forms/validación | react-hook-form + zod | Zod también define los schemas de contenido |
 
 Aliases TS (tsconfig): `@components/*`, `@layouts/*`, `@lib/*`, `@assets/*`, `@types/*`.
 
 ### Tailwind 4 — tokens en CSS
 
-Design tokens en `src/styles/global.css` dentro de `@theme {}` (primary teal `#20b7c9`, accent lima `#8be000`, surface, text). Importante: existen variantes `--color-primary-deep` / `--color-accent-deep` para **texto** teal/lima sobre fondos claros — los tonos base no cumplen contraste WCAG AA como texto. Fuentes locales (Inter Variable, Plus Jakarta Sans) en `public/fonts/` via `@font-face`.
+Design tokens en `src/styles/global.css` dentro de `@theme {}` (primary teal `#20b7c9`, accent lima `#8be000`, surface, text). Importante: existen variantes `--color-primary-deep` / `--color-accent-deep` para **texto** teal/lima sobre fondos claros — los tonos base no cumplen contraste WCAG AA como texto. También hay tokens de radio (`--radius-chip/control/card/pill`) y de sombra (`--shadow-card/raised/overlay`) con nombres propios a propósito: usar `--radius-sm/md/lg/xl/2xl` o `--shadow-sm/md/lg` sobrescribiría la escala por defecto de Tailwind 4 y cambiaría todos los `rounded-*`/`shadow-*` existentes del sitio. Fuentes locales (Inter Variable, Plus Jakarta Sans) en `public/fonts/` via `@font-face`.
 
 ### React Islands — uso mínimo
 
-Astro genera zero-JS por defecto. Solo estos 5 componentes hidratan:
+Astro genera zero-JS por defecto. Solo estos 6 componentes hidratan:
 
 | Componente | Directiva |
 |-----------|-----------|
@@ -64,6 +66,7 @@ Astro genera zero-JS por defecto. Solo estos 5 componentes hidratan:
 | `InscriptionForm.tsx` (4 pasos, localStorage 48h TTL) | `client:visible` |
 | `ImageLightbox.tsx` | `client:visible` |
 | `TrochaVerdeMap.tsx` (Leaflet) | `client:visible` |
+| `SiteSearch.tsx` (Pagefind, en la cabecera) | `client:visible` |
 
 **Regla**: nunca `client:load` salvo MobileMenu; no agregar `client:*` a componentes que no requieran interactividad.
 
@@ -71,7 +74,7 @@ Astro genera zero-JS por defecto. Solo estos 5 componentes hidratan:
 
 Las colecciones se definen en `src/content.config.ts` (raíz de src, no `src/content/config.ts`) con glob loaders; **todos los schemas Zod viven centralizados en `src/lib/schemas.ts`** y se testean en `src/lib/__tests__/schemas.test.ts`.
 
-14 colecciones definidas; 10 con directorio y contenido: `events`, `faqs`, `gallery`, `news`, `programs`, `riders`, `social-initiatives`, `species` (~32), `sponsors`, `trees` (~77). Otras 4 están en config pero **sin directorio aún**: `directivos`, `results`, `rutas`, `pages` — si trabajas con ellas, crea primero el directorio.
+14 colecciones definidas; 10 con directorio y contenido: `events`, `faqs`, `gallery`, `news`, `programs`, `riders`, `social-initiatives`, `species` (~32), `sponsors`, `trees` (~77). `results` ya tiene directorio (`src/content/results/`) pero **sin datos todavía**: solo su `README.md`, que documenta el formato y que el loader ignora porque lee `yaml`/`yml`/`json`. Sin archivos, el tablero de la temporada de `/noticias` no se pinta. Otras 3 están en config pero **sin directorio aún**: `directivos`, `rutas`, `pages` — si trabajas con ellas, crea primero el directorio.
 
 Relaciones por referencia en frontmatter: evento→galería (`relatedGallery`), evento→noticias (`relatedNews`), noticia→galería (`relatedGallery`/`galleryFolder`), rider→programa (`program`), árbol→especie.
 
@@ -126,7 +129,7 @@ Coverage (solo `src/lib/**` y `src/components/interactive/**`): global 70/75/70/
 ## CI/CD
 
 Dos workflows en `.github/workflows/`:
-- `deploy.yml` (push a `develop`): job `ci` (typecheck + `npm test`) como **gate** → job `deploy` (build + lftp a Hostinger, environment `develop`)
+- `deploy.yml` (push a `develop`): job `ci` (typecheck + `npm test`) como **gate** → job `deploy` (`build:only` —sin astro check, el typecheck ya corrió en `ci`— + lftp a Hostinger, environment `develop`)
 - `deploy-prod.yml` (push a `main`): build + deploy directo, **sin tests** — asume que el código ya pasó el gate en develop
 
 Deploy usa **lftp** con reintentos (FTP-Deploy-Action fallaba con ECONNRESET contra Hostinger). Variables públicas (`PUBLIC_*`) van como Variables del Environment; credenciales FTP como Secrets. Flujo de trabajo: feature branch → `develop` (QA) → `main` (producción).
@@ -147,5 +150,8 @@ Archivos legacy no activos: `netlify.toml`, `wrangler.toml`, `workers/donations/
 - `docs/02-technical-architecture.md` — ADRs y configs (al configurar)
 - `docs/03-content-strategy.md` — schemas completos, taxonomía, CMS (al tocar collections)
 - `docs/04-sistema-editorial.md` — **léelo antes de rediseñar cualquier sección o página**
+- `docs/05-convencion-utm.md` — etiquetado de enlaces compartidos (al preparar difusión en redes/WhatsApp)
+- `docs/06-plan-animaciones.md` — plan retomable de micro-interacciones y scroll-driven (CSS puro, sin runtimes)
+- `docs/07-plan-la-pista.md` — plan retomable de la página `/la-pista` (colección `obstaculos`, flipbook CSS de los saltos, mapa SVG); bloqueado por insumos del club
 - `.claude/agents/` — 22 agentes de proyecto organizados como compañía digital (C-suite → engineers → auditors); `.claude/teams/` — 5 teams para workflows multi-departamento
 - `.claude/settings.json` — allowlist de comandos npm/git del proyecto; `rm -rf`, `git push --force` y `git reset --hard` en deny list

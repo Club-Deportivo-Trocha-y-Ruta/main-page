@@ -1,5 +1,13 @@
-@import "tailwindcss";
-@plugin "@tailwindcss/typography";
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* El escáner de contenido de Tailwind rastrea todo lo no-gitignored, incluidos
+   docs/ y .claude/: sus textos mencionan clases de ejemplo (p. ej.
+   `duration-[var(...)]`) que generaban utilities inválidas —warnings de
+   Lightning CSS— o mantenían vivos tokens por accidente. Las clases reales
+   viven solo en src/. */
+@source not '../../docs';
+@source not '../../.claude';
 
 @theme {
   /* Colores de marca — Trocha y Ruta Cycling Kit */
@@ -19,6 +27,7 @@
   --color-surface: #ffffff;
   --color-surface-dark: #2f2f2f;
   --color-surface-muted: #d8d8d8;
+  --color-surface-tint: #f7f8f8;
 
   --color-text-primary: #2f2f2f;
   --color-text-secondary: #5a5a5a;
@@ -26,6 +35,81 @@
   /* Tipografía */
   --font-sans: 'Inter Variable', system-ui, sans-serif;
   --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Radios — nombres propios (NO --radius-sm/md/lg/xl/2xl): esos
+     sobrescribirían la escala por defecto de Tailwind 4 y cambiarían todos
+     los rounded-* existentes del sitio. */
+  --radius-chip: 0.375rem;
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
+  --radius-pill: 999px;
+
+  /* Sombras — mismo motivo: nombres propios en vez de --shadow-sm/md/lg. */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.05);
+  --shadow-raised: 0 4px 10px rgb(0 0 0 / 0.08);
+  --shadow-overlay: 0 10px 24px rgb(0 0 0 / 0.12);
+  /* Sombra dura "pressable" (botón físico, docs/06-plan-animaciones.md Fase 1
+     Tarea 2): sin blur, solo offset vertical fijo — el borde inferior de un
+     botón elevado que se comprime al presionar. El color no es fijo: cada
+     variante de Button.astro lo fija con el custom property
+     --btn-shadow-color (clase arbitraria de Tailwind, p. ej.
+     [--btn-shadow-color:var(--color-primary-dark)] o con color-mix() sobre
+     su propio color); sin variante fijada cae a un gris neutro. Nombre
+     propio por la misma razón que las sombras de arriba. */
+  --shadow-pressable: 0 4px 0 0 var(--btn-shadow-color, var(--color-text-secondary));
+
+  /* === Motion — vocabulario de animación (docs/06-plan-animaciones.md) ===
+     Duraciones: micro-interacciones 150–300ms, celebraciones 400–600ms.
+     Solo se anima `transform`/`opacity` — nunca propiedades que disparen
+     layout, para no romper el presupuesto de CLS < 0.05. `--ease-spring`,
+     `--ease-pop` y las duraciones de abajo son la base sobre la que se
+     construyen todas las fases del plan (botón físico, stepper de
+     inscripción, view transitions de tarjetas, scroll-driven del sistema
+     editorial). Nombres propios a propósito (NO --ease-out/--ease-in-out):
+     Tailwind 4 ya trae esa escala por defecto y pisarla rompería cualquier
+     `ease-out`/`ease-in-out` existente en el sitio — misma razón que
+     --radius-chip / --shadow-card de arriba. Curvas `linear()` con
+     overshoot: el valor sube por encima de 1 y asienta ahí, simulando un
+     resorte físico sin runtimes de animación (Rive/Lottie/GSAP quedan
+     fuera de alcance). */
+  /* Resorte suave, overshoot ~6% — micro-interacciones: hover, lift de
+     tarjetas, entradas de contenido. */
+  --ease-spring: linear(
+    0,
+    0.1428 8.33%,
+    0.4209 16.67%,
+    0.6885 25%,
+    0.8843 33.33%,
+    0.9994 41.67%,
+    1.0501 50%,
+    1.0598 58.33%,
+    1.049 66.67%,
+    1.032 75%,
+    1.0165 83.33%,
+    1.0055 91.67%,
+    1 100%
+  );
+  /* Rebote marcado, overshoot ~15% — celebración: checkmarks, pasos
+     completados del stepper de inscripción. */
+  --ease-pop: linear(
+    0,
+    0.2056 7.69%,
+    0.591 15.38%,
+    0.9197 23.08%,
+    1.1021 30.77%,
+    1.1499 38.46%,
+    1.1175 46.15%,
+    1.0596 53.85%,
+    1.0109 61.54%,
+    0.9842 69.23%,
+    0.9775 76.92%,
+    0.9826 84.62%,
+    0.9913 92.31%,
+    1 100%
+  );
+
+  --duration-micro: 200ms; /* micro-interacciones: 150–300ms */
+  --duration-celebration: 500ms; /* celebraciones: 400–600ms */
 }
 
 /* Fuentes locales */
@@ -51,7 +135,10 @@
     /* scroll-behavior: smooth — deshabilitado para evitar conflicto con ClientRouter (View Transitions) */
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     font-weight: 700;
   }
@@ -100,11 +187,196 @@
   .reveal {
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    transition:
+      opacity 0.4s ease-out,
+      transform 0.4s ease-out;
   }
   .reveal.revealed {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   Scroll-driven animations (CSS puro, cero JS)
+
+   Mejora progresiva: todo va dentro de `@supports (animation-timeline: view())`
+   y de `prefers-reduced-motion: no-preference`. Si el navegador no lo soporta o
+   el usuario pidió menos movimiento, el contenido queda en su estado final
+   visible — nunca oculto a la espera de una animación que no va a correr.
+
+   Solo se animan `transform` y `opacity`: nada que dispare layout (CLS < 0.05).
+   Convive con `.reveal` (IntersectionObserver), no lo reemplaza.
+   ============================================================ */
+
+/* Estado sin soporte: el trazo de progreso simplemente no se pinta y queda el
+   sendero punteado de base. */
+.timeline-progress {
+  display: none;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes sda-grow-line {
+      from {
+        transform: scaleY(0);
+      }
+      to {
+        transform: scaleY(1);
+      }
+    }
+
+    @keyframes sda-drift {
+      from {
+        transform: translateY(var(--sda-drift-from, -12px));
+      }
+      to {
+        transform: translateY(var(--sda-drift-to, 12px));
+      }
+    }
+
+    @keyframes sda-trail-draw {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    /* Sendero de la línea de tiempo que se dibuja conforme se baja. El rango
+       por defecto de `view()` (todo el tiempo que el elemento es visible) se
+       recorta al 85% para que el trazo llegue al final antes de que la sección
+       termine de salir de pantalla. */
+    .timeline-progress {
+      display: block;
+      transform-origin: top;
+      /* Longhands a propósito: con el shorthand `animation`, Lightning CSS
+         mete `view()` dentro de él y los navegadores descartan la regla entera
+         (el shorthand no acepta `animation-timeline`). */
+      animation-name: sda-grow-line;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 85%;
+    }
+
+    /* Deriva vertical para capas decorativas (patrones, fondos). Nunca sobre
+       texto de lectura ni sobre el elemento LCP. */
+    .sda-parallax-slow,
+    .sda-parallax-fast {
+      animation-name: sda-drift;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+      will-change: transform;
+    }
+
+    .sda-parallax-slow {
+      --sda-drift-from: -10px;
+      --sda-drift-to: 10px;
+    }
+
+    .sda-parallax-fast {
+      --sda-drift-from: -28px;
+      --sda-drift-to: 28px;
+    }
+
+    /* Perfil de elevación que se traza al entrar en pantalla
+       (`ProgramPathway.astro`, `404.astro`).
+
+       Quien barre es un `<rect>` dentro de un `<clipPath>` que crece de
+       `scaleX(0)` a `scaleX(1)` desde el borde izquierdo: el recorte descubre
+       el trazo de izquierda a derecha, igual que si se dibujara. Sin animación
+       el rectángulo cubre el viewBox entero, así que el estado por defecto del
+       marcado —el que ven Firefox, `prefers-reduced-motion` y cualquier
+       navegador sin scroll-driven— es el perfil completo. No hace falta una
+       regla de respaldo fuera de estas guardas.
+
+       Por qué no `stroke-dashoffset`, que sería lo obvio: los trazos del perfil
+       llevan `vector-effect="non-scaling-stroke"` y el patrón de guiones se mide
+       entonces en el espacio de pantalla, mientras `pathLength` normaliza sobre
+       la geometría sin transformar. Con el SVG estirado
+       (`preserveAspectRatio="none"`) las dos longitudes no coinciden: medido en
+       Chrome, a 1160×176 el trazo se queda sin su último 12% con
+       `stroke-dashoffset: 0` y asoma un trozo suelto con `1`. El barrido por
+       recorte no depende de longitudes, solo de la caja.
+
+       La línea de tiempo se declara en el recuadro del perfil (`.sda-trail`) y
+       no en el `<rect>`: el `view()` anónimo necesita una caja principal y los
+       elementos SVG no la tienen. El nombre se resuelve por ascendencia, así
+       que dos perfiles en la misma página no se pisan. */
+    .sda-trail {
+      view-timeline-name: --sda-trail;
+      view-timeline-axis: block;
+    }
+
+    .sda-trail-sweep {
+      transform-origin: left;
+      /* Longhands a propósito: ver la nota de más arriba sobre el shorthand
+         `animation` y Lightning CSS. */
+      animation-name: sda-trail-draw;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --sda-trail;
+      /* Termina al 35% de `cover` —no al 85% como el sendero vertical— para que
+         el trazo se complete cuando el perfil va por la mitad de la pantalla y
+         no cuando ya se está yendo. De paso, un perfil que cae dentro de la
+         primera pantalla arranca casi dibujado en vez de vacío. */
+      animation-range: cover 0% cover 35%;
+    }
+  }
+}
+
+/* Barra de conversión móvil (`ConversionBar.astro`): aparece al pasar el
+   hero, ligada al scroll del documento —no al de un elemento— por eso usa
+   `scroll()` y no `view()` como el resto de animaciones de esta sección.
+   Mejora progresiva igual que arriba: sin soporte o con menos movimiento la
+   barra queda visible fija desde el primer render (el markup base no trae
+   transform ni opacity propios). */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes sda-conversion-bar-in {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .conversion-bar {
+      /* Longhands a propósito: ver la nota de más arriba sobre el shorthand
+         `animation` y Lightning CSS. */
+      animation-name: sda-conversion-bar-in;
+      animation-timing-function: ease-out;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 480px;
+    }
+  }
+}
+
+/* La barra de conversión y el banner de consentimiento
+   (`ConsentBanner.astro`) se anclan los dos al borde inferior, y el banner va
+   por encima (`z-[60]` contra `z-40`): en la primera visita —el caso más
+   común, y el de más valor— la tarjeta de cookies taparía justo la CTA de
+   inscripción. Se resuelve reservándole al banner el alto exacto de la barra,
+   así conviven apilados en vez de encimarse.
+
+   Alto de la barra = `pt-3` (12px) + botón `h-12` (48px) + su
+   `padding-bottom: max(12px, env(safe-area-inset-bottom))`.
+
+   El selector es de hermano posterior porque `BaseLayout.astro` pinta
+   `<ConversionBar />` antes que `<ConsentBanner />`; si algún día cambia ese
+   orden, hay que revisar esta regla. Fuera de `md` la barra no se pinta
+   (`md:hidden`) y el banner no necesita reserva. */
+@media (width < 48rem) {
+  .conversion-bar ~ #consent-banner {
+    padding-bottom: calc(60px + max(12px, env(safe-area-inset-bottom)));
   }
 }
 
@@ -119,7 +391,9 @@
   z-index: 9999;
   opacity: 0;
   pointer-events: none;
-  transition: width 0.3s ease-out, opacity 0.3s ease;
+  transition:
+    width 0.3s ease-out,
+    opacity 0.3s ease;
 }
 
 /* Prose tables responsive — scroll horizontal en mobile */
@@ -133,7 +407,7 @@
   text-align: center;
 }
 .prose :where(figure img) {
-  border-radius: 0.75rem;
+  border-radius: var(--radius-control);
   display: inline-block;
   max-width: 100%;
   height: auto;
@@ -208,7 +482,7 @@
 .prose :where(.stat-strip__item) {
   margin: 0;
   background: color-mix(in srgb, var(--color-primary) 7%, var(--color-surface));
-  border-radius: 0.75rem;
+  border-radius: var(--radius-control);
   padding: 1rem 0.75rem;
   text-align: center;
 }
@@ -264,7 +538,7 @@
   padding: 1.25rem 1.5rem;
   border-left: 4px solid var(--color-primary);
   background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface));
-  border-radius: 0 0.75rem 0.75rem 0;
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
 }
 .prose :where(.pull-quote__text) {
   margin: 0;
@@ -350,7 +624,7 @@
   position: relative;
   display: block;
   height: 1.75rem;
-  border-radius: 0.375rem;
+  border-radius: var(--radius-chip);
   background: color-mix(in srgb, var(--color-surface-muted) 35%, var(--color-surface));
 }
 .prose :where(.standings-board__reach) {
@@ -358,7 +632,7 @@
   inset-block: 0;
   left: 0;
   width: calc(min(var(--pts) + var(--reach), var(--board-max)) / var(--board-max) * 100%);
-  border-radius: 0.375rem;
+  border-radius: var(--radius-chip);
   background: repeating-linear-gradient(
     135deg,
     color-mix(in srgb, var(--color-primary) 16%, var(--color-surface)) 0 6px,
@@ -371,7 +645,7 @@
   left: 0;
   width: calc(var(--pts) / var(--board-max) * 100%);
   min-width: 0.5rem;
-  border-radius: 0.375rem;
+  border-radius: var(--radius-chip);
   background: var(--color-primary-deep);
   overflow: hidden;
 }
@@ -436,7 +710,7 @@
   gap: 0.25rem;
   margin-top: 0.25rem;
   padding: 0.0625rem 0.4375rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-size: 0.75rem;
   font-weight: 600;
   line-height: 1.4;
@@ -517,7 +791,7 @@
 .prose :where(.thread__item) {
   margin: 0;
   padding: 0.875rem 1rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-control);
   font-size: 0.9375rem;
   line-height: 1.45;
   color: var(--color-text-primary);
@@ -554,7 +828,7 @@
   margin-block: 2rem;
   padding: 1.25rem;
   border: 1px solid var(--color-surface-muted);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-control);
   background: color-mix(in srgb, var(--color-primary) 4%, var(--color-surface));
   text-align: left;
 }
@@ -690,7 +964,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
-  border-radius: 1rem;
+  border-radius: var(--radius-card);
   overflow: hidden;
   background: var(--color-surface-muted);
   transform-style: preserve-3d;
@@ -748,9 +1022,7 @@
 /* Hover (solo dispositivos con puntero fino) */
 @media (hover: hover) and (pointer: fine) {
   .race-lineup__poster-wrap {
-    transform: perspective(800px)
-      rotateX(var(--rx, 0deg))
-      rotateY(var(--ry, 0deg));
+    transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   }
   .race-lineup__card:hover .race-lineup__glare {
     opacity: 1;
@@ -786,5 +1058,225 @@
   }
   .race-lineup__card {
     transition-delay: 0ms;
+  }
+}
+
+/* ============================================================
+   Stepper de inscripción — celebración del avance
+   (`src/components/interactive/InscriptionForm.tsx`, prefijo `if-`)
+
+   Mejora progresiva, igual que el resto del archivo: TODO va dentro de
+   `prefers-reduced-motion: no-preference`. Sin la preferencia no se declara
+   ni `stroke-dasharray` ni `animation`, así que el checkmark se pinta entero
+   y el indicador aparece en su estado final — el paso completado nunca
+   depende de una animación para ser perceptible (fondo teal + icono).
+
+   El relleno de la barra de progreso NO vive aquí: es una transición de
+   `scaleX` con utilidades Tailwind en el propio componente
+   (`transition-transform ease-pop duration-[var(--duration-celebration)]`),
+   con su respectivo `motion-reduce:transition-none`.
+   ============================================================ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Trazo del checkmark del paso completado. 24 = unidades del `viewBox`
+     0 0 24 24, con holgura sobre la longitud real del path `M5 13l4 4L19 7`
+     (~19.8u): un dash más largo que el trazo lo cubre entero sin repetir.
+     Si cambia la `d` del path, revisar este valor. */
+  @keyframes if-check-draw {
+    from {
+      stroke-dashoffset: 24;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Squash & stretch del indicador al completarse. El asentamiento por debajo
+     de 1 no está en los keyframes: lo aporta `--ease-pop`, que sobrepasa el
+     destino en cada tramo (sube ~1.17 y baja ~0.98 antes de fijarse en 1). */
+  @keyframes if-step-pop {
+    0% {
+      transform: scale(1);
+    }
+    45% {
+      transform: scale(1.15);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .if-step-check {
+    stroke-dasharray: 24;
+    animation-name: if-check-draw;
+    /* Más corto que la barra a propósito: el check remata antes de que el riel
+       termine de llenarse, y la mirada sigue el avance hacia el paso siguiente. */
+    animation-duration: calc(var(--duration-celebration) * 0.6);
+    animation-timing-function: ease-out;
+    /* El trazo entra justo después del golpe del círculo. `backwards` lo
+       mantiene sin dibujar durante ese retardo; al terminar no hace falta
+       `forwards` porque el estado en reposo (dashoffset 0) ya es el final. */
+    animation-delay: 80ms;
+    animation-fill-mode: backwards;
+  }
+
+  .if-step-pop {
+    animation-name: if-step-pop;
+    animation-duration: var(--duration-micro);
+    animation-timing-function: var(--ease-pop);
+  }
+}
+
+/* ============================================================
+   Validación de formularios — shake de error y pop de campo válido
+   (`ContactForm.tsx`, `InscriptionForm.tsx`, prefijo `field-`)
+
+   Mejora progresiva, igual que el resto del archivo: TODO va dentro de
+   `prefers-reduced-motion: no-preference`. Ninguna de las dos animaciones es
+   la única señal de su estado — el mensaje `role="alert"` y el borde rojo ya
+   comunican el error sin necesidad de shake; el checkmark de campo válido es
+   `aria-hidden` (refuerzo visual, no información nueva) y, sin la
+   preferencia, se pinta directo en su estado final (escala 1, sin animar) en
+   vez de quedar oculto esperando una animación que no va a correr.
+
+   `.field-shake` NUNCA se ata directo a `errors[name]` en los componentes
+   (eso sigue gobernando solo el borde/estilo de error): la clase la controla
+   un Set de React (`shakingFields`) para poder re-disparar la animación en
+   cada intento fallido, no solo la primera vez — ver el comentario en cada
+   componente.
+   ============================================================ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 3 oscilaciones horizontales en ~300ms. Duración fija (no
+     `--duration-micro`, que es 200ms): el plan pide expresamente ~300ms para
+     este shake, el extremo superior del rango de micro-interacciones. */
+  @keyframes field-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    16.67%,
+    50%,
+    83.33% {
+      transform: translateX(-5px);
+    }
+    33.33%,
+    66.67% {
+      transform: translateX(5px);
+    }
+  }
+
+  .field-shake {
+    animation-name: field-shake;
+    animation-duration: 300ms;
+    animation-timing-function: ease-in-out;
+  }
+
+  /* Pop de entrada del checkmark de campo válido: mismo resorte que el
+     stepper de inscripción (`--ease-pop`), pero en escala de tiempo micro. */
+  @keyframes field-pop {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  .field-pop {
+    animation-name: field-pop;
+    animation-duration: var(--duration-micro);
+    animation-timing-function: var(--ease-pop);
+  }
+}
+
+/* ============================================================
+   Confeti de celebración — pantalla de éxito de los formularios
+   (`ConfettiBurst.tsx` vía `SuccessConfetti.tsx`, prefijo `confetti-`)
+
+   Mejora progresiva, igual que el resto del archivo: TODO va dentro de
+   `prefers-reduced-motion: no-preference`, incluidos el tamaño y el color de
+   la partícula. Sin la preferencia, un `.confetti-piece` no tiene ni caja ni
+   fondo: no quedan papelitos estáticos raros sobre el mensaje de éxito. En la
+   práctica ni se monta —`SuccessConfetti` consulta `matchMedia` antes de
+   descargar el chunk—, pero la celebración no depende de esa consulta para
+   ser invisible.
+
+   Estructura: cada partícula es UN `<span>` de ancho cero y alto completo que
+   cae (`translate`), y su `::before` es el papelito que gira (`rotate`). Dos
+   elementos porque una sola caja no puede animar dos `transform` distintos a
+   la vez. Solo se animan `transform` y `opacity` — nada que dispare layout.
+
+   El sorteo de cada partícula (posición, color, tamaño, deriva, giros,
+   duración, retardo) llega como custom properties en línea desde el
+   componente; el pseudo-elemento las hereda. Sin animación infinita: la
+   celebración se agota sola y el componente se desmonta al terminar.
+   ============================================================ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Caída con vaivén: la deriva horizontal va de -x a +x y vuelve, mientras la
+     vertical avanza de -14% a 112% del alto de la capa (el `<span>` mide
+     `height: 100%`, así que los porcentajes son relativos a la tarjeta y la
+     lluvia dura lo mismo en una tarjeta corta que en una larga). La opacidad
+     entra y sale para que ninguna partícula aparezca o desaparezca de golpe. */
+  @keyframes confetti-fall {
+    0% {
+      transform: translate3d(calc(var(--confetti-drift, 0px) * -1), -14%, 0);
+      opacity: 0;
+    }
+    12% {
+      opacity: 1;
+    }
+    50% {
+      transform: translate3d(var(--confetti-drift, 0px), 49%, 0);
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(calc(var(--confetti-drift, 0px) * -1), 112%, 0);
+      opacity: 0;
+    }
+  }
+
+  /* Aleteo del papelito: giro 3D sin `perspective`, así la proyección
+     ortográfica lo adelgaza al pasar de canto — la lectura de papel dando
+     vueltas sale gratis. */
+  @keyframes confetti-flip {
+    from {
+      transform: rotate3d(1, 1, 0.2, 0deg);
+    }
+    to {
+      transform: rotate3d(1, 1, 0.2, calc(var(--confetti-turns, 3) * 360deg));
+    }
+  }
+
+  .confetti-piece {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 100%;
+    animation-name: confetti-fall;
+    animation-duration: var(--confetti-duration, 1700ms);
+    animation-delay: var(--confetti-delay, 0ms);
+    /* Lineal a propósito: el confeti real cae a velocidad terminal, no
+       acelera. `both` lo mantiene invisible durante su retardo. */
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+
+  .confetti-piece::before {
+    content: '';
+    display: block;
+    width: var(--confetti-w, 8px);
+    height: var(--confetti-h, 12px);
+    border-radius: var(--confetti-radius, 2px);
+    background: var(--confetti-color, var(--color-primary));
+    animation-name: confetti-flip;
+    animation-duration: var(--confetti-duration, 1700ms);
+    animation-delay: var(--confetti-delay, 0ms);
+    animation-timing-function: linear;
+    animation-fill-mode: both;
   }
 }

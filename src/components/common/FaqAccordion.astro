@@ -57,4 +57,46 @@ const { items, class: className } = Astro.props;
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
+
+  /* Apertura suave del acordeón (docs/06-plan-animaciones.md Fase 4 Tarea 12):
+     mejora progresiva solo para navegadores con `::details-content` +
+     `interpolate-size` (Chromium). Todo va detrás de este único `@supports`,
+     así que en el resto de navegadores no se define ninguna regla nueva y el
+     `<details>` nativo se abre/cierra exactamente igual que hoy — sin
+     transición, instantáneo. */
+  @supports (interpolate-size: allow-keywords) {
+    .faq-item {
+      interpolate-size: allow-keywords;
+    }
+
+    .faq-item::details-content {
+      height: 0;
+      overflow: clip;
+      /* `ease-out` y no `--ease-spring`: el resorte sobrepasa ~6% su valor
+         final, y sobre `height` ese overshoot empuja de más todo lo que va
+         debajo del acordeón y lo devuelve — un rebote de layout de ~0.077 de
+         shift. Hoy no cuenta para CLS porque siempre nace de un clic o un
+         Enter (`hadRecentInput`), pero el rebote se ve. El resorte se queda
+         donde no mueve layout: transform y opacity. */
+      transition:
+        height var(--duration-micro) ease-out,
+        content-visibility var(--duration-micro) allow-discrete;
+    }
+
+    .faq-item[open]::details-content {
+      height: auto;
+    }
+
+    @starting-style {
+      .faq-item[open]::details-content {
+        height: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .faq-item::details-content {
+        transition: none;
+      }
+    }
+  }
 </style>

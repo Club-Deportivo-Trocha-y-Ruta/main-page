@@ -11,11 +11,20 @@ const { variant = 'primary', size = 'md', href, class: className, ...rest } = As
 
 // El teal de marca solo da 2.4:1 contra blanco: sobre el teal vivo va texto
 // grafito (5.5:1) y como texto/borde sobre fondo claro va el tono -deep.
+//
+// Botón "físico" (docs/06-plan-animaciones.md Fase 1 Tarea 2): cada variante
+// fija --btn-shadow-color (custom property que consume --shadow-pressable en
+// @theme) a un tono oscurecido de su propio color — tokens -dark/-deep ya
+// existentes cuando los hay, color-mix() cuando no (secondary, sobre gris).
 const variants: Record<string, string> = {
-  primary: 'bg-primary text-surface-dark hover:bg-primary-deep hover:text-white',
-  secondary: 'bg-surface-muted text-text-primary hover:bg-gray-200',
-  accent: 'bg-accent text-surface-dark hover:bg-accent-dark',
-  outline: 'border-2 border-primary-deep text-primary-deep hover:bg-primary-deep hover:text-white',
+  primary:
+    'bg-primary text-surface-dark hover:bg-primary-deep hover:text-white [--btn-shadow-color:var(--color-primary-dark)]',
+  secondary:
+    'bg-surface-muted text-text-primary hover:bg-gray-200 [--btn-shadow-color:color-mix(in_srgb,var(--color-surface-muted)_55%,black)]',
+  accent:
+    'bg-accent text-surface-dark hover:bg-accent-dark [--btn-shadow-color:var(--color-accent-dark)]',
+  outline:
+    'border-2 border-primary-deep text-primary-deep hover:bg-primary-deep hover:text-white [--btn-shadow-color:var(--color-primary-deep)]',
 };
 
 const sizes: Record<string, string> = {
@@ -24,23 +33,39 @@ const sizes: Record<string, string> = {
   lg: 'px-7 py-3.5 text-lg',
 };
 
+// Botón "físico" estilo Duolingo: descansa elevado sobre `shadow-pressable`
+// (sombra dura, sin blur — ver @theme) y baja ~4px al presionar mientras la
+// sombra se comprime a 0 al instante (sin transición: solo transitiona
+// `transform`/`translate`, nunca `box-shadow`, para no pagar el costo de
+// animar sombras). `motion-reduce:*` anula el desplazamiento — el botón
+// sigue funcionando, solo sin el viaje.
+const pressable = [
+  'shadow-pressable',
+  'transition-transform duration-[var(--duration-micro)] ease-spring',
+  'hover:-translate-y-px active:translate-y-1 active:shadow-none',
+  'motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:active:translate-y-0',
+].join(' ');
+
 const classes = [
   'inline-flex items-center justify-center rounded-lg font-semibold text-center',
-  'transition-colors duration-200',
+  pressable,
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
   variants[variant],
   sizes[size],
   className,
-].filter(Boolean).join(' ');
-
+]
+  .filter(Boolean)
+  .join(' ');
 ---
 
-{href ? (
-  <a href={href} class={classes} {...rest}>
-    <slot />
-  </a>
-) : (
-  <button class={classes} {...rest}>
-    <slot />
-  </button>
-)}
+{
+  href ? (
+    <a href={href} class={classes} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button class={classes} {...rest}>
+      <slot />
+    </button>
+  )
+}

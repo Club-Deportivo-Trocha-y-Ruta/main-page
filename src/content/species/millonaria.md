@@ -13,6 +13,12 @@ plural: "Millonarias"
 feminine: true
 ---
 
-La millonaria o crotón (*Codiaeum variegatum*) es uno de los arbustos ornamentales más visualmente impactantes del trópico. Sus hojas coriáceas presentan una explosión de colores —rojo intenso, naranja, amarillo brillante, verde y venas contrastantes— que cambian según la edad de la hoja y la intensidad lumínica. Cuanto más sol recibe la planta, más vivos son los colores.
+Hay una Millonaria en la pista Carlos Castro, sembrada el 22 de abril de 2026 durante la Sembratón del Día de la Tierra y protegida con una llanta de bicicleta reciclada.
 
-Originaria del sureste asiático, la millonaria se adaptó perfectamente a los climas cálidos de Colombia y hoy se encuentra en jardines, parques y avenidas de todo el país. En Yumbo y el Valle del Cauca es una planta de jardín muy popular por su bajo mantenimiento y alto impacto visual. En la pista Carlos Castro aporta color permanente al espacio de entrenamiento, convirtiendo cada jornada de ciclismo en una experiencia también visual y estética.
+La donó el Vivero Guacandá, del Sr. Néstor Correa, que ese mismo día aportó también la Palma Azul del inventario.
+
+## Sobre la especie
+
+La millonaria o crotón (*Codiaeum variegatum*) es un arbusto ornamental originario del sureste asiático. Sus hojas coriáceas presentan una explosión de colores —rojo, naranja, amarillo, verde y venas contrastantes— que cambian con la edad de la hoja y la intensidad de la luz. Cuanto más sol recibe la planta, más vivos son los colores.
+
+Se adaptó bien a los climas cálidos de Colombia y hoy es una planta muy popular en los jardines de Yumbo y el Valle del Cauca por su bajo mantenimiento y su alto impacto visual.

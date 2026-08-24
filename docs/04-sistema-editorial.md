@@ -57,6 +57,7 @@ Toda sección se arma con las mismas cuatro piezas, en este orden:
 | `width` | `narrow`, `default`, `wide` | El marco siempre es de ancho completo |
 | `spacing` | `none`, `compact`, `default`, `spacious` | |
 | `labelledby` / `label` | id del titular / nombre | Una de las dos, siempre |
+| `scrollDriven` | booleano | Habilita animaciones ligadas al scroll dentro de la sección. Ver 2.5 |
 
 Los tokens de cada tono viven en `src/lib/editorial.ts`. **No se escriben clases de fondo
 a mano en las secciones**: si hace falta un fondo nuevo, se agrega un tono.
@@ -93,6 +94,10 @@ Ilustraciones disponibles en `src/lib/editorial.ts`:
 - `SeasonTrack.astro` + `buildSeason()` — riel horizontal con una parada por
   fecha y la barra llena hasta donde va el año. Sirve para cualquier secuencia
   con un "vas aquí".
+- `SeasonRail.astro` — la versión de una línea del riel, para cuando no cabe el
+  recorrido navegable: sin enlaces, sin texto sobre las paradas y con el dibujo
+  `aria-hidden`, porque el dato equivalente viaja en un resumen `sr-only`. La
+  usa la tarjeta de temporada del hero de la portada.
 
 El SVG se estira con `preserveAspectRatio="none"`, así que **dentro del SVG no va texto ni
 círculos**: los marcadores se dibujan en HTML encima del recuadro.
@@ -103,6 +108,46 @@ Ninguna sección termina en punto muerto. Enlace al detalle, CTA de inscripción
 WhatsApp — pero siempre algo.
 
 ---
+
+### 2.5 Animación ligada al scroll — `scrollDriven`
+
+Las animaciones de scroll del sitio son **CSS puro** (`animation-timeline: view()`), sin
+una línea de JS. Las utilidades viven en `src/styles/global.css`, bajo
+`@supports (animation-timeline: view())` anidado en `prefers-reduced-motion: no-preference`:
+si el navegador no lo soporta o el usuario pidió menos movimiento, el contenido queda en su
+estado final visible. Solo se animan `transform` y `opacity`.
+
+| Clase | Para qué |
+|-------|----------|
+| `.timeline-progress` | Trazo del sendero de `Timeline` que se dibuja al bajar |
+| `.sda-parallax-slow` / `.sda-parallax-fast` | Deriva vertical de capas decorativas |
+| `.sda-trail` + `.sda-trail-sweep` | Perfil de elevación que se traza al entrar en pantalla |
+
+El perfil se traza con un `<rect>` dentro de un `<clipPath>` que crece de `scaleX(0)` a
+`scaleX(1)`: el recorte descubre el trazo de izquierda a derecha. `.sda-trail` va en el
+recuadro del perfil (declara la línea de tiempo con nombre; el `view()` anónimo necesita
+una caja CSS y los elementos SVG no la tienen) y `.sda-trail-sweep`, en el `<rect>`.
+Quieto, el rectángulo cubre el viewBox entero: el estado por defecto del marcado es el
+perfil completo. Solo se barren los trazos, nunca los rellenos del terreno.
+
+Tres trampas que ya costaron una sesión de depuración cada una:
+
+1. **`overflow: hidden` crea un contenedor de scroll.** Si un ancestro lo tiene, `view()` se
+   ancla a él en vez de al viewport y la animación queda congelada en un valor fijo. Por eso
+   `scrollDriven` hace que `SectionShell` recorte con `overflow-clip`, que clipea sin ser
+   scrollable. Cualquier sección que contenga animación de scroll necesita esa prop.
+2. **No usar el shorthand `animation`.** Lightning CSS mete `view()` dentro del shorthand
+   (`animation: linear both x view()`), forma que los navegadores descartan entera. Hay que
+   escribir `animation-name`, `animation-timing-function` y `animation-fill-mode` por
+   separado.
+3. **`stroke-dashoffset` no sirve para dibujar estos trazos.** Los perfiles llevan
+   `vector-effect="non-scaling-stroke"`, y ahí el patrón de guiones se mide en el espacio de
+   pantalla mientras `pathLength` normaliza sobre la geometría sin transformar. Con el SVG
+   estirado (`preserveAspectRatio="none"`) las dos longitudes no coinciden: medido en Chrome,
+   a 1160×176 el trazo pierde su último 12% con `stroke-dashoffset: 0` y asoma un trozo suelto
+   con `1`. El barrido por recorte no depende de longitudes, solo de la caja.
+
+Nada de esto reemplaza a `.reveal` (IntersectionObserver, en `BaseLayout`): conviven.
 
 ## 3. Reglas que no se negocian
 
@@ -154,6 +199,7 @@ WhatsApp — pero siempre algo.
 | Portada (`/`) | ✅ Migrada |
 | Preguntas frecuentes (`/preguntas-frecuentes`) | ✅ Migrada |
 | Política editorial (`/politica-editorial`) | ✅ Migrada |
+| Equipo (`/equipo`) | ✅ Construida — **oculta al público**, ver §27 |
 
 ---
 
@@ -621,6 +667,9 @@ terreno se pinta apagado, un ciclista queda fuera de la traza unido a ella por
 una línea punteada, y el tramo que lleva de vuelta va resaltado en lima hasta
 el marcador «Inicio», que es un enlace real y no un adorno. Cero JS: SVG
 generado en build, con el detalle narrado en un `figcaption` en `sr-only`.
+Los dos senderos se trazan al entrar en pantalla (`.sda-trail`, §2.5); el
+ciclista **no** viaja por la traza a propósito —está fuera de ruta, que es lo
+que cuenta la página— y su único movimiento sigue siendo el bamboleo idle.
 
 **Los datos.** `buildControlPoints()` (`@lib/not-found`) arma los cuatro puntos
 reutilizando derivaciones que ya existían —`buildSeason()`, `summarizePrograms()`,
@@ -739,18 +788,40 @@ verificable por el lector. Las afirmaciones históricas del club
 (`CLUB_STATS.ridersTrained`, `medals`), que no tienen dataset detrás, se
 quedan solo en `AboutPreview`.
 
-**El pulso del hero.** El hero era un cartel fijo. Ahora, debajo de los
-botones, muestra la próxima fecha real de la temporada vía `heroPulse()`, que
+**El hero dejó de ser un cartel.** Era una foto a pantalla completa con el
+texto encima, en blanco sobre degradados oscuros, y una flecha de scroll. Ahora
+es claro y a dos columnas —texto a la izquierda, foto a la derecha—, sobre la
+cadena del tono `tinted` (`getTone('tinted')` de `@lib/editorial`, no clases
+escritas a mano) y con la textura topo del sistema. Marco propio, sí, pero nada
+de fondos inventados.
+
+Lo que estaba escondido en un chip subió a **tarjeta de temporada**: el riel
+compacto (`SeasonRail`, §2.3) más la próxima fecha real vía `heroPulse()`, que
 sale de `buildSeason()` — la misma derivación de `/calendario` y `/enlaces`, así
 que las tres nunca se contradicen. Si la carrera es hoy, el aviso cambia. Si ya
-corrió toda la temporada, no se pinta nada. Cuando hay pulso, la flecha de
-scroll se oculta: dos señales compitiendo por la misma mirada.
+corrió toda la temporada, la tarjeta no se pinta y no la reemplaza nada.
+
+**Cada cifra, en un solo sitio.** La tarjeta del hero no escribe el conteo de
+fechas corridas ni los años del club: esas dos cifras las publica la banda de
+credibilidad, que va justo debajo y es la que viaja con procedencia y con
+enlace para comprobarlas. Repetirlas a un scroll de distancia es el mismo
+defecto que este rediseño corrigió arriba, con otros números. El hero aporta lo
+que la banda no dice: el dibujo del riel y cuál es la próxima fecha.
+
+**El reparto de secciones.** El recorrido es: hero → cifras comprobables →
+programas → el club **con la clase de prueba dentro** (`AboutPreview` incrusta
+`InscriptionCTA variant="inline"` con `headingLevel="h3"`, porque el `h2` de la
+sección ya lo puso `SectionIntro`) → la temporada → Trocha Verde →
+patrocinadores → el cierre. El calendario y las crónicas, que eran dos secciones
+seguidas contando el mismo año, son una sola a dos columnas: `SeasonOverview`
+—lo que sigue a la izquierda, lo ya contado a la derecha—. `UpcomingEvents` y
+`NewsPreview` se borraron con esa fusión.
 
 **El ritmo.** Los tonos alternan `plain` / `muted` de arriba abajo para que dos
 secciones seguidas nunca compartan fondo, con dos excepciones deliberadas:
 Trocha Verde usa `tinted` porque cambia de registro, y el cierre usa el fondo
-de marca. `WaveSeparator` apunta ahora a `fill-surface`, que es el fondo real
-de la sección que sigue.
+de marca. El hero entrega limpio al blanco de las cifras, así que no hay ola de
+corte: `WaveSeparator` salió de la portada.
 
 **Correcciones de accesibilidad y marcado.**
 
@@ -763,9 +834,48 @@ de la sección que sigue.
 - La sección de Trocha Verde pintaba con `emerald-*` de Tailwind, un verde que no
   está en la paleta del club. Pasa a los tokens de marca.
 
-**Lo que no se tocó.** El vídeo de YouTube del hero: carga la API de terceros en
-escritorio y pesa sobre el LCP, pero quitarlo es una decisión de producto, no
-de migración.
+**El vídeo de YouTube se retiró.** Cargaba la API de terceros en escritorio y
+pesaba sobre el LCP; se documentó antes como decisión de producto pendiente,
+pero el movimiento que aportaba ya lo cubre lo que el hero pinta sin coste: la
+textura topo (`TOPO_PATHS` de `@lib/editorial`) con su deriva de scroll. El
+poster queda como único elemento LCP; su `sizes` y el `imagesizes` del
+`<link rel="preload">` de `BaseLayout.astro` describen la columna real y tienen
+que cambiar juntos.
+
+### Rediseño «Bitácora de temporada»
+
+**El hero cambia de registro.** Deja de ser un cartel oscuro a pantalla
+completa y pasa a un marco claro sobre la cadena del tono `tinted`: el mismo
+criterio de contraste que rige el resto del sistema, no un fondo inventado
+para el hero. La foto deja de ser el lienzo de fondo y pasa a tarjeta
+lateral —sigue siendo el elemento LCP, con `loading="eager"` y
+`fetchpriority="high"`—, y lo que antes vivía en un chip escondido sube a
+tarjeta propia: el riel compacto (`SeasonRail`) más el pulso de la próxima
+fecha, los dos derivados de `buildSeason()` — la misma función que arma
+`/calendario` y `/enlaces`, así que las tres páginas nunca cuentan una
+temporada distinta.
+
+**La conversión deja de ser una parada suelta.** El bloque de la clase de
+prueba que antes vivía como sección aparte, entre dos secciones, se funde
+dentro de `AboutPreview` —`InscriptionCTA` en su variante `inline`, con
+`headingLevel="h3"` porque el `h2` de la sección ya lo puso `SectionIntro`—: el
+porqué es ofrecer la prueba justo donde el lector ya se creyó la historia del
+club, no antes. El bloque suelto desaparece y la portada queda con un solo
+momento de conversión en el scroll, más el cierre.
+
+**El calendario y las crónicas se funden en `SeasonOverview`.**
+`UpcomingEvents` y `NewsPreview` —dos secciones seguidas contando el mismo
+año— se reemplazan en la portada por una sola sección a dos columnas: lo que
+sigue a la izquierda, lo último en carrera a la derecha. Las válidas
+canceladas se mantienen visibles y en texto —no solo como ausencia en la lista
+de próximas fechas—, porque una fecha que desaparece sin explicación se lee
+como un error del sitio, no como una decisión de la organización.
+
+**El ritmo de tonos que queda.** `tinted` (hero) → `plain` (cifras) → `muted`
+(programas) → `plain` (el club) → `muted` (la temporada) → `tinted` (Trocha
+Verde) → `plain` (patrocinadores) → el teal de marca (cierre). Ninguna sección
+consecutiva comparte fondo, y `WaveSeparator` ya no se usa en la portada: el
+hero entrega directo al blanco de las cifras, sin ola de corte de por medio.
 
 ---
 
@@ -1041,3 +1151,115 @@ la política general de protección infantil que se eliminó en el §23: esa
 afirmaba un comité y canales de reporte que no existían en la práctica. Aun
 así, no está de más que el club confirme que este protocolo sí se aplica,
 igual que confirmó la edad mínima del §21.
+
+---
+
+## 26. Referencia del tablero de la temporada
+
+**Qué muestra.** `SeasonStandings.astro`, al cierre de `/noticias`, es la
+general del club contada como barras: una fila por corredor con su nombre, su
+categoría, su puesto y cómo se movió respecto de la válida anterior. Responde
+la pregunta que ninguna crónica suelta responde —*¿y cómo va el año?*— y que el
+club ya venía contando **a mano** dentro de una crónica, con las clases
+`.standings-board` de `global.css` y los puntos escritos literal en el
+markdown. La sección habla ese mismo idioma visual, pero derivado de datos: los
+estilos son propios del componente porque aquellas clases están acotadas a
+`.prose` y tocarlas cambiaría lo ya publicado.
+
+**De dónde salen las cifras.** De `summarizeStandings()` (`@lib/results`),
+sobre la colección `results` —una válida, una categoría, un archivo— y sobre
+`events`:
+
+| Marca de la pista | Qué es | De dónde sale |
+|-------------------|--------|---------------|
+| Barra teal profundo | Puntos acumulados en la temporada | Suma de `points` por corredor |
+| Tramo teal claro | Lo que sumó en la última válida | `points` de la válida de fecha más reciente |
+| Línea punteada | Puntos del 3.º de su categoría | Total del tercer puesto de la general |
+| Zona rayada | Puntos todavía en juego | Válidas que faltan × mejor puntaje observado |
+| Fila en lima | Corredor en zona de podio | Puesto ≤ 3 de su categoría |
+
+Las válidas que faltan salen de `buildSeason()` —la misma derivación de
+`/calendario`, `/enlaces` y la portada, así que ninguna se contradice— y las
+fechas canceladas no cuentan: siguen en el calendario, pero no reparten puntos.
+Si ningún resultado trae `points`, la escala cae en el puntaje de referencia
+(40, el que ya usaban las crónicas). `results.ts` es puro: recibe los dos
+arreglos por parámetro, como `calendar.ts` o `sponsors.ts`.
+
+**Sin datos no se pinta.** Hoy `src/content/results/` solo tiene su `README.md`
+—que el loader no carga, porque solo lee `yaml`/`yml`/`json`—, así que
+`summarizeStandings()` devuelve `null` y la sección **no existe** en el HTML:
+`/noticias` se construye exactamente igual que antes de que el componente
+existiera. No hay tablero "próximamente" ni fila de ejemplo, la misma regla que
+ya aplican `summarizePrograms()` o `summarizeDocuments()`. Lo mismo pasa hacia
+adentro: sin tercer corredor no hay línea de podio, y con la temporada corrida
+desaparece la zona rayada.
+
+**Dos decisiones que conviene tener escritas.** El titular no afirma una copa
+que no conste: el nombre de la serie se deriva del tramo común a los nombres de
+todas las válidas (*I Válida Copa Valle 2026 – Ginebra* + *VI Válida Copa Valle
+2026 – Roldanillo* → **Copa Valle**) y, con una sola válida cargada, la sección
+habla de "la temporada". Y el empate se rompe por puestos de llegada: dos
+corredores con los mismos puntos no valen lo mismo si uno los hizo con dos
+segundos y el otro con un primero y un quinto.
+
+**Los nombres de los menores los decide el club.** Igual que con los `tags` de
+las crónicas (§20), la plantilla no toma esa decisión: publica lo que el club
+cargue en `results` y nada más. Si hay duda sobre un corredor, la llegada no se
+carga —el README de la colección lo dice antes que cualquier otra cosa, y los
+ejemplos de ahí y de los tests son nombres ficticios a propósito.
+
+**Accesibilidad.** La pista es decorativa (`aria-hidden`) y todo el dato vive en
+texto: total, "+N en esta" y el movimiento como **flecha + verbo** —▲ Sube 2
+puestos, ▼ Baja 1 puesto, — Mantiene, ＋ Nuevo—, nunca solo por color. Cada
+categoría es una `<section>` con su `aria-labelledby`, y el rojo y el azul de
+estado (6,2:1 y 6,3:1 sobre blanco) viven en el componente porque solo los usa
+él. Cero JavaScript: los anchos los calcula el CSS desde las custom properties
+de cada fila.
+
+---
+
+## 27. Referencia de Equipo — una página construida y oculta
+
+**Por qué está oculta.** `/equipo` era el único TODO real del código: un ítem de
+navegación comentado en `constants.ts` y dos `.astro.bak` de perfiles de
+corredores. La página ya existe y se construye, pero **el club todavía no tiene
+firmadas las autorizaciones de uso de imagen**, así que no se publica. El
+ocultamiento va en cuatro frentes a la vez, no en uno:
+
+| Frente | Cómo |
+|--------|------|
+| Navegación | El ítem sigue comentado en `NAV_ITEMS` (`src/lib/constants.ts`) |
+| Buscadores | `noindex, nofollow` vía el prop `noindex` de `BaseLayout` → `SEOHead` |
+| Sitemap | El filtro de `astro.config.mjs` excluye `/equipo`, como ya excluía `/enlaces` |
+| Buscador del sitio | Una página `noindex` cambia `data-pagefind-body` por `data-pagefind-ignore="all"` en `BaseLayout` — si no, Pagefind la devolvería desde la cabecera |
+
+Ese último punto es el que se olvida: sin él la página oculta reaparece en el
+buscador interno, que es exactamente por donde la encontraría una familia.
+
+**Solo adultos, y dicho en la propia página.** La bajada del `h1` declara que
+ahí aparecen únicamente personas mayores de edad y que los perfiles de los
+deportistas —niños y jóvenes— no se publican. Es la misma decisión que ya
+tomaron los `tags` de las crónicas (§20) y el tablero de la temporada (§26),
+esta vez escrita donde el lector la ve.
+
+**Sin datos, la página se sostiene igual.** `src/content/directivos/` existe con
+solo su `README.md` —excluido del loader con un patrón negativo, porque la
+colección carga `**/*.md` y ahí un README sí entraría—, así que hoy
+`summarizeStaff()` devuelve `null`, `groupStaffByArea()` devuelve `[]` y lo que
+se pinta es la entrada y el paso siguiente a `/programas`. Ni una tarjeta de
+ejemplo, ni un "próximamente", ni un nombre inventado: la misma regla de
+`summarizePrograms()` y `summarizeStandings()`.
+
+**El vocabulario.** `STAFF_AREAS` (`src/lib/staff.ts`) reparte los doce roles
+del schema en dos áreas con orden de lectura —quién responde legalmente por el
+club, y quién está en la pista— y declara para cada una a qué pregunta responde,
+igual que `DOCUMENT_CATEGORIES` en Transparencia. Un rol que el vocabulario no
+conozca cae en el cuerpo técnico en vez de perder a la persona, y el área que
+nadie ocupa no se pinta.
+
+**El schema ganó `draft`, nada más.** `directivosSchema` ya cubría nombre, rol,
+credenciales, orden y foto opcional. Solo faltaba el interruptor que el resto de
+colecciones sí tiene: `draft` (por defecto `false`, así que ninguna ficha
+existente cambia de comportamiento) para guardar una ficha sin publicarla
+mientras no haya autorización de imagen. Se replicó en el `config.yml` de
+Sveltia, como exige `CLAUDE.md`.

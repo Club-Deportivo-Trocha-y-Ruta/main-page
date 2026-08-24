@@ -13,6 +13,12 @@ plural: "Ceibas"
 feminine: true
 ---
 
-La ceiba (*Ceiba pentandra*) es uno de los árboles más grandes y emblemáticos de los trópicos americanos. Su tronco grueso con contrafuertes basales, sus ramas horizontales y su copa en paraguas la hacen inconfundible. En el Valle del Cauca crece en zonas cálidas y húmedas, y su presencia en un espacio es señal de ecosistema maduro y saludable.
+La Ceiba se sembró el 3 de mayo de 2026 en la pista Carlos Castro, protegida con una llanta de bicicleta reciclada.
 
-Los frutos de la ceiba contienen fibras blancas llamadas kapok, usadas tradicionalmente para relleno de almohadas y salvavidas. La siembra de una ceiba en la pista Carlos Castro es un acto de visión a largo plazo: este árbol puede vivir más de 200 años, convirtiéndose en testigo de generaciones de corredores de Trocha y Ruta.
+La donó Helmut Ortiz, presidente del club. Es una siembra pensada en el largo plazo: la ceiba puede vivir siglos, así que este árbol será testigo de varias generaciones de corredores de Trocha y Ruta.
+
+## Sobre la especie
+
+La ceiba (*Ceiba pentandra*) es uno de los árboles más grandes y emblemáticos de los trópicos americanos, capaz de alcanzar los 70 metros. Su tronco grueso con contrafuertes basales, sus ramas horizontales y su copa en paraguas la hacen inconfundible. En el Valle del Cauca crece en zonas cálidas y húmedas, y su presencia en un lugar es señal de ecosistema maduro.
+
+Sus frutos contienen fibras blancas llamadas kapok, usadas tradicionalmente para relleno de almohadas y salvavidas. Para los mayas era el árbol sagrado, el eje del universo que conectaba el inframundo, la tierra y el cielo.

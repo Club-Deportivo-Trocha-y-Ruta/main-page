@@ -11,6 +11,12 @@ uses: ["ornamental", "sombrío", "alimentación", "medicinal"]
 draft: false
 ---
 
+El Almendro se sembró el 3 de mayo de 2026 en la pista Carlos Castro, protegido con una llanta de bicicleta reciclada.
+
+Lo donó Helmut Ortiz, presidente del club. Con el tiempo, su copa amplia dará sombra sobre la pista y sus frutos atraerán fauna silvestre; sus hojas, al caer en tonos rojos y anaranjados, marcarán cada cambio de estación.
+
+## Sobre la especie
+
 El almendro tropical (*Terminalia catappa*) es un árbol caducifolio de la familia Combretaceae que puede alcanzar 25 metros de altura. Su copa estratificada en pisos horizontales lo hace inconfundible y muy apreciado para arborización urbana y parques en toda Colombia, desde la costa Caribe hasta los valles interandinos.
 
-Los frutos del almendro contienen una semilla comestible similar a la almendra comercial, aunque más pequeña; aves y roedores son sus principales dispersores. En Yumbo, estos árboles se han integrado al paisaje urbano y sus hojas secas de color rojo-naranja anuncian cada cambio de estación con una paleta natural extraordinaria.
+Sus frutos contienen una semilla comestible similar a la almendra comercial, aunque más pequeña; aves y roedores son sus principales dispersores. Una curiosidad conocida por los acuaristas: sus hojas al caer se vuelven rojo intenso y se usan para acidificar acuarios.

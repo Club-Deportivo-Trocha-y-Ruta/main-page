@@ -16,6 +16,7 @@ import NewsCard from '@components/common/NewsCard.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
 import StatFigure from '@components/editorial/StatFigure.astro';
+import SeasonStandings from '@components/sections/SeasonStandings.astro';
 import { groupByMonth, summarizeNews } from '@lib/news';
 
 type NewsEntry = CollectionEntry<'news'>;
@@ -23,6 +24,15 @@ type NewsEntry = CollectionEntry<'news'>;
 const news = (await getCollection('news'))
   .filter((n: NewsEntry) => !n.data.draft)
   .sort((a: NewsEntry, b: NewsEntry) => b.data.date.getTime() - a.data.date.getTime());
+
+// El tablero de la general se arma con los resultados cargados y el calendario
+// —de ahí salen cuántas válidas faltan—. Con `results` vacía no pinta nada:
+// mientras el club no publique un resultado, la página queda igual que hoy.
+// La colección va entera porque hoy solo hay una temporada cargada:
+// `buildStandings()` no filtra por año (ver `src/content/results/README.md`),
+// así que al abrir la temporada siguiente hay que archivar la anterior.
+const results = await getCollection('results');
+const events = await getCollection('events');
 
 // La más reciente abre la página; el resto va al archivo por mes.
 const [latest, ...rest] = news;
@@ -88,11 +98,18 @@ const competitions = summary.byCategory.find((c) => c.category === 'competencias
           Lo último
         </h2>
 
+        {/*
+          `transitionName` encadena la portada con la imagen destacada de la
+          crónica al abrirla. El archivo de abajo no repite esta nota porque
+          `groupByMonth(rest)` ya excluye a `latest`: ningún id aparece dos
+          veces en la página, que es lo que exige `view-transition-name`.
+        */}
         <NewsCard
           class="mt-5"
           variant="lead"
           eager
           href={`/noticias/${latest.id}`}
+          transitionName={`news-img-${latest.id}`}
           title={latest.data.title}
           date={latest.data.date}
           category={latest.data.category}
@@ -140,6 +157,7 @@ const competitions = summary.byCategory.find((c) => c.category === 'competencias
                         <NewsCard
                           as="h4"
                           href={`/noticias/${post.id}`}
+                          transitionName={`news-img-${post.id}`}
                           title={post.data.title}
                           date={post.data.date}
                           category={post.data.category}
@@ -164,6 +182,8 @@ const competitions = summary.byCategory.find((c) => c.category === 'competencias
       <p class="py-12 text-center text-text-secondary">No hay noticias publicadas aún.</p>
     </SectionShell>
   )}
+
+  <SeasonStandings results={results} events={events} tone="tinted" />
 
   <SectionShell tone="plain" width="default" spacing="compact" label="Seguir al club">
     <div class="rounded-2xl border border-primary/20 bg-primary/5 px-6 py-8 text-center sm:px-10">

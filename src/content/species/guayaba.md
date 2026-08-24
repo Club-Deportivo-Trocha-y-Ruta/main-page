@@ -13,6 +13,10 @@ plural: "Guayabas"
 feminine: true
 ---
 
-La guayaba (*Psidium guajava*) es uno de los frutales más emblemáticos de Colombia, con una gran diversidad de variedades en todo el territorio nacional. Este árbol de la familia Myrtaceae es originario de América tropical y fue difundido por todo el mundo por los españoles y portugueses en el siglo XVI. En Colombia, la guayaba blanca y rosada son las más cultivadas, mientras que en el Valle del Cauca se producen variedades criollas de alta concentración de azúcar y aroma intenso.
+Una Guayaba común se sembró el 4 de abril de 2026 en la Pista de Ciclomontañismo Carlos Castro, dentro de una llanta de bicicleta reciclada pintada de rosado. Es la variedad clásica del programa Trocha Verde, junto a la Guayaba Pera.
 
-Los frutos de guayaba son ricos en vitamina C, vitamina A y licopeno, con más vitamina C que muchos cítricos. Sus hojas se usan en medicina tradicional para tratar la diarrea. En la pista Carlos Castro, las guayabas sembradas por los niños de Trocha y Ruta producirán frutos que podrán compartir con familias y visitantes, haciendo de cada entrenamiento una pequeña fiesta de sabores colombianos.
+## Sobre la especie
+
+La guayaba (*Psidium guajava*) es uno de los frutales más emblemáticos de Colombia y un árbol frutal originario de América tropical. Pertenece a la familia Myrtaceae y fue difundida por el mundo por españoles y portugueses en el siglo XVI. En el país conviven muchas variedades; en el Valle del Cauca son frecuentes las criollas de alta concentración de azúcar y aroma intenso.
+
+Sus frutos son ricos en vitamina C —más que muchos cítricos—, vitamina A y licopeno, y sus hojas se usan en medicina tradicional para tratar la diarrea. Cuando el árbol cargue, sus frutos podrán compartirse con las familias que llegan a los entrenamientos.

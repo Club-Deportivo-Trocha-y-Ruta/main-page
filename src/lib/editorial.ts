@@ -58,7 +58,7 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     inverted: false,
   },
   muted: {
-    surface: 'bg-gray-50 text-text-primary',
+    surface: 'bg-surface-tint text-text-primary',
     heading: 'text-text-primary',
     muted: 'text-text-secondary',
     eyebrow: 'text-primary-deep',

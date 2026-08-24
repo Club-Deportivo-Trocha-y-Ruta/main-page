@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { CTA_TRIAL_LABEL } from '@lib/constants';
 import { isActivePath } from '@lib/navigation';
 
 interface NavItem {
@@ -86,7 +87,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
         aria-label="Abrir menú de navegación"
-        className="inline-flex items-center justify-center rounded-md p-2.5 text-text-secondary hover:bg-gray-100 hover:text-primary-deep transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="inline-flex items-center justify-center rounded-md p-2.5 text-text-secondary hover:bg-surface-tint hover:text-primary-deep transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <line x1="3" y1="6" x2="21" y2="6" />
@@ -101,20 +102,22 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
           {/* Overlay */}
           {isOpen && (
             <div
-              className="fixed inset-0 z-40 bg-black/50 transition-opacity"
+              className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-[var(--duration-micro)] ease-spring starting:opacity-0 motion-reduce:transition-none"
               onClick={close}
               aria-hidden="true"
             />
           )}
 
-          {/* Drawer */}
+          {/* Drawer: desliza por el mismo mecanismo de siempre (translate-x-full/0 vía
+              clase condicional, no montaje condicional), solo con el vocabulario de
+              motion del plan — ease-spring y duration-micro en vez de ease-in-out/300ms. */}
           <div
             ref={menuRef}
             id="mobile-menu"
             role="dialog"
             aria-modal="true"
             aria-label="Menú de navegación"
-            className={`fixed top-0 right-0 z-50 h-full w-72 max-w-[85vw] bg-white shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+            className={`fixed top-0 right-0 z-50 h-full w-72 max-w-[85vw] bg-white shadow-xl flex flex-col transform transition-transform duration-[var(--duration-micro)] ease-spring motion-reduce:transition-none ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
           >
             {/* Close button */}
             <div className="flex items-center justify-between p-4 border-b border-gray-100 shrink-0">
@@ -122,7 +125,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
               <button
                 onClick={close}
                 aria-label="Cerrar menú"
-                className="rounded-md p-2 text-text-secondary hover:bg-gray-100 hover:text-primary-deep transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="rounded-md p-2 text-text-secondary hover:bg-surface-tint hover:text-primary-deep transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <line x1="18" y1="6" x2="6" y2="18" />
@@ -143,7 +146,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
                       className={`block rounded-md px-3 py-3 text-sm font-medium transition-colors ${
                         isActive(item.href)
                           ? 'bg-primary/10 text-primary-deep font-semibold'
-                          : 'text-text-secondary hover:bg-gray-50 hover:text-primary-deep'
+                          : 'text-text-secondary hover:bg-surface-tint hover:text-primary-deep'
                       }`}
                     >
                       {item.label}
@@ -164,7 +167,7 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
                       className={`block rounded-md px-3 py-3 text-sm transition-colors ${
                         isActive(item.href)
                           ? 'text-primary-deep font-semibold'
-                          : 'text-text-secondary hover:bg-gray-50 hover:text-primary-deep'
+                          : 'text-text-secondary hover:bg-surface-tint hover:text-primary-deep'
                       }`}
                     >
                       {item.label}
@@ -174,12 +177,26 @@ export default function MobileMenu({ navItems, secondaryNavItems, currentPath }:
               </ul>
 
               <div className="mt-6">
+                {/*
+                  El CTA del header ya no está oculto en móvil, pero este sigue siendo el que
+                  ve quien abre el menú, y el 82% del tráfico llega desde móvil. Dice lo mismo
+                  que el resto del sitio (`CTA_TRIAL_LABEL`): el botón se llamaba
+                  "Preinscríbete" aquí y "Clase de prueba gratis" en hero y banners, así que
+                  `cta_inscripcion_click` mezclaba dos promesas distintas.
+
+                  El `data-analytics-event` funciona pese al portal: el listener de
+                  `Analytics.astro` es un `click` delegado en `document` con `closest()`, y el
+                  drawer se monta en `document.body`, dentro del árbol que ese listener observa.
+                  Sin el atributo, el clic no se ve y el evento queda en cero — es justo lo que
+                  pasó entre mayo y agosto de 2026.
+                */}
                 <a
                   href="/inscripciones"
                   onClick={close}
+                  data-analytics-event="cta_inscripcion_click"
                   className="flex w-full items-center justify-center rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
-                  Preinscríbete
+                  {CTA_TRIAL_LABEL}
                 </a>
               </div>
             </nav>

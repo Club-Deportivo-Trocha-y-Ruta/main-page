@@ -12,6 +12,14 @@ draft: false
 plural: "Mangos Manzana"
 ---
 
-El mango manzana es una variedad de *Mangifera indica* caracterizada por su fruto redondeado con epidermis que vira a rojo-anaranjado en la madurez, evocando visualmente una manzana. Su pulpa es de color amarillo intenso, firme y de sabor dulce con notas cítricas, con poca fibra y un hueso relativamente pequeño. Es una de las variedades más cultivadas en jardines familiares y huertas del Valle del Cauca.
+Dos Mangos Manzana crecen hoy en la Pista de Ciclomontañismo Carlos Castro. Los dos se sembraron el mismo día, el 22 de abril de 2026, durante la Sembratón del Día de la Tierra, y los dos están protegidos con llantas de bicicleta recicladas. El segundo crecerá junto al área de entrenamiento de los más pequeños del club.
 
-El árbol es de porte mediano a grande y productivo desde el tercer año. Sus flores en espiga blanquecina atraen abejas y mariposas, haciendo del mango manzana un árbol ecológicamente benéfico además de gastronómicamente apreciado. En la pista Carlos Castro, esta variedad suma a la colección de mangos del programa Trocha Verde una expresión diferente de la diversidad varietal de una misma especie.
+Los dos son un regalo de los amigos de Óscar Eduardo Ortiz —compañeros de trabajo que se sumaron a la jornada de siembra— y llegaron como plantones ya de buen tamaño, listos para arrancar el crecimiento.
+
+Con estos dos, la colección de mangos del programa Trocha Verde se amplía a otra variedad: los niños que entrenan en la pista podrán ir viendo, en unos años, cómo la misma especie se expresa de formas distintas según cuál variedad haya dado el fruto.
+
+## Sobre la variedad
+
+El mango manzana es una variedad de *Mangifera indica* caracterizada por su fruto redondeado, con epidermis que vira a rojo-anaranjado en la madurez y evoca visualmente una manzana. La pulpa es amarilla intensa, firme y dulce, con notas cítricas, poca fibra y hueso relativamente pequeño. Es una de las variedades más cultivadas en jardines familiares y huertas del Valle del Cauca.
+
+El árbol es de porte mediano a grande y empieza a producir desde el tercer año. Sus flores en espiga blanquecina atraen abejas y mariposas, con lo cual el aporte del árbol va más allá del fruto: alimenta también la red de polinizadores del entorno.

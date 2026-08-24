@@ -13,6 +13,12 @@ plural: "Pomarrosas"
 feminine: true
 ---
 
-La pomarrosa (*Syzygium jambos*) es un árbol de la familia Myrtaceae originario del sureste asiático que llegó a América con los portugueses y españoles en el siglo XVI. En Colombia se le encuentra en bordes de quebrada, jardines y fincas de los climas medios y cálidos del interior del país. Su nombre evoca el aroma característico de sus frutos: pequeñas esferas blancas o rosadas con fragancia intensa a agua de rosas.
+Hay una Pomarrosa en la pista Carlos Castro, sembrada el 22 de abril de 2026 durante la Sembratón del Día de la Tierra y protegida con una llanta de bicicleta reciclada.
 
-Los frutos de pomarrosa se consumen frescos, en jugos, jaleas y licores artesanales. Su copa densa y crecimiento moderado la convierten en un árbol de sombrío excelente para zonas recreativas. En el Valle del Cauca, la pomarrosa es frecuente en fincas cafeteras y solares de casas de pueblo donde ofrece sombra y frutos aromáticos durante casi todo el año.
+La donó el Sr. Vladimir. Sus frutos aromáticos son perfectos para que los niños del club los descubran.
+
+## Sobre la especie
+
+La pomarrosa (*Syzygium jambos*) es un árbol de la familia Myrtaceae originario del sureste asiático que llegó a América con los portugueses y españoles en el siglo XVI. En Colombia se encuentra en bordes de quebrada, jardines y fincas de los climas medios y cálidos del interior del país. Su nombre evoca el aroma característico de sus frutos: pequeñas esferas blancas o rosadas con fragancia intensa a agua de rosas.
+
+Los frutos se consumen frescos, en jugos, jaleas y licores artesanales. Su copa densa y su crecimiento moderado la convierten en un buen árbol de sombrío para zonas recreativas. En el Valle del Cauca es frecuente en fincas cafeteras y solares de casas de pueblo.

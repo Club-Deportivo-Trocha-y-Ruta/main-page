@@ -28,7 +28,7 @@ const enableGA4 = Boolean(ga4Id);
         if (stored === 'granted') {
           gtag('consent', 'update', { analytics_storage: 'granted' });
         }
-      } catch (e) {}
+      } catch {}
       gtag('js', new Date());
       gtag('config', ga4Id, { anonymize_ip: true, send_page_view: true });
     </script>
@@ -50,14 +50,14 @@ const enableGA4 = Boolean(ga4Id);
               if (item.kind === 'pageview') p.trackPageview(item.path, item.title);
               else if (item.kind === 'event') p.trackEvent(item.event);
               else if (item.kind === 'consent') p.setConsent(item.status);
-            } catch (e) {}
+            } catch {}
           }
         }
 
         function registerProvider(p) {
           if (state.providers.some((x) => x.id === p.id)) return;
           state.providers.push(p);
-          try { p.init(); } catch (e) {}
+          try { p.init(); } catch {}
           state.ready = true;
           while (state.queue.length > 0) {
             const item = state.queue.shift();
@@ -65,24 +65,68 @@ const enableGA4 = Boolean(ga4Id);
           }
         }
 
+        // `window.gtag` no lo define este script: lo crea el snippet de forward de
+        // Partytown, y el orden respecto a este bloque no está garantizado. Antes se
+        // hacía `if (typeof window.gtag !== 'function') return`, así que cualquier
+        // interacción temprana —un clic en el CTA nada más cargar— se descartaba en
+        // silencio. Ahora se retiene y se drena en cuanto el puente existe. El techo
+        // de 10 s evita dejar un intervalo vivo si Partytown nunca llega a cargar.
+        const pendingCalls = [];
+        let drainTimer = null;
+        let drainAttempts = 0;
+
+        function stopDraining() {
+          if (drainTimer === null) return;
+          clearInterval(drainTimer);
+          drainTimer = null;
+        }
+
+        function drainPending() {
+          if (typeof window.gtag !== 'function') {
+            drainAttempts += 1;
+            if (drainAttempts > 100) {
+              pendingCalls.length = 0;
+              stopDraining();
+            }
+            return;
+          }
+          stopDraining();
+          while (pendingCalls.length > 0) {
+            const call = pendingCalls.shift();
+            try { call(); } catch {}
+          }
+        }
+
+        function withGtag(call) {
+          if (typeof window.gtag === 'function') {
+            try { call(); } catch {}
+            return;
+          }
+          pendingCalls.push(call);
+          if (drainTimer === null) drainTimer = setInterval(drainPending, 100);
+        }
+
         registerProvider({
           id: 'ga4',
           init() {},
           trackPageview(path, title) {
-            if (typeof window.gtag !== 'function') return;
-            window.gtag('event', 'page_view', {
-              page_path: path,
-              page_title: title,
-              send_to: ga4Id,
+            withGtag(function () {
+              window.gtag('event', 'page_view', {
+                page_path: path,
+                page_title: title,
+                send_to: ga4Id,
+              });
             });
           },
           trackEvent(event) {
-            if (typeof window.gtag !== 'function') return;
-            window.gtag('event', event.name, event.params || {});
+            withGtag(function () {
+              window.gtag('event', event.name, event.params || {});
+            });
           },
           setConsent(status) {
-            if (typeof window.gtag !== 'function') return;
-            window.gtag('consent', 'update', { analytics_storage: status });
+            withGtag(function () {
+              window.gtag('consent', 'update', { analytics_storage: status });
+            });
           },
         });
 

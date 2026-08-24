@@ -13,21 +13,10 @@
  */
 
 export type EventCategory =
-  | 'xco'
-  | 'xcm'
-  | 'ruta'
-  | 'enduro'
-  | 'recreativo'
-  | 'social'
-  | 'entrenamiento';
+  'xco' | 'xcm' | 'ruta' | 'enduro' | 'recreativo' | 'social' | 'entrenamiento';
 
 export type EventLevel =
-  | 'municipal'
-  | 'departamental'
-  | 'regional'
-  | 'nacional'
-  | 'internacional'
-  | 'interno';
+  'municipal' | 'departamental' | 'regional' | 'nacional' | 'internacional' | 'interno';
 
 export type EventStatus = 'upcoming' | 'ongoing' | 'past' | 'cancelled';
 
@@ -177,6 +166,8 @@ export interface Season<T> {
   /** Fechas ya corridas (incluye la que está en curso). */
   completed: number;
   total: number;
+  /** Fechas del calendario que se cayeron. Se siguen pintando, pero no se corren. */
+  cancelled: number;
   /** Avance de la temporada en %, para pintar la barra. */
   progressPct: number;
   next: SeasonStop<T> | null;
@@ -217,13 +208,40 @@ export function buildSeason<T extends SeasonInput>(events: T[], now: Date = new 
   }));
 
   const completed = stops.filter((s) => s.status === 'past' || s.status === 'ongoing').length;
+  const cancelled = stops.filter((s) => s.status === 'cancelled').length;
 
   return {
     year,
     stops,
     completed,
     total: stops.length,
+    cancelled,
     progressPct: stops.length === 0 ? 0 : Math.round((completed / stops.length) * 10000) / 100,
     next: stops.find((s) => s.status === 'upcoming' || s.status === 'ongoing') ?? null,
   };
+}
+
+/**
+ * Las fechas canceladas que todavía no han pasado, en orden.
+ *
+ * Una válida cancelada no compite por ser "la próxima" —el orden se leería
+ * torcido—, pero tampoco puede desaparecer: quien ya la tenía apuntada necesita
+ * enterarse. Las de meses atrás, no. El corte va por día (`AAAA-MM-DD` en la
+ * zona del club, igual que todo este módulo) y no por milisegundos: comparar
+ * contra `Date.now()` descartaría la fecha del día mismo desde las 7 p.m. del
+ * día anterior en Bogotá, porque el frontmatter es medianoche UTC.
+ *
+ * Vive aquí y no en cada página porque la portada y `/calendario` muestran la
+ * misma lista y no pueden discrepar.
+ */
+export function cancelledAhead<T extends SeasonInput>(events: T[], now: Date = new Date()): T[] {
+  const today = clubToday(now);
+
+  return events
+    .filter(
+      (event) =>
+        resolveEventStatus(event.data, now) === 'cancelled' &&
+        eventDay(event.data.endDate ?? event.data.date) >= today,
+    )
+    .sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
 }

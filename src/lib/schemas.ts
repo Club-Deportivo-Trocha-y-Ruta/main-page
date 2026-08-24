@@ -88,10 +88,23 @@ export const directivosSchema = z.object({
   yearJoined: z.number().optional(),
   active: z.boolean().default(true),
   order: z.number().default(0),
+  /**
+   * Mismo interruptor que el resto de colecciones: una ficha a medio cargar
+   * —o sin autorización de imagen firmada— se guarda sin publicarse. Aditivo:
+   * las fichas que no lo declaren siguen siendo publicables.
+   */
+  draft: z.boolean().default(false),
 });
 
 export const newsSchema = z.object({
   title: z.string(),
+  /**
+   * Acepta fecha sola (`2026-08-02`) u hora completa con offset colombiano
+   * (`2026-08-02T18:30:00-05:00`). Google News ordena por frescura usando la
+   * marca de tiempo, así que la hora real vale para una crónica publicada el
+   * mismo día de la válida; sin ella se asume medianoche de Bogotá.
+   * La conversión a ISO con offset vive en `toColombiaIso` (`src/lib/seo.ts`).
+   */
   date: z.coerce.date(),
   updatedDate: z.coerce.date().optional(),
   author: z.string().default('Club Trocha y Ruta'),
@@ -377,3 +390,33 @@ export const treesSchema = z.object({
   order: z.number().default(0),
   seo: seoSchema.optional(),
 });
+
+// ============================================================
+// HITOS DE LA HISTORIA DEL CLUB (línea de tiempo)
+// ============================================================
+
+/**
+ * Un hito del recorrido del club. `label` no siempre es un año ("La casa",
+ * "Hoy"), así que el orden lo manda `order` y no la fecha.
+ *
+ * `body` admite marcadores `{{clave}}` que se resuelven en build contra las
+ * cifras vivas del sitio (ver `renderMilestoneText` en `src/lib/milestones.ts`),
+ * para que un dato como el número de árboles no quede congelado en el texto.
+ *
+ * `image` es el nombre del archivo dentro de `src/assets/images/refresh/`.
+ */
+export const milestonesSchema = z
+  .object({
+    label: z.string(),
+    title: z.string(),
+    body: z.string(),
+    icon: z.string().optional(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    order: z.number().default(0),
+    draft: z.boolean().default(false),
+  })
+  .refine((data) => !data.image || Boolean(data.imageAlt?.trim()), {
+    message: 'imageAlt es obligatorio cuando el hito tiene image',
+    path: ['imageAlt'],
+  });

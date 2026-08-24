@@ -1,0 +1,85 @@
+---
+/**
+ * El riel compacto de la temporada: la versión de una línea de `SeasonTrack`.
+ *
+ * `SeasonTrack` es el recorrido navegable de `/calendario` —cada parada enlaza
+ * a su fecha, con día, mes y ciudad—. Aquí no cabe nada de eso: el riel vive
+ * dentro de la tarjeta de pulso del hero, donde solo tiene que responder "¿en
+ * qué punto va el año?" sin robarle la mirada al titular. Por eso es una hoja
+ * sin enlaces, sin JS y sin texto sobre las paradas.
+ *
+ * El vocabulario visual sí es el mismo que el del riel grande: barra llena
+ * hasta donde va la temporada, paradas corridas en teal profundo, la que sigue
+ * en lima y la cancelada en hueco. Y la misma regla de accesibilidad: el dibujo
+ * va `aria-hidden` y el dato equivalente viaja como texto.
+ *
+ * Ningún estado se distingue solo por color: la cancelada lleva además la
+ * barrita diagonal y la que sigue es más grande que las demás.
+ */
+import type { Season, SeasonStop } from '@lib/calendar';
+
+interface Props {
+  season: Season<{ id: string; data: { title: string } }>;
+  class?: string;
+}
+
+const { season, class: className } = Astro.props;
+
+type Stop = SeasonStop<{ id: string; data: { title: string } }>;
+
+const isNext = (stop: Stop) => season.next?.id === stop.id;
+const isCancelled = (stop: Stop) => stop.status === 'cancelled';
+
+// La que sigue manda: es más grande que cualquier otra parada, no solo lima.
+const NEXT_DOT = 'size-4 bg-accent ring-4 ring-accent/25';
+
+const dot: Record<string, string> = {
+  past: 'size-2.5 bg-primary-deep',
+  ongoing: 'size-2.5 bg-primary-deep',
+  upcoming: 'size-2.5 bg-surface ring-2 ring-primary-deep/25',
+  cancelled: 'size-2.5 bg-surface ring-2 ring-black/25',
+};
+
+const dotFor = (stop: Stop) => (isNext(stop) ? NEXT_DOT : (dot[stop.status] ?? dot.upcoming));
+
+// El equivalente en texto de todo lo que dibuja el riel. Se arma aquí y no en
+// el marcado para que no se cuelen saltos de línea entre las cifras.
+const cancelledNote =
+  season.cancelled === 0
+    ? ''
+    : season.cancelled === 1
+      ? ', 1 cancelada'
+      : `, ${season.cancelled} canceladas`;
+
+const summary = `Temporada ${season.year}: ${season.completed} de ${season.total} fechas corridas${cancelledNote}.`;
+---
+
+{
+  season.stops.length > 0 && (
+    <div class:list={['not-prose', className]}>
+      <div class="relative h-6" aria-hidden="true">
+        <div class="bg-surface-muted/50 absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full" />
+        <div
+          class="bg-primary-deep absolute top-1/2 left-0 h-1.5 -translate-y-1/2 rounded-full"
+          style={`width:${season.progressPct}%`}
+        />
+
+        <ol class="absolute inset-0">
+          {season.stops.map((stop) => (
+            <li
+              class="absolute top-1/2 flex size-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+              style={`left:${stop.pct}%`}
+            >
+              <span class:list={['block rounded-full', dotFor(stop)]} />
+              {isCancelled(stop) && (
+                <span class="absolute h-0.5 w-4 -rotate-45 rounded-full bg-[#b42318]" />
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <p class="sr-only">{summary}</p>
+    </div>
+  )
+}

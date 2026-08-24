@@ -39,77 +39,111 @@ const latestNewsSlug = latestInitiative?.data.relatedNews?.[0];
 ---
 
 <SectionShell tone="tinted" width="wide" labelledby="trocha-verde-heading">
-  <div class="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
-      <!-- Mosaico de imágenes -->
-      <div class="grid grid-cols-2 gap-3">
-        <div class="col-span-2">
-          <Image
-            src={carretilla}
-            alt="Carretilla reciclada y pintada como jardín decorativo en la pista de ciclomontañismo"
-            class="rounded-2xl w-full aspect-[16/9] object-cover shadow-lg"
-            loading="lazy"
-          />
-        </div>
+  <div class="grid items-center gap-8 md:grid-cols-2 lg:gap-12">
+    <!-- Mosaico de imágenes -->
+    <div class="grid grid-cols-2 gap-3">
+      <div class="col-span-2">
         <Image
-          src={guayacanLila}
-          alt="Guayacán plantado en llanta reciclada pintada de rosado"
-          class="rounded-xl w-full aspect-square object-cover shadow-md"
-          loading="lazy"
-        />
-        <Image
-          src={mangoMorada}
-          alt="Mango plantado en llanta reciclada pintada de morado"
-          class="rounded-xl w-full aspect-square object-cover shadow-md"
+          src={carretilla}
+          alt="Carretilla reciclada y pintada como jardín decorativo en la pista de ciclomontañismo"
+          class="aspect-[16/9] w-full rounded-2xl object-cover shadow-lg"
           loading="lazy"
         />
       </div>
+      <Image
+        src={guayacanLila}
+        alt="Guayacán plantado en llanta reciclada pintada de rosado"
+        class="aspect-square w-full rounded-xl object-cover shadow-md"
+        loading="lazy"
+      />
+      <Image
+        src={mangoMorada}
+        alt="Mango plantado en llanta reciclada pintada de morado"
+        class="aspect-square w-full rounded-xl object-cover shadow-md"
+        loading="lazy"
+      />
+    </div>
 
-      <!-- Texto -->
-      <div>
-        <SectionIntro
-          id="trocha-verde-heading"
-          eyebrow="Trocha Verde"
-          eyebrowIcon="ph:plant-bold"
-          title="Donde cada pedalada deja raíces"
-          highlight="deja raíces"
-          lead="El club no solo forma ciclistas: cuida el terreno donde pedalean. Llantas de bicicleta convertidas en protectores de árboles, carretillas viejas en jardines y ladrillos en letreros artesanales."
-        />
+    <!-- Texto -->
+    <div>
+      <SectionIntro
+        id="trocha-verde-heading"
+        eyebrow="Trocha Verde"
+        eyebrowIcon="ph:plant-bold"
+        title="Donde cada pedalada deja raíces"
+        highlight="deja raíces"
+        lead="El club no solo forma ciclistas: cuida el terreno donde pedalean. Llantas de bicicleta convertidas en protectores de árboles, carretillas viejas en jardines y ladrillos en letreros artesanales."
+      />
 
-        <!-- Contadores dinámicos (acumulado histórico) -->
-        <p class="mt-8 text-xs font-semibold uppercase tracking-wider text-text-secondary">
-          Acumulado del programa
-        </p>
-        <div class="flex gap-6 mt-2">
-          <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 text-accent-deep">
-              <Icon name="ph:tree-bold" class="h-5 w-5" aria-hidden="true" />
-            </div>
-            <div>
-              <p class="text-xl font-bold font-display text-text-primary">{totalTrees}</p>
-              <p class="text-xs text-text-secondary">Árboles sembrados</p>
-            </div>
+      <!-- Contadores dinámicos (acumulado histórico) -->
+      <p class="text-text-secondary mt-8 text-xs font-semibold tracking-wider uppercase">
+        Acumulado del programa
+      </p>
+      <div class="reveal mt-2 flex gap-6">
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-accent/20 text-accent-deep flex h-10 w-10 items-center justify-center rounded-full"
+          >
+            <Icon name="ph:tree-bold" class="h-5 w-5" aria-hidden="true" />
           </div>
-          <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 text-accent-deep">
-              <Icon name="ph:recycle-bold" class="h-5 w-5" aria-hidden="true" />
-            </div>
-            <div>
-              <p class="text-xl font-bold font-display text-text-primary">{totalRecycled}</p>
-              <p class="text-xs text-text-secondary">Llantas recicladas</p>
-            </div>
+          <div>
+            <p class="font-display text-text-primary text-xl font-bold">
+              <!-- Count-up CSS puro (docs/06-plan-animaciones.md Fase 4 Tarea 11):
+                     ver comentario del <style> al final del archivo. --tv-count es
+                     decorativo/aria-hidden; el sr-only es la cifra que leen lectores
+                     de pantalla, siempre la final, nunca el conteo intermedio. -->
+              <span class="tv-count" style={`--count-target:${totalTrees}`}>
+                <span class="tv-count__digits" aria-hidden="true"></span>
+                <span class="sr-only">{totalTrees}</span>
+              </span>
+            </p>
+            <p class="text-text-secondary text-xs">Árboles sembrados</p>
           </div>
         </div>
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-accent/20 text-accent-deep flex h-10 w-10 items-center justify-center rounded-full"
+          >
+            <Icon name="ph:recycle-bold" class="h-5 w-5" aria-hidden="true" />
+          </div>
+          <div>
+            <p class="font-display text-text-primary text-xl font-bold">{totalRecycled}</p>
+            <p class="text-text-secondary text-xs">Llantas recicladas</p>
+          </div>
+        </div>
+      </div>
 
-        <!-- Última jornada: contextualiza el acumulado con el dato reciente -->
-        {latestInitiative && (
-          <div class="mt-6 rounded-xl border border-accent/30 bg-surface/70 p-4">
-            <p class="text-xs font-semibold uppercase tracking-wider text-accent-deep">
+      <!-- Fallback sin JS: si el observer de `.reveal` (BaseLayout.astro) no
+             corre, `.revealed` no llega nunca y --tv-count se quedaría en 0 para
+             siempre (ver el <style> del final). `<noscript>` solo se parsea sin
+             JS, así que este bloque nunca existe con JS activo — `is:inline` es
+             obligatorio: sin él Astro saca el <style> del <noscript> y lo mete
+             en el bundle que carga siempre, con o sin JS, y el fallback dejaría
+             de servir para nada. -->
+      <noscript>
+        <style is:inline>
+          .tv-count__digits {
+            --tv-count: var(--count-target) !important;
+          }
+          /* El mismo observer pinta `.reveal`: sin JS la rejilla entera se
+               quedaría en opacity 0 y la cifra no se vería aunque su contador
+               sí tuviera el valor final. */
+          .reveal {
+            opacity: 1 !important;
+            transform: none !important;
+          }
+        </style>
+      </noscript>
+
+      <!-- Última jornada: contextualiza el acumulado con el dato reciente -->
+      {
+        latestInitiative && (
+          <div class="border-accent/30 bg-surface/70 mt-6 rounded-xl border p-4">
+            <p class="text-accent-deep text-xs font-semibold tracking-wider uppercase">
               Última jornada · {formatDate(latestInitiative.data.date)}
             </p>
-            <p class="mt-1 text-sm text-text-primary font-medium">
-              {latestInitiative.data.title}
-            </p>
-            <p class="mt-1 text-sm text-text-secondary">
+            <p class="text-text-primary mt-1 text-sm font-medium">{latestInitiative.data.title}</p>
+            <p class="text-text-secondary mt-1 text-sm">
               {[
                 latestInitiative.data.impact?.treesPlanted !== undefined
                   ? `${latestInitiative.data.impact.treesPlanted} árboles`
@@ -120,26 +154,85 @@ const latestNewsSlug = latestInitiative?.data.relatedNews?.[0];
                 latestInitiative.data.allies.length > 0
                   ? `${latestInitiative.data.allies.length} aliados`
                   : null,
-              ].filter(Boolean).join(' · ')}
+              ]
+                .filter(Boolean)
+                .join(' · ')}
             </p>
             {latestNewsSlug && (
               <a
                 href={`/noticias/${latestNewsSlug}`}
-                class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-accent-deep underline underline-offset-2 hover:text-accent-deep"
+                class="text-accent-deep hover:text-accent-deep mt-2 inline-flex items-center gap-1 text-sm font-semibold underline underline-offset-2"
               >
                 Lee la crónica
                 <Icon name="ph:arrow-right-bold" class="h-3.5 w-3.5" aria-hidden="true" />
               </a>
             )}
           </div>
-        )}
+        )
+      }
 
-        <!-- CTA -->
-        <div class="mt-8">
-          <Button href="/trocha-verde" variant="accent">
-            Conoce Trocha Verde
-          </Button>
-        </div>
+      <!-- CTA -->
+      <div class="mt-8">
+        <Button href="/trocha-verde" variant="accent"> Conoce Trocha Verde </Button>
       </div>
+    </div>
   </div>
 </SectionShell>
+
+<style>
+  /* Count-up CSS puro del total de árboles (docs/06-plan-animaciones.md, Fase
+     4 Tarea 11). Cero JS nuevo: el disparador es el cambio de clase
+     `.reveal` → `.revealed` que ya añade el IntersectionObserver de
+     BaseLayout.astro — el mismo mecanismo que ya usan SeasonOverview,
+     ProgramsGrid, RaceLineup, etc.
+
+     Estado de reposo = cifra final SIEMPRE, en las tres capas de mejora
+     progresiva:
+       1. Sin `@property` (o sin soporte de `@supports at-rule()`, la forma
+          correcta de detectarlo — `@supports (prop: value)` no sirve para
+          probar un at-rule): el bloque de abajo nunca se activa y
+          `--tv-count` quedaría en `var(--count-target)`.
+       2. Con `@property` pero `prefers-reduced-motion: reduce`: la regla que
+          arranca en 0 vive dentro de `@media (prefers-reduced-motion:
+          no-preference)`, así que tampoco se activa.
+       3. Con soporte y sin esa preferencia, pero sin JS: `.revealed` nunca
+          llega (BaseLayout.astro es quien lo añade) y `--tv-count` se
+          quedaría en 0 para siempre — lo corrige el `<noscript>` del markup
+          de arriba, con `!important` porque compite con la misma
+          especificidad y no depende del orden de bundling.
+
+     El número real y accesible vive en un <span class="sr-only"> aparte del
+     dígito animado (aria-hidden): los lectores de pantalla leen la cifra
+     final del contenido (`totalTrees`, @lib/trocha-verde), nunca el conteo
+     intermedio. */
+  .tv-count__digits {
+    --tv-count: var(--count-target);
+    counter-reset: tv-count var(--tv-count);
+  }
+  .tv-count__digits::before {
+    content: counter(tv-count);
+  }
+
+  @supports at-rule(@property) {
+    @property --tv-count {
+      syntax: '<integer>';
+      inherits: false;
+      initial-value: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .tv-count__digits {
+        --tv-count: 0;
+        /* Duración fija fuera de --duration-micro/--duration-celebration a
+           propósito: el plan pide ~1–1.5s para este conteo, más largo que
+           ambos tokens (200ms/500ms) — mismo criterio que el shake de campo
+           inválido (300ms fijo, ver el bloque `field-` en global.css). */
+        transition: --tv-count 1.2s ease-out;
+      }
+
+      .reveal.revealed .tv-count__digits {
+        --tv-count: var(--count-target);
+      }
+    }
+  }
+</style>

@@ -12,6 +12,14 @@ draft: false
 plural: "Mangos Tommy"
 ---
 
-El mango Tommy Atkins (*Mangifera indica* 'Tommy Atkins') es la variedad de mango más exportada del mundo y Colombia la cultiva intensamente en los departamentos de Cundinamarca, Valle del Cauca y la región Caribe. Sus frutos grandes, con piel roja-verde-amarilla brillante, pulpa firme y vida útil prolongada en postcosecha lo convirtieron en el estándar de la industria exportadora hacia Europa y Norteamérica desde los años 90.
+Tres Mangos Tommy crecen hoy en la pista Carlos Castro, los tres protegidos con llantas de bicicleta recicladas. El primero se sembró el 1 de abril de 2026 y todavía se distingue por su llanta rosada; en sus primeras semanas ya mostraba un follaje vigoroso. Los otros dos llegaron tres semanas después, el 22 de abril, durante la Sembratón del Día de la Tierra.
 
-Aunque comercialmente domina el mercado de exportación, los aficionados prefieren variedades de sabor más complejo como el mango de azúcar o el hilacha. En la pista Carlos Castro, el Tommy Atkins amplía el conocimiento de los niños de Trocha y Ruta sobre la diversidad varietal del mango y la relación entre agricultura, economía y comercio internacional que atraviesa la vida de Colombia.
+Esos dos tienen padrino. Paula Santamaría y su familia eligieron el suyo pensando en la sombra que dará sobre el Pump Track. Elcy, mamá del deportista Ihsan, donó el otro para que creciera al lado de la pista en la que su hijo entrena cada semana.
+
+Ahí está la idea que sostiene esta parte de Trocha Verde: un frutal junto a una pista de ciclomontañismo no es decoración. Con los años dará sombra y fruta a quien entrene ahí. Los niños que hoy dan vueltas al circuito son los mismos que verán cargar estos árboles.
+
+## Sobre la variedad
+
+El Tommy Atkins (*Mangifera indica* 'Tommy Atkins') es la variedad de mango más exportada del mundo, y el Valle del Cauca es una de las regiones donde Colombia la cultiva. Sus frutos grandes, de piel roja y pulpa firme, aguantan bien el transporte, y eso la convirtió en el estándar de la industria exportadora.
+
+Curiosamente, los aficionados al mango prefieren variedades de sabor más complejo, como el de azúcar o el hilacha. Que en la pista haya un Tommy sirve justo para eso: para que los niños entiendan que detrás de una fruta hay decisiones de mercado, rutas de exportación y una economía que atraviesa la vida del país.

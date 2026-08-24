@@ -120,10 +120,12 @@ export default function ImageLightbox({ images }: Props) {
         ))}
       </div>
 
-      {/* Modal lightbox */}
+      {/* Modal lightbox: entrada tipo pop (fade del overlay + fade/scale del
+          visor) vía @starting-style — el nodo se monta de nuevo cada vez que
+          `isOpen` pasa a true, así que no hace falta `transition-discrete`. */}
       {isOpen && currentImage && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center animate-fade-in"
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center transition-opacity duration-[var(--duration-micro)] ease-spring starting:opacity-0 motion-reduce:transition-none"
           onClick={(e) => { if (e.target === e.currentTarget) close(); }}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
@@ -133,7 +135,7 @@ export default function ImageLightbox({ images }: Props) {
             role="dialog"
             aria-modal="true"
             aria-label="Visor de imágenes"
-            className="relative flex flex-col items-center max-w-full max-h-full px-4 py-8 md:px-16"
+            className="relative flex flex-col items-center max-w-full max-h-full px-4 py-8 md:px-16 transition-[opacity,scale] duration-[var(--duration-micro)] ease-spring starting:scale-95 starting:opacity-0 motion-reduce:transition-none"
           >
             {/* Close button */}
             <button

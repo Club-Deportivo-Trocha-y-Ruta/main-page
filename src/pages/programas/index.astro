@@ -12,6 +12,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import BaseLayout from '@layouts/BaseLayout.astro';
+import ScrollDepth from '@components/common/ScrollDepth.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
 import Badge from '@components/common/Badge.astro';
 import Button from '@components/common/Button.astro';
@@ -21,6 +22,7 @@ import SectionIntro from '@components/editorial/SectionIntro.astro';
 import StatFigure from '@components/editorial/StatFigure.astro';
 import FactGrid from '@components/editorial/FactGrid.astro';
 import ProgramPathway from '@components/sections/ProgramPathway.astro';
+import { CTA_TRIAL_LABEL } from '@lib/constants';
 import { getRefreshImage } from '@lib/refresh-images';
 import {
   buildPathway,
@@ -60,7 +62,14 @@ const entryAgeLabel = `a los ${entryAge} años`;
   description={`Tres etapas de formación en ciclomontañismo para niños y jóvenes en Yumbo: iniciación desde los ${entryAge} años, formación juvenil y alto rendimiento.`}
 >
   <!-- Entrada: orienta antes de mostrar el detalle -->
-  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="programas-titulo">
+  <SectionShell
+    tone="tinted"
+    pattern="topo"
+    width="wide"
+    spacing="compact"
+    labelledby="programas-titulo"
+    scrollDriven
+  >
     <Breadcrumb items={[{ label: 'Programas' }]} />
 
     <div class="mt-6 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
@@ -261,7 +270,7 @@ const entryAgeLabel = `a los ${entryAge} años`;
               Ver programa completo
             </Button>
             <Button variant="accent" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
-              Pedir clase de prueba
+              {CTA_TRIAL_LABEL}
             </Button>
           </div>
         </div>
@@ -276,4 +285,5 @@ const entryAgeLabel = `a los ${entryAge} años`;
       description="Escríbenos la edad de tu hijo y te decimos en qué etapa encaja. La primera clase es de prueba y no tiene costo."
     />
   </SectionShell>
+  <ScrollDepth target="main" />
 </BaseLayout>

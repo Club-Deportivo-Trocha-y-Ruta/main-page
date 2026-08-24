@@ -1,7 +1,8 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { axe } from 'vitest-axe';
+import { CTA_TRIAL_LABEL } from '@lib/constants';
 import MobileMenu from '../MobileMenu';
 
 const navItems = [
@@ -123,7 +124,34 @@ describe('MobileMenu', () => {
     render(<MobileMenu {...defaultProps} />);
     await user.click(screen.getByLabelText('Abrir menú de navegación'));
 
-    expect(screen.getByText('Preinscríbete')).toBeInTheDocument();
+    expect(screen.getByText(CTA_TRIAL_LABEL)).toBeInTheDocument();
+  });
+
+  // El botón se llamaba "Preinscríbete" aquí y "Clase de prueba gratis" en el hero y
+  // los banners: el mismo destino con dos promesas distintas y una sola métrica. La
+  // aserción va contra la constante para que renombrarla no deje textos sueltos.
+  it('el CTA usa la etiqueta única del sitio', async () => {
+    const user = userEvent.setup();
+    render(<MobileMenu {...defaultProps} />);
+    await user.click(screen.getByLabelText('Abrir menú de navegación'));
+
+    expect(CTA_TRIAL_LABEL).toBe('Clase de prueba gratis');
+    expect(screen.queryByText('Preinscríbete')).not.toBeInTheDocument();
+  });
+
+  // Sin `data-analytics-event` el clic delegado de `Analytics.astro` no lo registra y
+  // `cta_inscripcion_click` queda en cero pese a haber tráfico: exactamente lo que
+  // ocurrió entre mayo y agosto de 2026, con el 82% de las sesiones llegando desde
+  // móvil. Funciona pese al portal porque ese listener está en `document` y el drawer
+  // se monta en `document.body`.
+  it('el CTA móvil está instrumentado para analítica', async () => {
+    const user = userEvent.setup();
+    render(<MobileMenu {...defaultProps} />);
+    await user.click(screen.getByLabelText('Abrir menú de navegación'));
+
+    const cta = screen.getByText(CTA_TRIAL_LABEL).closest('a');
+    expect(cta).toHaveAttribute('href', '/inscripciones');
+    expect(cta).toHaveAttribute('data-analytics-event', 'cta_inscripcion_click');
   });
 
   // ─── Accesibilidad ───────────────────────────────────────

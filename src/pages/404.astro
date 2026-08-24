@@ -44,6 +44,11 @@ const controlPoints = buildControlPoints({ events, news, programs });
 // con un ciclista fuera de la traza (izquierda) y el regreso al camino
 // marcado (derecha). Los puntos t son de composición, no de contenido: no
 // hay una cifra que respalden, así que se quedan aquí y no en `not-found.ts`.
+//
+// El sendero se traza al entrar en pantalla (`.sda-trail`, misma pieza que
+// `ProgramPathway`); el ciclista no viaja por él a propósito: está fuera de
+// ruta, que es justo lo que cuenta la página. Su único movimiento sigue
+// siendo el bamboleo de más abajo.
 const profile = elevationProfile();
 const uid = uniqueSvgId('notfound');
 const LOST_AT = 0.4;
@@ -64,6 +69,7 @@ const backToRoute = elevationPointAt(BACK_AT);
     width="wide"
     spacing="compact"
     labelledby="error-404-titulo"
+    scrollDriven
   >
     <SectionIntro
       as="h1"
@@ -89,7 +95,7 @@ const backToRoute = elevationPointAt(BACK_AT);
         </span>
       </div>
 
-      <figure class="not-prose relative mt-3 h-48 sm:h-56 md:h-64">
+      <figure class="sda-trail not-prose relative mt-3 h-48 sm:h-56 md:h-64">
         <figcaption class="sr-only">
           Ilustración de un perfil de montaña: un ciclista aparece fuera de la traza marcada del
           sendero, a la izquierda del recorrido. Más adelante, sobre el camino, un marcador señala
@@ -112,25 +118,38 @@ const backToRoute = elevationPointAt(BACK_AT);
                 height="260"
               />
             </clipPath>
+
+            <!-- Barrido que traza el sendero al entrar en pantalla: quieto
+                 cubre todo el viewBox, así que sin animación se ve entero -->
+            <clipPath id={`${uid}-draw`}>
+              <rect class="sda-trail-sweep" x="0" y="0" width="1000" height="260" />
+            </clipPath>
           </defs>
 
           <!-- El terreno, sin marcar: donde nadie te guía todavía -->
           <path d={profile.area} class="text-primary/10" fill="currentColor" />
+          <!-- El tramo que sí lleva de vuelta a la ruta principal -->
           <path
-            d={profile.line}
-            fill="none"
-            class="text-primary-deep/45"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            vector-effect="non-scaling-stroke"
+            d={profile.area}
+            clip-path={`url(#${uid}-back)`}
+            class="text-accent/35"
+            fill="currentColor"
           />
 
-          <!-- El tramo que sí lleva de vuelta a la ruta principal -->
-          <g clip-path={`url(#${uid}-back)`}>
-            <path d={profile.area} class="text-accent/35" fill="currentColor" />
+          <!-- Los senderos, que se dibujan; el ciclista se queda fuera -->
+          <g clip-path={`url(#${uid}-draw)`}>
             <path
               d={profile.line}
+              fill="none"
+              class="text-primary-deep/45"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              vector-effect="non-scaling-stroke"
+            />
+            <path
+              d={profile.line}
+              clip-path={`url(#${uid}-back)`}
               fill="none"
               class="text-accent-deep"
               stroke="currentColor"
@@ -155,7 +174,7 @@ const backToRoute = elevationPointAt(BACK_AT);
 
         <!-- El ciclista, fuera de la traza: decorativo, el texto ya está en el figcaption -->
         <span
-          class="motion-safe:animate-pulse absolute flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-dashed border-primary-deep/60 bg-surface shadow-sm"
+          class="offroute-cyclist absolute flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-dashed border-primary-deep/60 bg-surface shadow-sm"
           style={`left:${offRoute.xPct}%;top:${offRoute.yPct}%`}
           aria-hidden="true"
         >
@@ -247,3 +266,27 @@ const backToRoute = elevationPointAt(BACK_AT);
     </div>
   </SectionShell>
 </BaseLayout>
+
+<style>
+  /* Bamboleo idle del ciclista fuera de traza (docs/06-plan-animaciones.md
+     Fase 4 Tarea 12): la única animación en loop permitida del plan, por ser
+     muy sutil (±2°) y vivir en una página sin lectura extensa. Pivota desde
+     la base del círculo, como si buscara el equilibrio parado sobre la
+     bicicleta, en vez de girar sobre su propio centro. */
+  @media (prefers-reduced-motion: no-preference) {
+    .offroute-cyclist {
+      animation: offroute-sway 3s ease-in-out infinite;
+      transform-origin: bottom;
+    }
+  }
+
+  @keyframes offroute-sway {
+    0%,
+    100% {
+      rotate: -2deg;
+    }
+    50% {
+      rotate: 2deg;
+    }
+  }
+</style>

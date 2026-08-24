@@ -10,6 +10,32 @@
  * eso se respeta `imageLayout`. Recortar un afiche a 16:9 se come el nombre de
  * la carrera, así que en ese caso se muestra completo sobre un fondo hecho con
  * el mismo archivo desenfocado.
+ *
+ * **Morph hacia la crónica** (`transitionName`): el recuadro de la portada
+ * puede llevar un `view-transition-name` que la página de destino repite en su
+ * imagen destacada; bajo `ClientRouter` la portada vuela hasta su sitio en la
+ * crónica en vez de fundirse con el resto. El nombre va en el recuadro y no en
+ * el `<img>` porque el recuadro recorta (`overflow-hidden`) tanto el
+ * `group-hover:scale-105` de la foto como el fondo desenfocado del afiche: la
+ * instantánea de salida es entonces exactamente lo que se ve al hacer clic. El
+ * recuadro ya es `relative`, así que ganar un nombre no cambia de dónde cuelgan
+ * sus dos imágenes absolutas.
+ *
+ * El nombre se escribe como propiedad CSS en línea, **no** con la directiva
+ * `transition:name` de Astro. El emparejamiento de una view transition es por
+ * nombre, así que basta con declarar la propiedad; la directiva, en cambio,
+ * empuja al `<head>` un `<style>` de ~2,4 KB por elemento nombrado y sin
+ * deduplicar (el bloque `::view-transition-old/new` completo más su variante
+ * `back` y el respaldo para navegadores sin soporte nativo). Como el `.htaccess`
+ * sirve el HTML con `max-age=0`, ese peso bloquea render y se vuelve a descargar
+ * en cada visita, y crece lineal con el número de tarjetas. Las animaciones de
+ * Astro no se pierden: `ClientRouter` cambia el `<head>` dentro del callback de
+ * `startViewTransition`, así que las reglas que gobiernan la animación son
+ * siempre las de la página de destino —y la crónica sí conserva su directiva—.
+ * Ojo con el otro efecto de la directiva: se aplicaba en todas las tarjetas,
+ * también en las que no reciben `transitionName` (las relacionadas de una
+ * crónica), donde el nombre autogenerado no encadenaba con nada y sacaba la
+ * tarjeta del fundido de página. Sin `transitionName` ahora no se emite nada.
  */
 import { Icon } from 'astro-icon/components';
 import { formatDate } from '@lib/utils';
@@ -32,6 +58,20 @@ interface Props {
   as?: 'h3' | 'h4';
   /** La primera tarjeta visible de la página carga con prioridad. */
   eager?: boolean;
+  /**
+   * Nombre de la view transition del recuadro de la portada. Debe ser
+   * `news-img-{id}` —el mismo que usa la imagen destacada de
+   * `/noticias/{id}`— y único dentro de la página: un nombre repetido cancela
+   * la transición entera. Sin él el recuadro no recibe nombre y la tarjeta se
+   * funde con la página, como siempre.
+   *
+   * Se interpola crudo en la propiedad CSS, así que tiene que ser un
+   * identificador válido. Lo es por construcción: el `id` de la colección lo
+   * genera Astro ya slugificado (minúsculas, sin acentos) y el prefijo
+   * `news-img-` evita que empiece por dígito, que es lo único que rompería el
+   * ident con las fechas al frente de estos ids.
+   */
+  transitionName?: string;
   class?: string;
 }
 
@@ -48,6 +88,7 @@ const {
   variant = 'default',
   as: Heading = 'h3',
   eager = false,
+  transitionName,
   class: className,
 } = Astro.props;
 
@@ -62,6 +103,9 @@ const isCompact = variant === 'compact';
 // tarjeta deja de verse a medias.
 const contained = imageLayout === 'contain' && !isCompact;
 const fit = contained ? 'object-contain' : 'object-cover';
+
+// Sin nombre no se emite atributo: `undefined` hace que Astro omita el `style`.
+const morphStyle = transitionName ? `view-transition-name: ${transitionName}` : undefined;
 ---
 
 <article
@@ -75,6 +119,7 @@ const fit = contained ? 'object-contain' : 'object-cover';
 >
   {image ? (
     <div
+      style={morphStyle}
       class:list={[
         'relative overflow-hidden bg-surface-muted',
         isCompact ? 'size-20 shrink-0 rounded-xl sm:size-24' : 'aspect-video',
@@ -171,7 +216,10 @@ const fit = contained ? 'object-contain' : 'object-cover';
           aria-hidden="true"
         >
           {isLead ? 'Leer la crónica' : 'Leer'}
-          <Icon name="ph:arrow-right-bold" class="size-3.5" />
+          <Icon
+            name="ph:arrow-right-bold"
+            class="size-3.5 transition-transform duration-[var(--duration-micro)] ease-spring group-hover:rotate-[8deg] motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
+          />
         </span>
       </div>
     )}

@@ -15,6 +15,7 @@ import {
   socialInitiativesSchema,
   treesSchema,
   speciesSchema,
+  milestonesSchema,
 } from './lib/schemas';
 
 const riders = defineCollection({
@@ -22,8 +23,10 @@ const riders = defineCollection({
   schema: ridersSchema,
 });
 
+// El README de la carpeta documenta el formato para quien cargue fichas a mano;
+// el patrón lo excluye para que el loader no intente validarlo como una ficha.
 const directivos = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: 'src/content/directivos' }),
+  loader: glob({ pattern: ['**/*.md', '!README.md'], base: 'src/content/directivos' }),
   schema: directivosSchema,
 });
 
@@ -87,6 +90,11 @@ const species = defineCollection({
   schema: speciesSchema,
 });
 
+const milestones = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: 'src/content/milestones' }),
+  schema: milestonesSchema,
+});
+
 export const collections = {
   riders,
   directivos,
@@ -102,4 +110,5 @@ export const collections = {
   socialInitiatives,
   trees,
   species,
+  milestones,
 };

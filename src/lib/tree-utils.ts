@@ -339,3 +339,118 @@ export function speciesGrammar(species: {
     possessive: species.feminine ? 'Nuestras' : 'Nuestros',
   };
 }
+
+// ─── Titulares de la página de especie ──────────────────────────────────────────
+//
+// Estas páginas se escribían como fichas de enciclopedia: el `<title>` y el `<h1>`
+// eran el nombre de la especie a secas y la bajada era su descripción botánica. El
+// resultado, medido en Search Console entre el 24 de julio y el 20 de agosto de
+// 2026, fue que el 98,5% de las impresiones del sitio en Google venían de consultas
+// como "mango tommy" —1.359 impresiones y cero clics—, mientras el club sumaba 26
+// impresiones para todo lo relacionado con ciclismo.
+//
+// El giro no es esconder el contenido: es que la página deje de ir sobre *la
+// especie* y pase a ir sobre *los ejemplares que el club sembró*. Esa es la
+// pregunta para la que Trocha y Ruta sí es la única respuesta posible.
+//
+// Todo lo que se afirma sale del inventario. Si no hay árboles de la especie no hay
+// nada que contar y se cae al texto botánico, que sigue siendo lo único cierto.
+
+export interface SpeciesHeadline {
+  /** Encabezado visible, centrado en los ejemplares del club. */
+  heading: string;
+  /** `<title>` para buscadores. */
+  seoTitle: string;
+  /** `<meta name="description">`. */
+  seoDescription: string;
+  /** Bajada del hero, construida solo con datos del inventario. */
+  lead: string;
+}
+
+const upperFirst = (value: string): string =>
+  value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+
+export function speciesHeadline(
+  species: { commonName: string; description: string; plural?: string; feminine?: boolean },
+  stats: SpeciesTreeStats | null,
+  place?: string
+): SpeciesHeadline {
+  // Sin ejemplares, la página no tiene nada propio que contar.
+  if (!stats) {
+    return {
+      heading: species.commonName,
+      seoTitle: `${species.commonName} en Trocha Verde`,
+      seoDescription: species.description,
+      lead: species.description,
+    };
+  }
+
+  const grammar = speciesGrammar(species);
+  const one = stats.total === 1;
+
+  // Se respeta la capitalización del contenido. Bajar la inicial daría "mango
+  // Tommy" —correcto— pero también "guayacán Azul", donde el adjetivo quedaría
+  // capitalizado a mitad de frase; y bajarlo todo destruiría los nombres propios
+  // de cultivar. El resto del sitio ya nombra las especies así.
+  const noun = one ? species.commonName : grammar.plural;
+  const possessive = one ? (species.feminine ? 'Nuestra' : 'Nuestro') : grammar.possessive;
+  const planted = species.feminine
+    ? one
+      ? 'sembrada'
+      : 'sembradas'
+    : one
+      ? 'sembrado'
+      : 'sembrados';
+
+  // "3 mangos Tommy" en plural; en singular el número sobra.
+  const counted = one ? noun : `${stats.total} ${noun}`;
+  const whereShort = place ? ` en ${placeWithArticle(place)}` : '';
+
+  const sponsoredNote =
+    stats.sponsored > 0
+      ? ` ${stats.sponsored} ${stats.sponsored === 1 ? 'tiene' : 'tienen'} padrino o madrina.`
+      : '';
+
+  return {
+    heading: `${possessive} ${counted}`,
+    // Corto a propósito: `SEOHead` solo añade el nombre del sitio si el conjunto
+    // cabe en 60 caracteres, así que el titular se nombra a sí mismo.
+    seoTitle: `${upperFirst(counted)} ${planted} por Trocha y Ruta`,
+    seoDescription:
+      `${upperFirst(counted)} ${planted}${whereShort} por el Club Deportivo Trocha y Ruta. ` +
+      `Fecha de siembra, padrinos y estado de cada ejemplar.`,
+    lead:
+      `${upperFirst(counted)} ${planted}${whereShort}, ` +
+      `${plantingSpan(stats.firstPlanted, stats.lastPlanted)}.${sponsoredNote}`,
+  };
+}
+
+// Los `location` del inventario son nombres de sitio sin artículo ("Pista de
+// Ciclomontañismo Carlos Castro"), y en español "sembrados en Pista de..." es
+// agramatical. Se antepone el artículo cuando el sustantivo inicial es conocido;
+// ante cualquier duda se deja el nombre tal cual, que es preferible a errar el
+// género.
+const FEMININE_PLACES = /^(pista|cancha|sede|escuela|v[ií]a|finca|zona|granja|plaza|manga)\b/i;
+const MASCULINE_PLACES = /^(parque|colegio|estadio|sendero|lote|jard[ií]n|vivero|barrio)\b/i;
+
+/** Antepone el artículo al nombre del lugar cuando se puede determinar el género. */
+export function placeWithArticle(place: string): string {
+  const trimmed = place.trim();
+  if (!trimmed) return trimmed;
+  // Ya viene con artículo desde el contenido.
+  if (/^(el|la|los|las)\s/i.test(trimmed)) return trimmed;
+  if (FEMININE_PLACES.test(trimmed)) return `la ${trimmed}`;
+  if (MASCULINE_PLACES.test(trimmed)) return `el ${trimmed}`;
+  return trimmed;
+}
+
+/** Ubicación declarada por la mayoría de los ejemplares, si hay consenso. */
+export function commonPlace<T extends { data: { location?: string } }>(trees: T[]): string | undefined {
+  const tally = new Map<string, number>();
+  for (const tree of trees) {
+    const place = tree.data.location?.trim();
+    if (place) tally.set(place, (tally.get(place) ?? 0) + 1);
+  }
+  if (tally.size === 0) return undefined;
+  return [...tally.entries()].sort((a, b) => b[1] - a[1])[0][0];
+}
