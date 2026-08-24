@@ -23,6 +23,7 @@ import { generateEventsListJsonLd } from '@lib/seo';
 import { formatDate } from '@lib/utils';
 import {
   buildSeason,
+  cancelledAhead,
   dayLabel,
   getEventCategory,
   getEventLevel,
@@ -52,9 +53,8 @@ const past = withStatus
 // que vienen —una cancelada puede caer antes que la próxima y el orden se lee
 // torcido—, pero tampoco pueden desaparecer: la familia que ya la tenía anotada
 // necesita ver que se cayó. Van en su propio bloque mientras no pase la fecha.
-const cancelled = withStatus
-  .filter(({ status, event }) => status === 'cancelled' && event.data.date.getTime() >= Date.now())
-  .sort((a, b) => a.event.data.date.getTime() - b.event.data.date.getTime());
+// El criterio vive en `@lib/calendar`: la portada muestra la misma lista.
+const cancelled = cancelledAhead(events);
 
 const [next, ...restUpcoming] = upcoming;
 
@@ -81,11 +81,13 @@ function chroniclesOf(event: Event) {
 const season = buildSeason(events);
 
 const jsonLd = generateEventsListJsonLd(
-  [...upcoming, ...cancelled, ...past].map(({ event }) => ({
-    title: event.data.title,
-    date: event.data.date,
-    url: '/calendario',
-  }))
+  [...upcoming.map(({ event }) => event), ...cancelled, ...past.map(({ event }) => event)].map(
+    (event: Event) => ({
+      title: event.data.title,
+      date: event.data.date,
+      url: '/calendario',
+    })
+  )
 );
 
 const nextCategory = next ? getEventCategory(next.event.data.category) : null;
@@ -288,7 +290,7 @@ const nextMonth = next
       />
 
       <ul class="mt-8 grid gap-3 md:grid-cols-2">
-        {cancelled.map(({ event, status }, index) => (
+        {cancelled.map((event: Event, index: number) => (
           <li
             id={`evento-${event.id}`}
             class="reveal scroll-mt-24"
@@ -302,7 +304,7 @@ const nextMonth = next
               city={event.data.city}
               category={event.data.category}
               level={event.data.level}
-              status={status}
+              status="cancelled"
               muted
             />
           </li>

@@ -2,15 +2,26 @@
 /**
  * Portada.
  *
- * El recorrido de una familia que llega por primera vez: qué es esto (hero) →
- * por qué creerle (cifras comprobables) → qué ofrece (programas) → quién está
- * detrás (el club) → el paso siguiente → qué está pasando (calendario y
- * noticias) → qué más hace el club (Trocha Verde) → en quién confía y quién
- * confía en él (patrocinadores, club seguro) → el cierre.
+ * El recorrido de una familia que llega por primera vez: qué es esto y en qué
+ * punto va el año (hero) → por qué creerle (cifras comprobables) → qué ofrece
+ * (programas) → quién está detrás y, ahí mismo, el paso siguiente (el club con
+ * la clase de prueba) → qué está pasando (la temporada: lo que sigue y lo que
+ * ya se contó) → qué más hace el club (Trocha Verde) → en quién confía
+ * (patrocinadores) → el cierre.
+ *
+ * La conversión dejó de ser una parada suelta entre dos secciones: vive dentro
+ * de `AboutPreview`, justo donde el lector ya se creyó la historia. Y el
+ * calendario y las crónicas, que contaban el mismo año dos veces seguidas,
+ * ahora son una sola sección a dos columnas (`SeasonOverview`).
  *
  * El ritmo lo dan los tonos del sistema editorial, alternando `plain` y
- * `muted` para que dos secciones seguidas nunca compartan fondo. Si mueves una
- * sección de sitio, revisa que la alternancia siga cuadrando.
+ * `muted` para que dos secciones seguidas nunca compartan fondo. El hero ya no
+ * es un cartel oscuro: es claro, sobre el gradiente `tinted`, y por eso entrega
+ * limpio al blanco de las cifras sin necesidad de ola de corte. Hay dos
+ * excepciones deliberadas a la alternancia: Trocha Verde va en `tinted` porque
+ * cambia de registro a propósito, y el cierre va sobre el teal de marca porque
+ * es el final, no una sección más. Si mueves una sección de sitio, revisa que
+ * la alternancia siga cuadrando.
  *
  * Ver docs/04-sistema-editorial.md.
  */
@@ -27,13 +38,10 @@ import Hero from '@components/sections/Hero.astro';
 import StatsCounter from '@components/sections/StatsCounter.astro';
 import ProgramsGrid from '@components/sections/ProgramsGrid.astro';
 import AboutPreview from '@components/sections/AboutPreview.astro';
-import UpcomingEvents from '@components/sections/UpcomingEvents.astro';
-import NewsPreview from '@components/sections/NewsPreview.astro';
+import SeasonOverview from '@components/sections/SeasonOverview.astro';
 import TrochaVerde from '@components/sections/TrochaVerde.astro';
 import SponsorsBar from '@components/sections/SponsorsBar.astro';
-import SectionShell from '@components/editorial/SectionShell.astro';
 import InscriptionCTA from '@components/common/InscriptionCTA.astro';
-import WaveSeparator from '@components/common/WaveSeparator.astro';
 
 const jsonLd = [
   generateOrganizationJsonLd(),
@@ -45,11 +53,8 @@ const jsonLd = [
 ---
 
 <BaseLayout title={SITE.name} description={SITE.description} jsonLd={jsonLd}>
-  <!-- 1. El gancho, con el pulso de la temporada -->
+  <!-- 1. El gancho, con el pulso de la temporada (tinted, claro) -->
   <Hero />
-
-  <!-- El corte del hero cae sobre blanco: es el fondo de la banda de cifras. -->
-  <WaveSeparator from="fill-surface-dark" to="fill-surface" />
 
   <!-- 2. Por qué creerle: cifras que el lector puede comprobar (plain) -->
   <div class="reveal">
@@ -61,39 +66,25 @@ const jsonLd = [
     <ProgramsGrid />
   </div>
 
-  <!-- 4. Quién está detrás (plain) -->
+  <!-- 4. Quién está detrás y el paso siguiente: la clase de prueba va dentro
+       de esta sección, no como parada aparte (plain) -->
   <div class="reveal">
     <AboutPreview />
   </div>
 
-  <!-- 5. Momento de conversión (muted) -->
-  <SectionShell tone="muted" width="default" spacing="compact" label="Clase de prueba">
-    <div class="reveal">
-      <InscriptionCTA
-        variant="inline"
-        heading="La primera clase es de prueba y no cuesta nada"
-        description="Tu hijo entrena una sesión completa con su grupo antes de que decidas. Entrenadores certificados y pista propia."
-      />
-    </div>
-  </SectionShell>
-
-  <!-- 6. Qué está pasando (plain) -->
+  <!-- 5. Qué está pasando: el calendario y las crónicas como una sola historia
+       (muted) -->
   <div class="reveal">
-    <UpcomingEvents />
+    <SeasonOverview />
   </div>
 
-  <!-- 7. Lo que se contó de cada carrera (muted) -->
-  <div class="reveal">
-    <NewsPreview />
-  </div>
-
-  <!-- 8. El otro lado del club: la iniciativa ambiental. Cambia de registro a
+  <!-- 6. El otro lado del club: la iniciativa ambiental. Cambia de registro a
        propósito, con su propio verde. -->
   <div class="reveal">
     <TrochaVerde />
   </div>
 
-  <!-- 9. Quién respalda al club (plain). Aquí iba también un sello de "club
+  <!-- 7. Quién respalda al club (plain). Aquí iba también un sello de "club
        seguro" que se apoyaba en una política de protección infantil publicada
        en el sitio; el club confirmó que esa política no existe en la práctica,
        así que la sección se retiró junto con la página. -->
@@ -101,7 +92,7 @@ const jsonLd = [
     <SponsorsBar />
   </div>
 
-  <!-- 10. El cierre -->
+  <!-- 8. El cierre, sobre el teal de marca -->
   <div class="reveal">
     <InscriptionCTA
       variant="banner"

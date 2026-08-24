@@ -2,47 +2,64 @@
 /**
  * Hero de la portada.
  *
- * Mantiene su marco propio —imagen a pantalla completa sobre fondo oscuro— a
- * propósito: no es una sección del sistema editorial y `SectionShell` no le
- * sirve. Lo que sí toma prestado del sistema es la textura topo (`TOPO_PATHS`
- * / `TOPO_TILE` de `@lib/editorial`) y la regla de fondo: nada escrito a mano
- * que el contenido pueda decir.
+ * Marco propio —no `SectionShell`—, pero del sistema editorial hacia adentro:
+ * el fondo es la cadena del tono `tinted` (`getTone('tinted')` en
+ * `@lib/editorial`, no clases escritas a mano) y la textura es la misma topo
+ * que usan las secciones, con su deriva de scroll y su desvanecido hacia abajo.
  *
- * Por eso el antetítulo saca el año de `SITE.founded` en vez de repetir "2010"
- * en el texto, y debajo de los botones va **el pulso del club**: la próxima
- * fecha real de la temporada, o un aviso distinto si la carrera es hoy. Así la
- * portada deja de ser un cartel fijo. Si ya corrió toda la temporada, ese
- * bloque simplemente no se pinta.
+ * El hero dejó de ser un cartel: era una foto a pantalla completa con el texto
+ * encima, en blanco sobre degradados oscuros. Ahora es claro y a dos columnas
+ * —texto a la izquierda, foto a la derecha—, y lo que estaba escondido en un
+ * chip pasa a ser la pieza que más dice del club: la tarjeta de temporada, con
+ * el riel de fechas y la próxima carrera real.
+ *
+ * La regla de fondo no cambia: nada escrito a mano que el contenido pueda
+ * decir. El año de fundación sale de `SITE.founded` y el pulso de
+ * `heroPulse()` —la misma derivación de `/calendario` y `/enlaces`, así que las
+ * tres nunca se contradicen—. Si ya corrió toda la temporada, la tarjeta no se
+ * pinta y no la reemplaza nada.
+ *
+ * Las cifras de la temporada (años del club, fechas corridas) no se escriben
+ * aquí: viven en la banda de credibilidad de la sección siguiente
+ * (`StatsCounter`), que es la que las publica con su procedencia y su enlace
+ * para comprobarlas. El hero aporta lo que la banda no dice: el dibujo del
+ * riel y cuál es la próxima fecha.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 import Button from '@components/common/Button.astro';
+import SeasonRail from '@components/sections/SeasonRail.astro';
 import { getHeroPoster } from '@lib/hero-poster';
 import { heroPulse } from '@lib/home';
+import { buildSeason } from '@lib/calendar';
 import { CTA_TRIAL_LABEL, SITE } from '@lib/constants';
-import { TOPO_PATHS, TOPO_TILE, uniqueSvgId } from '@lib/editorial';
+import { getTone, TOPO_PATHS, TOPO_TILE, uniqueSvgId } from '@lib/editorial';
 
 interface Props {
   title?: string;
   /** Fragmento exacto del título que va resaltado con el trazo de marca. */
   highlight?: string;
   subtitle?: string;
-  backgroundImage?: string;
 }
 
 const {
   title = 'Formando campeones en la vida y en la pista',
   highlight = 'en la vida',
   subtitle = 'Ciclomontañismo para niños desde los 4 años, con pista propia en Yumbo, Valle del Cauca.',
-  backgroundImage,
 } = Astro.props;
 
 const poster = await getHeroPoster();
+const tone = getTone('tinted');
 const topoPatternId = uniqueSvgId('hero-topo');
 
 type Event = CollectionEntry<'events'>;
 const events = (await getCollection('events')).filter((event: Event) => !event.data.draft);
-const pulse = heroPulse(events);
+
+// Un solo "ahora" para las dos derivaciones: `buildSeason()` y `heroPulse()`
+// resuelven el mismo estado y no pueden discrepar por dos `new Date()`.
+const now = new Date();
+const season = buildSeason(events, now);
+const pulse = heroPulse(events, now);
 
 // El resaltado se aplica sobre el texto tal cual viene: si el fragmento no
 // aparece en el título, se pinta el título completo sin marcar.
@@ -53,46 +70,21 @@ const afterMark = cut >= 0 && highlight ? title.slice(cut + highlight.length) : 
 
 <section
   aria-labelledby="hero-titulo"
-  class="relative min-h-[60vh] md:min-h-[80vh] flex items-center justify-center bg-surface-dark overflow-clip"
+  class:list={['relative isolate overflow-clip', tone.surface]}
 >
-  <!-- Poster: fondo estático y elemento LCP de la portada. -->
-  <img
-    src={poster.src}
-    srcset={poster.srcSet.attribute || undefined}
-    sizes="100vw"
-    alt=""
-    width="1280"
-    height="720"
-    class="hero-poster absolute inset-0 h-full w-full object-cover"
-    loading="eager"
-    decoding="async"
-    fetchpriority="high"
-    aria-hidden="true"
-  />
-
-  {backgroundImage && (
-    <img
-      src={backgroundImage}
-      alt=""
-      class="absolute inset-0 h-full w-full object-cover"
-      loading="eager"
-      decoding="async"
-      fetchpriority="high"
-    />
-  )}
-
-  <!-- Curvas topo decorativas con deriva ligada al scroll. Sobredimensionada
-       verticalmente (30px arriba y abajo) para que la deriva nunca descubra
-       un borde sin patrón.
-
-       El trazo va en blanco al 15%, no en el teal de marca: es lo que el
-       sistema fija para el patrón sobre fondo oscuro (`SECTION_TONES.dark.pattern`
-       = `text-white/15` en `@lib/editorial`), y así el hero se lee igual que
-       las demás secciones oscuras del sitio. -->
+  <!-- Curvas topo: misma textura, mismo color de patrón y mismo desvanecido
+       que `SectionShell` con `pattern="topo"` y `scrollDriven`. Se pinta más
+       alta que la sección para que la deriva nunca descubra una franja sin
+       patrón, y la sección recorta con `overflow-clip` —no `hidden`, que
+       crearía un contenedor de scroll y congelaría el `view()`. -->
   <svg
-    class="hero-topo sda-parallax-slow pointer-events-none absolute inset-x-0 -top-[30px] -bottom-[30px] h-[calc(100%+60px)] w-full text-white opacity-[0.15] z-[1]"
+    class:list={[
+      'sda-parallax-slow pointer-events-none absolute inset-x-0 -top-8 -z-10 h-[calc(100%+4rem)] w-full',
+      tone.pattern,
+    ]}
     aria-hidden="true"
     focusable="false"
+    style="mask-image: linear-gradient(to bottom, black, transparent 78%);"
   >
     <defs>
       <pattern
@@ -101,92 +93,124 @@ const afterMark = cut >= 0 && highlight ? title.slice(cut + highlight.length) : 
         height={TOPO_TILE}
         patternUnits="userSpaceOnUse"
       >
-        {TOPO_PATHS.map((d) => (
-          <path d={d} fill="none" stroke="currentColor" stroke-width="1.25" />
-        ))}
+        {
+          TOPO_PATHS.map((d) => (
+            <path d={d} fill="none" stroke="currentColor" stroke-width="1.25" />
+          ))
+        }
       </pattern>
     </defs>
-    <rect width="100%" height="100%" fill={`url(#${topoPatternId})`} />
+    <rect width="100%" height="100%" fill={`url(#${topoPatternId})`}></rect>
   </svg>
 
-  <!-- Resplandor teal sutil hacia la esquina superior derecha, debajo del degradado oscuro. -->
-  <div
-    class="absolute inset-0 z-[1]"
-    style="background: radial-gradient(circle at top right, rgba(32, 183, 201, 0.28), transparent 60%);"
-    aria-hidden="true"
-  >
-  </div>
-  <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-primary-dark/15 z-[2]"></div>
-  <div class="relative z-10 mx-auto max-w-5xl px-4 text-center text-white">
-    <!-- Badge de marca -->
-    <div class="inline-flex items-center gap-2 mb-5 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/90 border border-white/20">
-      <span class="w-1.5 h-1.5 rounded-full bg-accent inline-block"></span>
-      Yumbo · Valle del Cauca · Desde {SITE.founded}
-    </div>
-    <h1
-      id="hero-titulo"
-      class="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[0.95] tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] uppercase"
-    >
-      {beforeMark}{cut >= 0 && <span class="editorial-mark editorial-mark--on-dark">{highlight}</span>}{afterMark}
-    </h1>
-    <p class="mt-5 text-base md:text-xl text-white/85 drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)] max-w-2xl mx-auto">
-      {subtitle}
-    </p>
-    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-      <Button variant="accent" size="lg" href="/inscripciones">
-        {CTA_TRIAL_LABEL}
-        <svg class="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-      </Button>
-      <Button
-        variant="outline"
-        size="lg"
-        href="/quienes-somos"
-        class="border-white text-white hover:bg-white hover:text-surface-dark bg-white/10 backdrop-blur-sm"
-      >
-        Conoce más
-      </Button>
-    </div>
-
-    {/*
-      El pulso del club: lo que está pasando ahora mismo en la temporada. Si ya
-      corrió la última fecha, no se pinta nada.
-    */}
-    {pulse && (
-      <a
-        href="/calendario"
-        class="mt-8 inline-flex max-w-full items-center gap-3 rounded-full border border-white/20 bg-white/10 py-2 pl-3 pr-4 text-left backdrop-blur-sm transition-colors duration-200 hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-      >
-        <span
-          class:list={[
-            'flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider',
-            pulse.today ? 'bg-accent text-surface-dark' : 'bg-white/15 text-accent-light',
-          ]}
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+    <!-- En móvil se apila texto → foto → tarjeta de temporada; desde lg la foto
+         ocupa la columna derecha completa y la tarjeta baja bajo el texto. -->
+    <div class="grid gap-x-12 gap-y-10 lg:grid-cols-12 lg:items-center">
+      <div class="lg:col-span-7 lg:col-start-1 lg:row-start-1">
+        <p
+          class="text-text-secondary inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-4 py-1.5 text-xs font-semibold tracking-widest uppercase"
         >
-          {pulse.today && <Icon name="ph:lightning-bold" class="size-3.5" aria-hidden="true" />}
-          {pulse.today ? 'Corremos hoy' : 'Próxima fecha'}
-        </span>
-        <span class="min-w-0 text-sm text-white/90">
-          <span class="font-semibold">{pulse.when}</span>
-          {pulse.where && <span class="text-white/70"> · {pulse.where}</span>}
-        </span>
-        <Icon
-          name="ph:arrow-right-bold"
-          class="size-4 shrink-0 text-white/70"
-          aria-hidden="true"
-        />
-      </a>
-    )}
-  </div>
+          <span class="bg-accent inline-block size-1.5 rounded-full" aria-hidden="true"></span>
+          Yumbo · Valle del Cauca · Desde {SITE.founded}
+        </p>
 
-  <!--
-    Flecha de scroll. Solo cuando no hay pulso: con la tarjeta de la próxima
-    fecha abajo, la flecha se le encima y compiten por la misma mirada.
-  -->
-  {!pulse && (
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 motion-safe:animate-bounce" aria-hidden="true">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-white/70" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+        <h1
+          id="hero-titulo"
+          class="font-display text-text-primary mt-6 text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl"
+        >
+          {beforeMark}{cut >= 0 && <span class="editorial-mark">{highlight}</span>}{afterMark}
+        </h1>
+
+        <p class="text-text-secondary mt-5 max-w-xl text-base sm:text-lg">{subtitle}</p>
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Button variant="accent" size="lg" href="/inscripciones">
+            {CTA_TRIAL_LABEL}
+            <svg
+              class="ml-2 h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M7 17L17 7M17 7H7M17 7v10"></path>
+            </svg>
+          </Button>
+          <Button variant="outline" size="lg" href="/quienes-somos">Conoce el club</Button>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1 lg:self-center">
+        <!-- `sizes` describe la columna real —desde lg son ~5/12 de
+             `max-w-7xl`, no el ancho del viewport— y tiene que decir lo mismo
+             que el `imagesizes` del preload en `BaseLayout.astro`: si los dos
+             discrepan, el navegador descarga una variante y precarga otra. -->
+        <img
+          src={poster.src}
+          srcset={poster.srcSet.attribute || undefined}
+          sizes="(min-width: 1024px) 30rem, 100vw"
+          alt="Dos niños del club, con casco, gafas y guantes, sonríen sobre sus bicicletas"
+          width="1280"
+          height="720"
+          class="shadow-overlay aspect-[4/3] w-full rounded-2xl object-cover"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </div>
+
+      {
+        /*
+        El pulso del club, ascendido a tarjeta: en qué punto va la temporada y
+        cuál es la próxima fecha. Si ya corrió la última, no se pinta nada.
+      */
+      }
+      {
+        pulse && (
+          <div class="lg:col-span-7 lg:col-start-1 lg:row-start-2">
+            <div class="bg-surface shadow-raised max-w-[35rem] rounded-2xl border border-black/5 p-5 sm:p-6">
+              {/* El conteo de fechas corridas no se escribe aquí: lo publica
+                  la banda de credibilidad de la sección siguiente, y repetirlo
+                  a un scroll de distancia es la misma cifra dos veces. Lo que
+                  el riel dibuja viaja como texto en su propio resumen. */}
+              <p class="text-primary-deep text-xs font-bold tracking-[0.16em] uppercase">
+                Temporada {season.year}
+              </p>
+
+              <SeasonRail season={season} class="mt-4" />
+
+              <div class="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                <p class="text-text-secondary min-w-0 text-sm">
+                  {pulse.today ? (
+                    <span class="bg-accent text-surface-dark mr-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wider uppercase">
+                      <Icon name="ph:lightning-bold" class="size-3.5" aria-hidden="true" />
+                      Corremos hoy
+                    </span>
+                  ) : (
+                    <span class="text-text-primary font-semibold">Próxima fecha: {pulse.when}</span>
+                  )}
+                  {/* Solo el título: la ciudad ya viene dentro de él en casi
+                      toda la colección ("VII Válida Copa Valle 2026 - Yumbo"),
+                      y pintar además `where` la repetía. */}
+                  {pulse.title && <span> · {pulse.title}</span>}
+                </p>
+
+                <a
+                  href="/calendario"
+                  class="text-primary-deep inline-flex min-h-11 shrink-0 items-center gap-1.5 text-sm font-semibold hover:underline"
+                >
+                  Ver calendario
+                  <Icon name="ph:arrow-right-bold" class="size-4" aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+          </div>
+        )
+      }
+    </div>
   </div>
-  )}
 </section>

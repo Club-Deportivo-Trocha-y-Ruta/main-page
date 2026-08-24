@@ -7,12 +7,30 @@ interface Props {
   variant?: 'banner' | 'inline';
   heading?: string;
   description?: string;
+  /**
+   * Etiqueta del titular en la variante `inline`, para cuando la CTA se
+   * incrusta dentro de una sección que ya trae su propio `h2` (ver
+   * `AboutPreview`). La variante `banner` es su propio landmark y siempre
+   * usa `h2`, sin importar este prop.
+   */
+  headingLevel?: 'h2' | 'h3';
+  /**
+   * Disposición de la variante `inline`. `row` (el default histórico) pone
+   * texto y botones lado a lado desde `md` — pensado para cuando la tarjeta
+   * ocupa el ancho completo de la sección. `stacked` mantiene los botones
+   * debajo del texto en todas las tallas: es la forma correcta cuando la CTA
+   * vive dentro de media columna (ver `AboutPreview`), donde la fila de `md`
+   * aprieta el titular a una palabra por línea.
+   */
+  layout?: 'row' | 'stacked';
 }
 
 const {
   variant = 'inline',
   heading = 'Tu hijo puede empezar desde los 4 años',
   description = 'Primera clase de prueba gratis. Entrenadores certificados, ambiente seguro y divertido.',
+  headingLevel: Heading = 'h2',
+  layout = 'row',
 } = Astro.props;
 
 // La variante `banner` es un landmark propio y necesita nombre accesible. El
@@ -20,62 +38,75 @@ const {
 const headingId = uniqueSvgId('cta-inscripcion');
 ---
 
-{variant === 'banner' ? (
-  /*
-   * El texto va en grafito, no en blanco: el teal de marca (#20b7c9) solo
-   * alcanza 2.4:1 contra blanco y no cumple WCAG AA ni para texto grande.
-   * `text-surface-dark` sobre el mismo fondo da 5.5:1. Es la misma regla que
-   * ya aplica el tono `brand` del sistema editorial (ver `src/lib/editorial.ts`).
-   */
-  <section class="bg-primary py-16 px-4" aria-labelledby={headingId}>
-    <div class="mx-auto max-w-3xl text-center text-surface-dark">
-      <h2 id={headingId} class="text-2xl md:text-3xl font-display font-bold">
-        {heading}
-      </h2>
-      <p class="mt-3 text-base md:text-lg text-surface-dark/80">
-        {description}
-      </p>
-      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <Button variant="accent" size="lg" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
-          {CTA_TRIAL_LABEL}
-        </Button>
-        <a
-          href={`${CONTACT.whatsapp}?text=Hola%2C%20quiero%20inscribir%20a%20mi%20hijo%20en%20el%20club`}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-analytics-event="whatsapp_click"
-          class="inline-flex items-center gap-2 rounded-lg border-2 border-surface-dark px-7 py-3.5 text-lg font-semibold text-surface-dark transition-colors duration-200 hover:bg-surface-dark hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-surface-dark"
-        >
-          Preguntar por WhatsApp
-        </a>
-      </div>
-    </div>
-  </section>
-) : (
-  <div class="rounded-2xl border border-primary/20 bg-primary/5 px-6 py-8 md:px-10 md:py-10">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-      <div>
-        <h2 class="text-xl md:text-2xl font-display font-bold text-text-primary">
+{
+  variant === 'banner' ? (
+    /*
+     * El texto va en grafito, no en blanco: el teal de marca (#20b7c9) solo
+     * alcanza 2.4:1 contra blanco y no cumple WCAG AA ni para texto grande.
+     * `text-surface-dark` sobre el mismo fondo da 5.5:1. Es la misma regla que
+     * ya aplica el tono `brand` del sistema editorial (ver `src/lib/editorial.ts`).
+     */
+    <section class="bg-primary px-4 py-16" aria-labelledby={headingId}>
+      <div class="text-surface-dark mx-auto max-w-3xl text-center">
+        <h2 id={headingId} class="font-display text-2xl font-bold md:text-3xl">
           {heading}
         </h2>
-        <p class="mt-2 text-text-secondary">
-          {description}
-        </p>
+        <p class="text-surface-dark/80 mt-3 text-base md:text-lg">{description}</p>
+        <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Button
+            variant="accent"
+            size="lg"
+            href="/inscripciones"
+            data-analytics-event="cta_inscripcion_click"
+          >
+            {CTA_TRIAL_LABEL}
+          </Button>
+          <a
+            href={`${CONTACT.whatsapp}?text=Hola%2C%20quiero%20inscribir%20a%20mi%20hijo%20en%20el%20club`}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-analytics-event="whatsapp_click"
+            class="border-surface-dark text-surface-dark hover:bg-surface-dark focus-visible:outline-surface-dark inline-flex items-center gap-2 rounded-lg border-2 px-7 py-3.5 text-lg font-semibold transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Preguntar por WhatsApp
+          </a>
+        </div>
       </div>
-      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
-        <Button variant="accent" size="md" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
-          {CTA_TRIAL_LABEL}
-        </Button>
-        <a
-          href={`${CONTACT.whatsapp}?text=Hola%2C%20quiero%20inscribir%20a%20mi%20hijo%20en%20el%20club`}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-analytics-event="whatsapp_click"
-          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 text-base font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-        >
-          Preguntar por WhatsApp
-        </a>
+    </section>
+  ) : (
+    <div class="border-primary/20 bg-primary/5 rounded-2xl border px-6 py-8 md:px-10 md:py-10">
+      <div
+        class:list={[
+          'flex flex-col gap-6',
+          layout === 'row' && 'md:flex-row md:items-center md:justify-between',
+        ]}
+      >
+        <div>
+          <Heading class="font-display text-text-primary text-xl font-bold md:text-2xl">
+            {heading}
+          </Heading>
+          <p class="text-text-secondary mt-2">{description}</p>
+        </div>
+        <div class="flex shrink-0 flex-col items-start gap-3 sm:flex-row sm:items-center">
+          <Button
+            variant="accent"
+            size="md"
+            href="/inscripciones"
+            data-analytics-event="cta_inscripcion_click"
+          >
+            {CTA_TRIAL_LABEL}
+          </Button>
+          <a
+            href={`${CONTACT.whatsapp}?text=Hola%2C%20quiero%20inscribir%20a%20mi%20hijo%20en%20el%20club`}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-analytics-event="whatsapp_click"
+            class="border-primary-deep text-primary-deep hover:bg-primary-deep focus-visible:outline-primary inline-flex items-center gap-2 rounded-lg border-2 px-5 py-2.5 text-base font-semibold transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Preguntar por WhatsApp
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-)}
+  )
+}

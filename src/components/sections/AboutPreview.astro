@@ -1,19 +1,19 @@
 ---
 /**
- * Presentación del club en la portada.
+ * Presentación del club en la portada, fundida con el momento de conversión.
  *
  * Versión corta de Quiénes Somos: una foto de la casa (la pista), la frase que
- * explica qué es el club y los años que lleva haciéndolo. El detalle vive en
- * `/quienes-somos`.
+ * explica qué es el club y, justo donde nace la confianza, la clase de prueba.
+ * Los años del club los publica la banda de credibilidad (`StatsCounter`), con
+ * su procedencia y su enlace — aquí la tarjeta sobre la foto rotula la sede, no
+ * una cifra. El detalle vive en `/quienes-somos`.
  */
 import { Image } from 'astro:assets';
-import Button from '@components/common/Button.astro';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
-import { SITE, getYearsActive } from '@lib/constants';
+import { SITE } from '@lib/constants';
 import pistaXco from '@assets/images/pista-xco-carlos-castro.jpg';
-
-const yearsActive = getYearsActive();
 ---
 
 <SectionShell tone="plain" width="wide" labelledby="club-preview-heading">
@@ -30,13 +30,19 @@ const yearsActive = getYearsActive();
         class="aspect-[4/3] w-full rounded-2xl object-cover shadow-md"
       />
 
-      <!-- La cifra que más pesa, encima de la foto -->
-      <div class="absolute bottom-4 right-4 rounded-2xl bg-surface p-4 shadow-lg ring-1 ring-black/5 sm:p-5 lg:-bottom-6 lg:-right-6">
-        <p class="font-display text-3xl font-extrabold leading-none text-primary-deep sm:text-4xl">
-          {yearsActive}
+      <!--
+        Antes esta tarjeta llevaba los años del club. Esa cifra vive en la
+        banda de credibilidad de la portada; aquí queda solo rotulando la sede,
+        sin números.
+      -->
+      <div
+        class="bg-surface absolute right-4 bottom-4 rounded-2xl p-4 shadow-lg ring-1 ring-black/5 sm:p-5 lg:-right-6 lg:-bottom-6"
+      >
+        <p class="text-accent-deep text-xs font-semibold tracking-[0.18em] uppercase">
+          La casa del club
         </p>
-        <p class="mt-1 text-xs leading-snug text-text-secondary">
-          años formando<br />ciclistas en Yumbo
+        <p class="font-display text-text-primary mt-1 leading-snug font-bold">
+          Pista Carlos Castro, Yumbo
         </p>
       </div>
     </div>
@@ -51,14 +57,42 @@ const yearsActive = getYearsActive();
         lead={`Desde ${SITE.founded}, ${SITE.name} forma niños y jóvenes en la pista Carlos Castro. Más que un club deportivo, somos una comunidad de familias que entrena, compite y siembra junta.`}
       />
 
-      {/*
+      {
+        /*
         Aquí iba una fila de tres cifras. Se quitó por dos razones: dos de
         ellas —niños formados y medallas— eran afirmaciones sin fuente de
         verdad, y la tercera (árboles) ya la muestra la banda de credibilidad
-        de la portada, dos secciones más arriba. La cifra que sí sostiene esta
-        sección es la de los años, y va sobre la foto.
-      */}
-      <Button href="/quienes-somos" class="mt-8">Conoce nuestra historia</Button>
+        de la portada, dos secciones más arriba.
+      */
+      }
+
+      {
+        /*
+        La parada de conversión, fundida en la sección del club: justo donde
+        el lector ya cree la historia, se le ofrece probarla. `headingLevel`
+        la baja a `h3` porque el `h2` de la sección ya lo puso `SectionIntro`.
+      */
+      }
+      <div class="mt-8">
+        <InscriptionCTA
+          variant="inline"
+          layout="stacked"
+          headingLevel="h3"
+          heading="La primera clase es de prueba y no cuesta nada"
+          description="Tu hijo entrena una sesión completa con su grupo antes de que decidas. Entrenadores certificados y pista propia."
+        />
+      </div>
+
+      <p class="mt-4">
+        <!-- `min-h-11`: el enlace ya no es un botón, pero sigue siendo un
+             objetivo táctil y no puede quedar en la altura del texto. -->
+        <a
+          href="/quienes-somos"
+          class="text-primary-deep focus-visible:outline-primary inline-flex min-h-11 items-center text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          Conoce nuestra historia →
+        </a>
+      </p>
     </div>
   </div>
 </SectionShell>

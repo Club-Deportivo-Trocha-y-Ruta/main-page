@@ -1,0 +1,167 @@
+---
+/**
+ * La temporada en la portada: el calendario y las crónicas como una sola historia.
+ *
+ * Antes eran dos secciones seguidas —fechas por un lado, noticias por otro— que
+ * contaban el mismo año en dos veces. Aquí van en columnas hermanas: lo que
+ * sigue a la izquierda, lo que ya se corrió y se contó a la derecha.
+ *
+ * El estado de cada fecha se deriva de la fecha misma (`resolveEventStatus`),
+ * nunca del `status` del frontmatter, que se queda viejo. Las portadas de las
+ * crónicas no se repiten aquí: viven en `/noticias`, y duplicar sus
+ * `transitionName` cancelaría la transición de la página entera.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import EventCard from '@components/common/EventCard.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import { buildSeason, cancelledAhead, resolveEventStatus } from '@lib/calendar';
+import { formatDate } from '@lib/utils';
+
+type Event = CollectionEntry<'events'>;
+type NewsEntry = CollectionEntry<'news'>;
+
+const events = (await getCollection('events')).filter((e: Event) => !e.data.draft);
+
+const news = (await getCollection('news'))
+  .filter((n: NewsEntry) => !n.data.draft)
+  .sort((a: NewsEntry, b: NewsEntry) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
+const season = buildSeason(events);
+
+// Dos fechas, no tres: la columna tiene que caber al lado de las crónicas sin
+// que la sección se vuelva otra lista larga.
+const upcoming = events
+  .map((event: Event) => ({ event, status: resolveEventStatus(event.data) }))
+  .filter(({ status }) => status === 'upcoming' || status === 'ongoing')
+  .sort((a, b) => a.event.data.date.getTime() - b.event.data.date.getTime())
+  .slice(0, 2);
+
+// El mismo criterio que `/calendario`, resuelto en `@lib/calendar`: dos filtros
+// paralelos terminaban mostrando listas distintas en las dos páginas.
+const cancelled = cancelledAhead(events);
+
+// Sin fechas en la colección no hay temporada que numerar.
+const eyebrow = season.total > 0 ? `Temporada ${season.year}` : 'Temporada';
+
+const columnHeading = 'text-xs font-bold uppercase tracking-[0.18em] text-primary-deep';
+
+const outlineLink =
+  'inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+---
+
+<SectionShell tone="muted" width="wide" labelledby="temporada-heading">
+  <SectionIntro
+    id="temporada-heading"
+    eyebrow={eyebrow}
+    eyebrowIcon="ph:calendar-dots-bold"
+    title="En qué punto va la temporada"
+    highlight="la temporada"
+    lead="El club corre la Copa Valle completa: lo que sigue en el calendario y lo que ya se contó de cada carrera, en un solo lugar."
+    class="max-w-2xl"
+  />
+
+  <div class:list={['mt-10 grid items-start gap-8', news.length > 0 && 'lg:grid-cols-2']}>
+    <div>
+      <h3 class={columnHeading}>Lo que sigue</h3>
+
+      {
+        upcoming.length > 0 ? (
+          <ul class="mt-4 flex flex-col gap-3">
+            {upcoming.map(({ event, status }, index) => (
+              <li class="reveal" style={`--stagger:${index * 80}ms`}>
+                <EventCard
+                  title={event.data.title}
+                  date={event.data.date}
+                  endDate={event.data.endDate}
+                  location={event.data.location}
+                  city={event.data.city}
+                  category={event.data.category}
+                  level={event.data.level}
+                  status={status}
+                  href="/calendario"
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="text-text-secondary mt-4">No hay fechas programadas por el momento.</p>
+        )
+      }
+
+      {
+        cancelled.length > 0 && (
+          <ul class="mt-4 flex flex-col gap-2">
+            {cancelled.map((event: Event) => (
+              <li class="text-text-secondary flex flex-wrap items-baseline gap-2 rounded-xl border border-dashed border-black/15 p-3 text-sm">
+                {/* El rojo de estado no dice nada por sí solo: el chip lleva la
+                    palabra. Es el mismo #b42318 del tablero de la general. */}
+                <span class="rounded-full bg-[#b42318]/10 px-2 py-0.5 text-xs font-bold tracking-wide text-[#b42318] uppercase">
+                  Cancelada
+                </span>
+                {/* Solo el título: si se reprograma o no es cosa de la
+                    organización y ningún campo del contenido lo dice. Lo que se
+                    sepa de cada caso está en `/calendario`, en su ancla. */}
+                <a
+                  href={`/calendario#evento-${event.id}`}
+                  class="text-text-primary focus-visible:outline-primary font-semibold hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  {event.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      <p class="mt-6">
+        <a href="/calendario" class={outlineLink}>
+          Ver el calendario completo
+          <Icon name="ph:arrow-right-bold" class="size-4" aria-hidden="true" />
+        </a>
+      </p>
+    </div>
+
+    {
+      news.length > 0 && (
+        <div>
+          <h3 class={columnHeading}>Lo último en carrera</h3>
+
+          <ul class="bg-surface shadow-card mt-4 overflow-hidden rounded-2xl border border-black/5">
+            {news.map((post: NewsEntry, index: number) => (
+              <li class:list={[index > 0 && 'border-t border-black/10']}>
+                <a
+                  href={`/noticias/${post.id}`}
+                  class="group hover:bg-surface-muted focus-visible:outline-primary flex items-center gap-4 p-4 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:p-5"
+                >
+                  <span class="min-w-0 flex-1">
+                    <span class="text-text-secondary block text-xs font-semibold tracking-wide uppercase">
+                      {formatDate(post.data.date)}
+                    </span>
+                    <span class="font-display text-text-primary mt-1 block leading-snug font-bold">
+                      {post.data.title}
+                    </span>
+                  </span>
+                  <Icon
+                    name="ph:arrow-right-bold"
+                    class="text-primary-deep ease-spring size-4 shrink-0 transition-transform duration-[var(--duration-micro)] group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+                    aria-hidden="true"
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <p class="mt-6">
+            <a href="/noticias" class={outlineLink}>
+              Todas las crónicas
+              <Icon name="ph:arrow-right-bold" class="size-4" aria-hidden="true" />
+            </a>
+          </p>
+        </div>
+      )
+    }
+  </div>
+</SectionShell>
