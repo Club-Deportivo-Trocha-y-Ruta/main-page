@@ -9,6 +9,9 @@ ageMin: 4
 ageMax: 5
 targetLevel: "iniciación"
 schedule: "Martes y viernes 4:30 - 6:00 PM"
+seo:
+  metaTitle: "Ciclismo para niños de 4 a 5 años: Escuela de Iniciación"
+  metaDescription: "Clases de ciclismo para niños de 4 a 5 años en Yumbo: equilibrio, circuitos de habilidad y juego, martes y viernes de 4:30 a 6:00 PM en la Pista Carlos Castro."
 duration: "1 hora 30 minutos"
 location: "Pista de Ciclomontañismo Carlos Castro, Yumbo"
 maxStudents: 20

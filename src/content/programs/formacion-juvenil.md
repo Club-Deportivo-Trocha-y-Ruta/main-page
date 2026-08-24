@@ -9,6 +9,9 @@ ageMin: 6
 ageMax: 11
 targetLevel: "formación"
 schedule: "Lunes, miércoles y viernes 4:00 - 6:00 PM"
+seo:
+  metaTitle: "Escuela de ciclismo de montaña para niños de 6 a 11 años"
+  metaDescription: "Formación en ciclismo de montaña para niños de 6 a 11 años en Yumbo: técnica, rodadas de fondo y mecánica básica, lunes, miércoles y viernes de 4:00 a 6:00 PM."
 duration: "2 horas"
 location: "Punto de encuentro: Pista de Ciclomontañismo Carlos Castro, Yumbo"
 maxStudents: 25

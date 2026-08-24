@@ -55,11 +55,27 @@ const spreads = programs.map((program: Program, index: number) => ({
 // tres veces en esta página y se quedó desfasada cuando el club la corrigió.
 const entryAge = Math.min(...programs.map((program: Program) => program.data.ageMin));
 const entryAgeLabel = `a los ${entryAge} años`;
+
+// Meta description con los tramos de edad tal como los declara cada programa,
+// para que no se desfase cuando el club ajuste un rango.
+const OPEN_ENDED_AGE = 99;
+const ageStages = [...programs]
+  .sort((a: Program, b: Program) => a.data.ageMin - b.data.ageMin)
+  .map((program: Program) =>
+    program.data.ageMax >= OPEN_ENDED_AGE
+      ? `desde los ${program.data.ageMin} años`
+      : `de ${program.data.ageMin} a ${program.data.ageMax} años`,
+  );
+const stagesLabel =
+  ageStages.length > 1
+    ? `${ageStages.slice(0, -1).join(', ')} y ${ageStages[ageStages.length - 1]}`
+    : ageStages.join('');
+const metaDescription = `Clases de ciclismo para niños y jóvenes por edad: ${stagesLabel}. Pista propia en Yumbo y primera clase de prueba gratis.`;
 ---
 
 <BaseLayout
-  title="Programas"
-  description={`Tres etapas de formación en ciclomontañismo para niños y jóvenes en Yumbo: iniciación desde los ${entryAge} años, formación juvenil y alto rendimiento.`}
+  title="Clases de ciclismo para niños por edad · Trocha y Ruta Yumbo"
+  description={metaDescription}
 >
   <!-- Entrada: orienta antes de mostrar el detalle -->
   <SectionShell

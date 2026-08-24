@@ -5,7 +5,7 @@ export const SITE = {
   url: 'https://clubdeportivotrochayruta.org',
   founded: 2010,
   description:
-    'Club de ciclomontañismo para niños desde 4 años en Yumbo, Valle del Cauca, Colombia.',
+    'Escuela de ciclismo de montaña para niños desde los 4 años en Yumbo, al norte de Cali. Pista propia, seguro deportivo y primera clase de prueba gratis.',
 } as const;
 
 /*
