@@ -290,7 +290,12 @@ durante el scroll.
   el ruido de corrida a corrida (la portada osciló 55–80 en el build actual). La causa
   está fuera de estas 12 tareas: **657 KB de fuentes** (`InterVariable.woff2` 352 KB +
   `PlusJakartaSans-Variable.woff2` 305 KB, ambas sin subsetear y ambas con `<link
-  rel=preload>`) compitiendo con el preload del hero, más 370 KB de imágenes. Transfer
+  rel=preload>`) compitiendo con el preload del hero, más 370 KB de imágenes.
+  **Resuelto el 2026-08-26** por la tarea 2 de `docs/08-plan-creatividad-ui.md`: los
+  subsets `-latin` bajan las fuentes de 657 KB a 160 KB (−76 %). De paso se descubrió
+  que los 305 KB de `PlusJakartaSans-Variable.woff2` no eran una fuente sino la página
+  404 de GitHub, así que ese peso era íntegramente basura y los títulos nunca se
+  pintaron con Plus Jakarta Sans. Falta volver a medir Lighthouse. Transfer
   total de la portada: 1.16 MB contra un presupuesto de 500 KB; JS de la portada 77.5 KB
   contra 50 KB (56.9 KB son el runtime de React, preexistente). Decisión que hay que
   tomar en el gate: o se ataca el subsetting de fuentes en un backlog aparte, o se

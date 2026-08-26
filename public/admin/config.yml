@@ -352,6 +352,28 @@ collections:
           - { label: "Competición", value: "competición" }
           - { label: "Recreativo", value: "recreativo" }
       - { label: "Horario", name: "schedule", widget: "string", required: true }
+      - label: "Sesiones (día y hora)"
+        name: "sessions"
+        widget: "list"
+        required: false
+        collapsed: true
+        summary: "{{fields.day}} · {{fields.start}} a {{fields.end}}"
+        hint: "Opcional, pero es lo que permite anunciar «Próxima sesión» en la página de inicio. Una entrada por día de entrenamiento; si una sesión se repite martes y viernes, van dos entradas. Las aclaraciones (salida, gymkanas, edades) siguen viviendo en el campo Horario."
+        fields:
+          - label: "Día"
+            name: "day"
+            widget: "select"
+            options:
+              - { label: "Lunes", value: "mon" }
+              - { label: "Martes", value: "tue" }
+              - { label: "Miércoles", value: "wed" }
+              - { label: "Jueves", value: "thu" }
+              - { label: "Viernes", value: "fri" }
+              - { label: "Sábado", value: "sat" }
+              - { label: "Domingo", value: "sun" }
+          - { label: "Hora de inicio", name: "start", widget: "string", required: true, pattern: ["^([01][0-9]|2[0-3]):[0-5][0-9]$", "Escribe la hora en formato de 24 horas, HH:MM (ej: 16:30)"], hint: "Formato de 24 horas: 07:00, 16:30" }
+          - { label: "Hora de fin", name: "end", widget: "string", required: true, pattern: ["^([01][0-9]|2[0-3]):[0-5][0-9]$", "Escribe la hora en formato de 24 horas, HH:MM (ej: 18:00)"], hint: "Tiene que ser posterior a la hora de inicio" }
+          - { label: "Lugar", name: "place", widget: "string", required: false, hint: "Dónde se encuentra el grupo ese día. Déjalo vacío si la sesión no tiene un punto fijo (por ejemplo, una salida por fuera)." }
       - { label: "Duración por sesión", name: "duration", widget: "string", required: false }
       - { label: "Ubicación", name: "location", widget: "string", required: false }
       - { label: "Cupo máximo", name: "maxStudents", widget: "number", required: false }
@@ -687,6 +709,18 @@ collections:
       - { label: "Mostrar en navegación", name: "showInNav", widget: "boolean", default: false }
       - { label: "Orden", name: "order", widget: "number", default: 0 }
       - { label: "Borrador", name: "draft", widget: "boolean", default: false }
+      # Solo lo usa la página "programas": los textos del selector de edad que
+      # aparece encima de la ruta de formación. Las edades de los botones NO se
+      # escriben aquí, salen de "Edad mínima"/"Edad máxima" de cada programa.
+      - label: "Selector de edad (solo página «programas»)"
+        name: "agePicker"
+        widget: "object"
+        collapsed: true
+        required: false
+        fields:
+          - { label: "Pregunta", name: "legend", widget: "string", hint: "Ej.: ¿Qué edad tiene tu hijo?" }
+          - { label: "Aclaración", name: "hint", widget: "text", required: false }
+          - { label: "Texto de «sin filtro»", name: "allLabel", widget: "string", default: "Todas las edades" }
       - label: "SEO"
         name: "seo"
         widget: "object"

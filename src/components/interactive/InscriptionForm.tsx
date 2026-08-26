@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { PUBLIC_WEB3FORMS_KEY } from 'astro:env/client';
 import { CONTACT } from '@lib/constants';
+import { ENROLLMENT_DOCUMENTS } from '@lib/enrollment';
 import { trackEvent, ageBucket } from '@lib/analytics';
 import SuccessConfetti from './SuccessConfetti';
 
@@ -220,6 +221,25 @@ export default function InscriptionForm({ programs }: Props) {
     trackEvent({ name: 'inscription_step_view', params: { step: currentStep + 1 } });
   }, [currentStep]);
 
+  // ─── Checklist "qué llevar" de la pantalla de éxito (docs/08 tarea 17) ──
+  // `.reveal`/`.revealed` son las clases globales del scroll-reveal
+  // (global.css), pero el observer que las activa vive en BaseLayout y solo
+  // consulta el DOM una vez, al cargar la página — nunca ve esta lista
+  // porque no existe todavía en ese momento (se monta recién al llegar al
+  // éxito). Así que este island dispara su propio "reveal": un solo
+  // `requestAnimationFrame` después del montaje basta para que el navegador
+  // pinte el estado inicial (`opacity:0`) antes de pasar a `.revealed`, que
+  // es lo que dispara la transición. Bajo `prefers-reduced-motion: reduce`
+  // esto es inofensivo: la propia regla `.reveal` en global.css fuerza
+  // `opacity:1` de una vez, sin importar si `.revealed` llegó a añadirse.
+  const [checklistRevealed, setChecklistRevealed] = useState(false);
+  useEffect(() => {
+    if (submitStatus !== 'success') return;
+    setChecklistRevealed(false);
+    const frame = requestAnimationFrame(() => setChecklistRevealed(true));
+    return () => cancelAnimationFrame(frame);
+  }, [submitStatus]);
+
   const goToStep = (step: number) => setCurrentStep(step);
 
   const handleNext = async () => {
@@ -330,8 +350,17 @@ export default function InscriptionForm({ programs }: Props) {
         {/* Celebración de la conversión principal. Decorativa y recortada a la
             tarjeta: `pointer-events-none` + `aria-hidden`, así que no tapa ni
             bloquea el mensaje ni los CTA de abajo. Con
-            `prefers-reduced-motion: reduce` no se monta nada. */}
-        <SuccessConfetti />
+            `prefers-reduced-motion: reduce` no se monta nada.
+            Acotada al tercio superior (nota a11y del gate 14,
+            docs/06-plan-animaciones.md): debajo hay texto de lectura -el
+            checklist de documentos- y las 28 partículas cruzándolo entero
+            durante ~2s afectaban la accesibilidad cognitiva. El wrapper es
+            su propio contexto de posicionamiento absoluto, así que el
+            `inset-0` de `ConfettiBurst` (sin tocar ese componente
+            compartido con `ContactForm`) queda recortado a esta franja. */}
+        <div className="absolute inset-x-0 top-0 h-1/3 overflow-hidden rounded-t-2xl">
+          <SuccessConfetti />
+        </div>
         <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
           <svg className="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -360,7 +389,41 @@ export default function InscriptionForm({ programs }: Props) {
             </li>
             <li className="flex gap-3">
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">3</span>
-              Para confirmar la inscripcion necesitaras presentar documento de identidad, EPS vigente, certificado medico deportivo y autorizacion firmada por el acudiente.
+              <div>
+                <p>Para confirmar la inscripcion necesitaras presentar estos documentos:</p>
+                {/* Checklist "qué llevar": misma fuente que la sección de
+                    seguro/documentos de /inscripciones (`ENROLLMENT_DOCUMENTS`
+                    en `@lib/enrollment`), no texto propio de esta pantalla. */}
+                <ul className="mt-3 space-y-2">
+                  {ENROLLMENT_DOCUMENTS.map((doc, index) => (
+                    <li
+                      key={doc.label}
+                      className={`reveal flex items-center gap-2 ${checklistRevealed ? 'revealed' : ''}`}
+                      style={{ '--stagger': `${index * 90}ms` } as CSSProperties}
+                    >
+                      <span
+                        className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-white"
+                        aria-hidden="true"
+                      >
+                        <svg
+                          className="checklist-check size-3"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </span>
+                      {doc.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </li>
           </ol>
         </div>

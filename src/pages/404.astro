@@ -19,6 +19,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
 import FactGrid from '@components/editorial/FactGrid.astro';
+import ClubSeal from '@components/editorial/ClubSeal.astro';
 import { elevationProfile, elevationPointAt, uniqueSvgId } from '@lib/editorial';
 import { buildControlPoints } from '@lib/not-found';
 import { CONTACT } from '@lib/constants';
@@ -245,6 +246,12 @@ const backToRoute = elevationPointAt(BACK_AT);
   <!-- Si el enlace venía de otro lado y debería existir -->
   <SectionShell tone="muted" width="default" spacing="compact" label="Reportar un enlace roto">
     <div class="flex flex-col items-center gap-4 rounded-2xl border border-primary/15 bg-surface/70 px-6 py-8 text-center sm:px-10">
+      <!--
+        El sello cierra la página: pasado el desvío, el club sigue firmando el
+        mapa. Decorativo (`aria-hidden`) — el nombre del club ya lo dan la
+        cabecera y el pie.
+      -->
+      <ClubSeal size="md" tone="muted" rotate={5} />
       <p class="max-w-md text-text-secondary">
         ¿Llegaste por un enlace de otro sitio y esta página debería existir? Cuéntanos.
       </p>

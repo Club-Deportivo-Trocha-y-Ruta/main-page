@@ -88,7 +88,7 @@ seo:
      --accent. No repetir la cifra del título. Ejemplo Palmira: 11 corredores,
      2 platas, 241 puntos, 3,4 km. -->
 
-<div class="stat-strip">
+<div class="stat-strip reveal">
   <div class="stat-strip__item"><span class="stat-strip__value">—</span><span class="stat-strip__label">corredores en pista</span></div>
   <div class="stat-strip__item stat-strip__item--accent"><span class="stat-strip__value">—</span><span class="stat-strip__label">podios del club</span></div>
   <div class="stat-strip__item"><span class="stat-strip__value">—</span><span class="stat-strip__label">puntos sumados</span></div>
@@ -226,7 +226,7 @@ El club llegaba a Roldanillo con las cuentas claras y **80 puntos todavía en ju
 
 [PENDIENTE — desarrollo, dato técnico, línea humana]
 
-<div class="stat-callout">
+<div class="stat-callout reveal">
   <span class="stat-callout__value">—</span>
   <span class="stat-callout__text">[PENDIENTE — un número que cuente una historia por sí solo]</span>
 </div>
@@ -371,7 +371,7 @@ Con seis de siete disputadas, así queda Trocha y Ruta en la tabla general del *
      Actualizar valores con el PDF GENERAL VI; --accent a la distancia
      más corta. Quitar o sumar items según las cuentas reales. -->
 
-<div class="stat-strip">
+<div class="stat-strip reveal">
   <div class="stat-strip__item stat-strip__item--accent"><span class="stat-strip__value">a —</span><span class="stat-strip__label">[corredor] del podio de [categoría]</span></div>
   <div class="stat-strip__item"><span class="stat-strip__value">a —</span><span class="stat-strip__label">[corredor] del segundo lugar</span></div>
   <div class="stat-strip__item"><span class="stat-strip__value">a —</span><span class="stat-strip__label">[corredor] del podio</span></div>

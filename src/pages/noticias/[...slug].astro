@@ -19,9 +19,11 @@ import { Icon } from 'astro-icon/components';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Breadcrumb from '@components/common/Breadcrumb.astro';
 import ShareButtons from '@components/common/ShareButtons.astro';
+import WhatsappShareButton from '@components/common/WhatsappShareButton.astro';
 import ScrollDepth from '@components/common/ScrollDepth.astro';
 import InscriptionCTA from '@components/common/InscriptionCTA.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
+import ClubSeal from '@components/editorial/ClubSeal.astro';
 import NewsGallery from '@components/sections/NewsGallery.astro';
 import RaceLineup from '@components/sections/RaceLineup.astro';
 import ChronicleContext from '@components/sections/ChronicleContext.astro';
@@ -106,6 +108,13 @@ const jsonLd = generateArticleJsonLd({
   articleTags={tags}
 >
   <article>
+    <!--
+      Barra de progreso de lectura (docs/08-plan-creatividad-ui.md tarea 14):
+      decorativa y `aria-hidden`, CSS puro en `.reading-progress`
+      (global.css). `sticky`, no `fixed` — motivo documentado ahí mismo.
+    -->
+    <div class="reading-progress" aria-hidden="true"></div>
+
     <!-- Cabecera: quién, cuándo y de qué va -->
     <SectionShell tone="plain" width="wide" spacing="compact" labelledby="cronica-titulo">
       <Breadcrumb items={[{ label: 'Noticias', href: '/noticias' }, { label: title }]} />
@@ -213,6 +222,24 @@ const jsonLd = generateArticleJsonLd({
         <div class="prose prose-lg max-w-none">
           <Content />
         </div>
+        {
+          /*
+            Respaldo sin JS para el `.stat-strip`/`.stat-callout` que la crónica
+            pueda traer con `reveal` (docs/08-plan-creatividad-ui.md, Sprint 3
+            tarea 15) y para el `.count-up` opcional que anide adentro (tarea 6).
+            El markdown no puede emitir su propio `<noscript>` por bloque como sí
+            hace `StatFigure.astro`, así que la red de seguridad vive una sola
+            vez aquí, igual de genérica que la de `StatsCounter.astro`: sin JS,
+            `.revealed` nunca llega (lo añade el IntersectionObserver de
+            `BaseLayout.astro`) y tanto el bloque como el conteo se quedarían en
+            `opacity: 0` / `--count-value: 0` para siempre. `set:html` sobre un
+            string, no `<style is:inline>` literal — mismo motivo que
+            `StatFigure.astro`: un `<style>` real anidado rompe el parser
+            embebido de prettier-plugin-astro. Inocuo en crónicas sin estos
+            bloques: los selectores simplemente no matchean nada.
+          */
+        }
+        <noscript set:html="<style>.stat-strip.reveal,.stat-callout.reveal,.stat-strip.reveal .stat-strip__item{opacity:1 !important;transform:none !important}.count-up__digits{--count-value:var(--count-target) !important}</style>" />
 
         {galleryFolder && galleryImages.length > 0 && (
           <div class="mt-10">
@@ -241,6 +268,19 @@ const jsonLd = generateArticleJsonLd({
 
         <div class="mt-10 border-t border-black/10 pt-6">
           <ShareButtons title={title} description={excerpt} />
+        </div>
+
+        <div class="mt-6">
+          <WhatsappShareButton title={title} />
+        </div>
+
+        {/*
+          Firma de cierre: el escudo estampado donde termina la crónica, como
+          el sello al pie de una carta. Decorativo (`aria-hidden`), va después
+          de compartir para que sea lo último que queda de la columna de texto.
+        */}
+        <div class="mt-12 flex justify-center">
+          <ClubSeal size="md" tone="plain" />
         </div>
       </div>
     </SectionShell>

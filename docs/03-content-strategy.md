@@ -276,6 +276,15 @@ const programs = defineCollection({
 
     // --- Logística ---
     schedule: z.string(),        // "Sábados y domingos 7:00 - 10:00 AM"
+    // Mismo horario en datos, opcional. Es lo que permite anunciar la próxima
+    // sesión (`nextSession()` en src/lib/programs.ts); las aclaraciones del
+    // club ("salida", "+12 años") siguen viviendo solo en `schedule`.
+    sessions: z.array(z.object({
+      day: z.enum(['mon','tue','wed','thu','fri','sat','sun']),
+      start: z.string(),         // "16:30" — 24 horas, HH:MM
+      end: z.string(),           // "18:00" — posterior a `start`
+      place: z.string().optional(),
+    })).optional(),
     duration: z.string().optional(),  // "2 horas por sesión"
     location: z.string().optional(),
     maxStudents: z.number().optional(),

@@ -43,6 +43,9 @@
   --radius-control: 0.75rem;
   --radius-card: 1rem;
   --radius-pill: 999px;
+  /* Placa de dorsal (RaceLineup): esquina propia, distinta de --radius-chip,
+     para que la placa no se confunda visualmente con un chip/badge normal. */
+  --radius-plate: 0.25rem;
 
   /* Sombras — mismo motivo: nombres propios en vez de --shadow-sm/md/lg. */
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.05);
@@ -112,19 +115,36 @@
   --duration-celebration: 500ms; /* celebraciones: 400–600ms */
 }
 
-/* Fuentes locales */
+/* Fuentes locales — subsets `-latin` generados con pyftsubset.
+   Cobertura: Latin básico + Latin-1 Supplement + Latin Extended-A parcial +
+   puntuación general + símbolos de moneda, más las flechas (U+2190-2193),
+   los triángulos de posición (U+25B2/U+25BC) y la estrella (U+2605) que sí
+   aparecen en el texto visible del sitio (crónicas, `SeasonTrack`, hero).
+   Los ejes variables se conservan sin instanciar: Inter mantiene `opsz`
+   14-32 y `wght` 100-900; Plus Jakarta Sans mantiene `wght` 200-800.
+   El `unicode-range` evita que el navegador descargue la fuente en páginas
+   cuyo texto no la necesite y documenta la cobertura real del archivo.
+   Regenerar con `scripts/subset-fonts.sh` si cambia el juego de caracteres. */
 @font-face {
   font-family: 'Inter Variable';
-  src: url('/fonts/InterVariable.woff2') format('woff2');
+  src: url('/fonts/InterVariable-latin.woff2') format('woff2');
   font-weight: 100 900;
   font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0300-0301, U+0303-0304,
+    U+0308-0309, U+0323, U+0329, U+2000-206F, U+20A0-20CF, U+2122, U+2190-2193, U+2212, U+2215,
+    U+25B2, U+25BC, U+2605, U+FEFF, U+FFFD;
 }
 
 @font-face {
   font-family: 'Plus Jakarta Sans';
-  src: url('/fonts/PlusJakartaSans-Variable.woff2') format('woff2');
+  src: url('/fonts/PlusJakartaSans-Variable-latin.woff2') format('woff2');
   font-weight: 200 800;
   font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0300-0301, U+0303-0304,
+    U+0308-0309, U+0323, U+0329, U+2000-206F, U+20A0-20CF, U+2122, U+2190-2193, U+2212, U+2215,
+    U+25B2, U+25BC, U+2605, U+FEFF, U+FFFD;
 }
 
 /* Base global */
@@ -156,13 +176,26 @@
    Va como fondo del texto y no como pseudo-elemento: con `box-decoration-break`
    el trazo se corta y se repite en cada línea, así que sigue al titular cuando
    la frase resaltada parte en dos. Como pseudo-elemento se estiraba a todo el
-   ancho del bloque. */
+   ancho del bloque.
+   `background-size` (en vez de `transform`/`opacity`) es la excepción explícita
+   de docs/08-plan-creatividad-ui.md tarea 4: no dispara layout —el fondo pinta
+   dentro de una caja cuyo tamaño ya está fijado por el texto— y es la única
+   propiedad que permite "dibujar" el trazo de izquierda a derecha; un
+   `scaleX` tendría que ir en un pseudo-elemento aparte y eso es justo lo que
+   el comentario de arriba descarta por el corte de línea. */
 .editorial-mark {
   background-image: linear-gradient(
     to top,
     color-mix(in srgb, var(--color-accent) 55%, transparent) 0.34em,
     transparent 0.34em
   );
+  background-repeat: no-repeat;
+  background-position: left;
+  /* Estado final, visible sin JS y sin soporte de `.reveal`: el trazo pintado
+     entero. El único sitio donde se declara un `background-size` menor es el
+     bloque `no-preference` de más abajo, y solo mientras el `.reveal`
+     ancestro no tiene todavía `.revealed`. */
+  background-size: 100% 100%;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   padding-inline: 0.1em;
@@ -194,6 +227,83 @@
   .reveal.revealed {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Trazo de `.editorial-mark` que se dibuja al entrar en pantalla
+   (docs/08-plan-creatividad-ui.md, Sprint 0 tarea 4). Mejora progresiva:
+   TODO el "antes" (background-size 0%) vive dentro de
+   `prefers-reduced-motion: no-preference` Y de `.reveal:not(.revealed)`. Sin
+   soporte de `.reveal` como ancestro (la mayoría de usos de `SectionIntro`
+   fuera de una rejilla `.reveal`), bajo `reduce`, o sin JS con un `.reveal`
+   que ya llegó a `.revealed`, la regla de base de `.editorial-mark`
+   (`background-size: 100%`) es la única que aplica y el trazo se ve completo
+   desde el primer render. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal:not(.revealed) .editorial-mark {
+    background-size: 0% 100%;
+  }
+
+  .reveal .editorial-mark {
+    transition: background-size var(--duration-celebration) var(--ease-pop);
+    /* Pequeño retardo: el trazo empieza a dibujarse justo después de que el
+       titular termina su propio fundido de `.reveal` (0.4s), no a la vez. */
+    transition-delay: 150ms;
+  }
+}
+
+/* Sello del club — `ClubSeal.astro` (docs/08-plan-creatividad-ui.md, Sprint 2
+   tarea 9). El escudo se "estampa" al entrar en pantalla: llega grande y
+   transparente y aterriza en su tamaño con el rebote de `--ease-pop`.
+
+   Reparto de propiedades, y por qué es así:
+     - La inclinación va en la propiedad independiente `rotate`, no dentro de
+       `transform`: es una posición fija que debe sobrevivir a los dos estados
+       de `.reveal` (que ocupa `transform` con su `translateY(20px)`) sin que
+       ninguno de los dos tenga que repetirla.
+     - El estampado sí va en `transform` y reescribe ambos estados de
+       `.reveal` — NO en la propiedad independiente `scale`, aunque sería lo
+       natural. **Lightning CSS trata `scale`/`rotate`/`translate` como
+       longhands de `transform` (no lo son: el spec las aplica antes y por
+       separado) y, si conviven en la misma regla, se queda con una sola.**
+       Comprobado: `{ scale: 1.4; transform: none }` compila a
+       `{ transform: none }` — el estampado desaparecía sin un solo warning.
+       `rotate` sobrevive porque vive en una regla aparte, sin `transform`.
+   Ambas son propiedades compositables: no disparan layout (CLS < 0.05).
+
+   Estado de reposo = sello completo, en las tres capas de mejora progresiva:
+     1. Sin soporte de `rotate` (navegador viejo): la declaración se descarta
+        y queda el escudo derecho, a tamaño, visible.
+     2. Bajo `prefers-reduced-motion: reduce`: el bloque de abajo no se aplica,
+        así que no hay `scale(1.4)` de partida y el catch-all global de
+        `reduce` (`.reveal { opacity: 1; transform: none }`) resuelve la
+        entrada. La inclinación se conserva: es una posición fija, no
+        movimiento.
+     3. Sin JS: `.revealed` nunca llega y el sello se quedaría en `opacity: 0`
+        — lo repara el `<noscript>` que emite el propio componente.
+
+   Sin animación en bucle: el sello no gira ni late una vez estampado. */
+.club-seal {
+  rotate: var(--club-seal-rotate, -6deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .club-seal.reveal {
+    /* Sustituye el `translateY(20px)` → `translateY(0)` de `.reveal`: un sello
+       no sube desde abajo, cae en el sitio. La opacidad de `.reveal` sí se
+       aprovecha tal cual.
+       `--ease-pop` sobrepasa 1 y devuelve: en la escala eso es el
+       aplastamiento del sello contra el papel (1.4 → ~0.94 → 1). En `opacity`
+       el sobrepaso se recorta a 1, así que la tinta satura pronto y se queda
+       — buscado, no un descuido. */
+    transform: scale(1);
+    transition-property: transform, opacity;
+    transition-duration: var(--duration-celebration);
+    transition-timing-function: var(--ease-pop);
+  }
+
+  .club-seal.reveal:not(.revealed) {
+    transform: scale(1.4);
   }
 }
 
@@ -380,6 +490,147 @@
   }
 }
 
+/* Cabecera compacta al hacer scroll (`Header.astro`): ligada al scroll del
+   documento igual que `.conversion-bar`, por eso también usa `scroll(root)`.
+   Nunca anima `height`/`padding` (dispararía layout): el "compactado" es solo
+   una lectura visual —logo más chico, CTA con aspecto presionado— que no
+   mueve al resto de la página ni un píxel. Recorrido de 0 a 200px de scroll:
+   pasado ese punto la cabecera queda en su estado final "compacto".
+
+   Sin soporte o con menos movimiento, ninguna de las dos reglas aplica y la
+   cabecera se queda en su único estado de siempre (logo a tamaño completo,
+   CTA sin sombra) — no hay un estado "compacto" que mostrar de entrada. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes header-logo-compact {
+      from {
+        transform: scale(1);
+      }
+      to {
+        transform: scale(0.85);
+      }
+    }
+
+    .header-logo {
+      transform-origin: left center;
+      /* Longhands a propósito: ver la nota de más arriba sobre el shorthand
+         `animation` y Lightning CSS. */
+      animation-name: header-logo-compact;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 200px;
+    }
+
+    /* El CTA no puede animar `box-shadow` directamente (no es `transform`/
+       `opacity`, y de fondo es una propiedad cara de interpolar). En su lugar,
+       la sombra "dura" del botón `pressable` (ver `Button.astro`) vive ya
+       dibujada en un `::after` del mismo tamaño y solo se anima su `opacity`
+       de 0 a 1: el navegador nunca recalcula la sombra en sí, solo su
+       visibilidad. */
+    @keyframes header-cta-shadow-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .header-cta {
+      position: relative;
+      /* Mismo tono que la variante `accent` de `Button.astro`. */
+      --btn-shadow-color: var(--color-accent-dark);
+    }
+
+    .header-cta::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: var(--shadow-pressable);
+      pointer-events: none;
+      animation-name: header-cta-shadow-in;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 200px;
+    }
+  }
+}
+
+/* ============================================================
+   Barra de progreso de lectura en las crónicas
+   (`src/pages/noticias/[...slug].astro`, docs/08-plan-creatividad-ui.md
+   tarea 14). Decorativa (`aria-hidden`): no repite información que no esté
+   ya en el "N min de lectura" de la cabecera.
+
+   `position: sticky`, no `fixed` — aunque la tarea la pide "fija bajo el
+   header", `fixed` no sirve aquí por dos motivos ya verificados en este
+   archivo:
+
+   1. El `<main>` de `BaseLayout.astro` lleva `transition:name="page-main"`
+      (nota de la sección "Hilo de ruta", más abajo): un descendiente
+      `fixed` se ancla a ese `<main>` en vez de al viewport y se va con el
+      scroll. La barra vive dentro del `<article>`, así que le pasaría
+      igual.
+   2. `AnnouncementBar` es `relative` y se desplaza con la página; el
+      `<header>` es `sticky top-0` pero, mientras el banner es visible, no
+      está clavado en la parte superior del viewport (está más abajo, en su
+      posición natural de flujo). Un `fixed` con `top: var(--header-h)`
+      quedaría montado sobre el banner en la carga inicial: `--header-h`
+      solo mide el alto del `<header>`, no el del banner que tiene encima.
+
+   `sticky` resuelve los dos: en flujo normal desde donde se coloca —justo
+   al abrir el `<article>`, debajo de la miga de pan— y solo se clava en
+   `top: var(--header-h)` cuando el scroll la alcanza, momento en el que el
+   `<header>` ya está clavado en `top: 0` y no hay banner de por medio. Es
+   el mismo recurso que ya usan `TrochaVerdeNav` y el riel del hilo de ruta
+   para "pegado bajo el header".
+
+   El barrido usa `scroll(root)` —como `.conversion-bar` y la cabecera
+   compacta— porque mide el avance de todo el documento, no la visibilidad
+   de un elemento. Sin rango explícito el timeline cubre el 0%–100% del
+   scroll completo de la página (incluye el pie): se deja así a propósito,
+   calcular dónde termina el cuerpo de la crónica exigiría JS.
+
+   Sin soporte de `scroll()` o con `prefers-reduced-motion: reduce` no se
+   declara ninguna transformación: la barra queda en su único estado —
+   `scaleX(1)`, trazo completo— desde el primer render. No hay estado a
+   medias que reparar. */
+.reading-progress {
+  position: sticky;
+  top: var(--header-h, 4rem);
+  z-index: 20;
+  height: 3px;
+  background: var(--color-primary);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes reading-progress-fill {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    .reading-progress {
+      /* Longhands a propósito: ver la nota de más arriba sobre el shorthand
+         `animation` y Lightning CSS. */
+      animation-name: reading-progress-fill;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0% 100%;
+    }
+  }
+}
+
 /* Navigation progress bar */
 #nav-progress {
   position: fixed;
@@ -508,7 +759,53 @@
   color: var(--color-text-secondary);
 }
 
-/* Cifra destacada: un número que cuenta la historia, entre párrafos */
+/* Entrada de `.stat-strip`/`.stat-callout` al hacer scroll (docs/08-plan-
+   creatividad-ui.md, Sprint 3 tarea 15). Cero JS nuevo: el autor de la
+   crónica agrega la clase `reveal` al bloque en el markdown (plantilla en
+   `.claude/agents/content-marketer.md`) y hereda el mismo
+   IntersectionObserver de `BaseLayout.astro` que ya usa el resto del sitio
+   — un `.stat-callout` sin `reveal` se sigue viendo exactamente igual que
+   hoy, siempre visible.
+
+   El contenedor usa el fade/translateY de `.reveal` tal cual (nada que
+   declarar aparte). Lo que se agrega aquí es el escalonado de los 4-6
+   ítems de `.stat-strip`: a diferencia de `StatsCounter`/`SeasonOverview`
+   (Astro, `--stagger` calculado por índice en build), el markdown no tiene
+   forma de calcular un índice, así que el retardo por ítem sale de
+   `:nth-child` con la misma cadencia de 80ms ya establecida por esos
+   componentes. Solo `opacity`/`transform`: no dispara layout. */
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.stat-strip.reveal) .stat-strip__item {
+    transition:
+      opacity 0.4s ease-out,
+      transform 0.4s ease-out;
+  }
+  .prose :where(.stat-strip.reveal):not(.revealed) .stat-strip__item {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  .prose :where(.stat-strip.reveal.revealed) .stat-strip__item:nth-child(2) {
+    transition-delay: 80ms;
+  }
+  .prose :where(.stat-strip.reveal.revealed) .stat-strip__item:nth-child(3) {
+    transition-delay: 160ms;
+  }
+  .prose :where(.stat-strip.reveal.revealed) .stat-strip__item:nth-child(4) {
+    transition-delay: 240ms;
+  }
+  .prose :where(.stat-strip.reveal.revealed) .stat-strip__item:nth-child(5) {
+    transition-delay: 320ms;
+  }
+  .prose :where(.stat-strip.reveal.revealed) .stat-strip__item:nth-child(6) {
+    transition-delay: 400ms;
+  }
+}
+
+/* Cifra destacada: un número que cuenta la historia, entre párrafos.
+   Entrada por scroll: agregar `reveal` al `<div class="stat-callout">` en
+   el markdown, sin nada más — es un bloque único (no una rejilla), así que
+   el fade/translateY de `.reveal` de base ya es toda la entrada que hace
+   falta; no necesita el escalonado por `:nth-child` de `.stat-strip`. */
 .prose :where(.stat-callout) {
   margin-block: 2.5rem;
   padding-block: 1.25rem;
@@ -909,8 +1206,127 @@
   font-size: 0.8125rem;
 }
 
-/* Respect reduced motion preference */
+/* ============================================================
+   Count-up: utilidad compartida (docs/08-plan-creatividad-ui.md,
+   Sprint 1 tarea 6). Extraída del count-up original de
+   `TrochaVerde.astro` (docs/06-plan-animaciones.md, Fase 4 Tarea 11) para
+   reusarla también desde `StatFigure.astro` (prop `countUp`), sin duplicar
+   la declaración `@property`. Solo para valores enteros.
+
+   Markup que espera cada consumidor:
+     <span class="count-up" style="--count-target:N;--count-digits:D">
+       <span class="count-up__digits" aria-hidden="true"></span>
+       <span class="sr-only">N</span>
+     </span>
+   El dígito animado es `aria-hidden`; el `sr-only` siempre lleva la cifra
+   final (nunca el conteo intermedio) — los lectores de pantalla no deben
+   escuchar el número subir.
+
+   Cero JS nuevo: el disparador es el cambio de clase `.reveal` →
+   `.revealed` que ya añade el IntersectionObserver de BaseLayout.astro.
+   Un `.count-up` sin ancestro `.reveal` nunca arranca el conteo bajo
+   `no-preference` (se queda en `--count-value: 0`): cada consumidor nuevo
+   debe envolverlo en `.reveal` y replicar el `<noscript>` de abajo.
+
+   Estado de reposo = cifra final SIEMPRE, en las tres capas de mejora
+   progresiva:
+     1. Sin `@property` (o sin soporte de `@supports at-rule()`, la forma
+        correcta de detectarlo — `@supports (prop: value)` no sirve para
+        probar un at-rule): el bloque de abajo nunca se activa y
+        `--count-value` queda en `var(--count-target)`.
+     2. Con `@property` pero `prefers-reduced-motion: reduce`: la regla que
+        arranca en 0 vive dentro de `@media (prefers-reduced-motion:
+        no-preference)`, así que tampoco se activa.
+     3. Con soporte y sin esa preferencia, pero sin JS: `.revealed` nunca
+        llega (BaseLayout.astro es quien lo añade) y `--count-value` se
+        quedaría en 0 para siempre. Cada consumidor debe reparar esto con su
+        propio `<noscript is:inline>` que fuerce `--count-value:
+        var(--count-target) !important` Y `.reveal { opacity: 1 !important;
+        transform: none !important }` — sin lo segundo, la sección entera
+        (no solo la cifra) se queda invisible sin JS.
+
+   `--count-digits` reserva en `min-width` el ancho final del número, en
+   `ch`: sin esto, el conteo empieza mostrando "0" (1 dígito) y ensancha su
+   caja a medida que sube — un layout shift real que hoy no se dispara por
+   casualidad (la etiqueta de al lado suele mandar el ancho de la columna),
+   no porque esté prevenido. Cada consumidor calcula
+   `String(target).length` una sola vez, en build. */
+.count-up__digits {
+  display: inline-block;
+  min-width: calc(var(--count-digits, 1) * 1ch);
+  --count-value: var(--count-target);
+  counter-reset: count-up var(--count-value);
+}
+.count-up__digits::before {
+  content: counter(count-up);
+}
+
+@supports at-rule(@property) {
+  @property --count-value {
+    syntax: '<integer>';
+    inherits: false;
+    initial-value: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .count-up__digits {
+      --count-value: 0;
+      /* Duración fija fuera de --duration-micro/--duration-celebration a
+         propósito: el plan pide ~1–1.5s para este conteo, más largo que
+         ambos tokens (200ms/500ms) — mismo criterio que el shake de campo
+         inválido (300ms fijo, ver el bloque `field-` más abajo). */
+      transition: --count-value 1.2s ease-out;
+    }
+
+    .reveal.revealed .count-up__digits {
+      --count-value: var(--count-target);
+    }
+  }
+}
+
+/* ============================================================
+   Red de seguridad global — `prefers-reduced-motion: reduce`
+   (docs/08-plan-creatividad-ui.md, Sprint 0 tarea 1)
+
+   Catch-all: cualquier `animation`/`transition` que se nos escape (propia,
+   de un plugin, o inyectada por markdown/CMS) queda casi instantánea en vez
+   de reproducirse. No usamos `animation: none`/`transition: none` aquí
+   porque eso borraría también `animation-name`/`transition-property` y
+   ocultaría el estado final en los pocos casos con `animation-fill-mode:
+   forwards` fuera de este archivo; forzar la duración a ~0 dispara el mismo
+   frame final sin ese riesgo. `!important` es intencional: es la única
+   forma de que un catch-all universal gane sobre reglas con selectores más
+   específicos declaradas después en la cascada.
+
+   Ya verificado que no rompe nada existente:
+   - `.reveal`/`SponsorsBar`/el stepper de inscripción/el confetti ya
+     resuelven su propio estado bajo `reduce` con `transition: none` o con
+     bloques enteros dentro de `@media (prefers-reduced-motion:
+     no-preference)` — el catch-all nunca llega a pisar un `animation-name`
+     o `transition-property` real, solo refuerza la duración.
+   - El count-up compartido (`.count-up`, `--count-value`, usado por
+     `TrochaVerde.astro` y por `StatFigure.astro` vía la prop `countUp`)
+     solo declara su `transition` dentro de `no-preference`; bajo `reduce`
+     nunca se registra, así que no hay nada que este bloque pueda acelerar.
+   - Ningún componente interactivo (`src/components/interactive/`) escucha
+     `transitionend`/`animationend` para avanzar su propia lógica, así que
+     una duración de `.01ms` no deja timers de JS colgados.
+   - Astro ya anula sus propias view transitions bajo
+     `prefers-reduced-motion` (`::view-transition-*` y
+     `[data-astro-transition-scope]` con `animation: none !important`,
+     ver `astro/components/viewtransitions.css`); este bloque es
+     redundante ahí a propósito, no conflictivo.
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .reveal {
     opacity: 1;
     transform: none;
@@ -1019,6 +1435,32 @@
   letter-spacing: 0.02em;
 }
 
+/*
+ * Dorsal: la categoría se presenta como una placa de número de carrera en
+ * vez de texto suelto — borde doble (`border-style: double`, no dos reglas
+ * separadas) y tipografía tabular, por si algún día el dato incluye un
+ * número real (hoy `athlete.category` es el nombre de categoría que entrega
+ * la federación, p. ej. "Prejuvenil A Femenina" o "Teteros Con Pedales").
+ *
+ * Sin color por categoría vía `LEVEL_STYLES` (`src/lib/programs.ts`): ese
+ * mapa está indexado por el nivel del programa del club
+ * (iniciación/formación/competición/recreativo), no por la categoría de
+ * carrera de la federación — son dos taxonomías distintas sin
+ * correspondencia 1:1 fiable (p. ej. "Élite" no es "competición", es una
+ * categoría de edad/rendimiento de la federación). Inventar ese mapeo aquí
+ * sería una regla frágil basada en coincidencias de texto, así que la
+ * placa usa un único tono de marca para todas las categorías.
+ */
+.race-plate {
+  display: inline-block;
+  margin-top: 0.125rem;
+  padding: 0.1rem 0.65rem;
+  border: 3px double var(--color-primary-deep);
+  border-radius: var(--radius-plate);
+  background: var(--color-surface);
+  font-variant-numeric: tabular-nums;
+}
+
 /* Hover (solo dispositivos con puntero fino) */
 @media (hover: hover) and (pointer: fine) {
   .race-lineup__poster-wrap {
@@ -1026,6 +1468,15 @@
   }
   .race-lineup__card:hover .race-lineup__glare {
     opacity: 1;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .race-plate {
+    transition: rotate var(--duration-micro) var(--ease-spring);
+  }
+  .race-lineup__card:hover .race-plate {
+    rotate: 2deg;
   }
 }
 
@@ -1124,6 +1575,44 @@
     animation-name: if-step-pop;
     animation-duration: var(--duration-micro);
     animation-timing-function: var(--ease-pop);
+  }
+}
+
+/* ============================================================
+   Checklist «qué llevar» — /inscripciones y éxito de InscriptionForm
+   (docs/08-plan-creatividad-ui.md, Sprint 3 tarea 17, prefijo `checklist-`)
+
+   Mejora progresiva, mismo criterio que el resto del archivo: TODO va
+   dentro de `prefers-reduced-motion: no-preference`. Sin la preferencia no
+   se declara ni `stroke-dasharray` ni `animation`, así que el check se
+   pinta entero de una vez — nunca es la única señal de que el documento
+   está en la lista (el círculo de fondo y el texto ya lo comunican).
+   Reutiliza el keyframe `if-check-draw` definido arriba para el stepper de
+   inscripción, no lo duplica.
+
+   El disparador de `.revealed` en cada `<li class="reveal">` es distinto
+   según el sitio: en `/inscripciones` (Astro estático) es el mismo
+   IntersectionObserver global de `BaseLayout.astro`; en la pantalla de
+   éxito de `InscriptionForm.tsx` (contenido montado por React después de
+   la carga de la página, fuera del alcance de ese observer) el propio
+   island dispara su `.revealed` un frame después de montarse. Ambos casos
+   comparten este mismo CSS.
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .checklist-check {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+  }
+
+  /* Arranca cuando el propio ítem ya terminó su fundido de entrada: mismo
+     `--stagger` que gobierna el `transition-delay` del `.reveal` (línea
+     ~214), más los 0.4s de esa transición. */
+  .reveal.revealed .checklist-check {
+    animation-name: if-check-draw;
+    animation-duration: calc(var(--duration-celebration) * 0.5);
+    animation-timing-function: ease-out;
+    animation-delay: calc(var(--stagger, 0ms) + 400ms);
+    animation-fill-mode: backwards;
   }
 }
 
@@ -1278,5 +1767,95 @@
     animation-delay: var(--confetti-delay, 0ms);
     animation-timing-function: linear;
     animation-fill-mode: both;
+  }
+}
+
+/* ============================================================
+   Selector de edad de /programas
+   (docs/08-plan-creatividad-ui.md, Sprint 1 tarea 5)
+
+   Qué hace: al elegir una edad en el `<fieldset>` de `ProgramAgePicker`, la
+   sección del programa que cubre esa edad y su tramo en la regla de
+   `ProgramPathway` ganan un aro, y la foto de los demás programas se apaga.
+   Cero JavaScript: todo sale de `:has()` leyendo qué radio quedó `:checked`.
+
+   Cómo se conectan las dos mitades. CSS no sabe comparar el `value` de un radio
+   con un rango numérico, así que el puente se genera en build: `ProgramAgePicker`
+   emite una regla por edad —`…:has(input[value="7"]:checked) [data-ages~="7"]
+   { --age-emphasis: 1 }`— y aquí abajo todas las declaraciones leen esa variable
+   con `var(--age-emphasis, 0)`. El resultado es que el diseño vive completo en
+   este archivo y lo generado son solo N líneas mecánicas. `--age-emphasis` se
+   hereda, así que basta con encenderla en la sección para que la foto de dentro
+   también lo sepa.
+
+   Las tres cadenas acopladas (`program-age-scope`, `edad-programa`, `todas`)
+   están declaradas en `src/lib/programs.ts` (`AGE_SCOPE_CLASS`,
+   `AGE_INPUT_NAME`, `AGE_ALL_VALUE`) y repetidas aquí a mano porque una hoja de
+   estilos no puede importarlas. Si cambian allí, hay que cambiarlas aquí.
+
+   Degradación: todas las reglas de énfasis llevan `:has()` en el selector, así
+   que un navegador sin soporte las descarta enteras y la página se ve como
+   siempre. Lo mismo pasa con el estado inicial: el radio «todas» arranca
+   marcado, y con él ningún selector de abajo llega a coincidir.
+
+   Por qué NO se apaga el texto. El plan pedía bajar a ~0.55 la opacidad de los
+   programas que no corresponden, pero `opacity` sobre un bloque baja también el
+   contraste de su texto: `text-secondary` (#5a5a5a) al 55% sobre blanco queda en
+   3.3:1 y deja de cumplir WCAG 2.1 AA (1.4.3), y no hay ningún valor por debajo
+   de 1 que lo salve. Las secciones que no corresponden no son un control
+   inactivo —se siguen leyendo y sus enlaces siguen funcionando—, así que no
+   aplica la excepción del criterio. Se apaga entonces solo la ilustración (la
+   foto y su mancha de color, `[data-age-media]`), que no tiene requisito de
+   contraste, y el peso del mensaje lo lleva el énfasis: el aro y el zoom del
+   tramo. Ni una palabra de la página pierde legibilidad al filtrar.
+
+   Sobre el aro: aparece de golpe, sin curva propia — mismo criterio que
+   `Button.astro`, que nunca pone `box-shadow` ni `outline` en un `transition`.
+   Lo único que se anima es `opacity` y `transform`.
+   ============================================================ */
+
+.program-age-scope:has(input[name='edad-programa']:checked:not([value='todas'])) {
+  /* La sección del programa que corresponde. Aro por dentro (`outline-offset`
+     negativo): la sección ocupa todo el ancho de la ventana y un aro por fuera
+     no se vería. Con `--age-emphasis` en 0 el ancho es 0 y no se pinta nada. */
+  & section[data-ages] {
+    outline: calc(3px * var(--age-emphasis, 0)) solid var(--color-primary-deep);
+    outline-offset: -3px;
+  }
+
+  /* La ilustración de cada programa: se apaga en los que no corresponden.
+     `scale` mínimo en el que sí, lo justo para que el ojo aterrice ahí. La
+     sección recorta (`overflow-clip`/`hidden`), así que crecer no desborda. */
+  & section[data-ages] [data-age-media] {
+    opacity: calc(0.55 + 0.45 * var(--age-emphasis, 0));
+    transform: scale(calc(1 + 0.02 * var(--age-emphasis, 0)));
+  }
+
+  /* El tramo de la regla de edades. `position`/`z-index` solo entran en juego
+     con una edad elegida: el tramo que crece pasa por encima de sus vecinos,
+     que son hermanos absolutos y si no lo taparían por orden de pintado. */
+  & li[data-ages] > a {
+    position: relative;
+    z-index: calc(var(--age-emphasis, 0));
+    outline: calc(2px * var(--age-emphasis, 0)) solid var(--color-primary-deep);
+    outline-offset: 2px;
+    transform: scale(calc(1 + 0.06 * var(--age-emphasis, 0)));
+  }
+}
+
+/* La transición se declara fuera del `:has()` a propósito: si viviera dentro,
+   volver a «todas las edades» apagaría la regla y el cambio de vuelta sería un
+   salto seco. Al declararla aquí, el filtro entra y sale con la misma curva.
+
+   Nota: esta regla gana por especificidad al `transition-colors` que
+   `ProgramPathway` le pone al tramo. No se pierde nada — el único efecto de
+   hover de ese enlace es `brightness-95`, un `filter` que `transition-colors`
+   nunca cubrió. */
+@media (prefers-reduced-motion: no-preference) {
+  .program-age-scope [data-age-media],
+  .program-age-scope li[data-ages] > a {
+    transition-property: opacity, transform;
+    transition-duration: var(--duration-micro);
+    transition-timing-function: var(--ease-spring);
   }
 }

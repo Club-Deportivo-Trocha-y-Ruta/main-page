@@ -1,7 +1,11 @@
 ---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 import Button from '@components/common/Button.astro';
-import { CONTACT, CTA_TRIAL_LABEL } from '@lib/constants';
+import ClubSeal from '@components/editorial/ClubSeal.astro';
+import { CONTACT, CTA_TRIAL_LABEL, NEXT_SESSION_LABEL } from '@lib/constants';
 import { uniqueSvgId } from '@lib/editorial';
+import { nextSession } from '@lib/programs';
 
 interface Props {
   variant?: 'banner' | 'inline';
@@ -36,6 +40,32 @@ const {
 // La variante `banner` es un landmark propio y necesita nombre accesible. El
 // id se genera por render porque el componente aparece dos veces en la portada.
 const headingId = uniqueSvgId('cta-inscripcion');
+
+/*
+ * La próxima sesión sale del campo `sessions` de los programas activos, no de
+ * un texto escrito aquí: si el club todavía no capturó sus horarios en datos,
+ * la línea no se pinta y el banner queda como estaba. Solo la variante
+ * `banner` la muestra —es el cierre de la página, donde la familia decide— y
+ * por eso la colección solo se consulta ahí.
+ *
+ * Es un dato de build: `nextSession()` devuelve el día de la semana y la hora,
+ * que se repiten cada semana y siguen siendo ciertos aunque pasen días sin
+ * desplegar. Nunca "hoy" ni "mañana".
+ */
+type Program = CollectionEntry<'programs'>;
+
+const upcoming =
+  variant === 'banner'
+    ? nextSession(
+        (await getCollection('programs'))
+          .filter((program: Program) => !program.data.draft && program.data.active)
+          .map((program: Program) => ({
+            id: program.id,
+            title: program.data.title,
+            sessions: program.data.sessions,
+          }))
+      )
+    : null;
 ---
 
 {
@@ -48,10 +78,25 @@ const headingId = uniqueSvgId('cta-inscripcion');
      */
     <section class="bg-primary px-4 py-16" aria-labelledby={headingId}>
       <div class="text-surface-dark mx-auto max-w-3xl text-center">
+        {/*
+          El sello encabeza el banner: es el cierre de la página y quien firma
+          la promesa. Tono `brand` porque el fondo es el teal de marca, sobre
+          el que el escudo (teal→lima, fondo transparente) se perdería sin su
+          disco claro.
+        */}
+        <ClubSeal size="sm" tone="brand" rotate={-6} class="mb-5" />
         <h2 id={headingId} class="font-display text-2xl font-bold md:text-3xl">
           {heading}
         </h2>
         <p class="text-surface-dark/80 mt-3 text-base md:text-lg">{description}</p>
+        {upcoming && (
+          <p class="text-surface-dark mt-5 inline-flex items-center gap-2 rounded-full bg-white/40 px-4 py-2 text-sm font-semibold">
+            <Icon name="ph:calendar-check-bold" class="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span>
+              {NEXT_SESSION_LABEL}: {upcoming.label}
+            </span>
+          </p>
+        )}
         <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button
             variant="accent"

@@ -61,8 +61,8 @@ export interface RequiredDocument {
 
 /**
  * Lo que pide el club para confirmar la inscripción (paso 4 del proceso).
- * Ya estaba escrito, disperso, en el aviso y en la pantalla de éxito del
- * formulario — aquí queda en un solo lugar.
+ * Fuente única para el checklist de `/inscripciones` y el de la pantalla
+ * de éxito de `InscriptionForm.tsx` — ninguno de los dos repite esta copia.
  */
 export const ENROLLMENT_DOCUMENTS: RequiredDocument[] = [
   { label: 'Documento de identidad del niño o niña', icon: 'ph:identification-card-bold' },

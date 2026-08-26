@@ -51,6 +51,76 @@ const dateStr = eventDate.toLocaleDateString('es-CO', {
   </button>
 </div>
 
+<style>
+  /* Entrada + cierre colapsable (docs/08-plan-creatividad-ui.md Sprint 3
+     Tarea 18). El script de abajo no gana ninguna línea: el clic en cerrar
+     seguía llamando a `bar.remove()`; ahora agrega la clase `.is-collapsed`
+     y es el CSS el que hace desaparecer la barra. Sin esa clase, o sin
+     soporte de las features de abajo, la barra se ve y se cierra
+     exactamente igual que hoy (retiro instantáneo del DOM en la siguiente
+     carga si ya estaba cerrada — esa rama no cambia). */
+  #announcement-bar {
+    /* Siempre activo, con o sin soporte: recorta el contenido cuando la
+       altura llega a 0 y evita que el enlace/botón sigan siendo alcanzables
+       por teclado una vez colapsada (WCAG 2.1 AA). */
+    overflow: clip;
+  }
+
+  #announcement-bar.is-collapsed {
+    height: 0;
+    opacity: 0;
+    padding-block: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Entrada: fundido + pequeño descenso desde el primer pintado, igual
+       vocabulario (`--duration-micro` + `--ease-spring`) que las entradas de
+       SiteSearch/MobileMenu/Lightbox (docs/06-plan-animaciones.md Fase 3
+       Tarea 9). `allow-discrete` no tiene nada que gatear aquí (no hay
+       `display`/`content-visibility` de por medio en la entrada), se deja
+       solo porque la Tarea 18 lo pide explícitamente y es inocuo. */
+    #announcement-bar {
+      transition:
+        opacity var(--duration-micro) var(--ease-spring),
+        transform var(--duration-micro) var(--ease-spring);
+      transition-behavior: allow-discrete;
+    }
+
+    @starting-style {
+      #announcement-bar {
+        opacity: 0;
+        transform: translateY(-0.5rem);
+      }
+    }
+
+    /* Cierre: colapso de altura, excepción documentada aquí a la regla de
+       "solo transform/opacity" (permitida explícitamente por la Tarea 18).
+       `ease-out`, no `--ease-spring`, por la misma razón que en
+       `FaqAccordion.astro`: el resorte sobrepasa su valor final y sobre
+       `height` eso es un rebote de layout visible, no solo un efecto de
+       opacidad. La visibilidad se retrasa hasta que termina la transición
+       (con `visibility` no hace falta `allow-discrete`: a diferencia de
+       `display`, ya es interpolable en el modo "normal" de la spec) para
+       que el enlace y el botón sigan siendo focosables mientras se ve el
+       colapso y solo salgan del árbol de accesibilidad al terminar. */
+    @supports (interpolate-size: allow-keywords) {
+      #announcement-bar {
+        interpolate-size: allow-keywords;
+        height: auto;
+        transition:
+          opacity var(--duration-micro) var(--ease-spring),
+          transform var(--duration-micro) var(--ease-spring),
+          height var(--duration-micro) ease-out,
+          padding-block var(--duration-micro) ease-out,
+          visibility 0s linear var(--duration-micro);
+        transition-behavior: allow-discrete;
+      }
+    }
+  }
+</style>
+
 <script>
   const BAR_KEY = 'ann-bar-closed-v1';
 
@@ -67,7 +137,7 @@ const dateStr = eventDate.toLocaleDateString('es-CO', {
     const closeBtn = document.getElementById('close-announcement');
     closeBtn?.addEventListener('click', () => {
       localStorage.setItem(BAR_KEY, '1');
-      bar.remove();
+      bar.classList.add('is-collapsed');
     });
   }
 

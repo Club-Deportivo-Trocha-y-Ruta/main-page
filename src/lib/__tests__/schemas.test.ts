@@ -214,6 +214,60 @@ describe('programsSchema', () => {
       programsSchema.parse({ ...validProgram, targetLevel: 'avanzado' })
     ).toThrow();
   });
+
+  it('acepta un programa sin sesiones capturadas', () => {
+    expect(programsSchema.parse(validProgram).sessions).toBeUndefined();
+  });
+
+  it('acepta sesiones con día, horas y lugar', () => {
+    const result = programsSchema.parse({
+      ...validProgram,
+      sessions: [
+        { day: 'tue', start: '16:30', end: '18:00', place: 'Pista Carlos Castro' },
+        { day: 'sat', start: '07:00', end: '09:00' },
+      ],
+    });
+
+    expect(result.sessions).toHaveLength(2);
+    expect(result.sessions?.[0].place).toBe('Pista Carlos Castro');
+    expect(result.sessions?.[1].place).toBeUndefined();
+  });
+
+  it('rechaza un día que no es de la semana', () => {
+    expect(() =>
+      programsSchema.parse({
+        ...validProgram,
+        sessions: [{ day: 'lunes', start: '16:30', end: '18:00' }],
+      })
+    ).toThrow();
+  });
+
+  it('exige la hora en formato HH:MM de 24 horas', () => {
+    for (const start of ['4:30 PM', '16:3', '24:00', '16.30', '']) {
+      expect(() =>
+        programsSchema.parse({
+          ...validProgram,
+          sessions: [{ day: 'tue', start, end: '18:00' }],
+        })
+      ).toThrow();
+    }
+  });
+
+  it('rechaza una sesión que termina antes de empezar', () => {
+    expect(() =>
+      programsSchema.parse({
+        ...validProgram,
+        sessions: [{ day: 'tue', start: '18:00', end: '16:30' }],
+      })
+    ).toThrow();
+
+    expect(() =>
+      programsSchema.parse({
+        ...validProgram,
+        sessions: [{ day: 'tue', start: '18:00', end: '18:00' }],
+      })
+    ).toThrow();
+  });
 });
 
 // ============================================================
@@ -424,6 +478,47 @@ describe('pagesSchema', () => {
   it('rechaza layout inválido', () => {
     expect(() =>
       pagesSchema.parse({ title: 'Test', layout: 'sidebar' })
+    ).toThrow();
+  });
+
+  // Selector de edad de /programas: el copy es opcional porque solo lo usa esa
+  // página. Ver `src/content/pages/programas.md`.
+  it('acepta una página sin selector de edad', () => {
+    expect(pagesSchema.parse({ title: 'Quiénes Somos' }).agePicker).toBeUndefined();
+  });
+
+  it('acepta el selector de edad con su pregunta y su aclaración', () => {
+    const result = pagesSchema.parse({
+      title: 'Programas',
+      agePicker: {
+        legend: '¿Qué edad tiene tu hijo?',
+        hint: 'Es una ayuda visual.',
+        allLabel: 'Todas las edades',
+      },
+    });
+
+    expect(result.agePicker).toEqual({
+      legend: '¿Qué edad tiene tu hijo?',
+      hint: 'Es una ayuda visual.',
+      allLabel: 'Todas las edades',
+    });
+  });
+
+  it('la aclaración del selector es opcional', () => {
+    const result = pagesSchema.parse({
+      title: 'Programas',
+      agePicker: { legend: '¿Qué edad tiene?', allLabel: 'Todas' },
+    });
+
+    expect(result.agePicker?.hint).toBeUndefined();
+  });
+
+  it('rechaza un selector de edad sin pregunta o sin texto de «todas»', () => {
+    expect(() =>
+      pagesSchema.parse({ title: 'Programas', agePicker: { allLabel: 'Todas' } })
+    ).toThrow();
+    expect(() =>
+      pagesSchema.parse({ title: 'Programas', agePicker: { legend: '¿Qué edad tiene?' } })
     ).toThrow();
   });
 });

@@ -59,7 +59,10 @@ const showStatus = status === 'ongoing' || status === 'cancelled';
 
 <div
   class:list={[
-    'group flex h-full items-start gap-3 rounded-xl border-l-4 p-3 transition-colors hover:bg-surface-muted sm:gap-4 sm:p-4',
+    'group flex h-full items-start gap-3 rounded-xl border-l-4 p-3 sm:gap-4 sm:p-4',
+    'transition-[background-color,transform] duration-[var(--duration-micro)] ease-spring',
+    'hover:bg-surface-muted hover:-translate-y-1 hover:shadow-lg',
+    'motion-reduce:transition-none motion-reduce:hover:translate-y-0',
     muted ? 'border-surface-muted' : 'border-primary',
     status === 'cancelled' && 'opacity-75',
   ]}

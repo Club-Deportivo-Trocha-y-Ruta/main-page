@@ -17,7 +17,7 @@
  */
 import { Icon } from 'astro-icon/components';
 import { elevationProfile, elevationPointAt, uniqueSvgId } from '@lib/editorial';
-import { buildPathway, type PathwayInput } from '@lib/programs';
+import { buildAgePicker, buildPathway, type PathwayInput } from '@lib/programs';
 
 interface Props {
   programs: PathwayInput[];
@@ -50,6 +50,15 @@ const {
 const { stages, ticks, domain } = buildPathway(programs);
 const profile = elevationProfile();
 const uid = uniqueSvgId('pathway');
+
+/**
+ * Las edades que cubre cada tramo, publicadas como `data-*` en la regla.
+ *
+ * Es dato inerte: describe el tramo y no cambia nada por sí solo. El selector de
+ * edad de `/programas` lo usa para saber qué tramo resaltar (`global.css`), pero
+ * el resto de las páginas que montan la ruta lo ignoran.
+ */
+const coverage = buildAgePicker(programs).coverage;
 
 // El marcador de cada etapa se para en la mitad de su tramo, sobre el terreno.
 const markers = stages.map((stage) => ({
@@ -179,7 +188,13 @@ const band = (startPct: number, widthPct: number) => ({
     <!-- Tramos por edad -->
     <ol class="relative mt-1.5 h-14 sm:h-16">
       {stages.map((stage) => (
-        <li class="absolute inset-y-0 px-px" style={`left:${stage.startPct}%;width:${stage.widthPct}%`}>
+        <li
+          class="absolute inset-y-0 px-px"
+          style={`left:${stage.startPct}%;width:${stage.widthPct}%`}
+          data-ages={coverage.get(stage.id)?.ages.join(' ')}
+          data-age-min={coverage.get(stage.id)?.min}
+          data-age-max={coverage.get(stage.id)?.max}
+        >
           <a
             href={`${hrefBase}${stage.id}`}
             aria-label={`Etapa ${stage.step}: ${stage.title}, ${stage.ageRange}${stage.id === activeId ? ' — estás aquí' : ''}`}

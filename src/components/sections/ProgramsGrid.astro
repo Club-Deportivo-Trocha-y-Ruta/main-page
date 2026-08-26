@@ -32,7 +32,7 @@ const cards = programs.map((program: Program) => ({
   level: getLevelStyle(program.data.targetLevel),
   step: stepById.get(program.id) ?? 0,
   photo: getRefreshImage(program.data.image),
-  sessions: countWeeklySessions(program.data.schedule),
+  sessions: countWeeklySessions(program.data),
 }));
 ---
 

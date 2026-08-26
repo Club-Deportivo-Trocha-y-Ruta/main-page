@@ -9,6 +9,23 @@ ageMin: 12
 ageMax: 99
 targetLevel: "competición"
 schedule: "Mar/Jue 4-6 PM (salida) · Mié 4-6 PM (gymkanas en pista) · Sáb 7-9 AM (salida) · Dom 7-10 AM (salida, +12 años)"
+sessions:
+  - day: "tue"
+    start: "16:00"
+    end: "18:00"
+  - day: "wed"
+    start: "16:00"
+    end: "18:00"
+    place: "Pista de Ciclomontañismo Carlos Castro"
+  - day: "thu"
+    start: "16:00"
+    end: "18:00"
+  - day: "sat"
+    start: "07:00"
+    end: "09:00"
+  - day: "sun"
+    start: "07:00"
+    end: "10:00"
 seo:
   metaTitle: "Club de ciclismo de montaña juvenil desde 12 años · Yumbo"
   metaDescription: "Entrenamiento de ciclomontañismo XCO para jóvenes desde los 12 años en Yumbo: periodización, gymkanas en pista y competencia en la Copa Valle con Trocha y Ruta."

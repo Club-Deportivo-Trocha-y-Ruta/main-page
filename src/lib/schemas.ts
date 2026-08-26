@@ -192,6 +192,34 @@ export const resultsSchema = z.object({
   totalParticipants: z.number().optional(),
 });
 
+/** Hora del día en 24 horas, `HH:MM`. Ordena y compara como texto. */
+const TIME_OF_DAY = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+/**
+ * Una sesión de entrenamiento, en datos.
+ *
+ * El campo `schedule` sigue siendo el horario que lee una familia ("Mar/Jue 4-6
+ * PM (salida) · Sáb 7-9 AM"): admite aclaraciones y excepciones que ningún
+ * schema captura. `sessions` es su versión maquinable, y existe para lo que el
+ * texto libre no puede resolver bien: saber qué sesión viene ahora.
+ *
+ * El día va en inglés porque es un identificador, no un texto visible: los
+ * nombres en español viven en `WEEK_DAY_LABELS` (`src/lib/programs.ts`), del
+ * lado de la interfaz.
+ */
+export const programSessionSchema = z
+  .object({
+    day: z.enum(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']),
+    start: z.string().regex(TIME_OF_DAY, 'Hora en formato HH:MM de 24 horas'),
+    end: z.string().regex(TIME_OF_DAY, 'Hora en formato HH:MM de 24 horas'),
+    /** Dónde se encuentra el grupo, cuando la sesión no es en el sitio de siempre. */
+    place: z.string().optional(),
+  })
+  .refine((session) => session.end > session.start, {
+    message: 'La sesión tiene que terminar después de empezar',
+    path: ['end'],
+  });
+
 export const programsSchema = z.object({
   title: z.string(),
   subtitle: z.string().optional(),
@@ -208,6 +236,12 @@ export const programsSchema = z.object({
   ageMax: z.number(),
   targetLevel: z.enum(['iniciación', 'formación', 'competición', 'recreativo']),
   schedule: z.string(),
+  /**
+   * Opcional a propósito: un programa sin sesiones capturadas se sigue
+   * publicando con su `schedule` de texto, y la interfaz simplemente no puede
+   * anunciar la próxima sesión.
+   */
+  sessions: z.array(programSessionSchema).optional(),
   duration: z.string().optional(),
   location: z.string().optional(),
   maxStudents: z.number().optional(),
@@ -305,6 +339,26 @@ export const faqsSchema = z.object({
   draft: z.boolean().default(false),
 });
 
+/**
+ * Copy del selector de edad de `/programas`.
+ *
+ * Las edades y los tramos se derivan de la colección `programs` (`ageMin`/
+ * `ageMax`); lo único que no se puede derivar es cómo se le pregunta la edad a
+ * una familia. Ese texto vive aquí para que el club lo edite desde Sveltia sin
+ * tocar la plantilla. Si el bloque falta, la página no pinta el selector: no
+ * se inventa una pregunta por defecto.
+ */
+export const agePickerSchema = z
+  .object({
+    /** Pregunta del `<legend>`: "¿Qué edad tiene tu hijo?". */
+    legend: z.string(),
+    /** Aclaración de qué hace elegir una edad. */
+    hint: z.string().optional(),
+    /** Texto de la opción que quita el filtro: "Todas las edades". */
+    allLabel: z.string(),
+  })
+  .optional();
+
 export const pagesSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
@@ -313,6 +367,8 @@ export const pagesSchema = z.object({
   showInNav: z.boolean().default(false),
   order: z.number().default(0),
   draft: z.boolean().default(false),
+  /** Solo lo usa `src/pages/programas/index.astro` (entrada `programas`). */
+  agePicker: agePickerSchema,
   seo: seoSchema,
 });
 

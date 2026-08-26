@@ -50,27 +50,96 @@ const albumExists = albumSlug
 const showAlbumLink = albumExists && hasMore;
 ---
 
-<section class="mt-12 pt-8 border-t border-surface-muted" aria-labelledby="news-gallery-title">
-  <h2 id="news-gallery-title" class="text-2xl font-display font-bold mb-6">
+<section class="border-surface-muted mt-12 border-t pt-8" aria-labelledby="news-gallery-title">
+  <h2 id="news-gallery-title" class="font-display mb-6 text-2xl font-bold">
     {title}
-    <span class="text-base font-normal text-text-secondary ml-2">
+    <span class="text-text-secondary ml-2 text-base font-normal">
       ({allImages.length} fotos)
     </span>
   </h2>
 
-  <ImageLightbox client:visible images={allImages} />
+  <!-- `news-gallery-grid` es solo un gancho CSS: el island `ImageLightbox` no
+       se toca (mismo criterio documentado en `/galeria/[...slug].astro`, que
+       lo reutiliza "sin tocar"), así que el detalle de álbum —que monta el
+       mismo componente sin esta clase— no hereda el efecto polaroid. -->
+  <div class="news-gallery-grid">
+    <ImageLightbox client:visible images={allImages} />
+  </div>
 
-  {showAlbumLink && (
-    <div class="mt-6 text-center">
-      <a
-        href={`/galeria/${albumSlug}`}
-        class="inline-flex items-center gap-2 rounded-lg border-2 border-primary px-6 py-3 font-semibold text-primary hover:bg-primary hover:text-white transition-colors"
-      >
-        Ver álbum completo ({allImages.length} fotos)
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </a>
-    </div>
-  )}
+  {
+    showAlbumLink && (
+      <div class="mt-6 text-center">
+        <a
+          href={`/galeria/${albumSlug}`}
+          class="border-primary text-primary hover:bg-primary inline-flex items-center gap-2 rounded-lg border-2 px-6 py-3 font-semibold transition-colors hover:text-white"
+        >
+          Ver álbum completo ({allImages.length} fotos)
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </a>
+      </div>
+    )
+  }
 </section>
+
+<style is:global>
+  /* Efecto polaroid de las miniaturas (docs/08 tarea 11). `is:global` a
+     propósito: los `<button>` de la rejilla los renderiza el island React
+     `ImageLightbox`, no esta plantilla, así que el scoping normal de Astro
+     —que solo marca con su atributo los elementos que el propio componente
+     imprime— nunca los alcanzaría y la regla quedaría muerta. El selector
+     va acotado a `.news-gallery-grid` (el wrapper de arriba), así que no
+     sangra hacia el mismo island montado en `/galeria/[...slug].astro`.
+     La rotación va en el `<button>`, nunca en el `<img>` de adentro (ahí
+     vive el `group-hover:scale-105` propio del componente): son elementos
+     distintos, así que `rotate` y `scale` no compiten por la misma
+     declaración y Lightning CSS no las colapsa (la trampa documentada en la
+     tarea 9). El marco blanco es `padding` (más grueso abajo, como el
+     reverso en blanco de una polaroid) sobre fondo `--color-surface`: el
+     `<img>` de adentro no es absoluto, así que un padding en el botón ya lo
+     deja inscrito sin tocar el componente. El marco (fondo + padding) es
+     estático —no es animación— así que va en una regla base incondicional;
+     solo la transición y la rotación quedan detrás de la media query,
+     igual que el margen incondicional + rotación condicional de
+     AlbumCard.astro. El selector lleva además `[type="button"]`: el mismo
+     island también imprime el modal (cerrar/anterior/siguiente) dentro de
+     este wrapper, y esos tres `<button>` no traen ese atributo —solo la
+     miniatura de la rejilla lo tiene explícito (ver ImageLightbox.tsx)—,
+     así que sin el calificador el polaroid se filtraba a los controles del
+     visor. */
+  .news-gallery-grid button[type='button'] {
+    background-color: var(--color-surface);
+    padding: 0.5rem 0.5rem 1rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .news-gallery-grid button[type='button'] {
+      transition: rotate var(--duration-micro) var(--ease-spring);
+    }
+
+    .news-gallery-grid button[type='button']:where(:nth-child(odd)) {
+      rotate: -1.5deg;
+    }
+
+    .news-gallery-grid button[type='button']:where(:nth-child(even)) {
+      rotate: 1.2deg;
+    }
+
+    .news-gallery-grid button[type='button']:hover,
+    .news-gallery-grid button[type='button']:focus-visible {
+      rotate: 0deg;
+    }
+  }
+</style>

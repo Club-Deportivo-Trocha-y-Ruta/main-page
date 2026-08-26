@@ -31,7 +31,15 @@ const specialtyLabels: Record<string, string> = {
 };
 ---
 
-<a href={href} class="group block">
+<a
+  href={href}
+  class:list={[
+    'group block rounded-xl',
+    'transition-transform duration-[var(--duration-micro)] ease-spring',
+    'hover:-translate-y-1 hover:shadow-lg',
+    'motion-reduce:transition-none motion-reduce:hover:translate-y-0',
+  ]}
+>
   <div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-muted">
     <Image
       src={photo}

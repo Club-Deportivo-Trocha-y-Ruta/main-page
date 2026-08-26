@@ -58,8 +58,13 @@ const inSecondary = SECONDARY_NAV.some((item) => isActivePath(currentPath, item.
   -->
   <div class="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
     <div class="flex min-h-16 items-center justify-between py-2">
-      <!-- Logo -->
-      <a href="/" class="flex items-center">
+      <!--
+        `header-logo`: se encoge levemente al bajar (scroll-driven, `global.css`)
+        para dar la sensación de cabecera compacta sin animar `height`/`padding`
+        (evita layout shift). `transform-origin: left center` para que el logo
+        no se aleje del borde izquierdo al achicarse.
+      -->
+      <a href="/" class="header-logo flex items-center">
         <Image
           src={logo}
           alt="Club Deportivo Trocha y Ruta"
@@ -168,7 +173,7 @@ const inSecondary = SECONDARY_NAV.some((item) => isActivePath(currentPath, item.
         <a
           href="/inscripciones"
           data-analytics-event="cta_inscripcion_click"
-          class="inline-flex min-h-11 items-center gap-1 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-4"
+          class="header-cta inline-flex min-h-11 items-center gap-1 rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-4"
         >
           <span class="sm:hidden">{CTA_TRIAL_LABEL_SHORT}</span>
           <span class="hidden sm:inline">{CTA_TRIAL_LABEL}</span>

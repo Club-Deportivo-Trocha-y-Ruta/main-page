@@ -104,6 +104,25 @@ export function clubToday(now: Date = new Date()): string {
   return CLUB_DAY.format(now);
 }
 
+const CLUB_CLOCK = new Intl.DateTimeFormat('en-GB', {
+  timeZone: CLUB_TIME_ZONE,
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+});
+
+/**
+ * Hora de ahora mismo en la zona del club, como `HH:MM` de 24 horas.
+ *
+ * Va en 24 horas y con ceros a la izquierda por lo mismo que las fechas van en
+ * `AAAA-MM-DD`: así dos horas se comparan como texto (`'07:00' < '16:30'`) sin
+ * construir un `Date` intermedio ni volver a pensar en el huso. Lo que se lee
+ * en pantalla lo formatea quien lo pinte.
+ */
+export function clubTimeOfDay(now: Date = new Date()): string {
+  return CLUB_CLOCK.format(now);
+}
+
 export interface EventDates {
   date: Date;
   endDate?: Date;

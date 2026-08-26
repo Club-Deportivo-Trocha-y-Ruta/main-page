@@ -171,16 +171,25 @@ Dosis máxima por crónica: 1 stat-strip, 3 stat-callout, 2 pull-quote, 1 standi
 sección de corredor, porque su valor está en la repetición (el lector aprende a buscarlo).
 
 ```html
-<!-- Parte de la válida (bloque 2) — una vez, tras el cold open -->
-<div class="stat-strip">
-  <div class="stat-strip__item"><span class="stat-strip__value">11</span><span class="stat-strip__label">corredores en pista</span></div>
+<!-- Parte de la válida (bloque 2) — una vez, tras el cold open.
+     `reveal` en el contenedor: entra con fade + escalonado por ítem al
+     hacer scroll (docs/08-plan-creatividad-ui.md, tarea 15) — sin él, el
+     bloque se ve exactamente igual pero siempre visible, sin animación.
+     La cifra que es un entero puro (nunca las que llevan unidad como
+     "3,4 km") puede animarse con `.count-up`: `--count-target` es el
+     número final y `--count-digits` sus dígitos (`String(valor).length`,
+     a mano); el `<span class="sr-only">` siempre lleva la cifra final,
+     nunca la anima un lector de pantalla. -->
+<div class="stat-strip reveal">
+  <div class="stat-strip__item"><span class="stat-strip__value"><span class="count-up" style="--count-target:11;--count-digits:2"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">11</span></span></span><span class="stat-strip__label">corredores en pista</span></div>
   <div class="stat-strip__item stat-strip__item--accent"><span class="stat-strip__value">2</span><span class="stat-strip__label">platas del club</span></div>
   <div class="stat-strip__item"><span class="stat-strip__value">241</span><span class="stat-strip__label">puntos sumados</span></div>
   <div class="stat-strip__item"><span class="stat-strip__value">3,4 km</span><span class="stat-strip__label">por vuelta</span></div>
 </div>
 
-<!-- Cifra destacada — máx. 2-3, entre secciones -->
-<div class="stat-callout">
+<!-- Cifra destacada — máx. 2-3, entre secciones. `reveal` opcional, mismo
+     criterio que arriba (bloque único: sin escalonado por ítem). -->
+<div class="stat-callout reveal">
   <span class="stat-callout__value">21 s</span>
   <span class="stat-callout__text">lo que costó la vuelta de más que Jostin le dio a la palmera</span>
 </div>

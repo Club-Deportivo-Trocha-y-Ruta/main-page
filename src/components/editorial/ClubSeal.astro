@@ -1,0 +1,85 @@
+---
+/**
+ * Sello del club — el escudo oficial usado como firma de cierre.
+ *
+ * No aporta información: es la marca estampada al pie de una pieza que ya
+ * terminó de contar lo suyo (el final de una crónica, el banner de
+ * inscripción, la salida del 404). Por eso va `aria-hidden` con `alt=""`:
+ * quien usa lector de pantalla ya escuchó el nombre del club en la cabecera y
+ * en el pie, y repetirlo aquí solo añade ruido.
+ *
+ * Animación (docs/08-plan-creatividad-ui.md, Sprint 2 tarea 9): al entrar en
+ * pantalla el sello "se estampa" — llega grande (`transform: scale(1.4)`) y
+ * transparente, y aterriza en su tamaño con el rebote de `--ease-pop`. Toda la
+ * animación vive en `global.css` (`.club-seal`), dentro de
+ * `prefers-reduced-motion: no-preference`; el estado de reposo es el sello
+ * completo, ya visible. Sin rotación continua ni bucle de ningún tipo: la
+ * inclinación es fija, como la de un sello mal alineado sobre el papel, y una
+ * vez estampado no se mueve más.
+ *
+ * El disparador es el `.reveal`/`.revealed` que ya añade el
+ * IntersectionObserver de `BaseLayout.astro` — cero JS nuevo. El componente
+ * pone el `.reveal` él mismo (y su `<noscript>` de reserva, mismo criterio que
+ * `StatFigure` con `countUp`), así ningún consumidor tiene que recordarlo.
+ *
+ * No usarlo en el Hero: es una imagen decorativa que compite con el LCP.
+ */
+import { Image } from 'astro:assets';
+import logo from '@assets/images/logo.webp';
+import { getTone, type SectionTone } from '@lib/editorial';
+
+interface Props {
+  /**
+   * Tamaño del escudo: 40 / 56 / 80 px de lado. El disco que lo rodea añade su
+   * propio padding, así que el sello completo mide algo más.
+   */
+  size?: 'sm' | 'md' | 'lg';
+  /**
+   * Inclinación en grados, como la de un sello mal alineado. Se limita a ±15:
+   * más que eso deja de leerse como una firma y pasa a ser un adorno girado.
+   */
+  rotate?: number;
+  /** Tono de la sección que lo contiene: decide el disco de fondo. */
+  tone?: SectionTone;
+  class?: string;
+}
+
+const { size = 'md', rotate = -6, tone = 'plain', class: className } = Astro.props;
+
+/** Lado del escudo en px. El disco añade su propio padding alrededor. */
+const MARK_PX = { sm: 40, md: 56, lg: 80 } as const;
+const PAD = { sm: 'p-1.5', md: 'p-2', lg: 'p-3' } as const;
+
+const markPx = MARK_PX[size];
+
+// La inclinación viaja como custom property y no como clase: es un valor
+// continuo que el consumidor elige, no una escala cerrada.
+const tiltDeg = Math.max(-15, Math.min(15, rotate));
+
+// El escudo es un degradado teal→lima sobre fondo transparente: sobre el teal
+// de marca o sobre grafito se pierde. El disco siempre es claro; lo único que
+// cambia con el tono es el aro que lo recorta contra el fondo.
+const tokens = getTone(tone);
+const disc = tokens.inverted ? 'bg-white ring-white/25' : 'bg-surface ring-black/5';
+
+// Sin el IntersectionObserver de BaseLayout.astro, `.revealed` no llega nunca
+// y el sello se quedaría en `opacity: 0`. Va como string + `set:html` (no como
+// `<style is:inline>` literal) por la misma razón documentada en
+// `StatFigure.astro`: un `<style>` real anidado rompe el parser embebido de
+// prettier-plugin-astro.
+const revealNoscript = '<style>.reveal{opacity:1 !important;transform:none !important}</style>';
+---
+
+<span
+  class:list={[
+    'club-seal reveal shadow-card inline-flex shrink-0 items-center justify-center rounded-full ring-1',
+    disc,
+    PAD[size],
+    className,
+  ]}
+  style={`--club-seal-rotate:${tiltDeg}deg`}
+  aria-hidden="true"
+>
+  <Image src={logo} alt="" width={markPx} height={markPx} layout="fixed" class="object-contain" />
+</span>
+<noscript set:html={revealNoscript} />

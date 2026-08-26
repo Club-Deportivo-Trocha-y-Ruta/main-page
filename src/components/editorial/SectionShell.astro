@@ -47,6 +47,15 @@ interface Props {
    * `prefers-reduced-motion`, todo queda quieto y en su sitio.
    */
   scrollDriven?: boolean;
+  /**
+   * Cualquier `data-*` extra viaja al `<section>` tal cual.
+   *
+   * Existe para que una página pueda etiquetar sus secciones con datos que solo
+   * ella entiende —hoy, el rango de edades que cubre cada programa, que el CSS
+   * del selector de `/programas` lee con `[data-ages~="7"]`— sin que el marco
+   * editorial tenga que aprenderse el vocabulario de cada página.
+   */
+  [key: `data-${string}`]: string | number | undefined;
 }
 
 const {
@@ -60,6 +69,7 @@ const {
   class: className,
   innerClass,
   scrollDriven = false,
+  ...dataAttrs
 } = Astro.props;
 
 const tokens = getTone(tone);
@@ -70,6 +80,7 @@ const patternId = uniqueSvgId('topo');
   id={id}
   aria-labelledby={labelledby}
   aria-label={label}
+  {...dataAttrs}
   class:list={[
     'relative isolate',
     scrollDriven ? 'overflow-clip' : 'overflow-hidden',

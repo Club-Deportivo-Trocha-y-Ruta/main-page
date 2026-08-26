@@ -174,6 +174,16 @@ describe('RaceLineup', () => {
     expect(html).toContain('Tetero con Pedales');
   });
 
+  it('la categoría se presenta como placa de dorsal (clase race-plate)', async () => {
+    const html = await container.renderToString(RaceLineup, {
+      props: { athletes },
+    });
+    const doc = parseHtml(html);
+    const plates = doc.querySelectorAll('.race-lineup__category.race-plate');
+    expect(plates.length).toBe(athletes.length);
+    expect(plates[0].textContent?.trim()).toBe(athletes[0].category);
+  });
+
   it('img src coincide con el path del atleta', async () => {
     const html = await container.renderToString(RaceLineup, {
       props: { athletes },

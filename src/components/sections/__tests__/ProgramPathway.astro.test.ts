@@ -189,4 +189,34 @@ describe('ProgramPathway', () => {
       expect(doc.querySelectorAll('[aria-current]')).toHaveLength(0);
     });
   });
+
+  // El selector de edad de /programas resalta el tramo leyendo estos atributos
+  // con `[data-ages~="7"]`; sin ellos, elegir una edad no marcaría nada.
+  describe('edades publicadas como data-*', () => {
+    it('etiqueta cada tramo con las edades que se pueden elegir', async () => {
+      const doc = await render({ programs });
+      const bands = [...doc.querySelectorAll('ol > li')];
+
+      expect(bands.map((li) => li.getAttribute('data-ages'))).toEqual([
+        '4 5',
+        '6 7 8 9 10 11',
+        // El tramo sin techo se dibuja ancho pero solo ofrece su edad de entrada.
+        '12',
+      ]);
+      expect(bands.map((li) => li.getAttribute('data-age-min'))).toEqual(['4', '6', '12']);
+      expect(bands.map((li) => li.getAttribute('data-age-max'))).toEqual(['5', '11', '12']);
+    });
+
+    it('sigue al contenido cuando el club cambia un rango', async () => {
+      const doc = await render({
+        programs: [
+          { ...programs[0], ageMin: 3, ageMax: 4 },
+          { ...programs[1], ageMin: 5, ageMax: 7 },
+        ],
+      });
+      const bands = [...doc.querySelectorAll('ol > li')];
+
+      expect(bands.map((li) => li.getAttribute('data-ages'))).toEqual(['3 4', '5 6 7']);
+    });
+  });
 });

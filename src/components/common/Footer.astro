@@ -14,6 +14,41 @@
  * esté vivo. Si el contenido no lo sostiene, la cinta no se pinta.
  *
  * Los iconos dibujados a mano pasaron a `astro-icon`, como el resto del sitio.
+ *
+ * El borde superior reutiliza `elevationProfile()` —el mismo perfil de
+ * elevación que `ProgramPathway`/404— como silueta estática: un `<div>` de
+ * 40px con `margin-top` negativo (mismo valor, sin animación) hace que el pie,
+ * un `flex` hijo de `<body>`, se dibuje 40px más arriba de lo que ocuparía en
+ * flujo normal, así que la silueta queda pintada sobre el final de la sección
+ * anterior en vez de dejar un hueco. El resto del pie no se mueve: el alto es
+ * fijo en build, cero CLS. Al pintarse fuera de la caja del `<footer>`, ese
+ * `<div>` lleva `pointer-events-none` para no interceptar clics de la sección
+ * anterior, y `-z-10` (con `isolate` en el propio `<footer>` para acotar el
+ * stacking context) siguiendo la misma convención que Hero.astro/SectionShell.astro.
+ *
+ * Esa silueta se veía con dos costuras (capturas del 2026-08-26) y las dos
+ * están resueltas aquí, no con un color aproximado:
+ *
+ * 1. **Línea clara entre la silueta y la primera banda del pie.** El `area`
+ *    que devuelve `elevationProfile()` cierra el relleno contra `base`, que
+ *    queda un 2% por encima del borde inferior del viewBox — estirado en 40px,
+ *    ~0,8px transparentes por los que se veía el fondo de la sección anterior
+ *    (el teal del cierre en la portada, blanco en el resto). Aquí el perfil se
+ *    cierra **por debajo** del viewBox: el recorte del propio SVG hace de borde
+ *    y no queda ninguna fila a medio pintar. Además el contenedor solapa 1px
+ *    con el pie (`-mb-px`), así que la banda —que se pinta después, por ir en
+ *    flujo— tapa cualquier antialiasing del último píxel.
+ * 2. **Escalón de tono entre el relleno y la banda.** La cinta llevaba un velo
+ *    `bg-white/[0.03]` sobre `bg-surface-dark`, así que su color compuesto no
+ *    era el del token y la silueta —`currentColor` heredado de
+ *    `text-surface-dark`— se leía como un gris distinto. El velo se retiró: las
+ *    dos superficies salen ahora del mismo token.
+ * 3. **Línea clara suelta bajo la cinta** (captura del 2026-08-26, posterior a
+ *    las dos anteriores). Era el `border-b border-white/10` de la cinta, que sí
+ *    venía de antes: cerraba una banda más clara, y al quitarse el velo del
+ *    punto 2 se quedó huérfano — un `#444` sobre `#2f2f2f` flotando bajo la
+ *    silueta, sin nada que delimitar. Se eliminó; el `pt-12` del cuerpo ya
+ *    separa la cinta de los grupos de enlaces.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
@@ -23,6 +58,7 @@ import { SITE, CONTACT, SOCIAL, CHILD_SAFETY, getYearsActive } from '@lib/consta
 import { FOOTER_GROUPS } from '@lib/navigation';
 import { seasonProgress } from '@lib/linktree';
 import { summarizeTrees } from '@lib/trocha-verde';
+import { elevationProfile } from '@lib/editorial';
 
 type Event = CollectionEntry<'events'>;
 type Tree = CollectionEntry<'trees'>;
@@ -42,49 +78,120 @@ const socials = [
 ];
 
 const year = new Date().getFullYear();
+
+// Silueta del borde superior: mismo perfil que `ProgramPathway`/404, sin
+// animación. Estirado en una franja de 40px queda como picos que suben hacia
+// la sección anterior con la base pegada al resto del pie.
+//
+// No se usa el `area` que devuelve `elevationProfile()` —cierra contra `base`
+// y deja el 2% inferior del viewBox sin rellenar, que es la línea clara del
+// punto 1 de la cabecera de este archivo—: el trazo se cierra por debajo del
+// viewBox para que el borde de abajo lo recorte el propio SVG.
+const PROFILE_WIDTH = 1000;
+const PROFILE_HEIGHT = 260;
+const { line: profileLine } = elevationProfile({
+  width: PROFILE_WIDTH,
+  height: PROFILE_HEIGHT,
+});
+const topProfileArea = `${profileLine} L${PROFILE_WIDTH} ${PROFILE_HEIGHT * 2} L0 ${PROFILE_HEIGHT * 2} Z`;
 ---
 
-<footer class="bg-surface-dark text-white">
+<footer class="bg-surface-dark relative isolate text-white">
+  <!--
+    Silueta de perfil de elevación como borde superior: alto fijo (h-10 = 40px)
+    con `-mt-10` para que se pinte sobre el final de la sección anterior en
+    vez de sumar espacio nuevo. Puramente decorativo, `aria-hidden` en el SVG.
+    `pointer-events-none` porque, al pintarse fuera de la caja normal del
+    `<footer>` (flex hijo de `<body>`), queda superpuesto sobre cualquier
+    elemento interactivo de los últimos 40px de la sección anterior y no debe
+    interceptar clics/taps. `-z-10` sigue la misma convención que
+    Hero.astro/SectionShell.astro para overlays decorativos; el `isolate` en
+    el propio `<footer>` acota ese z-index negativo a su stacking context —
+    sin él, se hundiría por debajo de la sección anterior en vez de quedar
+    solo por debajo del fondo propio del pie (que no ocupa esta franja).
+
+    `-mb-px`: la franja solapa 1px con el pie. Lo que sigue en el marcado va en
+    flujo normal y, dentro de este stacking context, se pinta después que un
+    descendiente de z-index negativo, así que la banda cubre el último píxel de
+    la silueta y ahí no puede quedar costura.
+
+    `text-surface-dark` da el color del relleno (`currentColor` en el `<path>`)
+    y es literalmente el mismo token que el fondo del `<footer>`, del que
+    hereda la primera banda: mismo valor, no un gris parecido.
+  -->
+  <div class="text-surface-dark pointer-events-none relative -z-10 -mt-10 -mb-px h-10">
+    <!-- `display:block` (no `inline`) para que no quede el hueco de la línea
+         base del SVG por debajo del relleno. -->
+    <svg
+      class="block h-full w-full"
+      viewBox={`0 0 ${PROFILE_WIDTH} ${PROFILE_HEIGHT}`}
+      preserveAspectRatio="none"
+      shape-rendering="geometricPrecision"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d={topProfileArea} fill="currentColor" stroke="none"></path>
+    </svg>
+  </div>
+
   <!--
     La cinta: en qué punto va el club ahora mismo. Solo se pinta lo que el
     contenido sostiene.
-  -->
-  {(season || totalTrees > 0) && (
-    <div class="border-b border-white/10 bg-white/[0.03]">
-      <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-8 gap-y-3 px-4 py-4 text-sm sm:px-6 lg:px-8">
-        {season && (
-          <a
-            href="/calendario"
-            class="group inline-flex items-center gap-2 text-gray-300 transition-colors hover:text-white"
-          >
-            <Icon
-              name="ph:flag-checkered-bold"
-              class="size-4 shrink-0 text-primary-light"
-              aria-hidden="true"
-            />
-            <span>
-              Temporada {season.year}:{' '}
-              <span class="font-semibold text-white">{season.completed} de {season.total}</span>{' '}
-              fechas corridas
-            </span>
-          </a>
-        )}
 
-        {totalTrees > 0 && (
-          <a
-            href="/trocha-verde"
-            class="group inline-flex items-center gap-2 text-gray-300 transition-colors hover:text-white"
-          >
-            <Icon name="ph:tree-bold" class="size-4 shrink-0 text-accent-light" aria-hidden="true" />
-            <span>
-              <span class="font-semibold text-white">{totalTrees}</span> árboles sembrados por Trocha
-              Verde
-            </span>
-          </a>
-        )}
+    Sin fondo propio (antes, un velo `bg-white/[0.03]`): es la banda que recibe
+    la silueta y su color tiene que ser exactamente el del token, o se ve el
+    escalón de tono.
+
+    Tampoco lleva `border-b`. Ese divisor sí existía antes, pero cerraba una
+    banda más clara que el resto del pie; al quitar el velo se quedó huérfano y
+    se leía como una línea clara suelta (`#444` sobre `#2f2f2f`) flotando bajo
+    la silueta. La separación con el cuerpo la da el `pt-12` de la sección
+    siguiente.
+  -->
+  {
+    (season || totalTrees > 0) && (
+      <div>
+        <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-8 gap-y-3 px-4 py-4 text-sm sm:px-6 lg:px-8">
+          {season && (
+            <a
+              href="/calendario"
+              class="group inline-flex items-center gap-2 text-gray-300 transition-colors hover:text-white"
+            >
+              <Icon
+                name="ph:flag-checkered-bold"
+                class="text-primary-light size-4 shrink-0"
+                aria-hidden="true"
+              />
+              <span>
+                Temporada {season.year}:{' '}
+                <span class="font-semibold text-white">
+                  {season.completed} de {season.total}
+                </span>{' '}
+                fechas corridas
+              </span>
+            </a>
+          )}
+
+          {totalTrees > 0 && (
+            <a
+              href="/trocha-verde"
+              class="group inline-flex items-center gap-2 text-gray-300 transition-colors hover:text-white"
+            >
+              <Icon
+                name="ph:tree-bold"
+                class="text-accent-light size-4 shrink-0"
+                aria-hidden="true"
+              />
+              <span>
+                <span class="font-semibold text-white">{totalTrees}</span> árboles sembrados por
+                Trocha Verde
+              </span>
+            </a>
+          )}
+        </div>
       </div>
-    </div>
-  )}
+    )
+  }
 
   <!--
     Padding inferior extra solo en móvil: la barra de conversión fija
@@ -114,54 +221,77 @@ const year = new Date().getFullYear();
 
         <ul class="mt-5 space-y-3 text-sm text-gray-300">
           <li class="flex items-start gap-2">
-            <Icon name="ph:map-pin-bold" class="mt-0.5 size-4 shrink-0 text-primary-light" aria-hidden="true" />
+            <Icon
+              name="ph:map-pin-bold"
+              class="text-primary-light mt-0.5 size-4 shrink-0"
+              aria-hidden="true"
+            />
             <span>{CONTACT.address}</span>
           </li>
           <li>
-            <a href={CONTACT.phoneLink} class="flex items-center gap-2 transition-colors hover:text-primary-light">
-              <Icon name="ph:phone-bold" class="size-4 shrink-0 text-primary-light" aria-hidden="true" />
+            <a
+              href={CONTACT.phoneLink}
+              class="hover:text-primary-light flex items-center gap-2 transition-colors"
+            >
+              <Icon
+                name="ph:phone-bold"
+                class="text-primary-light size-4 shrink-0"
+                aria-hidden="true"
+              />
               {CONTACT.phone}
             </a>
           </li>
           <li>
             <a
               href={`mailto:${CONTACT.email}`}
-              class="flex min-w-0 items-center gap-2 transition-colors hover:text-primary-light"
+              class="hover:text-primary-light flex min-w-0 items-center gap-2 transition-colors"
             >
-              <Icon name="ph:envelope-simple-bold" class="size-4 shrink-0 text-primary-light" aria-hidden="true" />
+              <Icon
+                name="ph:envelope-simple-bold"
+                class="text-primary-light size-4 shrink-0"
+                aria-hidden="true"
+              />
               <span class="break-all">{CONTACT.email}</span>
             </a>
           </li>
         </ul>
 
         <div class="mt-6 flex flex-wrap gap-3">
-          {socials.map((social) => (
-            <a
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${social.name} del Club Trocha y Ruta`}
-              class="rounded-lg bg-white/10 p-3 text-gray-300 transition-colors hover:bg-white/20 hover:text-primary-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-light"
-            >
-              <Icon name={social.icon} class="size-5" aria-hidden="true" />
-            </a>
-          ))}
+          {
+            socials.map((social) => (
+              <a
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${social.name} del Club Trocha y Ruta`}
+                class="group hover:text-primary-light focus-visible:outline-primary-light rounded-lg bg-white/10 p-3 text-gray-300 transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                <Icon
+                  name={social.icon}
+                  class="ease-spring size-5 transition-transform duration-[var(--duration-micro)] group-hover:rotate-[8deg] motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
+                  aria-hidden="true"
+                />
+              </a>
+            ))
+          }
           <a
             href={SOCIAL.strava}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Strava del Club Trocha y Ruta"
-            class="rounded-lg bg-white/10 p-3 text-gray-300 transition-colors hover:bg-white/20 hover:text-primary-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-light"
+            class="group hover:text-primary-light focus-visible:outline-primary-light rounded-lg bg-white/10 p-3 text-gray-300 transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             {/* Strava no está en Phosphor: se conserva el trazado propio. */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              class="size-5"
+              class="ease-spring size-5 transition-transform duration-[var(--duration-micro)] group-hover:rotate-[8deg] motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
               aria-hidden="true"
             >
-              <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" />
+              <path
+                d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"
+              ></path>
             </svg>
           </a>
         </div>
@@ -169,37 +299,39 @@ const year = new Date().getFullYear();
 
       <!-- El mapa del sitio, agrupado por lo que es cada cosa -->
       <nav class="grid grid-cols-2 gap-8 sm:grid-cols-4" aria-label="Mapa del sitio">
-        {FOOTER_GROUPS.map((group) => (
-          <div>
-            <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">
-              {group.title}
-            </h3>
-            <ul class="mt-4 space-y-2">
-              {group.links.map((link) => (
-                <li>
-                  <a
-                    href={link.href}
-                    class="block py-1.5 text-sm text-gray-300 transition-colors hover:text-primary-light"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {
+          FOOTER_GROUPS.map((group) => (
+            <div>
+              <h3 class="text-sm font-semibold tracking-wider text-gray-400 uppercase">
+                {group.title}
+              </h3>
+              <ul class="mt-4 space-y-2">
+                {group.links.map((link) => (
+                  <li>
+                    <a
+                      href={link.href}
+                      class="hover:text-primary-light block py-1.5 text-sm text-gray-300 transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
       </nav>
     </div>
 
     <!-- Línea nacional de protección a la niñez (ICBF) -->
     <div class="mt-10 border-t border-white/10 pt-8">
       <p class="flex flex-wrap items-center justify-center gap-2 text-center text-sm text-gray-400">
-        <Icon name="ph:phone-bold" class="size-4 shrink-0 text-primary-light" aria-hidden="true" />
+        <Icon name="ph:phone-bold" class="text-primary-light size-4 shrink-0" aria-hidden="true" />
         <span>
           Línea ICBF:{' '}
           <a
             href={`tel:${CHILD_SAFETY.icbfLine}`}
-            class="font-semibold text-primary-light transition-colors hover:text-white"
+            class="text-primary-light font-semibold transition-colors hover:text-white"
             >{CHILD_SAFETY.icbfLine}</a
           >{' '}— protección a la niñez, gratuita y confidencial
         </span>
@@ -214,7 +346,7 @@ const year = new Date().getFullYear();
           href="https://www.linkedin.com/in/juadiga/"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-gray-300 underline decoration-gray-500 underline-offset-2 transition-colors hover:text-primary-light hover:decoration-primary-light"
+          class="hover:text-primary-light hover:decoration-primary-light text-gray-300 underline decoration-gray-500 underline-offset-2 transition-colors"
           >Juan Diego Garcia</a
         >, deportista y miembro activo del club
       </p>

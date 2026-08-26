@@ -50,7 +50,7 @@ const { Content } = await render(program);
 const { title } = program.data;
 const photo = getRefreshImage(program.data.image);
 const level = getLevelStyle(program.data.targetLevel);
-const sessions = countWeeklySessions(program.data.schedule);
+const sessions = countWeeklySessions(program.data);
 
 type Program = CollectionEntry<'programs'>;
 

@@ -340,19 +340,23 @@ export default defineConfig({
   --breakpoint-2xl: 1536px;
 }
 
-/* Fuentes locales */
+/* Fuentes locales — subsets `-latin` (ver `scripts/subset-fonts.sh`).
+   El `unicode-range` de las dos familias es idéntico y tiene que coincidir
+   con `$UNICODES` del script. Los ejes variables NO se instancian. */
 @font-face {
   font-family: 'Inter Variable';
-  src: url('/fonts/InterVariable.woff2') format('woff2');
+  src: url('/fonts/InterVariable-latin.woff2') format('woff2');
   font-weight: 100 900;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, /* … */ U+2190-2193, U+25B2, U+25BC, U+2605, U+FFFD;
 }
 
 @font-face {
   font-family: 'Plus Jakarta Sans';
-  src: url('/fonts/PlusJakartaSans-Variable.woff2') format('woff2');
+  src: url('/fonts/PlusJakartaSans-Variable-latin.woff2') format('woff2');
   font-weight: 200 800;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, /* … */ U+2190-2193, U+25B2, U+25BC, U+2605, U+FFFD;
 }
 
 /* Base global */

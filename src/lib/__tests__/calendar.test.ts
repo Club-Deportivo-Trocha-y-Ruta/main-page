@@ -4,6 +4,7 @@ import {
   buildSeason,
   cancelledAhead,
   clubToday,
+  clubTimeOfDay,
   eventDay,
   dayLabel,
   monthShort,
@@ -67,6 +68,20 @@ describe('resolveEventStatus', () => {
 
   it('lee el día del evento en UTC, tal como se escribió', () => {
     expect(eventDay(at('2026-01-31'))).toBe('2026-01-31');
+  });
+});
+
+describe('clubTimeOfDay', () => {
+  it('da la hora del club en 24 horas y con ceros a la izquierda', () => {
+    // Colombia va cinco horas atrás de UTC y no cambia de hora en el año.
+    expect(clubTimeOfDay(new Date('2026-08-26T21:05:00Z'))).toBe('16:05');
+    expect(clubTimeOfDay(new Date('2026-08-27T05:00:00Z'))).toBe('00:00');
+  });
+
+  it('ordena como texto, que es para lo que se usa', () => {
+    const manana = clubTimeOfDay(new Date('2026-08-26T12:00:00Z'));
+    const tarde = clubTimeOfDay(new Date('2026-08-26T21:00:00Z'));
+    expect(manana < tarde).toBe(true);
   });
 });
 

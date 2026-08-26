@@ -75,6 +75,23 @@ export const SOCIAL = {
 export const CTA_TRIAL_LABEL = 'Clase de prueba gratis';
 export const CTA_TRIAL_LABEL_SHORT = 'Clase gratis';
 
+/**
+ * Etiqueta del botón «Compartir por WhatsApp» al pie de las crónicas
+ * (`WhatsappShareButton.astro`). WhatsApp es el canal por el que de hecho
+ * circulan las crónicas —ver `docs/05-convencion-utm.md`, el 50% de las
+ * sesiones de mayo-agosto 2026 entraron como «Direct», que es tráfico de
+ * WhatsApp sin `referer`— así que tiene su propio CTA, no solo el ícono
+ * pequeño de `ShareButtons`.
+ */
+export const SHARE_WHATSAPP_LABEL = 'Compartir por WhatsApp';
+
+/**
+ * Rótulo del aviso de la próxima sesión en el banner de inscripción. Lo que
+ * viene después —el día, la hora y el lugar— sale del campo `sessions` de la
+ * colección `programs`; esto es solo el nombre del dato.
+ */
+export const NEXT_SESSION_LABEL = 'Próxima sesión';
+
 export const NAV_ITEMS = [
   { label: 'Inicio', href: '/' },
   { label: 'Quiénes Somos', href: '/quienes-somos' },

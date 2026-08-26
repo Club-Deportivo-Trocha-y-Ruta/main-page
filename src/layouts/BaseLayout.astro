@@ -62,11 +62,22 @@ const heroPoster = isHome ? await getHeroPoster() : null;
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <!-- Font preloading -->
-    <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Font preloading — se mantienen los dos porque ambas familias pintan
+         texto por encima del pliegue en todas las páginas: Inter en la
+         navegación del header y el cuerpo, Plus Jakarta Sans en el `h1`, que
+         es el candidato a LCP en todo el sitio salvo la home (donde lo es el
+         póster del hero). Tras el subsetting los dos juntos pesan ~160 KB,
+         menos de la mitad de lo que pesaba Inter sola sin subsetear. -->
     <link
       rel="preload"
-      href="/fonts/PlusJakartaSans-Variable.woff2"
+      href="/fonts/InterVariable-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/PlusJakartaSans-Variable-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin

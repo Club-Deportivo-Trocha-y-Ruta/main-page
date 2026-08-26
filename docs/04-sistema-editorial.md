@@ -30,6 +30,7 @@ Toda sección se arma con las mismas cuatro piezas, en este orden:
 | **Entrada narrativa** | `SectionIntro` | Antetítulo, titular con promesa, bajada |
 | **Dato ilustrado** | `StatFigure`, `FactGrid`, ilustración propia | La prueba de lo que afirma el titular |
 | **Paso siguiente** | `Button`, `InscriptionCTA`, enlace | Qué hace quien se convenció |
+| **Firma** (opcional) | `ClubSeal` | El escudo estampado donde la pieza termina. Ver 2.6 |
 
 ```astro
 <SectionShell tone="muted" pattern="topo" width="wide" labelledby="programas-heading">
@@ -98,6 +99,8 @@ Ilustraciones disponibles en `src/lib/editorial.ts`:
   recorrido navegable: sin enlaces, sin texto sobre las paradas y con el dibujo
   `aria-hidden`, porque el dato equivalente viaja en un resumen `sr-only`. La
   usa la tarjeta de temporada del hero de la portada.
+- `ClubSeal.astro` — el escudo del club estampado como firma de cierre. No es un
+  dato: es puntuación. Ver 2.6.
 
 El SVG se estira con `preserveAspectRatio="none"`, así que **dentro del SVG no va texto ni
 círculos**: los marcadores se dibujan en HTML encima del recuadro.
@@ -148,6 +151,48 @@ Tres trampas que ya costaron una sesión de depuración cada una:
    con `1`. El barrido por recorte no depende de longitudes, solo de la caja.
 
 Nada de esto reemplaza a `.reveal` (IntersectionObserver, en `BaseLayout`): conviven.
+
+---
+
+### 2.6 La firma — `ClubSeal`
+
+El escudo oficial (`src/assets/images/logo.webp`, el mismo de la cabecera) usado como
+sello: la marca que se estampa donde una pieza terminó de contar lo suyo. **No aporta
+información** — por eso va `aria-hidden` con `alt=""`, y por eso no es obligatorio: una
+sección sin firma no está incompleta.
+
+| Prop | Valores | Notas |
+|------|---------|-------|
+| `size` | `sm` (40px), `md` (56px), `lg` (80px) | Lado del escudo; el disco añade su propio padding |
+| `rotate` | grados, por defecto `-6` | Se acota a ±15: más que eso deja de leerse como firma |
+| `tone` | `SectionTone` | Decide el aro del disco. El disco siempre es claro: el escudo es un degradado teal→lima con fondo transparente y sobre el teal de marca o sobre grafito se pierde |
+| `class` | | Pasa al sello (márgenes del consumidor) |
+
+**Dónde se usa hoy**: cierre del detalle de crónica (`/noticias/[slug]`, después de
+compartir), cabeza del banner de `InscriptionCTA` (`variant="banner"`) y cierre del 404.
+**Dónde no**: en el Hero — es una imagen decorativa que competiría con el LCP.
+
+Animación (docs/08-plan-creatividad-ui.md, Sprint 2 tarea 9): al entrar en pantalla el
+sello llega grande y transparente (`transform: scale(1.4)` + `opacity: 0`) y aterriza con
+el rebote de `--ease-pop` en `--duration-celebration` (500ms). Cero JS nuevo: el
+disparador es el mismo `.reveal` → `.revealed` del `IntersectionObserver` de
+`BaseLayout.astro`. El componente se pone el `.reveal` y su `<noscript>` de reserva solo,
+como hace `StatFigure` con `countUp`. Nunca hay bucle: una vez estampado, el sello no se
+mueve más.
+
+Dos detalles del CSS (`.club-seal` en `global.css`) que no son cosméticos:
+
+1. **La inclinación va en la propiedad independiente `rotate`**, no dentro de `transform`:
+   es una posición fija que debe sobrevivir a los dos estados de `.reveal` —que ocupa
+   `transform` con su `translateY(20px)`— sin que ninguno tenga que repetirla. Bajo
+   `prefers-reduced-motion: reduce` se conserva: es posición, no movimiento.
+2. **El estampado sí va en `transform`, no en la propiedad independiente `scale`**, aunque
+   sería lo natural. Lightning CSS trata `scale`/`rotate`/`translate` como longhands de
+   `transform` (no lo son: el spec las aplica antes y por separado) y, si conviven en la
+   misma regla, se queda con una sola: `{ scale: 1.4; transform: none }` compila a
+   `{ transform: none }` y el estampado desaparece sin un solo warning. Es el pariente de
+   la trampa del shorthand `animation` de 2.5 — misma causa, misma cura: separar. `rotate`
+   sobrevive porque vive en una regla propia, sin `transform` al lado.
 
 ## 3. Reglas que no se negocian
 
@@ -218,6 +263,21 @@ Lo que hace de referencia, para copiar el patrón:
   juego, teal en la formación, teal profundo en la competencia.
 - **`summary`** (frontmatter) — la promesa de cada programa, editable desde Sveltia. Antes
   vivía como un objeto literal dentro de `ProgramsGrid.astro`, invisible para el club.
+- **`ProgramAgePicker.astro`** — un `<fieldset>` de radios (una edad por año que algún
+  programa cubre, más «Todas las edades») que resalta la etapa que corresponde. Sin JS: el
+  resaltado lo hace `:has()` sobre `.program-age-scope`, el `<div>` que envuelve la página.
+  Las edades salen de `buildAgePicker()`; el copy, de `src/content/pages/programas.md`
+  (`agePicker`). Ver `global.css` § «Selector de edad de /programas» y las notas de la
+  tarea 5 en `docs/08-plan-creatividad-ui.md` — sobre todo por qué el filtro **no** apaga
+  el texto de los programas que no corresponden.
+
+### Un `data-*` de página en una sección editorial
+
+`SectionShell` deja pasar al `<section>` cualquier prop `data-*` que le llegue. Existe por
+el selector de edad de `/programas`, que necesita etiquetar cada sección con las edades que
+cubre (`data-ages="6 7 8 9 10 11"`), y evita la alternativa mala: enseñarle al marco
+editorial el vocabulario de una página concreta. Todo lo demás del contrato sigue siendo
+explícito.
 
 ### Fechas: siempre en UTC, y "hoy" en la zona del club
 

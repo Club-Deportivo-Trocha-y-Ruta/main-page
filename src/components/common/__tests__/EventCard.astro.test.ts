@@ -147,7 +147,18 @@ describe('EventCard', () => {
     const doc = parseHtml(html);
     const card = doc.querySelector('div')!;
     expect(card.className).toContain('hover:bg-surface-muted');
-    expect(card.className).toContain('transition-colors');
+    expect(card.className).toContain('hover:-translate-y-1');
+    expect(card.className).toContain('hover:shadow-lg');
+  });
+
+  it('anula el desplazamiento de hover bajo prefers-reduced-motion', async () => {
+    const html = await container.renderToString(EventCard, {
+      props: baseProps,
+    });
+    const doc = parseHtml(html);
+    const card = doc.querySelector('div')!;
+    expect(card.className).toContain('motion-reduce:transition-none');
+    expect(card.className).toContain('motion-reduce:hover:translate-y-0');
   });
 
   // ─── Categorías múltiples ─────────────────────────────────

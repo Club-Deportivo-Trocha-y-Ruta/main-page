@@ -13,6 +13,18 @@
  * en `object-cover` dentro de una caja de alto fijo y en posición absoluta,
  * para que una foto vertical no estire la tarjeta — mismo problema que ya
  * resolvió `NewsCard.astro`.
+ *
+ * **Efecto polaroid** (solo talla `default`, docs/08 tarea 11): la caja de la
+ * foto se separa del borde con un margen blanco —más ancho debajo, como el
+ * reverso en blanco de una polaroid real— y el `<article>` completo lleva una
+ * rotación leve que se endereza al `:hover`/`:focus-within`. La rotación va
+ * en el `<article>` a propósito, nunca en la caja de la foto: esa caja es la
+ * candidata a un futuro `view-transition-name` (mismo criterio que
+ * `NewsCard.astro`/`TreeCard.astro` — el nombre va en el recuadro, no en el
+ * `<img>`), y rotar el elemento que llevaría el nombre desincronizaría la
+ * instantánea de salida de la view transition de lo que se ve en pantalla.
+ * La talla `featured` no lleva marco: es un bloque a dos columnas, no una
+ * foto suelta.
  */
 import { Icon } from 'astro-icon/components';
 import { formatDate } from '@lib/utils';
@@ -53,8 +65,10 @@ const isFeatured = variant === 'featured';
 
 <article
   class:list={[
-    'group relative overflow-hidden rounded-2xl bg-surface shadow-sm ring-1 ring-black/5 transition duration-300',
-    isFeatured ? 'md:grid md:grid-cols-2 md:items-stretch' : 'hover:-translate-y-1 hover:shadow-lg',
+    'group bg-surface relative overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5 transition duration-300',
+    isFeatured
+      ? 'md:grid md:grid-cols-2 md:items-stretch'
+      : 'album-card hover:-translate-y-1 hover:shadow-lg',
     className,
   ]}
 >
@@ -62,8 +76,8 @@ const isFeatured = variant === 'featured';
        proporción fija, si no una portada vertical estiraría la tarjeta. -->
   <div
     class:list={[
-      'relative aspect-video overflow-hidden bg-surface-muted',
-      isFeatured && 'md:aspect-auto md:h-full md:min-h-64',
+      'bg-surface-muted relative aspect-video overflow-hidden',
+      isFeatured ? 'md:aspect-auto md:h-full md:min-h-64' : 'm-3 mb-5 rounded-lg',
     ]}
   >
     <img
@@ -74,17 +88,19 @@ const isFeatured = variant === 'featured';
       decoding="async"
       class="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
     />
-    <span class="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold text-white sm:bottom-3 sm:right-3">
+    <span
+      class="absolute right-2 bottom-2 inline-flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold text-white sm:right-3 sm:bottom-3"
+    >
       <Icon name="ph:images-bold" class="size-3.5 shrink-0" aria-hidden="true" />
       {photoCountLabel(photoCount)}
     </span>
   </div>
 
-  <div class:list={['flex flex-col', isFeatured ? 'justify-center p-6 md:p-8' : 'p-5']}>
+  <div class:list={['flex flex-col', isFeatured ? 'justify-center p-6 md:p-8' : 'px-3 pb-3']}>
     <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
       <span
         class:list={[
-          'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider',
+          'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wider uppercase',
           style.soft,
           style.text,
         ]}
@@ -92,14 +108,14 @@ const isFeatured = variant === 'featured';
         <Icon name={style.icon} class="size-3.5" aria-hidden="true" />
         {style.label}
       </span>
-      <time datetime={date.toISOString()} class="text-xs text-text-secondary">
+      <time datetime={date.toISOString()} class="text-text-secondary text-xs">
         {formatDate(date)}
       </time>
     </div>
 
     <h3
       class:list={[
-        'font-display font-bold text-text-primary',
+        'font-display text-text-primary font-bold',
         isFeatured ? 'mt-3 text-xl sm:text-2xl' : 'mt-3 line-clamp-2 text-lg',
       ]}
     >
@@ -111,27 +127,70 @@ const isFeatured = variant === 'featured';
       </a>
     </h3>
 
-    {description && (
-      <p
-        class:list={[
-          'mt-2 text-sm leading-relaxed text-text-secondary',
-          isFeatured ? 'line-clamp-3' : 'line-clamp-2',
-        ]}
-      >
-        {description}
-      </p>
-    )}
+    {
+      description && (
+        <p
+          class:list={[
+            'text-text-secondary mt-2 text-sm leading-relaxed',
+            isFeatured ? 'line-clamp-3' : 'line-clamp-2',
+          ]}
+        >
+          {description}
+        </p>
+      )
+    }
 
     <slot />
 
-    {isFeatured && (
-      <a
-        href={href}
-        class="mt-5 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-primary-deep transition-all duration-200 hover:gap-2.5"
-      >
-        Ver álbum completo
-        <Icon name="ph:arrow-right-bold" class="size-3.5" aria-hidden="true" />
-      </a>
-    )}
+    {
+      isFeatured && (
+        <a
+          href={href}
+          class="text-primary-deep mt-5 inline-flex w-fit items-center gap-1.5 text-sm font-semibold transition-all duration-200 hover:gap-2.5"
+        >
+          Ver álbum completo
+          <Icon name="ph:arrow-right-bold" class="size-3.5" aria-hidden="true" />
+        </a>
+      )
+    }
   </div>
 </article>
+
+<style is:global>
+  /* Rotación alterna del marco polaroid (docs/08 tarea 11). `is:global` a
+     propósito: el ancestro `<li>` lo arma la rejilla de
+     `/galeria/index.astro` (no se toca ese archivo) y el scoping normal de
+     Astro no sirve aquí —no solo marca con su atributo al `.album-card` que
+     esta plantilla sí imprime, también se lo exige a *cada* compuesto de la
+     cadena, incluido el que queda dentro de `:where()`; verificado en
+     `dist/`, la regla salía muerta porque el `<li>` real nunca tiene ese
+     atributo—. Sin scoping, `:where()` solo necesita cumplir su propio
+     trabajo: quitarle especificidad a la parte del ancestro para que
+     `:hover`/`:focus-within` (una sola clase + una pseudo-clase) ganen
+     siempre sobre el ángulo de reposo sin depender del orden de las reglas.
+     El nombre de clase (`album-card`) es único en el sitio, así que no hay
+     riesgo de fuga a otro componente. Todo el bloque vive bajo
+     `no-preference`: es la excepción documentada a "sin JS" (es puro CSS),
+     pero sigue siendo una animación —el enderezado al pasar el cursor—, así
+     que respeta la misma regla que el resto de fase 2. Sin soporte de
+     `prefers-reduced-motion` o con `reduce`, la tarjeta queda plana, con el
+     mismo contenido y el mismo enlace estirado de siempre. */
+  @media (prefers-reduced-motion: no-preference) {
+    .album-card {
+      transition: rotate var(--duration-micro) var(--ease-spring);
+    }
+
+    :where(li:nth-child(odd)) > .album-card {
+      rotate: -1.5deg;
+    }
+
+    :where(li:nth-child(even)) > .album-card {
+      rotate: 1.2deg;
+    }
+
+    .album-card:hover,
+    .album-card:focus-within {
+      rotate: 0deg;
+    }
+  }
+</style>
