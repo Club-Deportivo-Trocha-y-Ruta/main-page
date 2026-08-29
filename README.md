@@ -1,136 +1,153 @@
 # Club Deportivo Trocha y Ruta
 
-Sitio web oficial del **Club Deportivo Trocha y Ruta** — club de ciclomontañismo para ninos desde los 4 anos, fundado en 2010 en Yumbo, Valle del Cauca, Colombia.
+Sitio web oficial del **Club Deportivo Trocha y Ruta** — escuela de ciclomontañismo para niños desde los 4 años, fundada en 2010 en Yumbo, Valle del Cauca, Colombia.
 
-> *Deporte, formacion y contacto con la naturaleza*
+> *Deporte, formación y contacto con la naturaleza*
+
+Producción: <https://clubdeportivotrochayruta.org>
 
 ## Stack
 
-| Capa | Tecnologia |
+| Capa | Tecnología |
 |------|-----------|
-| Framework | [Astro](https://astro.build) 5 (SSG estatico) |
-| Estilos | [Tailwind CSS](https://tailwindcss.com) 4 via Vite plugin |
-| Islands | [React](https://react.dev) 19 (5 componentes interactivos) |
-| CMS | [Sveltia CMS](https://github.com/sveltia/sveltia-cms) |
-| Hosting | [Hostinger](https://www.hostinger.com) + GitHub Actions (FTPS) |
+| Framework | [Astro](https://astro.build) 7 (SSG, `output: 'static'`) |
+| Estilos | [Tailwind CSS](https://tailwindcss.com) 4 vía Vite plugin (tokens en `@theme {}`, sin `tailwind.config`) |
+| Islands | [React](https://react.dev) 19 (6 componentes interactivos, todos `client:visible`) |
+| Contenido | Content Collections con schemas [Zod](https://zod.dev) (`src/lib/schemas.ts`) |
+| CMS | [Sveltia CMS](https://github.com/sveltia/sveltia-cms) en `/admin/` |
+| Buscador | [Pagefind](https://pagefind.app) (índice estático generado en el build) |
 | Formularios | [Web3Forms](https://web3forms.com) |
-| Imagenes | Astro Image + [Cloudinary](https://cloudinary.com) |
+| Imágenes | `astro:assets` + [Cloudinary](https://cloudinary.com) |
+| Analytics | GA4 con Consent Mode v2 y banner propio |
+| Tests | [Vitest](https://vitest.dev) 4 (proyectos `astro` y `react`), Testing Library, vitest-axe |
+| Hosting | [Hostinger](https://www.hostinger.com) (FTPS con lftp) desde GitHub Actions |
 
 ## Requisitos
 
-- Node.js >= 20
+- Node.js ≥ 22.12
 - npm
 
-## Inicio rapido
+## Inicio rápido
 
 ```bash
-# Clonar el repositorio
-git clone https://github.com/tu-usuario/trocha-y-ruta.git
-cd trocha-y-ruta
-
-# Instalar dependencias
+git clone https://github.com/Club-Deportivo-Trocha-y-Ruta/main-page.git
+cd main-page
 npm install
-
-# Iniciar servidor de desarrollo
+cp .env.example .env   # opcional: sin variables el sitio funciona, pero sin analytics ni envío de formularios
 npm run dev
 ```
 
-El sitio estara disponible en `http://localhost:4321`.
+El sitio queda en `http://localhost:4321`.
 
 ## Scripts
 
-| Comando | Descripcion |
+| Comando | Descripción |
 |---------|-------------|
 | `npm run dev` | Servidor de desarrollo |
-| `npm run build` | Build de produccion (incluye type-checking) |
+| `npm run build` | `astro check` + `astro build` + índice de Pagefind → `dist/` |
+| `npm run build:only` | Build sin type-checking (lo usa el pipeline de `develop`, que ya lo corrió) |
 | `npm run preview` | Preview del build local |
-| `npm run lint` | Ejecutar ESLint |
-| `npm run lint:fix` | ESLint con auto-fix |
-| `npm run format` | Formatear con Prettier |
-| `npm run format:check` | Verificar formato sin escribir |
-| `npm run typecheck` | Type-checking con `astro check` |
+| `npm run typecheck` | `astro check` |
+| `npm run lint` / `lint:fix` | ESLint |
+| `npm run format` / `format:check` | Prettier |
+| `npm test` | Vitest en modo watch |
+| `npm run test:run` | Vitest una sola vez (gate de CI) |
+| `npm run test:astro` / `test:react` | Solo un proyecto de Vitest |
+| `npm run test:coverage` | Cobertura con thresholds |
+| `./scripts/subset-fonts.sh` | Regenera los subsets de fuentes en `public/fonts/` (requiere `fonttools` + `brotli`) |
+
+Un solo archivo de test: `npx vitest run --project astro src/lib/__tests__/utils.test.ts`.
 
 ## Estructura del proyecto
 
 ```
 src/
-├── assets/           # Imagenes y recursos estaticos
+├── assets/images/     # Imágenes procesadas por astro:assets
 ├── components/
-│   ├── interactive/  # React Islands (5 componentes)
-│   ├── sections/     # Secciones de pagina (Hero, Stats, etc.)
-│   └── ui/           # Componentes UI reutilizables
-├── content/          # 11 Content Collections (riders, events, news...)
-├── layouts/          # BaseLayout, PageLayout, PostLayout
-├── lib/              # Utilidades (SEO, helpers)
-├── pages/            # 18 paginas (Astro file-based routing)
-├── styles/           # global.css con tokens Tailwind 4
-└── types/            # TypeScript types compartidos
+│   ├── common/        # Header, Footer, SEOHead, Analytics, tarjetas…
+│   ├── editorial/     # Sistema editorial: SectionShell, SectionIntro, StatFigure…
+│   ├── interactive/   # React islands
+│   └── sections/      # Secciones de página
+├── content/           # 15 Content Collections (markdown / YAML)
+├── content.config.ts  # Registro de colecciones
+├── data/              # transparencia-documentos.json
+├── layouts/           # BaseLayout, PageLayout, PostLayout, LinktreeLayout
+├── lib/               # Schemas Zod, SEO, analytics, lógica pura por página (+ tests)
+├── pages/             # Rutas (file-based routing), rss.xml y news-sitemap.xml
+├── styles/global.css  # Tokens de Tailwind 4 y CSS del sistema editorial
+└── test/              # Setup de Vitest y mocks
 public/
-├── admin/            # Sveltia CMS (config.yml + index.html)
-└── fonts/            # Inter Variable, Plus Jakarta Sans
+├── admin/             # Sveltia CMS (index.html + config.yml)
+├── documentos/        # PDFs de transparencia
+├── fonts/             # Subsets de Inter Variable y Plus Jakarta Sans
+├── images/            # Fotos de crónicas, álbumes y logos
+└── .htaccess          # Cabeceras de seguridad y CSP (Apache / Hostinger)
+docs/                  # Arquitectura, contenido, sistema editorial y planes
 ```
 
 ## Content Collections
 
-El sitio gestiona 11 colecciones de contenido:
+| Colección | Contenido |
+|-----------|-----------|
+| `news` | Crónicas y noticias |
+| `events` | Calendario de competencias |
+| `results` | Resultados por válida y categoría (YAML); alimentan el tablero de la temporada |
+| `programs` | Programas de formación |
+| `faqs` | Preguntas frecuentes |
+| `gallery` | Álbumes fotográficos |
+| `sponsors` | Patrocinadores |
+| `social-initiatives` | Iniciativas sociales |
+| `milestones` | Hitos de la historia del club |
+| `trees` / `species` | Inventario de Trocha Verde |
+| `riders` | Corredores (todos en borrador: no se publican perfiles de menores) |
+| `directivos` | Equipo adulto (página `/equipo`, oculta hasta contar con autorizaciones de imagen) |
+| `rutas` | Rutas de entrenamiento (definida, sin contenido) |
+| `pages` | Textos de páginas que no se derivan del contenido |
 
-| Coleccion | Tipo | Descripcion |
-|-----------|------|-------------|
-| `riders` | content | Corredores del club |
-| `directivos` | content | Equipo directivo y staff |
-| `news` | content | Noticias y articulos |
-| `events` | content | Calendario de competencias |
-| `results` | data | Resultados (YAML/JSON) |
-| `programs` | content | Programas de formacion |
-| `testimonials` | content | Testimonios de familias |
-| `sponsors` | content | Patrocinadores |
-| `gallery` | content | Albumes fotograficos |
-| `rutas` | content | Rutas de entrenamiento |
-| `pages` | content | Paginas estaticas editables |
+Los schemas viven en `src/lib/schemas.ts`; al cambiar un campo hay que actualizar también `public/admin/config.yml` y los archivos de contenido.
 
-## React Islands
+## React islands
 
-Astro genera zero JavaScript por defecto. Solo 5 componentes usan React para interactividad:
+Astro genera cero JavaScript por defecto. Solo seis componentes hidratan, todos con `client:visible`:
 
-- **MobileMenu** (`client:load`) — Menu hamburguesa mobile
-- **ContactForm** (`client:visible`) — Formulario de contacto con validacion
-- **InscriptionForm** (`client:visible`) — Formulario de inscripcion multi-paso
-- **ImageLightbox** (`client:visible`) — Lightbox para galeria de fotos
-- **TestimonialsCarousel** (`client:visible`) — Carrusel de testimonios
+- **MobileMenu** — menú de navegación móvil
+- **SiteSearch** — buscador del sitio (carga Pagefind al abrir el diálogo)
+- **ContactForm** — formulario de contacto
+- **InscriptionForm** — inscripción en cuatro pasos
+- **ImageLightbox** — visor de fotos de la galería
+- **TrochaVerdeMap** — mapa Leaflet del inventario de árboles
 
 ## Variables de entorno
 
-Crear un archivo `.env` en la raiz:
+Copiar `.env.example` a `.env`. Todas son opcionales:
 
 ```env
-PUBLIC_WEB3FORMS_KEY=tu_api_key
-PUBLIC_CLOUDINARY_CLOUD_NAME=tu_cloud_name
+PUBLIC_WEB3FORMS_KEY=          # envío de formularios
+PUBLIC_CLOUDINARY_CLOUD_NAME=  # imágenes externas
+PUBLIC_GA4_MEASUREMENT_ID=     # G-XXXXXXXXXX; sin ella no se carga analytics ni el banner de consentimiento
 ```
 
 ## CMS
 
-El sitio incluye Sveltia CMS para edicion de contenido. Accesible en `/admin/` una vez desplegado.
+Sveltia CMS se sirve en `/admin/` (cargado desde CDN, sin dependencia npm). Su configuración está en `public/admin/config.yml`, con backend GitHub y flujo editorial (borrador → revisión → publicado).
 
 ## Deploy
 
-El sitio se despliega automaticamente en **Hostinger** al hacer push a `main` via GitHub Actions con FTPS incremental.
+Dos pipelines de GitHub Actions suben el sitio a Hostinger por FTPS con `lftp`:
 
-### Configuracion
+| Rama | Workflow | Qué hace |
+|------|----------|----------|
+| `develop` | `deploy.yml` | Typecheck + tests como gate → build → deploy al entorno de QA |
+| `main` | `deploy-prod.yml` | Build → deploy a producción (sin tests: ya pasaron en `develop`) |
 
-Agregar estos secrets en GitHub (`Settings > Secrets and variables > Actions`):
+Cada workflow usa un Environment de GitHub (`develop` y `production`) con las variables `PUBLIC_*` como *Variables* y `FTP_SERVER`, `FTP_USERNAME` y `FTP_PASSWORD` como *Secrets*.
 
-| Secret | Descripcion |
-|--------|-------------|
-| `FTP_SERVER` | Servidor FTP de Hostinger |
-| `FTP_USERNAME` | Usuario FTP |
-| `FTP_PASSWORD` | Contrasena FTP |
+## Documentación
 
-### Build manual
-
-```bash
-npm run build
-# Los archivos estaticos se generan en dist/
-```
+- `CLAUDE.md` — guía técnica del repositorio (comandos, arquitectura, convenciones)
+- `docs/04-sistema-editorial.md` — sistema editorial de secciones y referencia de cada página
+- `docs/03-content-strategy.md` — modelo de contenido y CMS
+- `docs/05-convencion-utm.md` — etiquetado de enlaces compartidos
 
 ## Licencia
 

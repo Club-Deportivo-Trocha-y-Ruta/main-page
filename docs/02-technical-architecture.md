@@ -1,8 +1,22 @@
 # Arquitectura Técnica — Club Deportivo Trocha y Ruta
 
-**Versión**: 1.0
-**Fecha**: Marzo 2026
+**Versión**: 1.1
+**Fecha**: Marzo 2026 · nota de actualización: agosto 2026
 **Responsable**: System Architect
+
+> **Nota (2026-08): este documento describe la arquitectura propuesta en marzo de 2026 y no se ha
+> reescrito.** Lo que cambió desde entonces — `package.json`, `.github/workflows/` y `CLAUDE.md` son la
+> fuente de verdad —:
+>
+> - **Astro 7** (`^7.1`, migrado en agosto de 2026 porque Astro 5 quedó sin soporte), `@astrojs/react` 6,
+>   zod 4, Vitest 4. Node ≥ 22.12.
+> - **Hosting**: Hostinger por FTPS (lftp desde GitHub Actions), no Cloudflare Pages. ADR-005 quedó
+>   superada; `wrangler.toml`, `netlify.toml` y `workers/` son restos sin uso.
+> - **Analytics**: GA4 con gtag.js en el hilo principal y Consent Mode v2, no Cloudflare Web Analytics ni
+>   Umami. ADR-004 quedó superada.
+> - **Dependencias que nunca se instalaron**: `swiper`, `yet-another-react-lightbox`, `@formkit/auto-animate`,
+>   Keystatic. Se añadió **Pagefind** (buscador estático) y se centralizaron los schemas en `src/lib/schemas.ts`.
+> - Los archivos de configuración de §4 son los de marzo; los vigentes están en la raíz del repo.
 
 ---
 
@@ -645,6 +659,8 @@ const response = await fetch('https://api.web3forms.com/submit', {
 
 **Reversibilidad**: Alta. El script de analytics se agrega o quita en un componente.
 
+**Estado (2026-08)**: superada. El sitio mide con **GA4** (gtag.js en el hilo principal, Consent Mode v2 con banner propio, catálogo cerrado de eventos sin PII en `src/lib/events.ts`). Ni Cloudflare Web Analytics ni Umami llegaron a usarse.
+
 ---
 
 ### ADR-005: Hosting y Deploy
@@ -670,22 +686,29 @@ const response = await fetch('https://api.web3forms.com/submit', {
 
 **Reversibilidad**: Media. Cambiar de CDN de hosting es posible, pero requiere reconfigurar DNS, variables de entorno y webhooks de deploy.
 
+**Estado (2026-08)**: superada. El sitio se despliega en **Hostinger** por FTPS con lftp desde GitHub Actions (`deploy.yml` → environment `develop`, `deploy-prod.yml` → `production`); cabeceras y CSP viven en `public/.htaccess`. Cloudflare Pages no llegó a usarse.
+
 ---
 
 ## 7. Resumen de Decisiones y Stack Final Confirmado
 
+Estado real a agosto de 2026 (la tabla original de marzo se sustituye; ver la nota al inicio):
+
 | Capa | Tecnología | Versión | Estado |
 |------|-----------|---------|--------|
-| Framework | Astro | `^5.17.0` | Confirmado (se retrasa adopción de v6) |
-| Estilos | Tailwind CSS 4 + Vite plugin | `^4.1.0` | Confirmado — sin `tailwind.config.mjs` |
-| React Islands | React | `^19.2.4` | Confirmado |
-| CMS | **Sveltia CMS** | CDN | **Cambio**: reemplaza a Decap CMS |
-| Imágenes | Astro native + Cloudinary | — | Confirmado — enfoque híbrido |
-| Formularios | **Web3Forms** | HTTP API | **Cambio**: reemplaza a Netlify Forms |
-| Deploy/CDN | **Cloudflare Pages** | — | **Cambio**: reemplaza a Netlify como opción principal |
-| Analytics | Cloudflare Web Analytics + Umami | — | **Cambio**: Cloudflare primario, Umami secundario |
-| Iconos | astro-icon + Phosphor Icons | `^1.1.4` | Confirmado |
-| Animaciones | CSS + View Transitions API | Nativo | Confirmado |
+| Framework | Astro | `^7.1` | Migrado desde 5.x en agosto de 2026 (`output: 'static'`) |
+| Estilos | Tailwind CSS 4 + Vite plugin | `^4.3` | Sin `tailwind.config`; tokens en `@theme {}` |
+| React Islands | React | `^19.2` | 6 islands, todas `client:visible` |
+| Validación | zod | `^4.4` | Compartido entre Content Collections (`src/lib/schemas.ts`) y formularios |
+| CMS | Sveltia CMS | CDN (unpkg) | `public/admin/`; reemplazó a Decap |
+| Imágenes | `astro:assets` + Cloudinary | — | Híbrido |
+| Formularios | Web3Forms | HTTP API | `PUBLIC_WEB3FORMS_KEY` |
+| Buscador | Pagefind | `^1.5` | Índice estático generado al final del build |
+| Iconos | astro-icon + Phosphor Icons | `^1.1` | `ph:*` |
+| Analytics | GA4 (gtag.js) | — | Hilo principal + Consent Mode v2; **reemplaza** a Cloudflare Web Analytics + Umami (ADR-004) |
+| Hosting / deploy | Hostinger (FTPS, lftp) vía GitHub Actions | — | **Reemplaza** a Cloudflare Pages (ADR-005); environments `develop` y `production` |
+| Tests | Vitest 4 (proyectos `astro` y `react`) | `^4.1` | Gate de CI en `develop` |
+| Animaciones | CSS + View Transitions API | Nativo | Scroll-driven en CSS, sin runtimes |
 
 ---
 

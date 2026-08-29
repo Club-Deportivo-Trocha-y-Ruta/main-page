@@ -37,9 +37,9 @@ Node ≥ 22.12 (`engines`; CI usa 22.12). Variables de entorno (`.env.example`):
 - **Astro 7** estático, `site: https://clubdeportivotrochayruta.org`. El sitemap excluye `/enlaces` (linktree del QR) y `/equipo` (oculta). Iconos `astro-icon` + Phosphor (`ph:*`).
 - **Tailwind 4** vía `@tailwindcss/vite`; no existe `tailwind.config`. Tokens en `@theme {}` de `src/styles/global.css`; `@source not` saca `docs/` y `.claude/` del escáner de clases.
 - **React 19** solo en `src/components/interactive/`. **Vitest 4** con dos proyectos. **Pagefind** indexa `dist/` al final del build.
-- **Sveltia CMS** en `public/admin/` (se carga desde unpkg, sin npm). Su backend `github` apunta al placeholder `owner/trocha-y-ruta`, y la colección `settings` a `src/content/settings/site.yaml`, que no existe.
+- **Sveltia CMS** en `public/admin/` (se carga desde unpkg, sin npm). Backend `github` sobre `Club-Deportivo-Trocha-y-Ruta/main-page`, rama `main`, con `editorial_workflow`. No hay colección `settings`: los datos del sitio viven en `src/lib/constants.ts`.
 - Aliases TS: `@components/*`, `@layouts/*`, `@lib/*`, `@assets/*`, `@types/*`.
-- `netlify.toml`, `wrangler.toml` y `workers/donations/` son restos de experimentos; el hosting real es Hostinger. `docs/02-technical-architecture.md` es anterior a la migración a Astro 7 (habla de Astro 5, Cloudflare Pages, Umami): mandan `package.json` y `.github/workflows/`.
+- `netlify.toml`, `wrangler.toml` y `workers/donations/` son restos de experimentos; el hosting real es Hostinger. `docs/02-technical-architecture.md` es de marzo de 2026 y lleva una nota con lo que cambió después (Astro 7, Hostinger, GA4): mandan `package.json` y `.github/workflows/`.
 
 ### Tokens de diseño — reglas
 

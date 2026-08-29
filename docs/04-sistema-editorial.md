@@ -1282,7 +1282,8 @@ de cada fila.
 
 **Por qué está oculta.** `/equipo` era el único TODO real del código: un ítem de
 navegación comentado en `constants.ts` y dos `.astro.bak` de perfiles de
-corredores. La página ya existe y se construye, pero **el club todavía no tiene
+corredores (eliminados del árbol en agosto de 2026: eran perfiles de menores, que
+no se publican; quedan en el historial de git). La página ya existe y se construye, pero **el club todavía no tiene
 firmadas las autorizaciones de uso de imagen**, así que no se publica. El
 ocultamiento va en cuatro frentes a la vez, no en uno:
 

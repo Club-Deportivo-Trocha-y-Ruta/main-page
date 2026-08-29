@@ -5,7 +5,7 @@
 
 backend:
   name: github
-  repo: owner/trocha-y-ruta
+  repo: Club-Deportivo-Trocha-y-Ruta/main-page
   branch: main
   commit_messages:
     create: 'content: crea {{collection}} "{{slug}}"'
@@ -733,39 +733,12 @@ collections:
       - { label: "Contenido", name: "body", widget: "markdown" }
 
   # ----------------------------------------------------------
-  # CONFIGURACIÓN DEL SITIO (singleton)
+  # CONFIGURACIÓN DEL SITIO
   # ----------------------------------------------------------
-  - name: "settings"
-    label: "Configuración"
-    files:
-      - name: "site"
-        label: "Datos del Sitio"
-        file: "src/content/settings/site.yaml"
-        fields:
-          - { label: "Nombre del club", name: "clubName", widget: "string" }
-          - { label: "Lema", name: "tagline", widget: "string" }
-          - { label: "Descripción", name: "description", widget: "text" }
-          - { label: "Email", name: "email", widget: "string" }
-          - { label: "Teléfono", name: "phone", widget: "string" }
-          - { label: "Dirección", name: "address", widget: "string" }
-          - { label: "Ciudad", name: "city", widget: "string" }
-          - { label: "Departamento", name: "department", widget: "string" }
-          - label: "Redes sociales"
-            name: "social"
-            widget: "object"
-            fields:
-              - { label: "Facebook", name: "facebook", widget: "string", required: false }
-              - { label: "Instagram", name: "instagram", widget: "string", required: false }
-              - { label: "YouTube", name: "youtube", widget: "string", required: false }
-              - { label: "TikTok", name: "tiktok", widget: "string", required: false }
-          - label: "Horarios"
-            name: "schedule"
-            widget: "list"
-            fields:
-              - { label: "Día(s)", name: "days", widget: "string" }
-              - { label: "Horario", name: "hours", widget: "string" }
-          - { label: "Año de fundación", name: "foundedYear", widget: "number" }
-          - { label: "NIT", name: "nit", widget: "string", required: false }
+  # No hay colección `settings`: los datos del sitio (nombre, contacto, redes,
+  # navegación, etiquetas de CTA) viven en `src/lib/constants.ts` y ninguna
+  # página lee un YAML. La colección que existía aquí apuntaba a
+  # `src/content/settings/site.yaml`, un archivo que nunca se creó.
 
   # ----------------------------------------------------------
   # TROCHA VERDE — ÁRBOLES
