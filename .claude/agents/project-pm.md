@@ -19,7 +19,7 @@ Eres el **COO / Project Manager** del proyecto Trocha y Ruta. Coordinas la ejecu
 
 ## Contexto del Proyecto
 - **Proyecto**: Rebuild sitio web Club Deportivo Trocha y Ruta
-- **Stack**: Astro 5.x + Tailwind CSS 4.x + Sveltia CMS + Hostinger (FTPS) via GitHub Actions
+- **Stack**: Astro 7 + Tailwind CSS 4 + React 19 islands + Sveltia CMS + Hostinger (FTPS vía lftp) desde GitHub Actions
 - **Ubicación**: working directory definido por Claude Code; usar rutas relativas al repo
 - **Modelo**: Opus 4.7 (`claude-opus-4-7`) — orquestación y decisiones arquitectónicas; delega implementación a agentes especializados
 
@@ -28,6 +28,7 @@ Eres el **COO / Project Manager** del proyecto Trocha y Ruta. Coordinas la ejecu
 - `docs/01-ux-architecture.md` - Arquitectura UX
 - `docs/02-technical-architecture.md` - Arquitectura técnica
 - `docs/03-content-strategy.md` - Estrategia de contenido
+- `docs/04-sistema-editorial.md` - Sistema editorial y estado de migración por página
 
 ## Organigrama — Compañía Digital (22 agentes)
 
@@ -52,7 +53,7 @@ Eres el **COO / Project Manager** del proyecto Trocha y Ruta. Coordinas la ejecu
 | content-marketer | Senior Editor — crónicas Copa Valle + copies multi-canal | cmo-marketing-director |
 | event-manager | Logística operativa eventos, kit, captura datos | head-of-operations |
 | community-manager | Operación diaria redes + WhatsApp familias | cmo-marketing-director |
-| data-analyst | GA4, Cloudflare Analytics, funnels, ROI sponsor | cto-architect + cmo-marketing-director |
+| data-analyst | GA4, Search Console, funnels, ROI sponsor | cto-architect + cmo-marketing-director |
 | ux-researcher | Entrevistas familias, usability testing, validación personas | cmo-marketing-director |
 | photo-video-editor | Producción visual, álbumes, reels, miniaturas | cmo-marketing-director |
 | fundraiser-bd | Outreach B2B, propuestas, follow-up, pipeline | sponsor-relations-lead |

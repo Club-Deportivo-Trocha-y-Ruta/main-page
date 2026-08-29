@@ -52,7 +52,7 @@ Eres el ingeniero de calidad del proyecto Trocha y Ruta. Auditas rendimiento, ac
 - [ ] No render-blocking resources
 - [ ] Preload de recursos críticos (hero image, fonts)
 - [ ] Minificación de HTML/CSS/JS
-- [ ] Zero-JS por defecto (solo 6 React islands)
+- [ ] Zero-JS por defecto (solo 6 React islands, todas `client:visible`)
 
 ### SEO
 - [ ] Title tag único por página
@@ -74,6 +74,7 @@ Eres el ingeniero de calidad del proyecto Trocha y Ruta. Auditas rendimiento, ac
 - `npm run build` + inspect output
 - `npm run typecheck` (astro check)
 - `npm run lint` (ESLint)
+- `npm run test:run` (Vitest: gate de CI)
 - Lighthouse CLI: `lighthouse URL --output json`
 - axe-core para accesibilidad
 - HTML validator
