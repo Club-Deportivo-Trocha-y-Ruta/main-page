@@ -30,9 +30,7 @@ describe('seoSchema', () => {
   });
 
   it('valida metaDescription <= 160 chars', () => {
-    expect(() =>
-      seoSchema.parse({ metaDescription: 'a'.repeat(161) })
-    ).toThrow();
+    expect(() => seoSchema.parse({ metaDescription: 'a'.repeat(161) })).toThrow();
   });
 
   it('acepta metaDescription de 160 chars exactos', () => {
@@ -51,9 +49,7 @@ describe('socialMediaSchema', () => {
   });
 
   it('rechaza URLs inválidas', () => {
-    expect(() =>
-      socialMediaSchema.parse({ instagram: 'not-a-url' })
-    ).toThrow();
+    expect(() => socialMediaSchema.parse({ instagram: 'not-a-url' })).toThrow();
   });
 
   it('acepta undefined (optional)', () => {
@@ -89,9 +85,7 @@ describe('ridersSchema', () => {
   });
 
   it('rechaza categoría inválida', () => {
-    expect(() =>
-      ridersSchema.parse({ ...validRider, category: 'profesional' })
-    ).toThrow();
+    expect(() => ridersSchema.parse({ ...validRider, category: 'profesional' })).toThrow();
   });
 
   it('rechaza sin campos requeridos', () => {
@@ -130,16 +124,63 @@ describe('eventsSchema', () => {
     expect(result.draft).toBe(false);
   });
 
-  it('rechaza categoría de evento inválida', () => {
+  it('deja vacíos por defecto los campos que dependen del organizador', () => {
+    // Sin convocatoria confirmada no hay categorías ni precios: los bloques de
+    // la ficha no se pintan en vez de inventar un dato plausible.
+    const result = eventsSchema.parse(validEvent);
+    expect(result.categories).toEqual([]);
+    expect(result.fees).toEqual([]);
+    expect(result.circuit).toBeUndefined();
+    expect(result.capacity).toBeUndefined();
+    expect(result.urlSlug).toBeUndefined();
+  });
+
+  it('acepta la ficha completa de una válida', () => {
+    const result = eventsSchema.parse({
+      ...validEvent,
+      urlSlug: 'copa-valle-yumbo-2026',
+      venueSlug: 'pista-carlos-castro',
+      updatedAt: '2026-08-29',
+      circuit: { distanceKm: 3.8 },
+      fees: [{ label: 'Teteros', amount: 50000 }],
+      capacity: 350,
+      categories: [{ name: 'Infantil A', ageMin: 7, ageMax: 8, laps: 1 }],
+    });
+    expect(result.urlSlug).toBe('copa-valle-yumbo-2026');
+    expect(result.circuit?.distanceKm).toBe(3.8);
+    expect(result.fees[0].amount).toBe(50000);
+    expect(result.categories[0].name).toBe('Infantil A');
+    expect(result.updatedAt).toBeInstanceOf(Date);
+  });
+
+  it('rechaza un circuito sin distancia o con distancia negativa', () => {
+    expect(() => eventsSchema.parse({ ...validEvent, circuit: {} })).toThrow();
+    expect(() => eventsSchema.parse({ ...validEvent, circuit: { distanceKm: -1 } })).toThrow();
+  });
+
+  it('rechaza un urlSlug que no sea kebab-case', () => {
+    // Va directo a params.slug de getStaticPaths: una barra parte la ruta y un
+    // acento o un espacio produce una URL que nadie puede teclear.
+    for (const malo of ['Copa Valle', 'copa/valle', 'copa_valle', 'Copa-Valle', 'copa-válida']) {
+      expect(() => eventsSchema.parse({ ...validEvent, urlSlug: malo }), malo).toThrow();
+    }
     expect(() =>
-      eventsSchema.parse({ ...validEvent, category: 'bmx' })
+      eventsSchema.parse({ ...validEvent, urlSlug: 'copa-valle-yumbo-2026' })
+    ).not.toThrow();
+  });
+
+  it('rechaza un valor de inscripción negativo', () => {
+    expect(() =>
+      eventsSchema.parse({ ...validEvent, fees: [{ label: 'X', amount: -100 }] }),
     ).toThrow();
   });
 
+  it('rechaza categoría de evento inválida', () => {
+    expect(() => eventsSchema.parse({ ...validEvent, category: 'bmx' })).toThrow();
+  });
+
   it('rechaza registrationUrl no válida como URL', () => {
-    expect(() =>
-      eventsSchema.parse({ ...validEvent, registrationUrl: 'not-url' })
-    ).toThrow();
+    expect(() => eventsSchema.parse({ ...validEvent, registrationUrl: 'not-url' })).toThrow();
   });
 
   it('acepta todos los status válidos', () => {
@@ -170,9 +211,7 @@ describe('newsSchema', () => {
   });
 
   it('rechaza excerpt > 200 chars', () => {
-    expect(() =>
-      newsSchema.parse({ ...validNews, excerpt: 'a'.repeat(201) })
-    ).toThrow();
+    expect(() => newsSchema.parse({ ...validNews, excerpt: 'a'.repeat(201) })).toThrow();
   });
 
   it('acepta excerpt de 200 chars exactos', () => {
@@ -210,9 +249,7 @@ describe('programsSchema', () => {
   });
 
   it('rechaza targetLevel inválido', () => {
-    expect(() =>
-      programsSchema.parse({ ...validProgram, targetLevel: 'avanzado' })
-    ).toThrow();
+    expect(() => programsSchema.parse({ ...validProgram, targetLevel: 'avanzado' })).toThrow();
   });
 
   it('acepta un programa sin sesiones capturadas', () => {
@@ -238,7 +275,7 @@ describe('programsSchema', () => {
       programsSchema.parse({
         ...validProgram,
         sessions: [{ day: 'lunes', start: '16:30', end: '18:00' }],
-      })
+      }),
     ).toThrow();
   });
 
@@ -248,7 +285,7 @@ describe('programsSchema', () => {
         programsSchema.parse({
           ...validProgram,
           sessions: [{ day: 'tue', start, end: '18:00' }],
-        })
+        }),
       ).toThrow();
     }
   });
@@ -258,14 +295,14 @@ describe('programsSchema', () => {
       programsSchema.parse({
         ...validProgram,
         sessions: [{ day: 'tue', start: '18:00', end: '16:30' }],
-      })
+      }),
     ).toThrow();
 
     expect(() =>
       programsSchema.parse({
         ...validProgram,
         sessions: [{ day: 'tue', start: '18:00', end: '18:00' }],
-      })
+      }),
     ).toThrow();
   });
 });
@@ -353,7 +390,7 @@ describe('directivosSchema', () => {
         role: 'presidente',
         roleLabel: 'Presidente',
         email: 'not-email',
-      })
+      }),
     ).toThrow();
   });
 });
@@ -378,7 +415,7 @@ describe('sponsorsSchema', () => {
         name: 'Test',
         logo: '/logo.png',
         level: 'premium',
-      })
+      }),
     ).toThrow();
   });
 });
@@ -407,7 +444,7 @@ describe('gallerySchema', () => {
         cover: '/cover.jpg',
         images: [{ src: '/1.jpg', alt: 'Test' }],
         videos: [{ url: 'not-a-url', title: 'Video' }],
-      })
+      }),
     ).toThrow();
   });
 });
@@ -436,15 +473,11 @@ describe('rutasSchema', () => {
   });
 
   it('rechaza dificultad inválida', () => {
-    expect(() =>
-      rutasSchema.parse({ ...validRuta, difficulty: 'extrema' })
-    ).toThrow();
+    expect(() => rutasSchema.parse({ ...validRuta, difficulty: 'extrema' })).toThrow();
   });
 
   it('rechaza suitableFor con categoría inválida', () => {
-    expect(() =>
-      rutasSchema.parse({ ...validRuta, suitableFor: ['profesional'] })
-    ).toThrow();
+    expect(() => rutasSchema.parse({ ...validRuta, suitableFor: ['profesional'] })).toThrow();
   });
 });
 
@@ -476,9 +509,7 @@ describe('pagesSchema', () => {
   });
 
   it('rechaza layout inválido', () => {
-    expect(() =>
-      pagesSchema.parse({ title: 'Test', layout: 'sidebar' })
-    ).toThrow();
+    expect(() => pagesSchema.parse({ title: 'Test', layout: 'sidebar' })).toThrow();
   });
 
   // Selector de edad de /programas: el copy es opcional porque solo lo usa esa
@@ -515,10 +546,10 @@ describe('pagesSchema', () => {
 
   it('rechaza un selector de edad sin pregunta o sin texto de «todas»', () => {
     expect(() =>
-      pagesSchema.parse({ title: 'Programas', agePicker: { allLabel: 'Todas' } })
+      pagesSchema.parse({ title: 'Programas', agePicker: { allLabel: 'Todas' } }),
     ).toThrow();
     expect(() =>
-      pagesSchema.parse({ title: 'Programas', agePicker: { legend: '¿Qué edad tiene?' } })
+      pagesSchema.parse({ title: 'Programas', agePicker: { legend: '¿Qué edad tiene?' } }),
     ).toThrow();
   });
 });
@@ -551,9 +582,7 @@ describe('milestonesSchema', () => {
   });
 
   it('rechaza imagen sin alt', () => {
-    expect(() =>
-      milestonesSchema.parse({ ...valid, image: 'historia-pista.webp' })
-    ).toThrow();
+    expect(() => milestonesSchema.parse({ ...valid, image: 'historia-pista.webp' })).toThrow();
   });
 
   it('rechaza imagen con alt en blanco', () => {
@@ -562,7 +591,7 @@ describe('milestonesSchema', () => {
         ...valid,
         image: 'historia-pista.webp',
         imageAlt: '   ',
-      })
+      }),
     ).toThrow();
   });
 

@@ -124,9 +124,12 @@ collections:
     summary: "{{date | date('YYYY-MM-DD')}} — {{title}} [{{status}}]"
     fields:
       - { label: "Título", name: "title", widget: "string", required: true }
+      - { label: "URL propia", name: "urlSlug", widget: "string", required: false, pattern: ["^[a-z0-9]+(?:-[a-z0-9]+)*$", "Solo minúsculas, números y guiones: copa-valle-yumbo-2026"], hint: "Sin el prefijo de fecha: copa-valle-yumbo-2026. Si se deja vacío se usa el nombre del archivo. Cambiarlo rompe los enlaces ya compartidos. No usar el nombre 'slug': Astro lo trata como reservado." }
       - { label: "Fecha inicio", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
       - { label: "Fecha fin", name: "endDate", widget: "datetime", required: false, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      - { label: "Última revisión", name: "updatedAt", widget: "datetime", required: false, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, hint: "Cuándo se contrastaron estos datos con la convocatoria oficial." }
       - { label: "Ubicación", name: "location", widget: "string", required: true }
+      - { label: "Sede (slug)", name: "venueSlug", widget: "string", required: false, hint: "Identificador estable del lugar: pista-carlos-castro" }
       - { label: "Ciudad", name: "city", widget: "string", required: false }
       - { label: "Departamento", name: "department", widget: "string", default: "Valle del Cauca" }
       - { label: "URL del mapa", name: "mapUrl", widget: "string", required: false }
@@ -166,6 +169,52 @@ collections:
           - { label: "Cancelado", value: "cancelled" }
       - { label: "URL de inscripción", name: "registrationUrl", widget: "string", required: false }
       - { label: "Fecha límite inscripción", name: "registrationDeadline", widget: "datetime", required: false, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      - label: "Circuito"
+        name: "circuit"
+        widget: "object"
+        collapsed: true
+        required: false
+        hint: "Solo lo que esté en la convocatoria oficial. El desnivel no se publica: la altimetría de un GPS de celular se desvía demasiado."
+        fields:
+          - { label: "Kilómetros por vuelta", name: "distanceKm", widget: "number", value_type: "float", required: true }
+          - { label: "Vueltas", name: "laps", widget: "number", value_type: "int", required: false }
+          - { label: "Superficie", name: "surface", widget: "string", required: false }
+      - label: "Valores de inscripción"
+        name: "fees"
+        widget: "list"
+        required: false
+        label_singular: "Valor"
+        summary: "{{fields.label}} — {{fields.amount}}"
+        fields:
+          - { label: "Concepto", name: "label", widget: "string", required: true }
+          - { label: "Valor en pesos", name: "amount", widget: "number", value_type: "int", required: true }
+      - { label: "Cupos por categoría", name: "capacity", widget: "number", value_type: "int", required: false }
+      - label: "Cronograma del día"
+        name: "schedule"
+        widget: "list"
+        required: false
+        label_singular: "Momento"
+        summary: "{{fields.time}} — {{fields.title}}"
+        hint: "Lo que no es una largada: entrega de números, congresillo, premiaciones."
+        fields:
+          - { label: "Hora", name: "time", widget: "string", required: true, pattern: ["^([01][0-9]|2[0-3]):[0-5][0-9]$", "Hora en 24 horas: 07:00, 13:00"] }
+          - { label: "Qué pasa", name: "title", widget: "string", required: true }
+          - { label: "Dónde", name: "place", widget: "string", required: false }
+      - label: "Categorías"
+        name: "categories"
+        widget: "list"
+        required: false
+        label_singular: "Categoría"
+        summary: "{{fields.name}}"
+        hint: "Los rangos de edad y las vueltas los define el organizador. Si no están confirmados, dejar la lista vacía: el bloque no se pinta."
+        fields:
+          - { label: "Nombre", name: "name", widget: "string", required: true }
+          - { label: "Manga", name: "group", widget: "string", required: false, hint: "Primera manga, Segunda manga…" }
+          - { label: "Hora de largada", name: "startTime", widget: "string", required: false, pattern: ["^([01][0-9]|2[0-3]):[0-5][0-9]$", "Hora en 24 horas: 08:30, 12:40"] }
+          - { label: "Edad mínima", name: "ageMin", widget: "number", value_type: "int", required: false }
+          - { label: "Edad máxima", name: "ageMax", widget: "number", value_type: "int", required: false }
+          - { label: "Vueltas", name: "laps", widget: "number", value_type: "int", required: false }
+          - { label: "Recorrido", name: "course", widget: "string", required: false, hint: "SOLO si no da la vuelta completa: «70% de la pista», «Recorrido especial», «Pista alterna». Llenarlo impide que la página calcule los kilómetros, que en un trazado más corto serían falsos." }
       - { label: "Galería relacionada (slug)", name: "relatedGallery", widget: "string", required: false }
       - { label: "Noticias relacionadas (slugs)", name: "relatedNews", widget: "list", required: false }
       - { label: "URL de resultados", name: "resultsUrl", widget: "string", required: false }
@@ -180,7 +229,7 @@ collections:
           - { label: "Meta título", name: "metaTitle", widget: "string", required: false }
           - { label: "Meta descripción", name: "metaDescription", widget: "text", required: false }
           - { label: "Imagen OG", name: "ogImage", widget: "image", required: false }
-      - { label: "Descripción", name: "body", widget: "markdown" }
+      - { label: "Descripción", name: "body", widget: "markdown", hint: "Solo lo que ningún campo cubre: contexto, recorrido, premiación. El circuito, los valores, los cupos y el cierre se pintan desde sus campos — repetirlos aquí deja dos versiones del mismo dato." }
 
   # ----------------------------------------------------------
   # CORREDORES

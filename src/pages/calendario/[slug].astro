@@ -1,0 +1,576 @@
+---
+/**
+ * Ficha de una fecha del calendario.
+ *
+ * Hasta ahora una válida no tenía URL: vivía como un `<article id="evento-…">`
+ * dentro de `/calendario`, con sus datos duros —distancia del circuito, valores
+ * de inscripción, cupos, cierre— escritos en el cuerpo markdown, donde ninguna
+ * página los renderizaba y ningún buscador los podía citar.
+ *
+ * Esta página está escrita para quien viene de otro municipio: qué prueba es,
+ * dónde queda, cuánto mide el circuito, cuánto cuesta, hasta cuándo hay plazo y
+ * cómo va la temporada. La inscripción la maneja el organizador, así que aquí
+ * solo se enlaza —con UTM y con el nombre del sitio a la vista— y nunca se
+ * insinúa que inscribimos nosotros.
+ *
+ * Lo que el club no puede confirmar no se pinta: sin `mapUrl` no hay botón de
+ * cómo llegar, sin `categories` no hay tabla de categorías, sin `fees` no hay
+ * precios. La regla es la del sistema editorial (docs/04): si el dato no
+ * existe, el bloque no existe.
+ */
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import AddToCalendar from '@components/common/AddToCalendar.astro';
+import ShareButtons from '@components/common/ShareButtons.astro';
+import ScrollDepth from '@components/common/ScrollDepth.astro';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
+import EventCard from '@components/common/EventCard.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import FactGrid from '@components/editorial/FactGrid.astro';
+import SeasonTrack from '@components/sections/SeasonTrack.astro';
+import { formatDate } from '@lib/utils';
+import { withUtm } from '@lib/utm';
+import {
+  buildSeason,
+  clubToday,
+  dayLabel,
+  eventPath,
+  eventSlug,
+  getEventCategory,
+  getEventLevel,
+  resolveEventStatus,
+} from '@lib/calendar';
+import {
+  categoryDistance,
+  chroniclesOf,
+  formatKm,
+  formatRaceTime,
+  groupCategories,
+  mapProvider,
+  otherDates,
+  raceFacts,
+  registrationOpen,
+} from '@lib/race';
+import { generateEventJsonLd } from '@lib/seo';
+
+type Event = CollectionEntry<'events'>;
+type News = CollectionEntry<'news'>;
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events
+    .filter((event: Event) => !event.data.draft)
+    .map((event: Event) => ({ params: { slug: eventSlug(event) }, props: { event } }));
+}
+
+const { event } = Astro.props as { event: Event };
+const { Content } = await render(event);
+const data = event.data;
+
+const status = resolveEventStatus(data);
+const category = getEventCategory(data.category);
+const level = getEventLevel(data.level);
+const facts = raceFacts(data);
+
+/*
+ * `categories` tiene `.default([])` en el schema, pero el data-store de Astro
+ * guarda las entradas ya parseadas y solo las vuelve a leer cuando su archivo
+ * cambia: en una caché escrita antes de que el campo existiera, el default
+ * nunca corrió y aquí llega `undefined`. Se normaliza en un solo sitio en vez
+ * de repetir el `?.` en cada uso.
+ */
+const categories = data.categories ?? [];
+const categoryGroups = groupCategories(categories);
+const schedule = data.schedule ?? [];
+const openForRegistration = registrationOpen(data, clubToday());
+
+const month = new Intl.DateTimeFormat('es-CO', { month: 'long', timeZone: 'UTC' }).format(
+  data.date,
+);
+
+const events = (await getCollection('events')).filter((e: Event) => !e.data.draft);
+const news = (await getCollection('news')).filter((n: News) => !n.data.draft);
+
+const chronicles = chroniclesOf(event, news);
+const others = otherDates(event, events);
+const season = buildSeason(events);
+
+/*
+ * Los tonos alternan sobre las secciones que REALMENTE se pintan.
+ *
+ * El sistema editorial pide alternancia entre secciones contiguas, pero media
+ * página es condicional: escritos a mano, sin categorías y sin crónicas dos
+ * bloques `plain` quedaban pegados. Se arma primero la lista de lo que se va a
+ * renderizar y de ahí sale el tono de cada una, así la alternancia se mantiene
+ * con cualquier combinación de datos. La apertura es `tinted` y no entra.
+ */
+const sections = [
+  'ficha',
+  categories.length > 0 ? 'categorias' : null,
+  'detalle',
+  season.stops.length > 1 ? 'temporada' : null,
+  chronicles.length > 0 ? 'cronicas' : null,
+  others.length > 0 ? 'otras' : null,
+  'cierre',
+].filter((name): name is string => name !== null);
+
+const toneOf = Object.fromEntries(
+  sections.map((name, index) => [name, index % 2 === 0 ? 'plain' : 'muted'])
+) as Record<string, 'plain' | 'muted'>;
+
+const eventYear = data.date.getUTCFullYear();
+const canAddToCalendar = status === 'upcoming' || status === 'ongoing';
+
+const raceId = eventSlug(event);
+const path = eventPath(event);
+
+// El JSON-LD recibe la URL de inscripción limpia: los UTM son para leer el
+// tráfico que sale de aquí, no para que Google los indexe como la dirección
+// canónica del organizador.
+const jsonLd = generateEventJsonLd({
+  title: data.title,
+  date: data.date,
+  endDate: data.endDate,
+  location: data.location,
+  city: data.city,
+  department: data.department,
+  description: data.seo?.metaDescription,
+  image: data.image,
+  url: path,
+  status,
+  organizer: data.organizer,
+  registrationUrl: data.registrationUrl,
+});
+
+const registrationHref = data.registrationUrl
+  ? withUtm(data.registrationUrl, {
+      source: 'clubtrochayruta',
+      medium: 'referral',
+      campaign: raceId,
+    })
+  : null;
+
+/*
+ * La descripción de reserva solo puede prometer lo que esta ficha renderiza: el
+ * texto fijo anunciaba «Cómo llegar, circuito» en las diez URLs, y ninguna tiene
+ * `mapUrl` ni ocho de ellas `circuit`. Misma regla que `raceFacts()`.
+ */
+const promises = [
+  data.circuit ? 'el circuito' : null,
+  data.mapUrl ? 'cómo llegar' : null,
+  chronicles.length > 0 ? 'la crónica' : null,
+  'el estado de la temporada',
+].filter((item): item is string => item !== null);
+
+const promiseList =
+  promises.length > 1
+    ? `${promises.slice(0, -1).join(', ')} y ${promises[promises.length - 1]}`
+    : promises[0];
+
+const metaTitle = data.seo?.metaTitle ?? `${data.title} | Calendario`;
+const metaDescription =
+  data.seo?.metaDescription ??
+  `${category.label} en ${data.location}${data.city ? `, ${data.city}` : ''}. ${formatDate(data.date)}. Aquí ${promises.length > 1 ? 'están' : 'está'} ${promiseList}.`;
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  ogImage={data.seo?.ogImage ?? data.image}
+  jsonLd={jsonLd}
+>
+  <!-- Cuándo y qué -->
+  <SectionShell
+    tone="tinted"
+    pattern="topo"
+    width="wide"
+    spacing="compact"
+    labelledby="valida-titulo"
+  >
+    <Breadcrumb items={[{ label: 'Calendario', href: '/calendario' }, { label: data.title }]} />
+
+    <div class="mt-6 grid gap-6 md:grid-cols-[auto_1fr] md:items-start md:gap-10">
+      <p class="flex flex-row items-baseline gap-3 md:flex-col md:items-start md:gap-1">
+        <span class="font-display text-primary-deep text-6xl leading-none font-bold md:text-7xl">
+          {dayLabel(data.date, data.endDate)}
+        </span>
+        {/*
+          Mes y año en UNA expresión, no en dos. Escrito como dos expresiones
+          seguidas, Prettier las parte en dos líneas al formatear y el compilador
+          de Astro colapsa el salto: el HTML sale «octubre2026». El fallo no se
+          ve en el código —se ve en la página— y lo fija el test de render.
+        */}
+        <span class="text-text-secondary text-lg tracking-widest uppercase">
+          {`${month} ${data.date.getUTCFullYear()}`}
+        </span>
+      </p>
+
+      <div class="min-w-0">
+        <div class="flex flex-wrap gap-2">
+          <span
+            class="bg-primary-deep inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold text-white"
+          >
+            <Icon name={category.icon} class="size-3.5" aria-hidden="true" />
+            {category.short}
+          </span>
+          {
+            level && (
+              <span class="bg-surface-muted text-surface-dark inline-block rounded-full px-2.5 py-0.5 text-xs font-medium">
+                {level}
+              </span>
+            )
+          }
+        </div>
+
+        <SectionIntro as="h1" id="valida-titulo" title={data.title} tone="tinted" class="mt-3" />
+
+        {
+          status === 'cancelled' && (
+            <p
+              class="border-surface-dark bg-surface-muted/60 text-surface-dark mt-5 flex items-start gap-2 rounded-lg border-l-4 p-4"
+              role="status"
+            >
+              <Icon name="ph:x-circle-bold" class="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+              <span>
+                <strong>Esta fecha está cancelada.</strong> La dejamos publicada para que nadie
+                viaje en vano. Si el organizador la reprograma, la nueva fecha aparece en el
+                calendario.
+              </span>
+            </p>
+          )
+        }
+
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          {
+            canAddToCalendar && (
+              <AddToCalendar
+                title={data.title}
+                date={data.date}
+                endDate={data.endDate}
+                location={data.location}
+                raceId={raceId}
+              />
+            )
+          }
+
+          {
+            data.mapUrl && (
+              <a
+                href={data.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-analytics-event="race_directions_click"
+                data-analytics-race-id={raceId}
+                data-analytics-content-id={mapProvider(data.mapUrl)}
+                class="border-primary/30 bg-surface/70 text-primary-deep hover:bg-primary/10 focus-visible:outline-primary inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                <Icon name="ph:navigation-arrow-bold" class="size-4" aria-hidden="true" />
+                Cómo llegar
+              </a>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </SectionShell>
+
+  <!-- Los datos duros -->
+  <SectionShell tone={toneOf.ficha} width="wide" labelledby="ficha-tecnica">
+    <SectionIntro
+      id="ficha-tecnica"
+      tone={toneOf.ficha}
+      eyebrow="La ficha"
+      eyebrowIcon="ph:clipboard-text-bold"
+      title="Lo que hay que saber antes de viajar"
+      highlight="antes de viajar"
+      class="max-w-2xl"
+    />
+
+    <FactGrid items={facts} columns={2} class="mt-8" />
+
+    {
+      data.registrationDeadline && (
+        <p class="text-text-secondary mt-8 flex items-start gap-2">
+          <Icon name="ph:hourglass-medium-bold" class="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+          <span>
+            {/*
+              Tres estados, no un booleano: una válida cancelada tiene un plazo
+              que queda sin efecto, no un plazo vencido. El ternario anterior
+              anunciaba que el plazo «cerró» en una fecha que aún no llega.
+            */}
+            {status === 'cancelled'
+              ? `El plazo del ${formatDate(data.registrationDeadline)} queda sin efecto mientras la fecha no se reprograme.`
+              : openForRegistration
+                ? `Las inscripciones cierran el ${formatDate(data.registrationDeadline)}.`
+                : `El plazo de inscripción cerró el ${formatDate(data.registrationDeadline)}.`}
+          </span>
+        </p>
+      )
+    }
+
+    {
+      registrationHref && openForRegistration === true && (
+        <div class="mt-6">
+          <a
+            href={registrationHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-analytics-event="race_registration_outbound"
+            data-analytics-race-id={raceId}
+            class="bg-accent text-surface-dark hover:bg-accent-dark focus-visible:outline-accent inline-flex min-h-11 items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Inscríbete en la página oficial
+            <Icon name="ph:arrow-square-out-bold" class="size-4 shrink-0" aria-hidden="true" />
+          </a>
+          <p class="text-text-secondary mt-2 text-sm">
+            Las inscripciones las maneja el organizador, no el club.
+          </p>
+        </div>
+      )
+    }
+
+    {
+      data.updatedAt && (
+        <p class="text-text-secondary mt-8 text-sm">
+          Datos revisados contra la convocatoria oficial el {formatDate(data.updatedAt)}. Los
+          horarios y las categorías los define el organizador.
+        </p>
+      )
+    }
+  </SectionShell>
+
+  <!-- Las categorías, cuando el organizador las publica -->
+  {
+    categories.length > 0 && (
+      <SectionShell tone={toneOf.categorias} width="wide" labelledby="categorias">
+        <SectionIntro
+          id="categorias"
+          tone={toneOf.categorias}
+          eyebrow="Categorías"
+          eyebrowIcon="ph:users-three-bold"
+          title="A qué hora corre cada categoría"
+          highlight="A qué hora"
+          lead="Las mangas, en el orden en que largan. El cronograma y las vueltas son los que publica el organizador."
+          class="max-w-2xl"
+        />
+
+        {/*
+          El cronograma general va antes de las mangas: entrega de números y
+          congresillo son la razón por la que hay que madrugar, y quien viaja
+          necesita esa hora antes que la de su propia largada.
+        */}
+        {schedule.length > 0 && (
+          <ol class="border-primary/20 mt-8 space-y-3 border-l-2 pl-5">
+            {schedule.map((item) => (
+              <li class="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-3">
+                <span class="text-primary-deep min-w-24 text-sm font-bold">
+                  {formatRaceTime(item.time)}
+                </span>
+                <span class="text-surface-dark">
+                  {item.title}
+                  {item.place && <span class="text-text-secondary"> · {item.place}</span>}
+                </span>
+              </li>
+            ))}
+          </ol>
+        )}
+
+        <div class="mt-8 space-y-8">
+          {categoryGroups.map((manga) => (
+            <div>
+              {manga.group && (
+                <h3 class="text-primary-deep flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm font-bold tracking-[0.14em] uppercase">
+                  {manga.group}
+                  {manga.startTime && (
+                    <span class="text-text-secondary text-base font-semibold tracking-normal normal-case">
+                      desde las {formatRaceTime(manga.startTime)}
+                    </span>
+                  )}
+                </h3>
+              )}
+
+              <ul class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {manga.categories.map((cat) => (
+                  <li class="bg-surface/70 rounded-xl border border-black/10 p-4">
+                    <p class="text-surface-dark font-semibold">{cat.name}</p>
+
+                    {cat.startTime && (
+                      <p class="text-primary-deep mt-1 text-sm font-semibold">
+                        Larga a las {formatRaceTime(cat.startTime)}
+                      </p>
+                    )}
+
+                    {(cat.ageMin || cat.ageMax) && (
+                      <p class="text-text-secondary mt-1 text-sm">
+                        {cat.ageMin && cat.ageMax
+                          ? `${cat.ageMin} a ${cat.ageMax} años`
+                          : cat.ageMin
+                            ? `Desde ${cat.ageMin} años`
+                            : `Hasta ${cat.ageMax} años`}
+                      </p>
+                    )}
+
+                    {cat.laps && (
+                      <p class="text-text-secondary mt-1 text-sm">
+                        {cat.laps} {cat.laps === 1 ? 'vuelta' : 'vueltas'}
+                        {/*
+                          Los kilómetros solo se publican cuando la categoría da
+                          la vuelta completa. Con `course` el trazado es más
+                          corto y multiplicar por la distancia del circuito
+                          sería inventar la cifra: se muestra el recorrido tal
+                          como lo nombra el organizador.
+                        */}
+                        {categoryDistance(cat, data.circuit) !== null
+                          ? ` · ${formatKm(categoryDistance(cat, data.circuit)!)} km`
+                          : cat.course && ` · ${cat.course.toLowerCase()}`}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {data.updatedAt && (
+          <p class="text-text-secondary mt-8 text-sm">
+            Cronograma publicado por {data.organizer ?? 'el organizador'}. Puede cambiar: confirma
+            la hora de tu categoría el día anterior.
+          </p>
+        )}
+      </SectionShell>
+    )
+  }
+
+  <!-- El texto de la convocatoria -->
+  <SectionShell tone={toneOf.detalle} width="default" labelledby="detalle">
+    <h2 id="detalle" class="sr-only">Detalle de la convocatoria</h2>
+    <div class="prose prose-lg max-w-none">
+      <Content />
+    </div>
+  </SectionShell>
+
+  <!-- Cómo va la temporada -->
+  {
+    season.stops.length > 1 && (
+      <SectionShell tone={toneOf.temporada} width="wide" labelledby="temporada">
+        <SectionIntro
+          id="temporada"
+          tone={toneOf.temporada}
+          eyebrow="La temporada"
+          eyebrowIcon="ph:flag-checkered-bold"
+          title={`Cómo va la temporada ${season.year}`}
+          highlight="la temporada"
+          lead={
+            season.cancelled > 0
+              ? 'El calendario lo define el organizador y puede cambiar: las fechas que se cayeron siguen a la vista mientras no se reprogramen.'
+              : undefined
+          }
+          class="max-w-2xl"
+        />
+
+        <div class="border-primary/15 bg-surface/70 mt-8 rounded-2xl border p-5 sm:p-7">
+          <SeasonTrack season={season} hrefBase="/calendario#evento-" />
+        </div>
+      </SectionShell>
+    )
+  }
+
+  <!-- Lo que dejó esta fecha -->
+  {
+    chronicles.length > 0 && (
+      <SectionShell tone={toneOf.cronicas} width="default" labelledby="cronicas">
+        <SectionIntro
+          id="cronicas"
+          tone={toneOf.cronicas}
+          eyebrow="Después de la carrera"
+          eyebrowIcon="ph:newspaper-bold"
+          title={
+            chronicles.length === 1 ? 'La crónica de esta fecha' : 'Las crónicas de esta fecha'
+          }
+          class="max-w-2xl"
+        />
+
+        <ul class="mt-6 space-y-3">
+          {chronicles.map((chronicle) => (
+            <li>
+              <a
+                href={chronicle.href}
+                class="text-primary-deep focus-visible:outline-primary inline-flex items-start gap-2 font-semibold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                <Icon name="ph:arrow-right-bold" class="mt-1 size-4 shrink-0" aria-hidden="true" />
+                {chronicle.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </SectionShell>
+    )
+  }
+
+  <!-- Las demás fechas -->
+  {
+    others.length > 0 && (
+      <SectionShell tone={toneOf.otras} width="wide" labelledby="otras-fechas">
+        <SectionIntro
+          id="otras-fechas"
+          tone={toneOf.otras}
+          eyebrow="El resto del calendario"
+          eyebrowIcon="ph:calendar-dots-bold"
+          title={`Las otras fechas de ${eventYear}`}
+          class="max-w-2xl"
+        />
+
+        <ul class="mt-8 grid gap-3 md:grid-cols-2">
+          {others.map(({ event: other, status: otherStatus }) => (
+            <li>
+              <EventCard
+                title={other.data.title}
+                date={other.data.date}
+                endDate={other.data.endDate}
+                location={other.data.location}
+                city={other.data.city}
+                category={other.data.category}
+                level={other.data.level}
+                status={otherStatus}
+                href={eventPath(other)}
+                raceId={eventSlug(other)}
+                muted
+              />
+            </li>
+          ))}
+        </ul>
+
+        <p class="mt-8">
+          <a
+            href="/calendario"
+            class="border-primary-deep text-primary-deep hover:bg-primary-deep focus-visible:outline-primary inline-flex items-center gap-2 rounded-lg border-2 px-5 py-2.5 text-sm font-semibold transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Ver el calendario completo
+            <Icon name="ph:arrow-right-bold" class="size-4 shrink-0" aria-hidden="true" />
+          </a>
+        </p>
+      </SectionShell>
+    )
+  }
+
+  <!-- El paso siguiente para quien llegó de fuera -->
+  <SectionShell tone={toneOf.cierre} width="default" spacing="compact" label="Compartir y escuela">
+    <InscriptionCTA
+      heading="¿Tu hijo quiere correr una de estas?"
+      description="En el club se empieza desde los 4 años, sin experiencia previa. La primera clase de prueba es gratis."
+    />
+
+    <div class="mt-10 flex flex-col items-center gap-4 border-t border-black/10 pt-8 text-center">
+      <p class="text-text-secondary">
+        ¿Conoces a alguien que va a competir? Pásale la información.
+      </p>
+      <ShareButtons title={data.title} description={metaDescription} />
+    </div>
+  </SectionShell>
+
+  <ScrollDepth target="main" />
+</BaseLayout>

@@ -25,10 +25,13 @@ import {
   buildSeason,
   cancelledAhead,
   dayLabel,
+  eventPath,
+  eventSlug,
   getEventCategory,
   getEventLevel,
   resolveEventStatus,
 } from '@lib/calendar';
+import { withUtm } from '@lib/utm';
 
 type Event = CollectionEntry<'events'>;
 type News = CollectionEntry<'news'>;
@@ -85,10 +88,25 @@ const jsonLd = generateEventsListJsonLd(
     (event: Event) => ({
       title: event.data.title,
       date: event.data.date,
-      url: '/calendario',
+      // Cada ítem apunta a su ficha, no a esta lista: un ItemList cuyos diez
+      // elementos comparten URL no le dice nada a nadie.
+      url: eventPath(event),
     })
   )
 );
+
+// Los CTA salientes de la próxima fecha llevaban tres meses sin instrumentar y
+// sin UTM: todo el tráfico que el club le manda al organizador llegaba allá
+// como «Direct» y aquí no dejaba rastro.
+const nextRaceId = next ? eventSlug(next.event) : undefined;
+const nextRegistrationHref =
+  next?.event.data.registrationUrl && nextRaceId
+    ? withUtm(next.event.data.registrationUrl, {
+        source: 'clubtrochayruta',
+        medium: 'referral',
+        campaign: nextRaceId,
+      })
+    : null;
 
 const nextCategory = next ? getEventCategory(next.event.data.category) : null;
 const nextLevel = next ? getEventLevel(next.event.data.level) : null;
@@ -168,7 +186,12 @@ const nextMonth = next
             </div>
 
             <h2 id="proximo-evento" class="mt-3 font-display text-2xl font-bold md:text-4xl">
-              {next.event.data.title}
+              <a
+                href={eventPath(next.event)}
+                class="underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+              >
+                {next.event.data.title}
+              </a>
             </h2>
 
             <p class="mt-3 flex items-start gap-2 text-white/80">
@@ -199,28 +222,41 @@ const nextMonth = next
                 date={next.event.data.date}
                 endDate={next.event.data.endDate}
                 location={next.event.data.location}
+                raceId={nextRaceId}
               />
               {next.event.data.mapUrl && (
                 <a
                   href={next.event.data.mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-analytics-event="race_directions_click"
+                  data-analytics-race-id={nextRaceId}
+                  data-analytics-content-id="google-maps"
                   class="inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                   <Icon name="ph:navigation-arrow-bold" class="size-4" aria-hidden="true" />
                   Cómo llegar
                 </a>
               )}
-              {next.event.data.registrationUrl && (
+              {nextRegistrationHref && (
                 <a
-                  href={next.event.data.registrationUrl}
+                  href={nextRegistrationHref}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-analytics-event="race_registration_outbound"
+                  data-analytics-race-id={nextRaceId}
                   class="inline-flex min-h-11 items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-sm font-bold text-surface-dark transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                   Inscríbete
                 </a>
               )}
+              <a
+                href={eventPath(next.event)}
+                class="inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                Ver la ficha completa
+                <Icon name="ph:arrow-right-bold" class="size-4" aria-hidden="true" />
+              </a>
             </div>
           </div>
         </div>
@@ -260,6 +296,8 @@ const nextMonth = next
               category={event.data.category}
               level={event.data.level}
               status={status}
+              href={eventPath(event)}
+              raceId={eventSlug(event)}
             />
           </li>
         ))}
@@ -305,6 +343,8 @@ const nextMonth = next
               category={event.data.category}
               level={event.data.level}
               status="cancelled"
+              href={eventPath(event)}
+              raceId={eventSlug(event)}
               muted
             />
           </li>
@@ -338,6 +378,8 @@ const nextMonth = next
               category={event.data.category}
               level={event.data.level}
               status={status}
+              href={eventPath(event)}
+              raceId={eventSlug(event)}
               chronicles={chroniclesOf(event)}
               muted
             />

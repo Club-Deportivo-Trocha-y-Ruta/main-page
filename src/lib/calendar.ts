@@ -264,3 +264,52 @@ export function cancelledAhead<T extends SeasonInput>(events: T[], now: Date = n
     )
     .sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
 }
+
+// ─── La ficha de cada fecha ───────────────────────────────────────────────────
+
+interface EventPathInput {
+  id: string;
+  data: { urlSlug?: string };
+}
+
+/**
+ * URL de la ficha del evento.
+ *
+ * El `id` de la colección es el nombre del archivo, que lleva el prefijo de
+ * fecha con el que se ordenan en el CMS (`2026-10-copa-valle-vii-yumbo`). Esa
+ * es buena convención de archivo y mala URL: repite el año, mete el mes en
+ * cifras y no es lo que alguien teclea ni comparte. Por eso el frontmatter
+ * puede traer un `urlSlug` propio y esta función decide cuál manda.
+ *
+ * El campo se llama `urlSlug` y no `slug` por una razón que cuesta encontrar:
+ * `slug` es clave reservada del glob loader de Astro y reemplaza el `id` de la
+ * entrada. Con ese nombre, esta función sobraba —`event.id` ya venía siendo el
+ * slug— y a cambio se rompían las referencias cruzadas del contenido.
+ *
+ * Vive aquí, y no en cada página, porque `getStaticPaths()` y todos los enlaces
+ * del sitio tienen que coincidir: si discrepan, la ficha existe y nadie llega.
+ */
+export function eventSlug(event: EventPathInput): string {
+  return event.data.urlSlug?.trim() || event.id;
+}
+
+/** La ruta completa. `getStaticPaths()` usa `eventSlug()`; todo enlace, esto. */
+export function eventPath(event: EventPathInput): string {
+  return `/calendario/${eventSlug(event)}`;
+}
+
+const COP = new Intl.NumberFormat('es-CO', {
+  style: 'currency',
+  currency: 'COP',
+  maximumFractionDigits: 0,
+});
+
+/**
+ * Un valor de inscripción como se escribe en Colombia: `$70.000`, sin decimales.
+ *
+ * `Intl` intercala un espacio irrompible entre el signo y la cifra (`$ 70.000`)
+ * que no es como lo escribe nadie aquí; se quita.
+ */
+export function formatCop(amount: number): string {
+  return COP.format(amount).replace(/ /g, '');
+}

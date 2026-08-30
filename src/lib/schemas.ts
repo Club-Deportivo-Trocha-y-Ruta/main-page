@@ -50,7 +50,7 @@ export const ridersSchema = z.object({
         event: z.string(),
         position: z.number().optional(),
         description: z.string(),
-      })
+      }),
     )
     .default([]),
   socialMedia: socialMediaSchema,
@@ -127,7 +127,7 @@ export const newsSchema = z.object({
         category: z.string(),
         slug: z.string(),
         image: z.string(),
-      })
+      }),
     )
     .optional(),
   seo: seoSchema,
@@ -135,30 +135,43 @@ export const newsSchema = z.object({
 
 export const eventsSchema = z.object({
   title: z.string(),
+  /**
+   * URL propia del evento, sin el prefijo de fecha del nombre de archivo:
+   * `copa-valle-yumbo-2026` en vez de `2026-10-copa-valle-vii-yumbo`. Opcional
+   * — sin él la ruta cae al `id` de la entrada (ver `eventPath()` en
+   * `@lib/calendar`, que es quien resuelve la regla una sola vez).
+   *
+   * **No se puede llamar `slug`.** El glob loader de Astro trata esa clave del
+   * frontmatter como reservada (`generateIdDefault`: `if (data.slug) return
+   * data.slug`) y la usa como `id` de la entrada, antes de que Zod vea nada.
+   * Con el campo llamado `slug`, publicar una URL propia renombraba la entrada
+   * y dejaba `relatedEvent`/`relatedNews` apuntando a un id inexistente; dos
+   * entradas con el mismo valor colapsaban en una y la otra desaparecía del
+   * sitio con el build en verde.
+   */
+  urlSlug: z
+    .string()
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      'urlSlug en minúsculas y sin acentos, palabras separadas por guiones'
+    )
+    .optional(),
   date: z.coerce.date(),
   endDate: z.coerce.date().optional(),
+  /** Fecha de la última revisión del contenido contra la fuente oficial. */
+  updatedAt: z.coerce.date().optional(),
   location: z.string(),
+  /**
+   * Sede como identificador estable, para cruzar el evento con la página del
+   * lugar sin comparar substrings de `location`.
+   */
+  venueSlug: z.string().optional(),
   city: z.string().optional(),
   department: z.string().default('Valle del Cauca'),
   mapUrl: z.url().optional(),
-  category: z.enum([
-    'xco',
-    'xcm',
-    'ruta',
-    'enduro',
-    'recreativo',
-    'social',
-    'entrenamiento',
-  ]),
+  category: z.enum(['xco', 'xcm', 'ruta', 'enduro', 'recreativo', 'social', 'entrenamiento']),
   level: z
-    .enum([
-      'municipal',
-      'departamental',
-      'regional',
-      'nacional',
-      'internacional',
-      'interno',
-    ])
+    .enum(['municipal', 'departamental', 'regional', 'nacional', 'internacional', 'interno'])
     .default('departamental'),
   organizer: z.string().optional(),
   image: z.string().optional(),
@@ -166,6 +179,79 @@ export const eventsSchema = z.object({
   status: z.enum(['upcoming', 'ongoing', 'past', 'cancelled']).default('upcoming'),
   registrationUrl: z.url().optional(),
   registrationDeadline: z.coerce.date().optional(),
+  /**
+   * Ficha técnica del circuito. Solo lo que el club puede verificar: la
+   * distancia sale de la convocatoria oficial. El desnivel se omite a
+   * propósito — la altimetría barométrica de un GPS de celular se desvía
+   * demasiado en 3,8 km como para publicarla sin validación.
+   */
+  circuit: z
+    .object({
+      distanceKm: z.number().positive(),
+      laps: z.number().int().positive().optional(),
+      surface: z.string().optional(),
+    })
+    .optional(),
+  /** Valores de inscripción, en pesos colombianos. Los cobra el organizador. */
+  fees: z
+    .array(
+      z.object({
+        label: z.string(),
+        amount: z.number().int().nonnegative(),
+      }),
+    )
+    .default([]),
+  /** Cupos por categoría, según la convocatoria. */
+  capacity: z.number().int().positive().optional(),
+  /**
+   * Categorías de la convocatoria. Los rangos de edad, las vueltas y las horas
+   * los define la Comisión: publicarlos mal manda a un niño a la categoría
+   * equivocada o lo hace llegar tarde a su largada, así que el bloque no se
+   * pinta mientras el arreglo esté vacío.
+   */
+  categories: z
+    .array(
+      z.object({
+        name: z.string(),
+        /** Manga o grupo de competencia con el que larga. */
+        group: z.string().optional(),
+        /** Hora de largada, `HH:MM` en 24 horas — como `clubTimeOfDay()`. */
+        startTime: z
+          .string()
+          .regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'hora en formato HH:MM de 24 horas')
+          .optional(),
+        ageMin: z.number().int().nonnegative().optional(),
+        ageMax: z.number().int().nonnegative().optional(),
+        laps: z.number().int().positive().optional(),
+        /**
+         * Recorrido, cuando NO es la vuelta completa al circuito: «70% de la
+         * pista», «recorrido especial», «pista alterna».
+         *
+         * Su presencia es la señal de que **no se puede calcular la distancia**
+         * multiplicando vueltas por `circuit.distanceKm`. Las categorías
+         * infantiles corren un trazado más corto, y publicar 2 × 3,8 km para
+         * quien va a rodar el 70% sería una cifra inventada. Sin `course`, la
+         * categoría da la vuelta completa y la multiplicación es válida.
+         */
+        course: z.string().optional(),
+      }),
+    )
+    .default([]),
+  /**
+   * El cronograma del día: registro, congresillo, premiaciones. Lo que no es
+   * una largada de categoría pero marca a qué hora hay que estar en la pista.
+   */
+  schedule: z
+    .array(
+      z.object({
+        time: z
+          .string()
+          .regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'hora en formato HH:MM de 24 horas'),
+        title: z.string(),
+        place: z.string().optional(),
+      }),
+    )
+    .default([]),
   relatedGallery: z.string().optional(),
   relatedNews: z.array(z.string()).default([]),
   resultsUrl: z.url().optional(),
@@ -186,7 +272,7 @@ export const resultsSchema = z.object({
       riderName: z.string(),
       time: z.string().optional(),
       points: z.number().optional(),
-    })
+    }),
   ),
   clubHighlights: z.string().optional(),
   totalParticipants: z.number().optional(),
@@ -283,7 +369,7 @@ export const gallerySchema = z.object({
       alt: z.string(),
       caption: z.string().optional(),
       photographer: z.string().optional(),
-    })
+    }),
   ),
   videos: z
     .array(
@@ -291,7 +377,7 @@ export const gallerySchema = z.object({
         url: z.url(),
         title: z.string(),
         thumbnail: z.string().optional(),
-      })
+      }),
     )
     .default([]),
   relatedEvent: z.string().optional(),
@@ -319,9 +405,7 @@ export const rutasSchema = z.object({
   gpxFile: z.string().optional(),
   stravaRoute: z.url().optional(),
   mapUrl: z.url().optional(),
-  suitableFor: z.array(
-    z.enum(['pre-infantil', 'infantil', 'juvenil', 'elite', 'recreativo'])
-  ),
+  suitableFor: z.array(z.enum(['pre-infantil', 'infantil', 'juvenil', 'elite', 'recreativo'])),
   usedInPrograms: z.array(z.string()).default([]),
   active: z.boolean().default(true),
   order: z.number().default(0),
@@ -333,7 +417,14 @@ export const faqsSchema = z.object({
   question: z.string(),
   answer: z.string(),
   category: z
-    .enum(['general', 'inscripciones', 'entrenamiento', 'competencias', 'equipamiento', 'seguridad'])
+    .enum([
+      'general',
+      'inscripciones',
+      'entrenamiento',
+      'competencias',
+      'equipamiento',
+      'seguridad',
+    ])
     .default('general'),
   order: z.number().default(0),
   draft: z.boolean().default(false),
@@ -387,14 +478,16 @@ export const socialInitiativesSchema = z.object({
   image: z.string(),
   imageAlt: z.string().optional(),
   gallery: z.array(z.string()).default([]),
-  impact: z.object({
-    beneficiaries: z.number().optional(),
-    treesPlanted: z.number().optional(),
-    volunteersInvolved: z.number().optional(),
-    areaRestored: z.string().optional(),
-    trainedPeople: z.number().optional(),
-    description: z.string().optional(),
-  }).optional(),
+  impact: z
+    .object({
+      beneficiaries: z.number().optional(),
+      treesPlanted: z.number().optional(),
+      volunteersInvolved: z.number().optional(),
+      areaRestored: z.string().optional(),
+      trainedPeople: z.number().optional(),
+      description: z.string().optional(),
+    })
+    .optional(),
   allies: z.array(z.string()).default([]),
   relatedGallery: z.string().optional(),
   relatedNews: z.array(z.string()).default([]),
@@ -429,9 +522,7 @@ export const treesSchema = z.object({
     .enum(['llanta-bicicleta', 'llanta-moto', 'piedras', 'otro'])
     .default('llanta-bicicleta'),
   protectorColor: z.string().optional(),
-  category: z
-    .enum(['frutal', 'ornamental', 'nativo', 'maderable'])
-    .default('nativo'),
+  category: z.enum(['frutal', 'ornamental', 'nativo', 'maderable']).default('nativo'),
   image: z.string(),
   imageAlt: z.string(),
   status: z.enum(['sembrado', 'creciendo', 'floreciendo']).default('sembrado'),

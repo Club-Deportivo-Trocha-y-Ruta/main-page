@@ -176,3 +176,49 @@ describe('Referencias cruzadas', () => {
     });
   }
 });
+
+
+// ============================================================
+// Rutas de las fichas de evento
+// ============================================================
+
+describe('rutas de /calendario/[slug]', () => {
+  /**
+   * Dos eventos no pueden resolver a la misma URL.
+   *
+   * `urlSlug` es texto libre en Sveltia, y una colisión no da error de build:
+   * `getStaticPaths()` devuelve dos entradas con el mismo `params.slug` y una
+   * de las dos fichas deja de existir sin que nada avise. Se comprueba contra
+   * el contenido real, que es donde puede ocurrir.
+   */
+  it('ningún evento comparte URL con otro', () => {
+    const files = fg
+      .sync(`${CONTENT_DIR}/events/**/*.md`)
+      .filter((file) => basename(file).toLowerCase() !== 'readme.md');
+
+    const rutas = new Map<string, string[]>();
+    for (const file of files) {
+      const id = basename(file, '.md');
+      const { data } = matter(readFileSync(file, 'utf-8'));
+      const slug = typeof data.urlSlug === 'string' && data.urlSlug.trim() ? data.urlSlug.trim() : id;
+      rutas.set(slug, [...(rutas.get(slug) ?? []), id]);
+    }
+
+    const colisiones = [...rutas.entries()]
+      .filter(([, ids]) => ids.length > 1)
+      .map(([slug, ids]) => `${slug} ← ${ids.join(', ')}`);
+
+    expect(colisiones, `URLs duplicadas:\n${colisiones.join('\n')}`).toEqual([]);
+  });
+
+  it('ningún evento usa la clave reservada `slug` en su frontmatter', () => {
+    // Astro la convierte en el `id` de la entrada y rompe las referencias
+    // cruzadas en silencio. El campo del proyecto se llama `urlSlug`.
+    const files = fg
+      .sync(`${CONTENT_DIR}/events/**/*.md`)
+      .filter((file) => basename(file).toLowerCase() !== 'readme.md');
+
+    const culpables = files.filter((file) => 'slug' in matter(readFileSync(file, 'utf-8')).data);
+    expect(culpables.map((f) => basename(f))).toEqual([]);
+  });
+});

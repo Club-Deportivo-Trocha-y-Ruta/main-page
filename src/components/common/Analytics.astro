@@ -139,8 +139,20 @@ const enableGA4 = Boolean(ga4Id);
           'sponsor_click',
           'transparencia_pdf_download',
           'scroll_depth',
+          'race_registration_outbound',
+          'race_directions_click',
+          'race_calendar_add',
         ];
-        const ALLOWED_PARAMS = ['program_id', 'age_bucket', 'step', 'depth', 'pdf_name', 'sponsor_id'];
+        const ALLOWED_PARAMS = [
+          'program_id',
+          'age_bucket',
+          'step',
+          'depth',
+          'pdf_name',
+          'sponsor_id',
+          'race_id',
+          'content_id',
+        ];
 
         function sanitize(params) {
           const out = {};
@@ -173,9 +185,13 @@ const enableGA4 = Boolean(ga4Id);
           const pdf = el.getAttribute('data-analytics-pdf-name');
           const sponsor = el.getAttribute('data-analytics-sponsor-id');
           const programId = el.getAttribute('data-analytics-program-id');
+          const raceId = el.getAttribute('data-analytics-race-id');
+          const contentId = el.getAttribute('data-analytics-content-id');
           if (pdf) params.pdf_name = pdf;
           if (sponsor) params.sponsor_id = sponsor;
           if (programId) params.program_id = programId;
+          if (raceId) params.race_id = raceId;
+          if (contentId) params.content_id = contentId;
           emit(name, params);
         }
         document.addEventListener('click', handleDelegatedClick);

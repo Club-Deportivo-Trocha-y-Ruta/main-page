@@ -29,6 +29,12 @@ interface Props {
   /** Opcional: sin href el título se renderiza como texto plano (evita
    *  enlaces circulares cuando la card ya está en su página destino). */
   href?: string;
+  /**
+   * Identificador de la válida para la analítica, que se reenvía al
+   * `AddToCalendar` interno. Sin él ese botón no emite: la tarjeta se usa en
+   * tres superficies y no todas tienen por qué medirse igual.
+   */
+  raceId?: string;
   /** Crónicas publicadas del evento (solo tiene sentido en fechas corridas). */
   chronicles?: { href: string; title: string }[];
   /** Atenúa la card. Se usa para el bloque de fechas corridas. */
@@ -45,6 +51,7 @@ const {
   level,
   status,
   href,
+  raceId,
   chronicles = [],
   muted = false,
 } = Astro.props;
@@ -126,7 +133,13 @@ const showStatus = status === 'ongoing' || status === 'cancelled';
     </div>
 
     {status === 'upcoming' && (
-      <AddToCalendar title={title} date={date} endDate={endDate} location={location} />
+      <AddToCalendar
+        title={title}
+        date={date}
+        endDate={endDate}
+        location={location}
+        raceId={raceId}
+      />
     )}
 
     {chronicles.length > 0 && (

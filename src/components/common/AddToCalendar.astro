@@ -7,9 +7,21 @@ interface Props {
   endDate?: Date;
   location: string;
   description?: string;
+  /**
+   * Identificador de la válida para la analítica. Opcional a propósito: sin él
+   * el componente no emite nada, así que se puede instrumentar superficie por
+   * superficie sin reescribir el significado de una métrica ya en uso.
+   *
+   * Hoy lo pasan la ficha del evento y el bloque de próxima fecha de
+   * `/calendario`. Falta la portada, que monta el componente a través de
+   * `EventCard`: mientras siga así, `race_calendar_add` no es el total de
+   * clics del sitio. Separar por superficie se hace con `page_location`, no
+   * con `content_id` —ese distingue Google Calendar del `.ics`—.
+   */
+  raceId?: string;
 }
 
-const { title, date, endDate, location, description = '' } = Astro.props;
+const { title, date, endDate, location, description = '', raceId } = Astro.props;
 
 const googleUrl = generateGoogleCalendarUrl({ title, date, endDate, location, description });
 const icsContent = generateICSContent({ title, date, endDate, location, description });
@@ -22,19 +34,39 @@ const icsFilename = `${slugify(title)}.ics`;
     href={googleUrl}
     target="_blank"
     rel="noopener noreferrer"
-    class="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/5 px-3 py-1.5 text-sm font-medium text-primary-deep transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+    class="border-primary/30 bg-primary/5 text-primary-deep hover:bg-primary/10 focus-visible:outline-primary inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
     aria-label={`Agregar ${title} a Google Calendar`}
+    data-analytics-event={raceId ? 'race_calendar_add' : undefined}
+    data-analytics-race-id={raceId}
+    data-analytics-content-id={raceId ? 'google-calendar' : undefined}
   >
-    <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" /><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
+    <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+      ><path
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+      ></path><path
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      ></path><path
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+      ></path><path
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+      ></path></svg
+    >
     <span>Google Calendar</span>
   </a>
   <a
     href={`data:text/calendar;charset=utf-8,${icsEncoded}`}
     download={icsFilename}
-    class="inline-flex items-center gap-1.5 rounded-md border border-surface-muted bg-surface-muted/40 px-3 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+    class="border-surface-muted bg-surface-muted/40 text-text-secondary hover:bg-surface-muted focus-visible:outline-primary inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
     aria-label={`Descargar .ics de ${title}`}
+    data-analytics-event={raceId ? 'race_calendar_add' : undefined}
+    data-analytics-race-id={raceId}
+    data-analytics-content-id={raceId ? 'ics' : undefined}
   >
-    <svg class="size-4 shrink-0" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H72v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V208Zm-48-56a8,8,0,0,1-8,8H136v16a8,8,0,0,1-16,0V160H104a8,8,0,0,1,0-16h16V128a8,8,0,0,1,16,0v16h16A8,8,0,0,1,160,152Z" /></svg>
+    <svg class="size-4 shrink-0" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"
+      ><path
+        d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H72v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V208Zm-48-56a8,8,0,0,1-8,8H136v16a8,8,0,0,1-16,0V160H104a8,8,0,0,1,0-16h16V128a8,8,0,0,1,16,0v16h16A8,8,0,0,1,160,152Z"
+      ></path></svg
+    >
     <span>Descargar .ics</span>
   </a>
 </div>

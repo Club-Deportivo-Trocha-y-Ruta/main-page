@@ -16,7 +16,13 @@ import { Icon } from 'astro-icon/components';
 import EventCard from '@components/common/EventCard.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
-import { buildSeason, cancelledAhead, resolveEventStatus } from '@lib/calendar';
+import {
+  buildSeason,
+  cancelledAhead,
+  eventPath,
+  eventSlug,
+  resolveEventStatus,
+} from '@lib/calendar';
 import { formatDate } from '@lib/utils';
 
 type Event = CollectionEntry<'events'>;
@@ -81,7 +87,8 @@ const outlineLink =
                   category={event.data.category}
                   level={event.data.level}
                   status={status}
-                  href="/calendario"
+                  href={eventPath(event)}
+                  raceId={eventSlug(event)}
                 />
               </li>
             ))}

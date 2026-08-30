@@ -362,7 +362,9 @@ export function generateEventJsonLd(event: EventInput): JsonLd {
     sport: 'Mountain Biking',
   };
 
-  if (event.registrationUrl) {
+  // `InStock` en una carrera cancelada o ya corrida es una afirmación falsa
+  // hacia Google, y las fichas de fechas pasadas conservan su `registrationUrl`.
+  if (event.registrationUrl && eventStatus === 'https://schema.org/EventScheduled') {
     result.offers = {
       '@type': 'Offer',
       url: event.registrationUrl,

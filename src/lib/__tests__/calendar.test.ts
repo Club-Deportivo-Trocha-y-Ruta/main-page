@@ -11,6 +11,9 @@ import {
   getEventCategory,
   getEventLevel,
   getEventStatusLabel,
+  eventSlug,
+  eventPath,
+  formatCop,
   EVENT_CATEGORIES,
 } from '../calendar';
 
@@ -255,5 +258,61 @@ describe('cancelledAhead', () => {
 
   it('no devuelve nada sin canceladas', () => {
     expect(cancelledAhead([evento('palmira', '2026-09-01')], hoy)).toEqual([]);
+  });
+});
+
+// ============================================================
+// La ficha de cada fecha
+// ============================================================
+
+describe('eventSlug / eventPath', () => {
+  it('prefiere el urlSlug del frontmatter sobre el nombre del archivo', () => {
+    const event = {
+      id: '2026-10-copa-valle-vii-yumbo',
+      data: { urlSlug: 'copa-valle-yumbo-2026' },
+    };
+    expect(eventSlug(event)).toBe('copa-valle-yumbo-2026');
+    expect(eventPath(event)).toBe('/calendario/copa-valle-yumbo-2026');
+  });
+
+  it('cae al id cuando no hay urlSlug', () => {
+    const event = { id: '2026-05-copa-valle-iv-cali', data: {} };
+    expect(eventPath(event)).toBe('/calendario/2026-05-copa-valle-iv-cali');
+  });
+
+  it('ignora un urlSlug en blanco en vez de generar //', () => {
+    const event = { id: '2026-05-copa-valle-iv-cali', data: { urlSlug: '   ' } };
+    expect(eventPath(event)).toBe('/calendario/2026-05-copa-valle-iv-cali');
+  });
+
+  it('el campo NO se llama slug: esa clave es reservada del loader de Astro', () => {
+    /*
+     * Regresión con historia: llamarlo `slug` hacía que el glob loader usara ese
+     * valor como `id` de la entrada (`generateIdDefault`), así que publicar una
+     * URL propia renombraba la entrada, rompía `relatedEvent`/`relatedNews` y,
+     * si dos eventos coincidían, una desaparecía del sitio con el build verde.
+     * Un `slug` en el frontmatter no debe cambiar la ruta.
+     */
+    const event = { id: '2026-05-copa-valle-iv-cali', data: { slug: 'otra-cosa' } } as {
+      id: string;
+      data: { urlSlug?: string };
+    };
+    expect(eventPath(event)).toBe('/calendario/2026-05-copa-valle-iv-cali');
+  });
+});
+
+describe('formatCop', () => {
+  it('escribe el valor como se escribe en Colombia, sin decimales', () => {
+    expect(formatCop(70000)).toBe('$70.000');
+    expect(formatCop(50000)).toBe('$50.000');
+  });
+
+  it('no deja espacio entre el signo y la cifra', () => {
+    // `Intl` mete un espacio irrompible que aquí nadie escribe.
+    expect(formatCop(70000)).not.toMatch(/\s/);
+  });
+
+  it('acepta el cero (una válida sin costo sigue siendo un dato)', () => {
+    expect(formatCop(0)).toBe('$0');
   });
 });
