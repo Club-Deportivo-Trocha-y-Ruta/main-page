@@ -466,6 +466,15 @@ class="sr-only">` con la cifra final) dentro de `.stat-strip__value`; como el
 
 ### Notas de la tarea 16 (2026-08-26)
 
+> **Actualización (2026-09-01): `nextSession()` se eliminó.** El aviso "Próxima
+> sesión" del banner de inscripción quedaba desactualizado entre deploys —mostraba
+> la sesión más cercana al momento del último build, no a la fecha real de quien
+> visitaba la página— y confundía a las familias. Se quitaron `nextSession()`,
+> `NextSession`, `ProgramSessionsInput`, `formatTimeOfDay()`, `SESSION_DAYS` y
+> `SESSION_DAY_TO_WEEK_DAY` de `src/lib/programs.ts`, `NEXT_SESSION_LABEL` de
+> `constants.ts` y el bloque que los usaba en `InscriptionCTA.astro`. El campo
+> `sessions` del schema se conserva: sigue alimentando `countWeeklySessions()`.
+
 - **`sessions` no reemplaza a `schedule`, lo acompaña.** El texto libre sigue siendo
   obligatorio y sigue siendo lo que lee una familia: es el único sitio donde caben las
   aclaraciones del club («salida», «gymkanas en pista», «+12 años», «según clima»).

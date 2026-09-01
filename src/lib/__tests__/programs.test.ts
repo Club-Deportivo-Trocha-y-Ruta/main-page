@@ -2,8 +2,6 @@ import { describe, it, expect } from 'vitest';
 import {
   buildAgePicker,
   countWeeklySessions,
-  formatTimeOfDay,
-  nextSession,
   parseSchedule,
   parseScheduleDays,
   buildPathway,
@@ -13,11 +11,7 @@ import {
   toPathwayInput,
   LEVEL_STYLES,
   OPEN_ENDED_AGE,
-  SESSION_DAYS,
-  SESSION_DAY_TO_WEEK_DAY,
-  WEEK_DAYS,
   type PathwayInput,
-  type ProgramSessionsInput,
 } from '../programs';
 
 // Los tres programas reales del club: si el contenido cambia de forma, estos
@@ -125,136 +119,6 @@ describe('countWeeklySessions', () => {
       countWeeklySessions({ schedule: 'Martes y viernes 4:30 - 6:00 PM', sessions: [] })
     ).toBe(2);
     expect(countWeeklySessions({})).toBeNull();
-  });
-});
-
-// ============================================================
-// formatTimeOfDay
-// ============================================================
-
-describe('formatTimeOfDay', () => {
-  it('traduce las 24 horas al español colombiano', () => {
-    expect(formatTimeOfDay('07:00')).toBe('7:00 a. m.');
-    expect(formatTimeOfDay('16:30')).toBe('4:30 p. m.');
-  });
-
-  it('resuelve los dos mediodías', () => {
-    expect(formatTimeOfDay('12:00')).toBe('12:00 p. m.');
-    expect(formatTimeOfDay('00:30')).toBe('12:30 a. m.');
-  });
-
-  it('devuelve intacto lo que no es una hora', () => {
-    expect(formatTimeOfDay('por confirmar')).toBe('por confirmar');
-  });
-});
-
-// ============================================================
-// nextSession
-// ============================================================
-
-describe('nextSession', () => {
-  // Los horarios reales de dos de los tres programas, recortados a lo que hace
-  // falta: uno con lugar fijo y otro con salidas sin punto de encuentro.
-  const SESSION_PROGRAMS: ProgramSessionsInput[] = [
-    {
-      id: 'escuela-de-iniciacion',
-      title: 'Escuela de Iniciación',
-      sessions: [
-        { day: 'tue', start: '16:30', end: '18:00', place: 'Pista Carlos Castro' },
-        { day: 'fri', start: '16:30', end: '18:00', place: 'Pista Carlos Castro' },
-      ],
-    },
-    {
-      id: 'alto-rendimiento',
-      title: 'Alto Rendimiento',
-      sessions: [
-        { day: 'wed', start: '16:00', end: '18:00' },
-        { day: 'sat', start: '07:00', end: '09:00' },
-      ],
-    },
-  ];
-
-  it('el orden de los códigos de día es el mismo de la semana en español', () => {
-    expect(SESSION_DAYS.map((day) => SESSION_DAY_TO_WEEK_DAY[day])).toEqual([...WEEK_DAYS]);
-  });
-
-  it('anuncia la sesión de hoy mientras no haya empezado', () => {
-    // Miércoles 26 de agosto de 2026, 10 a. m. en Bogotá.
-    const next = nextSession(SESSION_PROGRAMS, new Date('2026-08-26T15:00:00Z'));
-
-    expect(next).toMatchObject({
-      programId: 'alto-rendimiento',
-      day: 'miercoles',
-      daysAhead: 0,
-      place: null,
-      label: 'miércoles 4:00 p. m.',
-    });
-  });
-
-  it('sigue anunciándola mientras el grupo está rodando', () => {
-    // Mismo miércoles, 5 p. m.: la sesión va de 4 a 6.
-    expect(nextSession(SESSION_PROGRAMS, new Date('2026-08-26T22:00:00Z'))).toMatchObject({
-      day: 'miercoles',
-      daysAhead: 0,
-    });
-  });
-
-  it('pasa a la siguiente cuando la de hoy ya terminó', () => {
-    // Mismo miércoles, 6 p. m. en punto.
-    expect(nextSession(SESSION_PROGRAMS, new Date('2026-08-26T23:00:00Z'))).toMatchObject({
-      programId: 'escuela-de-iniciacion',
-      day: 'viernes',
-      daysAhead: 2,
-      label: 'viernes 4:30 p. m. · Pista Carlos Castro',
-    });
-  });
-
-  it('lee "ahora" en la zona del club, no en UTC', () => {
-    // 2 a. m. UTC del sábado: en Colombia todavía es viernes por la noche, y
-    // la sesión del viernes ya terminó. En UTC daría "sábado, hoy".
-    expect(nextSession(SESSION_PROGRAMS, new Date('2026-08-29T02:00:00Z'))).toMatchObject({
-      day: 'sabado',
-      daysAhead: 1,
-    });
-  });
-
-  it('da la vuelta a la semana cuando ya no queda nada por delante', () => {
-    // Sábado 10 a. m.: la única sesión del fin de semana terminó a las 9.
-    expect(nextSession(SESSION_PROGRAMS, new Date('2026-08-29T15:00:00Z'))).toMatchObject({
-      day: 'martes',
-      daysAhead: 3,
-    });
-  });
-
-  it('una sesión que solo se dicta hoy y ya terminó vuelve en una semana', () => {
-    const soloMiercoles = [SESSION_PROGRAMS[1]].map((program) => ({
-      ...program,
-      sessions: program.sessions?.filter((session) => session.day === 'wed'),
-    }));
-
-    expect(nextSession(soloMiercoles, new Date('2026-08-26T23:00:00Z'))).toMatchObject({
-      day: 'miercoles',
-      daysAhead: 7,
-    });
-  });
-
-  it('desempata por id para que dos builds den lo mismo', () => {
-    const empatados: ProgramSessionsInput[] = [
-      { id: 'zeta', title: 'Zeta', sessions: [{ day: 'wed', start: '16:00', end: '18:00' }] },
-      { id: 'alfa', title: 'Alfa', sessions: [{ day: 'wed', start: '16:00', end: '18:00' }] },
-    ];
-
-    expect(nextSession(empatados, new Date('2026-08-26T15:00:00Z'))?.programId).toBe('alfa');
-  });
-
-  it('devuelve null cuando ningún programa tiene sesiones capturadas', () => {
-    expect(nextSession([], new Date('2026-08-26T15:00:00Z'))).toBeNull();
-    expect(
-      nextSession(
-        [{ id: 'sin-horario', title: 'Sin horario' }],
-        new Date('2026-08-26T15:00:00Z')
-      )
-    ).toBeNull();
   });
 });
 

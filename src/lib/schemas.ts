@@ -238,8 +238,8 @@ export const programsSchema = z.object({
   schedule: z.string(),
   /**
    * Opcional a propósito: un programa sin sesiones capturadas se sigue
-   * publicando con su `schedule` de texto, y la interfaz simplemente no puede
-   * anunciar la próxima sesión.
+   * publicando con su `schedule` de texto; `countWeeklySessions()` cuenta los
+   * días distintos capturados aquí en vez de volver a parsear el texto.
    */
   sessions: z.array(programSessionSchema).optional(),
   duration: z.string().optional(),

@@ -85,13 +85,6 @@ export const CTA_TRIAL_LABEL_SHORT = 'Clase gratis';
  */
 export const SHARE_WHATSAPP_LABEL = 'Compartir por WhatsApp';
 
-/**
- * Rótulo del aviso de la próxima sesión en el banner de inscripción. Lo que
- * viene después —el día, la hora y el lugar— sale del campo `sessions` de la
- * colección `programs`; esto es solo el nombre del dato.
- */
-export const NEXT_SESSION_LABEL = 'Próxima sesión';
-
 export const NAV_ITEMS = [
   { label: 'Inicio', href: '/' },
   { label: 'Quiénes Somos', href: '/quienes-somos' },
