@@ -7,8 +7,6 @@ department: "Valle del Cauca"
 category: "xco"
 level: "departamental"
 organizer: "Comisión Vallecaucana de Ciclomontañismo"
-image: "/images/placeholder-event.jpg"
-imageAlt: "Primera válida Copa Valle XCO en Sevilla"
 status: "past"
 featured: false
 draft: false

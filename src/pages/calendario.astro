@@ -19,7 +19,7 @@ import ShareButtons from '@components/common/ShareButtons.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
 import SeasonTrack from '@components/sections/SeasonTrack.astro';
-import { generateEventsListJsonLd } from '@lib/seo';
+import { generateEventJsonLd, generateEventsListJsonLd } from '@lib/seo';
 import { formatDate } from '@lib/utils';
 import {
   buildSeason,
@@ -80,15 +80,52 @@ function chroniclesOf(event: Event) {
 
 const season = buildSeason(events);
 
-const jsonLd = generateEventsListJsonLd(
+const listJsonLd = generateEventsListJsonLd(
   [...upcoming.map(({ event }) => event), ...cancelled, ...past.map(({ event }) => event)].map(
     (event: Event) => ({
       title: event.data.title,
       date: event.data.date,
-      url: '/calendario',
+      url: `/calendario#evento-${event.id}`,
     })
   )
 );
+
+/**
+ * Un `SportsEvent` por cada fecha que todavía no se ha corrido.
+ *
+ * `generateEventJsonLd` existía desde el principio en `@lib/seo` —con sus
+ * tests— pero ninguna página lo llamaba: el calendario solo emitía el
+ * `ItemList`, que le dice a Google «aquí hay una lista» y nada más. Sin esto
+ * no hay forma de que una búsqueda muestre la fecha, la sede ni el enlace de
+ * inscripción de una válida.
+ *
+ * Las corridas se quedan fuera a propósito: un resultado enriquecido de evento
+ * solo sirve mientras la fecha esté por venir, y arrastrar toda la temporada
+ * pasada solo infla el HTML. Las canceladas sí entran mientras no pase su
+ * fecha, con `EventCancelled`: es justo lo que Google necesita para mostrar
+ * que se cayó en vez de seguir anunciándola.
+ *
+ * Cada evento apunta a su ancla (`#evento-<id>`) porque no hay página por
+ * evento: es el identificador más preciso que este sitio puede dar hoy.
+ */
+const scheduledJsonLd = [...upcoming.map(({ event }) => event), ...cancelled].map((event: Event) =>
+  generateEventJsonLd({
+    title: event.data.title,
+    date: event.data.date,
+    endDate: event.data.endDate,
+    location: event.data.location,
+    city: event.data.city,
+    department: event.data.department,
+    description: event.data.seo?.metaDescription,
+    image: event.data.image,
+    url: `/calendario#evento-${event.id}`,
+    status: resolveEventStatus(event.data),
+    registrationUrl: event.data.registrationUrl,
+    organizer: event.data.organizer,
+  })
+);
+
+const jsonLd = [listJsonLd, ...scheduledJsonLd];
 
 const nextCategory = next ? getEventCategory(next.event.data.category) : null;
 const nextLevel = next ? getEventLevel(next.event.data.level) : null;

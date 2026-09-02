@@ -7,8 +7,6 @@ department: "Valle del Cauca"
 category: "xco"
 level: "departamental"
 organizer: "Comisión Vallecaucana de Ciclomontañismo"
-image: "/images/placeholder-event.jpg"
-imageAlt: "Séptima válida Copa Valle XCO en Yumbo"
 status: "upcoming"
 registrationDeadline: 2026-10-15
 featured: true

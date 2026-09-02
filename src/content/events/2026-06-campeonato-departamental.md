@@ -8,8 +8,6 @@ department: "Valle del Cauca"
 category: "xco"
 level: "departamental"
 organizer: "Comisión Vallecaucana de Ciclomontañismo"
-image: "/images/placeholder-event.jpg"
-imageAlt: "Campeonato Departamental de MTB 2026 en Ginebra, Valle del Cauca"
 status: "past"
 registrationDeadline: 2026-06-10
 featured: false

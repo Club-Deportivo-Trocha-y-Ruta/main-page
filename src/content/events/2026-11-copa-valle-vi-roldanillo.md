@@ -8,8 +8,6 @@ department: "Valle del Cauca"
 category: "xco"
 level: "departamental"
 organizer: "Comisión Vallecaucana de Ciclomontañismo"
-image: "/images/placeholder-event.jpg"
-imageAlt: "Sexta válida Copa Valle XCO en Roldanillo"
 status: "upcoming"
 featured: false
 draft: false

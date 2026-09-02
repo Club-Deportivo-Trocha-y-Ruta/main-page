@@ -339,8 +339,13 @@ export function generateEventJsonLd(event: EventInput): JsonLd {
     '@context': 'https://schema.org',
     '@type': 'SportsEvent',
     name: event.title,
-    startDate: event.date.toISOString(),
-    ...(event.endDate ? { endDate: event.endDate.toISOString() } : {}),
+    // `toISOString()` devolvía la medianoche UTC de una fecha que el
+    // frontmatter escribe sin hora: para Colombia (UTC-5) eso es el día
+    // ANTERIOR a las 7 p. m., y Google anunciaba la válida un día antes.
+    // `toColombiaIso` ancla la fecha suelta a la medianoche de Bogotá, que es
+    // lo que ya hacen las noticias.
+    startDate: toColombiaIso(event.date),
+    ...(event.endDate ? { endDate: toColombiaIso(event.endDate) } : {}),
     eventStatus,
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     location: {

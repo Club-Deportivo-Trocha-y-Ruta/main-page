@@ -7,8 +7,6 @@ department: "Valle del Cauca"
 category: "xco"
 level: "departamental"
 organizer: "Comisión Vallecaucana de Ciclomontañismo"
-image: "/images/placeholder-event.jpg"
-imageAlt: "Segunda válida Copa Valle XCO en Ginebra"
 status: "past"
 featured: false
 draft: false
