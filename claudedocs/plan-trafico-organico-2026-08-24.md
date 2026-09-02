@@ -107,5 +107,5 @@ Es la única palanca que puede meter al club en el *map pack* de "escuela de cic
 ## 5. Orden sugerido
 
 - **Semana 1–2**: GBP reclamada y completa; verificación GA4 + vínculo SC; title/H1 de portada; UTM en todos los envíos.
-- **Semana 3–6**: landing Yumbo; `/la-pista` Fase 1; hub Copa Valle; solicitud de reseñas tras la válida de Roldanillo (26–27 sep).
+- **Semana 3–6**: landing Yumbo; `/la-pista` Fase 1; hub Copa Valle; solicitud de reseñas tras la válida de Yumbo (18 oct; Roldanillo se reprogramó al 7–8 nov y pasó a cerrar la temporada).
 - **Semana 7–12**: previa + página de la VII válida Yumbo (18 oct) con prensa e instituciones; redirecciones de URLs antiguas; 1 short semanal.

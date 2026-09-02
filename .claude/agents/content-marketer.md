@@ -279,7 +279,7 @@ Cuando la válida tiene gymkanas el sábado y XCO el domingo (patrón Palmira), 
 - **"Copa Valle Paraíso de Todos GW Shimano 2026"** — nombre completo de la temporada (primera mención); luego "Copa Valle".
 - **"primera válida", "segunda válida", "tercera válida"…** — siempre en minúscula y con ordinal escrito. NO usar "V.I", "1ª válida" ni "Round 1" en prosa.
 - En **tablas** con columnas estrechas sí: `1ª | 2ª | 3ª | 4ª` o `I | II | III`.
-- Calendario 2026 (7 válidas): Sevilla → Ginebra → La Cumbre (Pavas) → Cali (La Voragine, Pance Bikepark) → Palmira (Bosque Municipal) → Roldanillo (Sendero Eco-parque, 26 sep) → Yumbo (Pista Carlos Castro, 18 oct — **casa del club**).
+- Calendario 2026 (7 válidas, orden vigente tras la reprogramación por el terremoto del 10 de agosto): Sevilla → Ginebra → La Cumbre (Pavas) → Cali (La Voragine, Pance Bikepark) → Palmira (Bosque Municipal) → Yumbo (Pista Carlos Castro, 18 oct — **casa del club**, séptima válida) → Roldanillo (Sendero Eco-parque, 7 y 8 nov — sexta válida reprogramada; **cierra la temporada**). Roldanillo conserva su número (VI) aunque se corra al final: así la llama el comunicado de la Comisión y así quedó en las crónicas ya publicadas.
 - Nombres de sectores **siempre con artículo**: "La Voragine" (no "Voragine"), "Los Pinos" (no "Pinos").
 
 ### Sistema de puntuación (verificado contra PDFs oficiales Copa Valle 2026)
@@ -450,7 +450,7 @@ Eventos:   Cobertura pre (convocatoria), durante (fotos), post (crónica XCO com
 ```
 src/content/news/2026-08-copa-valle-palmira-xco.md      # Crónica modelo v3 (historias por corredor, "quién se movió")
 src/content/news/2026-08-copa-valle-palmira-gymkanas.md # Crónica modelo día 1 (títulos con gancho, pedagogía gymkana)
-src/content/news/2026-09-copa-valle-roldanillo-xco.md   # Plantilla v4 con notas de producción (borrador activo)
+src/content/news/2026-11-copa-valle-roldanillo-xco.md   # Plantilla v4 con notas de producción (borrador activo)
 src/content/news/2026-05-copa-valle-xco-cali.md         # Crónica modelo (bloque tecnología, lineup frontmatter)
 src/content/news/2026-04-copa-valle-xco-pavas.md        # Crónica modelo (tablas, tendencias, doblete)
 src/lib/constants.ts                                    # SITE, CONTACT, SOCIAL

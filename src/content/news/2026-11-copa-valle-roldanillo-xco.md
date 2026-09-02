@@ -3,9 +3,10 @@
 # Patrón: "[Hito del club] en el XCO de Roldanillo" / ej.: "Isabel pelea el segundo
 # lugar de la general en Roldanillo". Nunca "Trocha y Ruta arrasó".
 title: "Trocha y Ruta define su temporada en el XCO de Roldanillo"
-# Fecha del XCO. El evento arranca el sábado 26; si el formato es como Palmira
-# (sáb gymkanas + dom XCO), el XCO sería el domingo 27. CONFIRMAR con el afiche.
-date: 2026-09-27
+# Fecha del XCO. Válida reprogramada por el terremoto: el calendario
+# actualizado la fija el sábado 7 y el domingo 8 de noviembre (gymkanas + XCO),
+# así que el XCO va el domingo 8. CONFIRMAR el orden de pruebas con el afiche.
+date: 2026-11-08
 author: "Juan Diego García"
 category: "competencias"
 # Agregar tags de los corredores protagonistas al cerrar (patrón Palmira).
@@ -15,16 +16,16 @@ image: "/images/news/copa-valle-roldanillo-2026/afiche-copa-valle-roldanillo.web
 imageAlt: "Afiche de la sexta válida de la Copa Valle 2026 en el Sendero Eco-parque de Roldanillo"
 imageLayout: contain
 # Máximo 200 caracteres (lo valida el schema). Reescribir con el hito real.
-excerpt: "La sexta válida de la Copa Valle 2026 llevó al club al Sendero Eco-parque de Roldanillo: resultados, historias y las cuentas de la general a una sola fecha del final en casa."
+excerpt: "La válida de Roldanillo, reprogramada a noviembre, cerró la Copa Valle 2026 en el Sendero Eco-parque: resultados, historias y la general definitiva del club."
 featured: true
 draft: true
-relatedEvent: "2026-09-copa-valle-vi-roldanillo"
+relatedEvent: "2026-11-copa-valle-vi-roldanillo"
 relatedGallery: "copa-valle-roldanillo-2026"
 galleryFolder: "/images/news/copa-valle-roldanillo-2026"
 galleryImages: []
 seo:
   metaTitle: "Trocha y Ruta en el XCO de Roldanillo (Copa Valle 2026)"
-  metaDescription: "Resultados del Club Trocha y Ruta en la sexta válida de la Copa Valle 2026 en Roldanillo, con la clasificación general a una fecha del cierre en Yumbo."
+  metaDescription: "Resultados del Club Trocha y Ruta en la válida de Roldanillo, cierre de la Copa Valle 2026, con la clasificación general definitiva de la temporada."
   ogImage: "/images/news/copa-valle-roldanillo-2026/og-copa-valle-roldanillo.webp"
 ---
 
@@ -33,6 +34,18 @@ seo:
      Estado: esqueleto de producción. Se publica solo cuando el checklist
      esté completo. Protocolo completo: .claude/agents/content-marketer.md.
 
+     ⚠ VÁLIDA REPROGRAMADA (calendario actualizado tras el terremoto del 10 de
+     agosto). Roldanillo pasó del 26 de septiembre al 7 y 8 de noviembre y
+     ahora se corre DESPUÉS de Yumbo: sigue siendo la sexta válida, pero es la
+     ÚLTIMA fecha de la temporada. Lo que eso cambia en este esqueleto:
+       · Entre Palmira y Roldanillo se corre Yumbo (18 de octubre). Toda cuenta
+         pre-escrita con la general de Palmira quedó vieja: rehacerla con la
+         general publicada tras Yumbo.
+       · En Roldanillo se juegan los últimos 40 puntos; después no queda nada.
+         El tablero de la general ya no lleva zona de alcance (--reach:0) y la
+         escala sube a 280 (siete válidas × 40).
+       · El cierre ya no anuncia la final en casa: Roldanillo ES el cierre.
+
      NOVEDADES v4 (estreno en esta crónica): .thread en cada historia del
      bloque 4 y .standings-board abriendo la general. Ambos piden datos que
      antes no se recogían — están en el checklist de abajo.
@@ -40,10 +53,11 @@ seo:
      3b): existe en global.css pero no se usa hasta tener el trazado real.
 
      CHECKLIST DEL FIN DE SEMANA DE CARRERA
-     [ ] Confirmar formato: ¿un solo día (sáb 26) o dos días como Palmira?
-         Si son dos días → crear 2026-09-copa-valle-roldanillo-gymkanas.md
-         (crónica corta del día 1, regla de dos artículos) y cruzar enlaces
-         en el primer párrafo de cada una. Ajustar `date` de este archivo.
+     [ ] Formato de dos días según el calendario actualizado (sáb 7 gymkanas
+         + dom 8 XCO, como Palmira): crear 2026-11-copa-valle-roldanillo-
+         gymkanas.md (crónica corta del día 1, regla de dos artículos) y
+         cruzar enlaces en el primer párrafo de cada una. Confirmar el orden
+         de pruebas con el afiche antes de escribir.
      [ ] PDFs oficiales: "RESULTADOS VI copa valle XCO 2026" y "GENERAL VI
          copa valle XCO 2026". Todo dato de tabla sale de ahí. Cero memoria.
      [ ] Fotos por corredor en /public/images/news/copa-valle-roldanillo-2026/
@@ -132,11 +146,19 @@ Roldanillo queda en el norte del Valle, a [CONFIRMAR: ~dos horas] de Yumbo por l
 
 ## Lo que se jugaba
 
-<!-- Bloque pre-escrito con las cuentas verificadas tras Palmira (PDF GENERAL V).
-     Ya está en pasado para la crónica. Para la convocatoria previa en redes
-     puede pasarse a presente tal cual. Si algún corredor no viajó, ajustar. -->
+<!-- REESCRIBIR CON LA GENERAL POSTERIOR A YUMBO. Las cuentas de abajo se
+     escribieron con el PDF GENERAL V (tras Palmira), cuando Roldanillo era la
+     sexta de siete. Con la reprogramación, entre Palmira y Roldanillo se corre
+     Yumbo: todas las distancias cambian y aquí ya solo quedan 40 puntos en
+     juego, los últimos de la temporada. Rehacer el bloque con la general
+     publicada tras Yumbo y con quién viajó de verdad al norte del Valle.
+     Texto anterior, guardado como referencia de tono y estructura:
 
-El club llegaba a Roldanillo con las cuentas claras y **80 puntos todavía en juego** entre esta válida y la final. **Isabel Quiñones** era tercera de la general de Prejuvenil A Femenina, a **7 puntos** del segundo lugar. **Thiago Duque** tenía la distancia más corta del equipo: a **6 del podio** de Teteros Con Pedales con una sola válida corrida. **Mariana Coronado** estaba a 11 del tercer escalón de su categoría —el que ocupa su propia compañera—, **Miguel Ángel Anaya** a 13 en la categoría más poblada del campeonato, y **Sofía Gómez** a 20. Todo eso venía a decidirse en dos domingos: este, y el de casa.
+     «El club llegaba a Roldanillo con las cuentas claras y **80 puntos todavía en juego** entre esta válida y la final. **Isabel Quiñones** era tercera de la general de Prejuvenil A Femenina, a **7 puntos** del segundo lugar. **Thiago Duque** tenía la distancia más corta del equipo: a **6 del podio** de Teteros Con Pedales con una sola válida corrida. **Mariana Coronado** estaba a 11 del tercer escalón de su categoría —el que ocupa su propia compañera—, **Miguel Ángel Anaya** a 13 en la categoría más poblada del campeonato, y **Sofía Gómez** a 20. Todo eso venía a decidirse en dos domingos: este, y el de casa.»
+-->
+
+[PENDIENTE — lo que se jugaba, con la general posterior a Yumbo y los últimos
+40 puntos de la temporada en disputa]
 
 <!-- ── BLOQUE 4 · HISTORIAS DEL CLUB ──
      Una sección ## por corredor o arco (dupla, regreso, debut), con título
@@ -259,21 +281,21 @@ El club llegaba a Roldanillo con las cuentas claras y **80 puntos todavía en ju
 |------------|-----------|:----:|--------|:------:|
 | [PENDIENTE] | | | | |
 
-## La general tras seis válidas
+## La general del cierre
 
-Con seis de siete disputadas, así queda Trocha y Ruta en la tabla general del **XCO** de la Copa Valle. Cuentas claras: es una general aparte, las gymkanas tienen su propio acumulado y no suman aquí.
+Con las siete válidas disputadas, así queda Trocha y Ruta en la tabla general del **XCO** de la Copa Valle. Cuentas claras: es una general aparte, las gymkanas tienen su propio acumulado y no suman aquí.
 
 <!-- ── TABLERO DE LA GENERAL (v4, nuevo) ──
      La tabla de doce columnas es información de consulta: en el celular se
      scrollea de lado y nadie suma puntos mentalmente. El tablero responde de
-     un vistazo la única pregunta que importa entrando a la última válida:
-     ¿a este corredor todavía le alcanza?
+     un vistazo la única pregunta que importa al cerrar la temporada:
+     ¿dónde terminó cada corredor y por cuánto?
 
      CÓMO SE LLENA (todo sale del PDF GENERAL VI)
-     · --board-max:240 — máximo posible tras seis válidas (40 por válida).
-       Es la escala común: no cambia entre corredores.
-     · --reach:40 — los puntos que quedan en juego en la final de Yumbo.
-       Dibuja la zona rayada: hasta dónde PODRÍA llegar el corredor.
+     · --board-max:280 — máximo posible tras las siete válidas (40 por
+       válida). Es la escala común: no cambia entre corredores.
+     · --reach:0 — Roldanillo cierra la temporada: no quedan puntos por
+       repartir, así que la barra va sin zona rayada de alcance.
      · --pts — puntos acumulados del corredor (columna Total).
      · --pts-prev — su total ANTES de esta válida (Total menos lo que sumó
        hoy). Dibuja el tramo claro al final de la barra: se ve de un vistazo
@@ -302,10 +324,10 @@ Con seis de siete disputadas, así queda Trocha y Ruta en la tabla general del *
      movió y por qué" (le pasó a Thiago tras Palmira).
 
      LECTURA QUE HABILITA
-     · Línea punteada dentro de la barra → está en zona de podio.
-     · Línea dentro de la zona rayada → le alcanza ganando en Yumbo.
-     · Línea fuera de la zona rayada → matemáticamente no le da; la crónica
-       lo dice sin rodeos y cambia el foco a lo deportivo.
+     · Línea punteada dentro de la barra → cerró en zona de podio.
+     · Línea punteada por delante de la barra → se quedó a esa distancia del
+       podio de su categoría; la crónica lo dice sin rodeos y cambia el foco
+       a lo deportivo y a lo que deja el año.
 
      ACCESIBILIDAD: la pista es decorativa (aria-hidden). Todo el dato viaja
      en el texto de __meta — hay que escribirlo completo ahí, incluida la
@@ -318,7 +340,7 @@ Con seis de siete disputadas, así queda Trocha y Ruta en la tabla general del *
        <li class="standings-board__row" style="--pts:133; --pts-prev:100; --podio:146">
      Ojo: esos --podio son ilustrativos; los reales salen del PDF GENERAL VI. -->
 
-<ol class="standings-board" style="--board-max:240; --reach:40">
+<ol class="standings-board" style="--board-max:280; --reach:0">
   <li class="standings-board__row" style="--pts:0; --pts-prev:0; --podio:0">
     <span class="standings-board__label">
       <span class="standings-board__name">[PENDIENTE — corredor]</span>
@@ -340,21 +362,21 @@ Con seis de siete disputadas, así queda Trocha y Ruta en la tabla general del *
 <p class="standings-board__legend">
   <span><span class="standings-board__key"></span> puntos antes de Roldanillo</span>
   <span><span class="standings-board__key standings-board__key--gain"></span> lo que sumó hoy</span>
-  <span><span class="standings-board__key standings-board__key--podium"></span> ya en zona de podio</span>
-  <span><span class="standings-board__key standings-board__key--reach"></span> alcance con los 40 de la final</span>
+  <span><span class="standings-board__key standings-board__key--podium"></span> cerró en zona de podio</span>
   <span><span class="standings-board__key standings-board__key--line"></span> podio de su categoría</span>
 </p>
 
 ### La tabla completa
 
-<!-- Del PDF oficial GENERAL VI, fila por fila. Tendencia vs general de
-     Palmira. Columna "Al podio" = puntos al top-3 del campeonato.
+<!-- Del PDF oficial de la general final, fila por fila. Ojo con el orden:
+     Roldanillo es la válida VI pero se corrió después de Yumbo (VII), así que
+     la tendencia se compara contra la general publicada tras Yumbo. Columna "Al podio" = puntos al top-3 del campeonato.
      Se mantiene como respaldo de consulta bajo el tablero: hay familias que
      sí quieren ver válida por válida. -->
 
-| Deportista | Categoría | Pos. | Tendencia | I | II | III | IV | V | VI | Total | Al podio |
-|------------|-----------|:----:|:---------:|:--:|:--:|:--:|:--:|:--:|:--:|:-----:|:--------:|
-| [PENDIENTE] | | | <span class="text-gray-400">— Estable</span> | | | | | | | | |
+| Deportista | Categoría | Pos. | Tendencia | I | II | III | IV | V | VI | VII | Total | Al podio |
+|------------|-----------|:----:|:---------:|:--:|:--:|:--:|:--:|:--:|:--:|:---:|:-----:|:--------:|
+| [PENDIENTE] | | | <span class="text-gray-400">— Estable</span> | | | | | | | | | |
 
 ### Quién se movió y por qué
 
@@ -364,23 +386,27 @@ Con seis de siete disputadas, así queda Trocha y Ruta en la tabla general del *
 
 [PENDIENTE]
 
-### La cuenta corta
+### La cuenta final
 
-<!-- El bloque que más comparte la gente: cuántos puntos separan a cada
-     corredor de su objetivo, entrando a la final de Yumbo con 40 en juego.
-     Actualizar valores con el PDF GENERAL VI; --accent a la distancia
-     más corta. Quitar o sumar items según las cuentas reales. -->
+<!-- El bloque que más comparte la gente. Ya no hay fecha por delante: aquí va
+     el saldo del año — dónde terminó cada corredor y por cuánto. Actualizar
+     valores con el PDF de la general final; --accent al dato más noticioso.
+     Quitar o sumar items según las cuentas reales. -->
 
 <div class="stat-strip reveal">
   <div class="stat-strip__item stat-strip__item--accent"><span class="stat-strip__value">a —</span><span class="stat-strip__label">[corredor] del podio de [categoría]</span></div>
   <div class="stat-strip__item"><span class="stat-strip__value">a —</span><span class="stat-strip__label">[corredor] del segundo lugar</span></div>
   <div class="stat-strip__item"><span class="stat-strip__value">a —</span><span class="stat-strip__label">[corredor] del podio</span></div>
-  <div class="stat-strip__item"><span class="stat-strip__value">40</span><span class="stat-strip__label">puntos en juego en la final</span></div>
+  <div class="stat-strip__item"><span class="stat-strip__value">—</span><span class="stat-strip__label">puntos del club en la temporada</span></div>
 </div>
 
-## La última se corre en casa
+## Se acabó la Copa Valle 2026
 
-<!-- Cierre pre-escrito: ajustar la primera frase al balance real del día y
-     verificar que la fecha de Yumbo siga siendo el 18 de octubre. -->
+<!-- Cierre por escribir. La sección anterior anunciaba la final de Yumbo; con
+     el calendario reprogramado, Yumbo ya se corrió el 18 de octubre y
+     Roldanillo cierra el año. El cierre ahora mira hacia atrás (qué deja la
+     temporada, quién creció) y hacia adelante solo a lo que el club ya tenga
+     confirmado: nada de calendario 2027 inventado. Mantener el tono de las
+     crónicas anteriores: concreto, sin épica de más. -->
 
-Queda una. La **séptima y última válida** de la Copa Valle 2026 se corre el **18 de octubre** en la **Pista Carlos Castro de Yumbo** — el circuito donde el club entrena, a unas cuadras de las casas de buena parte del equipo. Todo lo que Roldanillo dejó abierto se cierra ahí, con la gente del club en las mallas. Si alguna vez pensó en ir a ver una válida, que sea esa: es en casa, y es la definición.
+[PENDIENTE — cierre de temporada]

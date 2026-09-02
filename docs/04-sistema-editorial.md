@@ -965,7 +965,7 @@ cruzando las dos direcciones de la relación, reutilizando `chroniclesForEvent()
 de `@lib/gallery`, y se descarta la crónica actual de sus propias hermanas.
 
 **La regla de los enlaces.** Ningún eslabón se convierte en URL sin comprobar
-que resuelve contra su colección. No es teórico: `2026-09-copa-valle-roldanillo-xco`
+que resuelve contra su colección. No es teórico: `2026-11-copa-valle-roldanillo-xco`
 declara un álbum que no existe. Hoy es inofensivo porque esa crónica está en
 `draft`, pero el día que se publique el enlace apuntaría a una página inexistente.
 Con la comprobación, el bloque simplemente no se pinta.

@@ -450,7 +450,7 @@ class="sr-only">` con la cifra final) dentro de `.stat-strip__value`; como el
   estado final visible y `--count-value` a `--count-target`. Inocua en las crónicas
   sin estos bloques —los selectores no matchean nada— y en las que sí los tengan pero
   no usen `reveal` ni `count-up` en su markdown.
-- **`src/content/news/2026-09-copa-valle-roldanillo-xco.md`** (el único `.md` con
+- **`src/content/news/2026-11-copa-valle-roldanillo-xco.md`** (el único `.md` con
   `stat-strip`/`stat-callout` hoy) se actualizó con `reveal` en sus tres bloques para
   que quede alineado con la plantilla nueva; sigue `draft: true`, así que no entra al
   build ni se pudo verificar en `dist/` — se verificó en cambio contra

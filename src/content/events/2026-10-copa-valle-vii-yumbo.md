@@ -15,7 +15,9 @@ featured: true
 draft: false
 ---
 
-Séptima y última válida de la Copa Valle Paraíso de Todos GW Shimano 2026, a disputarse en la Pista Carlos Castro de Yumbo, Valle del Cauca — la casa de Trocha y Ruta. Prueba de XCO con circuito de 3.8 km.
+Séptima válida de la Copa Valle Paraíso de Todos GW Shimano 2026, a disputarse en la Pista Carlos Castro de Yumbo, Valle del Cauca — la casa de Trocha y Ruta. Prueba de XCO con circuito de 3.8 km.
+
+Con la reprogramación de la válida de Roldanillo al 7 y 8 de noviembre, esta deja de ser la fecha de cierre: la temporada de la Copa Valle 2026 termina en Roldanillo.
 
 ## Información general
 
