@@ -7,13 +7,13 @@ city: "Roldanillo"
 department: "Valle del Cauca"
 category: "xco"
 level: "departamental"
-organizer: "Comisión Vallecaucana de Ciclomontañismo"
+organizer: "Super Amigos Bike"
 status: "upcoming"
 featured: false
 draft: false
 ---
 
-> **Válida reprogramada.** La VI válida de Roldanillo, cancelada por los acontecimientos del terremoto que afectó a diferentes regiones de Colombia el 10 de agosto, quedó reubicada en el calendario actualizado de la Comisión Vallecaucana de Ciclomontañismo: se corre el **7 y 8 de noviembre** y pasa a cerrar la temporada, después de la válida de Yumbo del 18 de octubre. **Aún no hay fecha de cierre de inscripciones confirmada.**
+> **Válida reprogramada.** Aplazada tras el terremoto del 10 de agosto, la válida de Roldanillo vuelve al calendario para el **7 y 8 de noviembre de 2026**, según el comunicado oficial de la Comisión Vallecaucana de Ciclomontañismo del 3 de septiembre. Con el cambio de fecha, Roldanillo **cierra la temporada** de la Copa Valle: se corre después de la válida de Yumbo del 18 de octubre.
 
 Sexta válida de la Copa Valle Paraíso de Todos GW Shimano 2026, a disputarse el **sábado 7 y domingo 8 de noviembre** en el Sendero Eco-parque de Roldanillo, Valle del Cauca, con pruebas de Gymkanas y XCO sobre un circuito de 3.7 km.
 
@@ -25,7 +25,7 @@ Sexta válida de la Copa Valle Paraíso de Todos GW Shimano 2026, a disputarse e
 - **Distancia del circuito**: 3.7 km
 - **Inscripción**: $70.000 (categorías regulares) / $50.000 (teteros)
 - **Cupos**: 350 por categoría
-- **Cierre de inscripciones**: por confirmar
+- **Cierre de inscripciones**: pendiente de la nueva convocatoria
 
 ## Categorías
 

@@ -5,9 +5,9 @@
 # la referencia en `relatedGallery`: sin este archivo, esa referencia apunta
 # a una página que no existe.
 title: "Copa Valle 2026 — VI válida, Roldanillo"
-# Válida reprogramada por el terremoto del 10 de agosto: se corre el sábado 7
-# y el domingo 8 de noviembre. El álbum cubre los dos días y esta fecha se
-# queda en la de apertura.
+# Fecha del evento. Reprogramada al 7 y 8 de noviembre (comunicado de la
+# Comisión del 3-sep-2026): formato de dos días, el álbum cubre ambos y esta
+# fecha es la de apertura.
 date: 2026-11-07
 # Portada: reemplazar por la mejor foto del fin de semana. Mientras el álbum
 # esté en draft esta ruta puede no existir todavía.

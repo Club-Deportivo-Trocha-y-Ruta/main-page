@@ -7,6 +7,19 @@
 
 ---
 
+## 0. Lo que ya se sabe de la pista (entrevista a los fundadores, 4-sep-2026)
+
+Fuente: `claudedocs/analisis-entrevista-fundadores-2026-09-04.md` (con verificación externa). Esto ya alcanza para redactar la apertura y la ficha histórica de la Fase 1 sin esperar al club.
+
+- **Dónde**: en el **teatrino del barrio Pizarro**, Yumbo. Carlos Castro lo encontró cubierto de maleza en una salida a trotar, el IMDERTY lo guadañó y él trazó los primeros recorridos; el espacio era zona de rumba y se ganó con unos 12 niños entrenando. El sitio tiene dos direcciones distintas para la pista (`CONTACT.address` y el evento de octubre): confirmar antes del `geo` del JSON-LD.
+- **Línea de tiempo**: primeros trazados hacia 2011 · primera válida Copa Valle en 2012 · válida de 2018 con la que la Comisión Nacional de MTB conoció la pista · rediseño con criterio nacional por el diseñador de pistas de la Federación («Pacho») · **subsede del XCO de los Juegos Nacionales 2019** (MinDeporte: 4,2 km) · nuevos ajustes para los **I Juegos Panamericanos Junior 2021** (oro de Martín Vidaurre, campeón mundial sub-23) · circuito de 3,8 km para la válida del 18-oct-2026.
+- **Criterio de diseño** (Carlos Castro, 0:37): pistas exigentes «pero cero accidentes»; cada salto lo prueban primero los corredores del club. Es la frase que sostiene la capa pedagógica de cada obstáculo.
+- **Infraestructura 2026** (1:23–1:24): baños nuevos, iluminación y seguridad con apoyo de la gestora social, infraestructura e IMDERTY.
+- **Quién construye**: el club es «la mano de obra» de los senderos (a pica y pala); el trazado de competencia lo revisa la Comisión. Sirve como `builtBy` genérico mientras no haya dato por obstáculo.
+- **Qué sigue bloqueado de §9**: la lista de obstáculos, los clips/fotos por obstáculo, el texto pedagógico por obstáculo, los consentimientos de imagen y el GPX. La historia, el criterio de diseño y el `builtBy` general ya no bloquean.
+
+---
+
 ## 1. Concepto
 
 > La página no muestra los saltos: muestra **cómo se aprende a saltarlos**.

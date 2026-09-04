@@ -5,6 +5,6 @@ body: El club compite cada válida de la Copa Valle y lleva corredores a campeon
 icon: 'ph:trophy-bold'
 image: comunidad-circuito.webp
 imageAlt: Corredora del club atacando una subida técnica en un circuito de XCO
-order: 3
+order: 7
 draft: false
 ---
