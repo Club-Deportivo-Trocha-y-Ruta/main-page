@@ -124,6 +124,7 @@ collections:
     summary: "{{date | date('YYYY-MM-DD')}} — {{title}} [{{status}}]"
     fields:
       - { label: "Título", name: "title", widget: "string", required: true }
+      - { label: "Nombre corto", name: "shortName", widget: "string", required: false, hint: "Solo si el año pasa dos veces por la misma ciudad: distingue las dos paradas en el riel de la temporada. Ej: \"Válida VII\", \"Chequeo\"." }
       - { label: "Fecha inicio", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
       - { label: "Fecha fin", name: "endDate", widget: "datetime", required: false, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
       - { label: "Ubicación", name: "location", widget: "string", required: true }

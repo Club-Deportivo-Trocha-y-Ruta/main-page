@@ -1,5 +1,6 @@
 ---
 title: "Chequeo Pro-Fondos Trocha y Ruta"
+shortName: "Chequeo"
 date: 2026-09-05
 location: "Pista Carlos Castro - Cra. 14N con Cl. 13BN"
 city: "Yumbo"

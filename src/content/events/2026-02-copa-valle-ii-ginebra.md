@@ -1,5 +1,6 @@
 ---
 title: "II Válida Copa Valle 2026 - Ginebra"
+shortName: "Válida II"
 date: 2026-02-28
 location: "Corregimiento La Floresta"
 city: "Ginebra"

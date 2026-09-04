@@ -47,7 +47,10 @@ const dotFor = (stop: Stop) =>
       Temporada {season.year}: {season.completed} de {season.total} fechas corridas.
       {season.cancelled > 0 &&
         ` ${season.cancelled === 1 ? 'Una fecha cancelada' : `${season.cancelled} fechas canceladas`}.`}
-      {season.next && ` La próxima es en ${season.next.label}.`}
+      {season.next &&
+        ` La próxima es en ${season.next.label}${
+          season.next.qualifier ? ` (${season.next.qualifier})` : ''
+        }.`}
     </figcaption>
 
     <div class="flex flex-wrap items-baseline justify-between gap-2">
@@ -126,6 +129,23 @@ const dotFor = (stop: Stop) =>
                 >
                   {stop.label}
                 </span>
+
+                {/*
+                  Solo cuando la temporada pasa dos veces por la misma ciudad:
+                  sin esto, "Yumbo" el 5 de septiembre y "Yumbo" el 18 de octubre
+                  se leen como la misma fecha repetida. Va en texto plano y no en
+                  chip para no competir con "Sigue" y "Cancelada", que son estado.
+                */}
+                {stop.qualifier && (
+                  <span
+                    class:list={[
+                      'mt-0.5 text-[10px] leading-tight text-text-secondary',
+                      isCancelled(stop) && 'line-through decoration-1',
+                    ]}
+                  >
+                    {stop.qualifier}
+                  </span>
+                )}
 
                 {isCancelled(stop) && (
                   <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-black/[0.06] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-text-secondary">

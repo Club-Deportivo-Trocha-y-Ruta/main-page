@@ -214,6 +214,40 @@ describe('buildSeason', () => {
     expect(season.progressPct).toBe(0);
     expect(season.next).toBeNull();
   });
+
+  // Dos paradas en la misma ciudad se leían como una fecha repetida: la
+  // temporada 2026 pasa dos veces por Yumbo (chequeo del club + válida) y dos
+  // por Ginebra (válida + campeonato departamental).
+  describe('ciudades que se repiten', () => {
+    const dosEnYumbo = [
+      evento('sevilla', '2026-01-31', { city: 'Sevilla', shortName: 'Válida I' }),
+      evento('chequeo', '2026-09-05', { city: 'Yumbo', shortName: 'Chequeo' }),
+      evento('valida-yumbo', '2026-10-18', { city: 'Yumbo', shortName: 'Válida VII' }),
+    ];
+
+    it('desambigua con el nombre corto las paradas de la ciudad repetida', () => {
+      const { stops } = buildSeason(dosEnYumbo, hoy);
+      expect(stops.map((s) => s.qualifier)).toEqual([null, 'Chequeo', 'Válida VII']);
+    });
+
+    it('no repite el nombre corto donde la ciudad ya identifica la parada', () => {
+      // Sevilla tiene `shortName`, pero es la única parada de su ciudad: el
+      // riel no gana nada mostrándolo y se llenaría de ruido.
+      expect(buildSeason(dosEnYumbo, hoy).stops[0].qualifier).toBeNull();
+    });
+
+    it('deja el qualifier en null si la ciudad se repite sin nombre corto', () => {
+      const sinNombre = [
+        evento('chequeo', '2026-09-05', { city: 'Yumbo' }),
+        evento('valida-yumbo', '2026-10-18', { city: 'Yumbo' }),
+      ];
+      expect(buildSeason(sinNombre, hoy).stops.map((s) => s.qualifier)).toEqual([null, null]);
+    });
+
+    it('no marca como repetida una ciudad que solo aparece una vez', () => {
+      expect(buildSeason(temporada, hoy).stops.every((s) => s.qualifier === null)).toBe(true);
+    });
+  });
 });
 
 // ============================================================

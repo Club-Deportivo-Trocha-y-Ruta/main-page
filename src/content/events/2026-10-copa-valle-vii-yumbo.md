@@ -1,5 +1,6 @@
 ---
 title: "VII Válida Copa Valle 2026 - Yumbo"
+shortName: "Válida VII"
 date: 2026-10-18
 location: "Pista Carlos Castro - Cra. 14N con Cl. 13BN"
 city: "Yumbo"

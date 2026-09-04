@@ -1,5 +1,6 @@
 ---
 title: "Campeonato Departamental de MTB 2026"
+shortName: "Departamental"
 date: 2026-06-12
 endDate: 2026-06-14
 location: "Corregimiento La Floresta"

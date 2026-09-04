@@ -108,6 +108,47 @@ describe('Convenciones de contenido', () => {
     }
     expect(draftCount).toBeLessThan(allMdFiles.length / 2);
   });
+
+  /**
+   * El riel de la temporada (`buildSeason` → `SeasonTrack`) rotula cada parada
+   * con la ciudad, no con el título: "VII Válida Copa Valle 2026 - Yumbo" no
+   * cabe en un punto. Cuando el año pasa dos veces por la misma ciudad —el
+   * chequeo del club y la válida en Yumbo, la válida y el departamental en
+   * Ginebra— las dos paradas se leen como una fecha repetida.
+   *
+   * `shortName` es lo que las distingue, y es opcional en el schema porque la
+   * mayoría de fechas no lo necesita. Este test cubre el hueco: si alguien
+   * agrega una segunda fecha en una ciudad que ya está en el calendario, se
+   * entera aquí y no en la página publicada.
+   */
+  it('dos fechas del mismo año en la misma ciudad llevan shortName', () => {
+    const porAnioYCiudad = new Map<string, { file: string; shortName?: string }[]>();
+
+    for (const filePath of fg.sync(`${CONTENT_DIR}/events/**/*.md`)) {
+      const { data } = parseFile(filePath);
+      if (!data.city || !data.date) continue;
+
+      // El frontmatter es AAAA-MM-DD y gray-matter lo entrega como Date en UTC.
+      const anio = new Date(data.date).getUTCFullYear();
+      const clave = `${anio} · ${data.city}`;
+      const paradas = porAnioYCiudad.get(clave) ?? [];
+      paradas.push({ file: basename(filePath), shortName: data.shortName });
+      porAnioYCiudad.set(clave, paradas);
+    }
+
+    const sinDistinguir = [...porAnioYCiudad.entries()]
+      .filter(([, paradas]) => paradas.length > 1)
+      .flatMap(([clave, paradas]) =>
+        paradas.filter((p) => !p.shortName).map((p) => `${clave} → ${p.file}`)
+      );
+
+    expect(
+      sinDistinguir,
+      `Estas fechas comparten ciudad y año con otra, así que el riel de la ` +
+        `temporada las pinta con el mismo rótulo. Agrega "shortName" ` +
+        `(ej: "Válida VII", "Chequeo") a cada una:\n  ${sinDistinguir.join('\n  ')}`
+    ).toEqual([]);
+  });
 });
 
 // ============================================================

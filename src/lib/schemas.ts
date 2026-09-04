@@ -135,6 +135,12 @@ export const newsSchema = z.object({
 
 export const eventsSchema = z.object({
   title: z.string(),
+  /**
+   * Nombre corto para el riel de la temporada ("Válida VII", "Chequeo").
+   * Solo se pinta cuando el año pasa dos veces por la misma ciudad y la ciudad
+   * sola ya no dice cuál de las dos fechas es.
+   */
+  shortName: z.string().optional(),
   date: z.coerce.date(),
   endDate: z.coerce.date().optional(),
   location: z.string(),

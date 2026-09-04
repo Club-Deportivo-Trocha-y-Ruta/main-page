@@ -172,6 +172,12 @@ export interface SeasonStop<T> {
   id: string;
   /** Nombre corto de la parada: la ciudad, que es como la nombra todo el mundo. */
   label: string;
+  /**
+   * Segunda línea que dice cuál de las dos es, cuando la temporada pasa más de
+   * una vez por la misma ciudad. `null` el resto del tiempo: en un riel donde
+   * cada ciudad aparece una sola vez, repetir el tipo de fecha es ruido.
+   */
+  qualifier: string | null;
   day: string;
   month: string;
   status: EventStatus;
@@ -194,7 +200,14 @@ export interface Season<T> {
 
 interface SeasonInput {
   id: string;
-  data: { title: string; date: Date; endDate?: Date; city?: string; status?: string };
+  data: {
+    title: string;
+    shortName?: string;
+    date: Date;
+    endDate?: Date;
+    city?: string;
+    status?: string;
+  };
 }
 
 /**
@@ -213,12 +226,25 @@ export function buildSeason<T extends SeasonInput>(events: T[], now: Date = new 
     .filter((event) => event.data.date.getUTCFullYear() === year)
     .sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
 
+  // La ciudad identifica la válida mejor que el título completo, pero no siempre
+  // basta: el club corre dos veces en Yumbo y dos en Ginebra el mismo año, y dos
+  // paradas con el mismo rótulo se leen como una fecha repetida. Donde la ciudad
+  // vuelve, la parada añade su `shortName` para decir cuál de las dos es.
+  const labelOf = (event: T) => event.data.city ?? event.data.title;
+  const seen = new Set<string>();
+  const repeated = new Set<string>();
+  for (const event of inSeason) {
+    const label = labelOf(event);
+    if (seen.has(label)) repeated.add(label);
+    seen.add(label);
+  }
+
   const stops: SeasonStop<T>[] = inSeason.map((event, index) => ({
     event,
     id: event.id,
-    // La ciudad identifica la válida mejor que el título completo
-    // ("VI Válida Copa Valle 2026 - Roldanillo" no cabe en un punto).
-    label: event.data.city ?? event.data.title,
+    // ("VI Válida Copa Valle 2026 - Roldanillo" no cabe en un punto.)
+    label: labelOf(event),
+    qualifier: repeated.has(labelOf(event)) ? (event.data.shortName ?? null) : null,
     day: dayLabel(event.data.date, event.data.endDate),
     month: monthShort(event.data.date),
     status: resolveEventStatus(event.data, now),
