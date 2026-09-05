@@ -12,106 +12,148 @@ Destino final del material:
 > **Esta carpeta se borra** cuando la noticia y el álbum se publiquen. Las fotos
 > de `fotos/` son copias de trabajo, ya convertidas a WebP, no las definitivas.
 
----
-
-## Lo que se ha recibido
-
-| # | Archivo de trabajo | Qué es | Estado |
-|---|---|---|---|
-| 1 | `fotos/podio-open.webp` | Podio de 3 + dos corredores con medalla + dos adultos del club | Categoría por confirmar (¿OPEN?) |
-| 2 | `fotos/podio-por-identificar-a.webp` | Podio con un adulto en el 1 y un juvenil en el 2; puesto 3 vacío | **Categoría sin identificar** |
-| 3 | `fotos/podio-prejuvenil-femenino.webp` | Podio de dos corredoras del club; puesto 3 vacío | Probable Prejuvenil damas |
-| 4 | `fotos/planilla-prejuvenil.webp` | Planilla de jueces, categoría PREJUVENIL | Transcrita abajo, con dudas |
-| 5 | `fotos/planilla-open.webp` | Planilla de jueces, categoría OPEN | Transcrita abajo, con dudas |
-
-Encabezado impreso de las dos planillas:
+Encabezado impreso de las planillas:
 
 > CONVOCATORIA 2DO CHEQUEO PROFONDOS DE CICLOMONTAÑISMO (XCO)
 > MODALIDAD: CROSS COUNTRY OLÍMPICO — YUMBO 05 DE SEPTIEMBRE DE 2026 — RESULTADOS
 
 ---
 
-## Planilla PREJUVENIL — lectura preliminar
+## Fotos recibidas
 
-Anotación manuscrita en el margen superior, apenas legible: parece decir
-**"Pre-juvenil damas"**, lo que encajaría con que las filas 1-4 sean damas y las
-7-8, varones anotados en la misma hoja.
-
-Las filas 1 y 2 están **tachadas** y rehechas en las filas 3 y 4.
-
-| Ord | Dorsal | Nombre en la planilla | Ciudad | Club | Vuelta 1 | Marca | Total |
-|---|---|---|---|---|---|---|---|
-| ~~1~~ | ~~906~~ | ~~Isabel Cristhina Quiñones Batero~~ | ~~Yumbo~~ | ~~Trocha y Ruta~~ | ~~18:52~~ | ~~1 Pt~~ | — |
-| ~~2~~ | ~~904~~ | ~~MARIANA CORONADO~~ | ~~Yumbo~~ | ~~Trocha y Ruta~~ | ~~20:04~~ | — | — |
-| 3 | 906 | isabel cristhina | Yumbo | T y R | 20:04 | 2 Pt | 41:55 |
-| 4 | 904 | maria cardona | Yumbo | T y R | 18:52 | 1 Pt | 37:59 |
-| 7 | 1860 | Johan Samuel Palacios Canizales | Yumbo | Trocha y Ruta | 20:30 | 2 Pt | 45:10 |
-| 8 | 1859 | Santiago Cardona Chate | Yumbo | Trocha y Ruta | 19:32 | 2 Pt | 40:25 |
-
-Lectura que **parece** desprenderse (sin confirmar):
-- Damas: 1ª el dorsal 904 (37:59), 2ª el dorsal 906 (41:55).
-- Varones: 1º Santiago Cardona Chate (40:25), 2º Johan Samuel Palacios Canizales (45:10).
+| Archivo de trabajo | Qué es | Estado |
+|---|---|---|
+| `fotos/planilla-prejuvenil.webp` | Planilla de jueces, PREJUVENIL | Transcrita ✅ |
+| `fotos/planilla-open.webp` | Planilla de jueces, OPEN | Transcrita, emparejamiento **confirmado por el club** ✅ |
+| `fotos/podio-open.webp` | Podio Open + dos corredores con medalla + juez y adulto del club | Identificado por maillot ✅ |
+| `fotos/podio-prejuvenil-masculino.webp` | Podio de dos: 1º y 2º; puesto 3 vacío | Prejuvenil varones — **por confirmar** |
+| `fotos/podio-prejuvenil-femenino.webp` | Podio de dos corredoras del club; puesto 3 vacío | Prejuvenil damas ✅ |
+| `fotos/previa-prejuvenil-1859-906-904.webp` | Santiago Cardona (1859), Isabel Quiñones (906) y Mariana Coronado (904) antes de largar | Identificados por dorsal ✅ |
+| `fotos/previa-largada-open-251-1907-1950.webp` | Parrilla del Open: 251, 1907 y 1950 en la línea | Identificados por dorsal ✅ |
+| `fotos/previa-largada-menores-1253-813-1704-426-1257.webp` | Parrilla de una categoría de menores | **Sin planilla todavía** |
+| `fotos/previa-teteros-ambiente.webp` | Niños del club jugando en la sombra, con buzo del club | Ambiente; no compiten en la foto |
+| `fotos/previa-corredora-por-identificar.webp` | Corredora con casco amarillo, maillot negro y culotte Safetti | **Sin identificar** |
 
 ---
 
-## Planilla OPEN — lectura preliminar
+## Resultados consolidados
 
-En el borde superior hay anotaciones **escritas al revés** (la hoja se usó
-girada) que parecen ser el podio de la categoría, y en la esquina superior
-derecha, suelto, "30:19  30:26".
+### PREJUVENIL
 
-Los dorsales manuscritos y los nombres impresos **no coinciden de renglón**: el
-nombre impreso queda medio renglón por debajo del dorsal escrito a mano. La
-tabla de abajo empareja cada dorsal con el nombre que le queda más cerca, que
-es justamente la duda 3.
+Las filas 1 y 2 de la planilla están **tachadas** y rehechas en las filas 3 y 4.
+En la fila corregida el juez escribió "maria cardona" junto al dorsal 904; **el
+club confirma que el 904 es Mariana Coronado**, y así lo respalda el resto del
+sitio: la crónica de Palmira ya publica a Mariana Coronado con el 904 y a Isabel
+Quiñones con el 906, en Prejuvenil A Femenina. La anotación de la planilla es un
+error del juez.
 
-| Dorsal | Nombre en la planilla | Ciudad | Club | V1 | V2 | V3 | V4 / total |
-|---|---|---|---|---|---|---|---|
-| DNP | Anderson Cárdenas Guaca | Yumbo | Trocha y Ruta | DNF | DNF | DNF | DNF |
-| 251 | Bernardino Montenegro Urrea | Yumbo | Independiente | 14:47 | 31:20 | 48:36 | DNF |
-| 1120 | Jorge Lasso | Cali | Escuela Olguita García | 14:29:83 | 30:19 | 47:50 | 1:05:?? |
-| 1950 | Juan Diego García Bohórquez | Yumbo | Trocha y Ruta | 15:12 | 30:26 | 46:20 | 1:03:15 |
-| 1906 | Samuel Rodríguez | Cali | Independiente | 17:14 | 35:53 | 54:53 | 1:13:46 |
-| 1907 | Samuel Ortiz Valencia | Yumbo | Trocha y Ruta | 14:28:91 | 29:23 | 44:55 | 1:00:11 |
-| 1908 | Felipe Maya | Cali | ¿"Invelavia"? | 18:46 | 40:23 | DNF | DNF |
-| 1203 | Germán Recio | Cali | ¿"Bombombún"? | 19:53 | DNF | DNF | DNF |
+**Damas**
 
-Columna "N Pt": aparece 1 a 7, una vez cada una, en el orden 251→3, 1120→1,
-1950→4, 1906→5, 1907→2, 1908→6, 1203→7. Parece el orden de paso en la primera
-vuelta, pero **no cuadra con los tiempos** (14:28:91 del 1907 es más rápido que
-14:29:83 del 1120 y aun así el 1120 lleva el "1 Pt").
+| Puesto | Dorsal | Corredora | Club | Vuelta 1 | Total |
+|---|---|---|---|---|---|
+| 1ª | 904 | Mariana Coronado Delgado | Trocha y Ruta | 18:52 | **37:59** |
+| 2ª | 906 | Isabel Cristhina Quiñones Batero | Trocha y Ruta | 20:04 | **41:55** |
+
+**Varones**
+
+| Puesto | Dorsal | Corredor | Club | Vuelta 1 | Total |
+|---|---|---|---|---|---|
+| 1º | 1859 | Santiago Cardona Chate | Trocha y Ruta | 19:32 | **40:25** |
+| 2º | 1860 | Johan Samuel Palacios Canizales | Trocha y Ruta | 20:30 | **45:10** |
+
+Los cuatro son de Yumbo y del club. Los dos podios tienen el puesto 3 vacío, que
+cuadra con que solo hubo dos corredores por sexo.
+
+### OPEN
+
+Emparejamiento dorsal ↔ nombre **confirmado por el club**. El orden de llegada
+sale de los tiempos finales y lo respalda la foto del podio: el 1º lleva el
+maillot rojo-negro del club (el mismo del 1907 en la parrilla), el 2º el
+rojo-azul con "YUMBO" (el del 1950) y el 3º el uniforme de la Escuela Olguita
+García.
+
+| Puesto | Dorsal | Corredor | Ciudad | Club | V1 | V2 | V3 | Total |
+|---|---|---|---|---|---|---|---|---|
+| 1º | 1907 | Samuel Ortiz Valencia | Yumbo | Trocha y Ruta | 14:28:91 | 29:23 | 44:55 | **1:00:11** |
+| 2º | 1950 | Juan Diego García Bohórquez | Yumbo | Trocha y Ruta | 15:12 | 30:26 | 46:20 | **1:03:15** |
+| 3º | 1120 | Jorge Lasso | Cali | Escuela Olguita García | 14:29:83 | 30:19 | 47:50 | **1:05:??** |
+| 4º | 1906 | Samuel Rodríguez | Cali | Independiente | 17:14 | 35:53 | 54:53 | **1:13:46** |
+| — | 251 | Bernardino Montenegro Urrea | Yumbo | Independiente | 14:47 | 31:20 | 48:36 | DNF |
+| — | 1908 | Felipe Maya | Cali | ¿"Invelavia"? | 18:46 | 40:23 | DNF | DNF |
+| — | 1203 | Germán Recio | Cali | ¿"Bombombún"? | 19:53 | DNF | DNF | DNF |
+| — | DNP | Anderson Cárdenas Guaca | Yumbo | Trocha y Ruta | — | — | — | DNP |
+
+**El titular está aquí:** Samuel Ortiz Valencia corre **Prejuvenil A** en la Copa
+Valle (así lo publica la crónica de Palmira, donde fue segundo de su categoría
+con el dorsal 609). En el chequeo se subió al Open y ganó la general de la
+categoría, por delante de adultos y de corredores de Cali. Juan Diego García
+Bohórquez, también del club, fue segundo.
 
 ---
 
-## Dudas para el club
+## Dorsales vistos sin planilla todavía
 
-1. **Categorías que se corrieron.** El evento en el sitio anuncia Teteros sin
-   pedales, Teteros con pedales, Preinfantiles, Infantiles y Prejuveniles, pero
-   las planillas dicen PREJUVENIL y **OPEN**. ¿Cuál es la lista real de
-   categorías de la jornada? Sin ella la tabla de la noticia queda coja.
-2. **Dorsal 904: ¿María Cardona o Mariana Coronado?** La fila tachada dice
-   "MARIANA CORONADO" y la corregida, "maria cardona", con el mismo dorsal.
-   Son dos personas distintas y una de ellas ya aparece con nombre en el sitio.
-3. **Planilla OPEN: emparejamiento dorsal ↔ nombre.** ¿La tabla de arriba está
-   bien armada? Y en concreto: ¿el 1:00:11 es de Samuel Ortiz Valencia?
-4. **Podio OPEN.** Las anotaciones invertidas del margen parecen ser el podio,
-   pero no las leo con certeza. ¿Me pasas el orden 1-2-3 dictado?
-5. **Qué significa "N Pt"** en las dos planillas: ¿puesto, vueltas completadas,
-   orden de paso?
-6. **Tiempo final del dorsal 1120** (Jorge Lasso): leo "1:05:" y los dos últimos
+De la parrilla de menores: **1253** (maillot Colombina), **813**, **1704**
+(Trocha y Ruta), **426** (Trocha y Ruta) y **1257** (Trocha y Ruta). Faltan las
+planillas de Teteros sin pedales, Teteros con pedales, Preinfantiles e
+Infantiles para saber a qué categoría corresponde esa largada y cómo terminó.
+
+---
+
+## Cruce con la lista de categorías del sitio
+
+El evento publicado anuncia cinco categorías: Teteros sin pedales, Teteros con
+pedales, Preinfantiles, Infantiles y Prejuveniles.
+
+| Categoría anunciada | Planilla recibida | Fotos |
+|---|---|---|
+| Teteros sin pedales | — | ambiente |
+| Teteros con pedales | — | ambiente |
+| Preinfantiles | — | ¿parrilla de menores? |
+| Infantiles | — | ¿parrilla de menores? |
+| Prejuveniles | ✅ PREJUVENIL | podio damas + podio varones + previa |
+| *(no anunciada)* **OPEN** | ✅ OPEN | podio + parrilla |
+
+**Aquí no cuadra la información**: hay una planilla de OPEN, con ocho inscritos,
+adultos y corredores de Cali de otros clubes (Bernardino Montenegro, Jorge
+Lasso, Germán Recio, Felipe Maya). Eso no encaja en ninguna de las cinco
+categorías anunciadas. O el chequeo abrió una categoría Open que no estaba en el
+afiche, o el Open es otra cosa. Ver duda 1.
+
+---
+
+## Dudas abiertas
+
+1. **La categoría Open.** ¿Se abrió sobre la marcha? Si corrió de verdad —y la
+   planilla, el podio y la parrilla dicen que sí—, hay que sumarla a la lista de
+   categorías del evento en el sitio o dejar sus resultados fuera de la noticia.
+   Dime cuál de las dos.
+2. **Planillas que faltan**: Teteros sin pedales, Teteros con pedales,
+   Preinfantiles e Infantiles.
+3. **Tiempo final del dorsal 1120** (Jorge Lasso): leo "1:05:" y los dos últimos
    dígitos no me cuadran (parece "99", que no existe en segundos).
-7. **Foto 2 (`podio-por-identificar-a.webp`)**: ¿de qué categoría es ese podio?
-   Y los puestos 3 vacíos de las fotos 2 y 3, ¿fue porque solo hubo dos
-   corredores o porque el tercero no se subió?
-8. **Nombres publicables.** Isabel Quiñones, Mariana Coronado, Samuel Ortiz y
-   Juan Diego García ya salen con nombre en el sitio. Nuevos en las planillas:
-   **Santiago Cardona Chate, Johan Samuel Palacios Canizales, Anderson Cárdenas
-   Guaca** y (según la duda 2) **María Cardona**. ¿Se publican con nombre?
-   ¿Autorización de imagen firmada para las fotos donde salen?
-9. **La niña pequeña de la foto 2** no está compitiendo. ¿Se publica esa foto o
-   la recortamos / la dejamos fuera?
+4. **Qué significa "N Pt"** en las dos planillas: ¿puesto, vueltas completadas,
+   orden de paso? En Open va 1 a 7 pero no cuadra con los tiempos (14:28:91 del
+   1907 lleva "2 Pt" y 14:29:83 del 1120 lleva "1 Pt").
+5. **Podio de Prejuvenil varones**: ¿la foto `podio-prejuvenil-masculino.webp` es
+   Santiago Cardona (1º) y Johan Samuel Palacios (2º)? Lo deduzco por el maillot
+   y el casco de la foto de la previa, no está confirmado. Y en esa foto sale una
+   niña pequeña que no compite: ¿se publica, se recorta o queda fuera?
+6. **Clubes del Open**: no leo bien dos. ¿"Invelavia" (Felipe Maya) y
+   "Bombombún" (Germán Recio) están bien escritos?
+7. **Corredora sin identificar** (`previa-corredora-por-identificar.webp`):
+   casco amarillo, maillot negro "GET UP AND LIVE", culotte Safetti vinotinto.
+   ¿Quién es y en qué categoría corrió?
+8. **Nombres publicables.** Ya salen con nombre en el sitio: Mariana Coronado,
+   Isabel Quiñones, Samuel Ortiz, Juan Diego García. **Nuevos**: Santiago Cardona
+   Chate, Johan Samuel Palacios Canizales y Anderson Cárdenas Guaca. ¿Se publican
+   con nombre? ¿Hay autorización de imagen firmada para las fotos donde salen?
+9. **Fotos de menores del club** (`previa-teteros-ambiente.webp`,
+   `previa-largada-menores-*.webp`): ¿autorizaciones al día para publicarlas?
 10. **Datos del bloque de transparencia** de la noticia (`.ledger`): inscritos
     totales, recaudo y en qué se va. Sin eso ese bloque no se puede escribir.
+11. **Logística del día**: hora real de inicio y cierre, clima, vueltas y
+    longitud por categoría, voluntarios y roles (solo adultos, con permiso).
 
 ---
 
