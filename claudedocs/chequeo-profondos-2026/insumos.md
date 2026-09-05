@@ -48,6 +48,13 @@ vista) y `circuito-tres-corredores.webp` (plano abierto del trazado).
 `menores-1257-circuito.webp` y `menores-tramo-piedras.webp`. Son las primeras
 fotos en carrera de las categorías de menores; las planillas siguen faltando.
 
+**Quinta y última tanda de carrera**: `menores-813-circuito.webp`,
+`menores-260-paso-de-troncos.webp`, `menores-1257-paso-de-troncos.webp` y
+`german-recio-acompana-menor.webp`.
+
+**Redundancia a resolver en la curaduría**: hay **cuatro** fotos del mismo paso
+de troncos (426, 260, 1257 y la del dorsal "90?"). Para el álbum sobran dos.
+
 **Peso del álbum.** El lightbox del sitio (`ImageLightbox.tsx`) pinta la
 miniatura con el archivo completo (`src={img.src}`, sin `srcset`), así que cada
 foto del álbum se descarga entera al hacer scroll. Con eso, dieciocho fotos a
@@ -168,6 +175,8 @@ afiche, o el Open es otra cosa. Ver duda 1.
    no. Por el uniforme son del club: Mariana Coronado (904) o Isabel Quiñones
    (906). Los pies de foto por ahora no las nombran. (El 904 sí se lee claro en
    `mariana-coronado-circuito.webp`.)
+4d. **Dorsal del corredor de maillot blanco de Colombia** en el paso de troncos:
+   leo **260**, pero podría ser 250. El pie de foto no lo nombra.
 4c. **Dorsal del corredor junto al letrero de guayaba**: la foto venía girada y
    la placa no la leo con certeza; parece **1906** (Samuel Rodríguez, Cali). El
    pie de foto no lo nombra. ¿Lo confirmas?
@@ -205,6 +214,17 @@ chequeo se corrió entre los árboles que el propio club sembró y catalogó, y 
 plata de las inscripciones va a mantener ese mismo terreno. **Confirmar con el
 club** que los letreros del circuito son en efecto los del inventario de Trocha
 Verde antes de escribirlo.
+
+### Dos cosas que da la última tanda
+
+- **Germán Recio (1203) rueda al lado de un corredor pequeño.** En la planilla
+  de Open figura con DNF después de la primera vuelta, y aparece además en la
+  parrilla de menores. Parece que dejó su carrera y se puso a acompañar a los
+  chiquitos, pero eso **no lo digo sin que el club lo confirme**: por ahora el
+  pie de foto solo describe lo que se ve.
+- **Un letrero en el circuito dice "Cree en ti y todo será posible"**, colgado
+  junto al paso de troncos. Va con banderas de varios países como banderines
+  sobre la loma. Sirve para el cold open de la noticia.
 
 ### Detalle del trazado visto en las fotos
 
