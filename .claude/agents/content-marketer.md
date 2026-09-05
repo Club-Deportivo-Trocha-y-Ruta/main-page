@@ -265,6 +265,101 @@ Ya existentes y vigentes: `<figure>` / `figure--portrait` (fotos con caption), `
 (rejilla de podios), `.figure-carousel` (scroll de fotos de acción), y el frontmatter `lineup:`
 que renderiza la parrilla del club como cartas 3D (`RaceLineup`) antes del cuerpo.
 
+### Piezas por crónica (formato v5, septiembre de 2026)
+
+Desde v5 una crónica puede traer una o dos piezas **propias**, dictadas por la forma del
+evento, en lugar del juego común de v4. La regla para inventar una: nace del dato que solo
+ese evento tiene (un horario por mangas, un recaudo), se escribe una vez en `global.css`
+bajo `.prose`, y cumple las tres condiciones de siempre — CSS puro con `reveal` opt-in,
+estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`opacity`
+(más `stroke-dashoffset`, la excepción documentada). Cinco existen hoy:
+
+| Pieza | Para qué | Estreno |
+|---|---|---|
+| `.visit-card` | La "ficha" de una carrera fuera de casa como tiquete con talón de fecha. Reemplaza al stat-strip cuando el dato singular es el contexto y no una cifra. | Alcalá 2026 |
+| `.day-clock` | El programa del día como lista vertical con separación **proporcional al tiempo real** entre salidas y riel que se traza con el scroll. Una vez, antes de la primera manga. | Alcalá 2026 |
+| `.clock-stamp` | La hora grande bajo cada `##` de manga, con barra del día que avanza hasta esa hora. | Alcalá 2026 |
+| `.ledger` | Recibo de un evento pro-fondos: lo que entró (total remarcado) y en qué se va. Se "imprime" línea a línea y remata con un sello. Nunca calcula: el total se escribe a mano y debe cuadrar. | Chequeo 2026 |
+| `.check-sheet` | Planilla de chequeo: una casilla por grupo de categoría que se marca al entrar en pantalla, con campos "Se probó" / "Se vio". Reemplaza a la tabla-diagnóstico. | Chequeo 2026 |
+
+```html
+<!-- Ficha de la visita — el talón es decorativo (la fecha va también en la
+     lista). Máx. 7 ítems; `--wide` ocupa las dos columnas. -->
+<div class="visit-card reveal">
+  <div class="visit-card__stub" aria-hidden="true">
+    <span class="visit-card__stub-day">Dom</span>
+    <span class="visit-card__stub-num">13</span>
+    <span class="visit-card__stub-month">Sep 2026</span>
+  </div>
+  <dl class="visit-card__list">
+    <div class="visit-card__item visit-card__item--wide"><dt>Competencia</dt><dd>Copa Let's Go Interdepartamental XCO</dd></div>
+    <div class="visit-card__item"><dt>Sede</dt><dd>Alcalá, Valle del Cauca</dd></div>
+  </dl>
+</div>
+
+<!-- Reloj del día — --gap = minutos desde la parada anterior (la primera va
+     en 0). Modificadores: --club (el club corrió), --quiet (sin corredores
+     del club), --award (premiación). Hasta 8 paradas. La leyenda va aparte. -->
+<ol class="day-clock reveal">
+  <li class="day-clock__stop day-clock__stop--quiet" style="--gap:0">
+    <span class="day-clock__time">8:00</span>
+    <span class="day-clock__label">Manga 1 · Máster</span>
+    <span class="day-clock__note">sin corredores del club</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--club" style="--gap:80">
+    <span class="day-clock__time">9:20</span>
+    <span class="day-clock__label">Manga 2 · Kanguritos</span>
+    <span class="day-clock__note">Pista especial · Liam y Celeste</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--award" style="--gap:80">
+    <span class="day-clock__time">10:40</span>
+    <span class="day-clock__label">Primera premiación</span>
+  </li>
+</ol>
+<p class="day-clock__legend">
+  <span><span class="day-clock__key"></span> el club estuvo en pista</span>
+  <span><span class="day-clock__key day-clock__key--award"></span> premiación</span>
+  <span><span class="day-clock__key day-clock__key--quiet"></span> manga sin corredores del club</span>
+</p>
+
+<!-- Sello de hora — bajo el ## de cada manga. --t = minutos desde las 8:00
+     (--clock-span, 300 por defecto, es lo que dura el día). -->
+<div class="clock-stamp reveal" style="--t:110">
+  <span class="clock-stamp__time">9:50 <small>a. m.</small></span>
+  <span class="clock-stamp__label">Manga 4 · vuelta de 3,3 km</span>
+  <span class="clock-stamp__day" aria-hidden="true"><span class="clock-stamp__dot"></span></span>
+</div>
+
+<!-- Recibo — máx. 4 líneas de cuenta y 4 destinos. El número entero de
+     inscritos puede llevar el count-up compartido; la cifra en pesos no
+     (el contador no pone el punto de miles). -->
+<div class="ledger reveal">
+  <p class="ledger__head"><span class="ledger__title">Chequeo Pro-Fondos</span><span class="ledger__date">Pista Carlos Castro · 5 de septiembre de 2026</span></p>
+  <dl class="ledger__lines">
+    <div class="ledger__line"><dt>Inscripciones</dt><dd>32 × $20.000</dd></div>
+    <div class="ledger__line ledger__line--total"><dt>Total para la pista</dt><dd>$640.000</dd></div>
+  </dl>
+  <p class="ledger__section">En qué se va</p>
+  <ul class="ledger__uses">
+    <li>Jornada de guadaña y limpieza del circuito</li>
+  </ul>
+  <span class="ledger__stamp" aria-hidden="true">Para la pista</span>
+</div>
+
+<!-- Planilla de chequeo — una fila por grupo, máx. 6. El SVG es decorativo;
+     todo el dato va en el texto. -->
+<ol class="check-sheet reveal">
+  <li class="check-sheet__row">
+    <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
+    <div class="check-sheet__body">
+      <span class="check-sheet__name">Teteros sin pedales</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>La salida en grupo.</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Todos terminaron la vuelta.</span>
+    </div>
+  </li>
+</ol>
+```
+
 ## Regla de dos artículos (eventos de dos días)
 
 Cuando la válida tiene gymkanas el sábado y XCO el domingo (patrón Palmira), se publican

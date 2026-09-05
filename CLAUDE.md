@@ -96,7 +96,7 @@ Inventario de árboles: páginas en `src/pages/trocha-verde/` (índice, `[specie
 
 ### Crónicas y tablero de temporada
 
-Las noticias son capítulos de la temporada (`src/lib/chronicle.ts` cruza evento ↔ crónica ↔ álbum). El markdown de las crónicas usa clases editoriales de `global.css` (`.stat-strip`, `.stat-callout`, `.pull-quote`, `.standings-board`, `.circuit-map`). La general (`SeasonStandings` en `/noticias`) se calcula en `results.ts` desde `src/content/results/*.yml` (una válida + una categoría por archivo). `buildStandings()` suma todo lo que encuentra: en la carpeta solo puede haber **una temporada**.
+Las noticias son capítulos de la temporada (`src/lib/chronicle.ts` cruza evento ↔ crónica ↔ álbum). El markdown de las crónicas usa clases editoriales de `global.css` (`.stat-strip`, `.stat-callout`, `.pull-quote`, `.thread`, `.standings-board`, `.circuit-map`) y, desde v5, piezas propias por crónica (`.visit-card`, `.day-clock`, `.clock-stamp`, `.ledger`, `.check-sheet`; markup en `.claude/agents/content-marketer.md`). Todas son CSS puro con `reveal` opt-in y estado final visible sin JS; el `<noscript>` de `noticias/[...slug].astro` las repara sin JS y hay que ampliarlo con cada pieza nueva. La general (`SeasonStandings` en `/noticias`) se calcula en `results.ts` desde `src/content/results/*.yml` (una válida + una categoría por archivo). `buildStandings()` suma todo lo que encuentra: en la carpeta solo puede haber **una temporada**.
 
 ## Testing
 
