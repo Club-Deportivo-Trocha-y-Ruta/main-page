@@ -131,4 +131,28 @@ describe('SeasonTrack', () => {
     expect(doc.body.textContent).not.toContain('Sigue');
     expect(doc.body.innerHTML).toContain('width:100%');
   });
+
+  describe('centrado inicial del riel', () => {
+    it('marca cada parada con su id, para que el script la encuentre', async () => {
+      const doc = await render({ season });
+      expect([...doc.querySelectorAll('ol > li')].map((li) => li.getAttribute('data-stop-id'))).toEqual([
+        'sevilla',
+        'palmira',
+        'roldanillo',
+        'yumbo',
+      ]);
+    });
+
+    it('apunta el scroll a la próxima parada', async () => {
+      const doc = await render({ season });
+      expect(doc.querySelector('.season-track-scroll')?.getAttribute('data-scroll-to')).toBe(
+        'roldanillo'
+      );
+    });
+
+    it('apunta a la última parada cuando ya se corrió toda la temporada', async () => {
+      const doc = await render({ season: buildSeason(events, new Date('2026-12-01T17:00:00Z')) });
+      expect(doc.querySelector('.season-track-scroll')?.getAttribute('data-scroll-to')).toBe('yumbo');
+    });
+  });
 });
