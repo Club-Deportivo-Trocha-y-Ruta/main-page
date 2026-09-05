@@ -269,6 +269,21 @@ tenían parrilla y ninguna imagen en el cuerpo de la crónica:
 Los tres podios van al pie, en la galería. Ninguno se nombra: no hay planilla
 que diga de qué categoría es cada uno ni quién es cada corredor.
 
+## Séptima tanda: última, cierra el material fotográfico
+
+El club confirma que **ya no llegan más fotos**. Las dos últimas:
+
+- `premiacion-mas-pequenos.webp`: una decena de niños de las categorías más
+  pequeñas con medalla y bolsa de premio junto al podio, con dos adultos del
+  club repartiendo. **Va embebida** al cierre de "Los más pequeños": es la foto
+  que resume el sentido del chequeo para esa edad, medalla para todos los que
+  largaron.
+- `podio-menores-damas-b.webp`: podio de dos corredoras, ambas de la Escuela
+  Olguita García de Cali. Va al pie, en la galería.
+
+**Total del material**: 34 fotos en el álbum, 9 embebidas en el cuerpo de la
+crónica y 24 en la galería del pie. Ninguna supera los 300 KB.
+
 ## Dudas abiertas
 
 0b. **¿El podio de `podio-menores-varones.webp` es el de Infantil A?** El

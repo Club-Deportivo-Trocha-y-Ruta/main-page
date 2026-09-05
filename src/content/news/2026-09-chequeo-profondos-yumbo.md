@@ -47,6 +47,7 @@ galleryImages:
   - 'podio-prejuvenil-masculino.webp'
   - 'podio-menores-varones.webp'
   - 'podio-menores-damas.webp'
+  - 'podio-menores-damas-b.webp'
   - 'podio-menores-mas-pequenos.webp'
 seo:
   metaTitle: 'Chequeo Pro-Fondos: Samuel Ortiz gana la Open en Yumbo'
@@ -222,6 +223,18 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
     <figcaption>El 1706, midiendo el terreno a su ritmo.</figcaption>
   </figure>
 </div>
+
+<figure>
+  <img
+    src="/images/news/chequeo-profondos-2026/premiacion-mas-pequenos.webp"
+    alt="Una decena de niños de las categorías más pequeñas posan con sus medallas y sus bolsas de premio junto al podio, acompañados por dos adultos del Club Trocha y Ruta"
+    width="1280"
+    height="960"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>La premiación de los más pequeños: medalla para todos los que largaron.</figcaption>
+</figure>
 
 ## Lo que se chequeó
 
