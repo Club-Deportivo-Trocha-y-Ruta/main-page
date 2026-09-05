@@ -2,6 +2,7 @@
 # ÁLBUM EN PRODUCCIÓN — Chequeo Pro-Fondos Trocha y Ruta 2026.
 # Se publica (draft: false) cuando estén las fotos de todas las categorías:
 # hoy faltan Teteros (sin y con pedales), Preinfantiles e Infantiles.
+# Orden del álbum: previa, largadas, carrera y podios.
 # Las fotos cargadas tienen autorización de imagen confirmada por el club.
 title: "Chequeo Pro-Fondos 2026 — Pista Carlos Castro"
 date: 2026-09-05
@@ -24,6 +25,21 @@ images:
   - src: "/images/news/chequeo-profondos-2026/teteros-ambiente.webp"
     alt: "Niños del Club Trocha y Ruta, con el buzo del club, juegan sentados a la sombra durante el Chequeo Pro-Fondos"
     caption: "La jornada, entre carrera y carrera."
+  - src: "/images/news/chequeo-profondos-2026/bernardino-montenegro-salto-teatrino.webp"
+    alt: "Bernardino Montenegro (251) salta con su bicicleta desde la plataforma del teatrino de la Pista Carlos Castro, con las rampas de madera abajo"
+    caption: "Bernardino Montenegro (251), saliendo de la plataforma del teatrino."
+  - src: "/images/news/chequeo-profondos-2026/open-bajada-al-teatrino.webp"
+    alt: "Un corredor de la categoría Open baja por el sendero de tierra hacia el teatrino, con la cinta amarilla de delimitación a un lado"
+    caption: "Camino de vuelta al teatrino, entre cintas."
+  - src: "/images/news/chequeo-profondos-2026/juan-felipe-circuito.webp"
+    alt: "Juan Felipe (1908), con casco amarillo, rueda por un tramo de tierra del circuito de la Pista Carlos Castro"
+    caption: "Juan Felipe (1908), en el circuito."
+  - src: "/images/news/chequeo-profondos-2026/juan-diego-garcia-ascenso.webp"
+    alt: "Juan Diego García (1950) sube por un sendero de tierra del circuito de la Pista Carlos Castro, con la loma seca de fondo"
+    caption: "Juan Diego García (1950), en el ascenso del circuito."
+  - src: "/images/news/chequeo-profondos-2026/prejuvenil-paso-de-troncos.webp"
+    alt: "Una corredora del Club Trocha y Ruta cruza el paso de troncos del circuito, con otro corredor al fondo sobre la loma"
+    caption: "El paso de troncos, uno de los obstáculos del trazado."
   - src: "/images/news/chequeo-profondos-2026/podio-prejuvenil-femenino.webp"
     alt: "Mariana Coronado e Isabel Quiñones en el podio de Prejuvenil femenina del Chequeo Pro-Fondos, en la Pista Carlos Castro de Yumbo"
     caption: "Mariana Coronado, primera, e Isabel Quiñones, segunda, en Prejuvenil femenina."

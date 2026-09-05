@@ -32,7 +32,12 @@ Encabezado impreso de las planillas:
 | `fotos/previa-largada-open-251-1907-1950.webp` | Parrilla del Open: 251, 1907 y 1950 en la línea | Identificados por dorsal ✅ |
 | `fotos/previa-largada-menores-1253-813-1704-426-1257.webp` | Parrilla de una categoría de menores | **Sin planilla todavía** |
 
-Las ocho fotos con autorización ya están en `public/images/news/chequeo-profondos-2026/`
+**Fotos de carrera** (segunda tanda, ya en `public/`): `bernardino-montenegro-salto-teatrino.webp`
+(dorsal 251 saltando desde la plataforma del teatrino), `open-bajada-al-teatrino.webp`,
+`juan-felipe-circuito.webp` (dorsal 1908), `juan-diego-garcia-ascenso.webp` (dorsal 1950)
+y `prejuvenil-paso-de-troncos.webp` (dorsal 90?, ver dudas).
+
+Las fotos con autorización ya están en `public/images/news/chequeo-profondos-2026/`
 y cargadas en el álbum (`src/content/gallery/chequeo-profondos-2026.md`, todavía en
 `draft: true`). Las dos planillas **no se publican**: son documento interno.
 | `fotos/previa-teteros-ambiente.webp` | Niños del club jugando en la sombra, con buzo del club | Ambiente; no compiten en la foto |
@@ -134,24 +139,43 @@ afiche, o el Open es otra cosa. Ver duda 1.
    Dime cuál de las dos.
 2. **Planillas que faltan**: Teteros sin pedales, Teteros con pedales,
    Preinfantiles e Infantiles.
-3. **Apellido de Juan Felipe** y en qué categoría corrió. El sitio publica nombre
-   y apellido; hoy solo tengo el nombre. Y una comprobación: ¿es el mismo Felipe
-   Maya que figura con el dorsal 1908 en la planilla de Open?
-4. **Qué significa "N Pt"** en las dos planillas: ¿puesto, vueltas completadas,
+3. **Juan Felipe = Felipe Maya (1908), casi seguro.** En la foto de carrera el
+   dorsal 1908 lleva el mismo casco amarillo, el mismo maillot negro y el mismo
+   culotte vinotinto Safetti que la foto de la previa. Si es él, corrió en Open
+   y fue DNF en la tercera vuelta. Confírmalo y dime el apellido completo, que el
+   sitio publica nombre y apellido.
+4. **¿Quién es el dorsal "90?" del paso de troncos?** La placa se lee "90" y el
+   tercer dígito no. Por el uniforme es del club, así que es Mariana Coronado
+   (904) o Isabel Quiñones (906). ¿Cuál de las dos? El pie de foto por ahora no
+   la nombra.
+5. **¿Corrieron juntas la Prejuvenil y la Open?** En esa misma foto hay un
+   corredor al fondo con uniforme rojo y azul, que parece el 1950. Si las
+   categorías largaron mezcladas, es un dato que cambia cómo se cuenta la
+   carrera.
+6. **Qué significa "N Pt"** en las dos planillas: ¿puesto, vueltas completadas,
    orden de paso? En Open va 1 a 7 pero no cuadra con los tiempos (14:28:91 del
    1907 lleva "2 Pt" y 14:29:83 del 1120 lleva "1 Pt").
-5. **Clubes del Open**: no leo bien dos. ¿"Invelavia" (Felipe Maya) y
+7. **Clubes del Open**: no leo bien dos. ¿"Invelavia" (Felipe Maya) y
    "Bombombún" (Germán Recio) están bien escritos?
-6. **Nombres publicables.** Ya salen con nombre en el sitio: Mariana Coronado,
+8. **Nombres publicables.** Ya salen con nombre en el sitio: Mariana Coronado,
    Isabel Quiñones, Samuel Ortiz, Juan Diego García. **Nuevos**: Santiago Cardona
    Chate, Johan Samuel Palacios Canizales y Anderson Cárdenas Guaca. La
    autorización de imagen está confirmada; falta el visto bueno para publicar
    estos tres nombres en la tabla de resultados.
-7. **PENDIENTE — recaudo y destino.** Inscritos totales, plata recogida y en qué
+9. **PENDIENTE — recaudo y destino.** Inscritos totales, plata recogida y en qué
    se va. El club lo confirma después. Mientras tanto el bloque `.ledger` de la
    noticia no se puede escribir: o llega el dato, o ese bloque se borra.
-8. **Logística del día**: hora real de inicio y cierre, clima, vueltas y
+10. **Logística del día**: hora real de inicio y cierre, clima, vueltas y
    longitud por categoría, voluntarios y roles (solo adultos, con permiso).
+
+### Detalle del trazado visto en las fotos
+
+Sirve para escribir "lo que se chequeó" sin inventar: rampas de madera y una
+plataforma de concreto en el teatrino (el 251 la salta), un paso de troncos
+atravesados en el descenso, señal amarilla de **"OPCIONAL"** con flecha —o sea,
+línea B para quien no quiera el obstáculo—, delimitación con cinta amarilla de
+"peligro no pase" y estacas verdes. Terreno seco y polvoriento, monte bajo,
+cielo despejado con nubes altas.
 
 ### Resueltas
 
