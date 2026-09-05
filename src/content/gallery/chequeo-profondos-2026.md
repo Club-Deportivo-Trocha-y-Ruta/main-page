@@ -1,9 +1,8 @@
 ---
-# ÁLBUM EN PRODUCCIÓN — Chequeo Pro-Fondos Trocha y Ruta 2026.
-# Se publica (draft: false) cuando estén las fotos de todas las categorías:
-# hoy faltan Teteros (sin y con pedales), Preinfantiles e Infantiles.
-# Orden del álbum: previa, largadas, carrera y podios.
-# Las fotos cargadas tienen autorización de imagen confirmada por el club.
+# Álbum del Chequeo Pro-Fondos 2026. Todas las fotos tienen autorización de
+# imagen confirmada por el club. Orden: previa, largadas, carrera y podios.
+# Se publica antes que la noticia porque el material fotográfico ya está
+# completo; a la crónica todavía le faltan resultados de varias categorías.
 title: "Chequeo Pro-Fondos 2026 — Pista Carlos Castro"
 date: 2026-09-05
 cover: "/images/news/chequeo-profondos-2026/prejuvenil-previa.webp"
@@ -95,5 +94,5 @@ relatedEvent: "2026-09-chequeo-profondos-yumbo"
 category: "competencia"
 tags: ["chequeo", "pro-fondos", "pista-carlos-castro", "yumbo", "xco"]
 featured: false
-draft: true
+draft: false
 ---
