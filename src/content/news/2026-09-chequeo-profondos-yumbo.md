@@ -42,8 +42,16 @@ seo:
      puntaje ni general; el interés está en el proceso (qué se chequeó) y
      en la transparencia (cuánto entró, en qué se va). Por eso NO se usan
      .stat-strip, .thread ni .standings-board — son la firma de Roldanillo
-     y Alcalá y aquí serían atrezo. Sí van .stat-callout (máx. 2),
-     .pull-quote (máx. 2, solo con cita real), .figure-grid y <figure>.
+     y Alcalá y aquí serían atrezo. Sí van .pull-quote (máx. 2, solo con
+     cita real), .figure-grid y <figure>, más DOS PIEZAS PROPIAS (formato
+     v5, estreno en esta noticia; markup y reglas en
+     .claude/agents/content-marketer.md):
+       .ledger       el recibo de la pista: lo que entró y en qué se va,
+                     como tirilla (se "imprime" línea a línea al entrar en
+                     pantalla y remata con un sello). Solo cifras reales.
+       .check-sheet  la planilla de chequeo: una casilla por grupo de
+                     categoría que se va marcando al hacer scroll, con los
+                     campos "Se probó" / "Se vio". Reemplaza a la tabla.
 
      CHECKLIST DEL SÁBADO — todo lo que hay que traer para cerrar la noticia
      [ ] Inscritos por categoría y total. Sale del formulario y de la mesa
@@ -111,22 +119,35 @@ El del sábado tuvo, además, un destino: lo recaudado por las inscripciones va 
 
 <!-- Bloque de TRANSPARENCIA — inédito en el sitio. Cero cifras inventadas.
      Inscritos y recaudo salen del formulario y la mesa; el destino lo dicta
-     el club. Una tabla de dos columnas (Lo que entró / En qué se va) es la
-     forma más directa: dice cuánto entró, dice adónde va y no simula
-     precisión que no existe. Un .stat-callout resalta el recaudo total.
-     Si el club no puede detallar el destino, dejar solo "mantenimiento de
-     pista" en genérico — sin desglose inventado. -->
+     el club. Va como recibo (.ledger): arriba lo que entró, con el total
+     remarcado; abajo en qué se va. El componente no calcula nada: el total
+     se escribe a mano y debe cuadrar (inscritos × 20.000 + aporte).
+     · Máximo 4 líneas de cuenta y 4 destinos (hasta ahí llega el
+       escalonado de la "impresión").
+     · Si el club no puede detallar el destino, dejar UN solo ítem:
+       "Mantenimiento de la pista" — sin desglose inventado.
+     · Si no hubo aporte adicional, borrar esa línea (no poner $0).
+     · El número de inscritos puede animarse con el count-up compartido,
+       solo si es un entero puro; reemplazar el texto del <dd> por:
+         <span class="count-up" style="--count-target:32;--count-digits:2"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">32</span></span> × $20.000
+       (--count-digits = cantidad de dígitos). La cifra en pesos NO se
+       anima: el contador no sabe poner el punto de miles. -->
 
-<div class="stat-callout reveal">
-  <span class="stat-callout__value">$[PENDIENTE]</span>
-  <span class="stat-callout__text">recaudado con las inscripciones del chequeo, íntegros al mantenimiento de la Pista Carlos Castro. [PENDIENTE — inscritos totales × $20.000]</span>
+<div class="ledger reveal">
+  <p class="ledger__head"><span class="ledger__title">Chequeo Pro-Fondos</span><span class="ledger__date">Pista Carlos Castro · sábado 5 de septiembre de 2026</span></p>
+  <dl class="ledger__lines">
+    <div class="ledger__line"><dt>Inscripciones</dt><dd>[PENDIENTE] × $20.000</dd></div>
+    <div class="ledger__line"><dt>Aporte adicional</dt><dd>$[PENDIENTE]</dd></div>
+    <div class="ledger__line ledger__line--total"><dt>Total para la pista</dt><dd>$[PENDIENTE]</dd></div>
+  </dl>
+  <p class="ledger__section">En qué se va</p>
+  <ul class="ledger__uses">
+    <li>[PENDIENTE — destino 1, dictado por el club]</li>
+    <li>[PENDIENTE — destino 2]</li>
+    <li>[PENDIENTE — destino 3]</li>
+  </ul>
+  <span class="ledger__stamp" aria-hidden="true">Para la pista</span>
 </div>
-
-| Lo que entró | En qué se va |
-|---|---|
-| [PENDIENTE — inscritos totales] inscripciones × $20.000 | [PENDIENTE — destino 1 dictado por el club] |
-| [PENDIENTE — aporte adicional si lo hubo] | [PENDIENTE — destino 2] |
-|  | [PENDIENTE — destino 3] |
 
 ## Quién hizo qué
 
@@ -180,17 +201,55 @@ carrera; cabe hablar de trazadas, no solo de resistencia.]
 domingo siguiente (CONFIRMAR quiénes van), el chequeo fue su último
 ensayo en pista conocida.]
 
-<!-- Tabla-diagnóstico de tres columnas — resumen visual del bloque. Se
-     llena al cierre con lo que salga del sábado. No repetir literalmente
-     lo dicho arriba; esta tabla es para consultar de un vistazo. -->
+<!-- Planilla de chequeo (.check-sheet) — resumen visual del bloque: una
+     casilla por grupo que se va marcando al hacer scroll. Se llena al
+     cierre con lo que salga del sábado, en UNA frase corta por campo (el
+     detalle ya quedó arriba; esto es para consultar de un vistazo). Si un
+     grupo no corrió, se borra su fila: la casilla marcada significa
+     "chequeado", no se deja vacía. Máximo 6 filas. -->
 
-| Categoría | Qué se probó | Qué se vio |
-|---|---|---|
-| Teteros sin pedales | [PENDIENTE] | [PENDIENTE] |
-| Teteros con pedales | [PENDIENTE] | [PENDIENTE] |
-| Preinfantiles | [PENDIENTE] | [PENDIENTE] |
-| Infantiles | [PENDIENTE] | [PENDIENTE] |
-| Prejuveniles | [PENDIENTE] | [PENDIENTE] |
+<ol class="check-sheet reveal">
+  <li class="check-sheet__row">
+    <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
+    <div class="check-sheet__body">
+      <span class="check-sheet__name">Teteros sin pedales</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>[PENDIENTE]</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>[PENDIENTE]</span>
+    </div>
+  </li>
+  <li class="check-sheet__row">
+    <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
+    <div class="check-sheet__body">
+      <span class="check-sheet__name">Teteros con pedales</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>[PENDIENTE]</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>[PENDIENTE]</span>
+    </div>
+  </li>
+  <li class="check-sheet__row">
+    <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
+    <div class="check-sheet__body">
+      <span class="check-sheet__name">Preinfantiles</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>[PENDIENTE]</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>[PENDIENTE]</span>
+    </div>
+  </li>
+  <li class="check-sheet__row">
+    <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
+    <div class="check-sheet__body">
+      <span class="check-sheet__name">Infantiles</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>[PENDIENTE]</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>[PENDIENTE]</span>
+    </div>
+  </li>
+  <li class="check-sheet__row">
+    <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
+    <div class="check-sheet__body">
+      <span class="check-sheet__name">Prejuveniles</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>[PENDIENTE]</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>[PENDIENTE]</span>
+    </div>
+  </li>
+</ol>
 
 <!-- FOTOS POR GRUPO — .figure-grid cuando existan. Convención de nombres:
      categoria-contexto.webp en /images/news/chequeo-profondos-2026/.

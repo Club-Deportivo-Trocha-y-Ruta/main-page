@@ -57,8 +57,21 @@ seo:
        · Las dos premiaciones (10:40 a. m. y 1:00 p. m.) son secciones
          cortas del mismo reloj: quién del club subió a recibir.
        · Sin .stat-strip: el "parte" de arriba es una FICHA de la visita
-         (tabla de dos columnas), porque el dato singular de este domingo no
-         es una cifra sino el contexto (dónde, contra quién, a qué fuimos).
+         (.visit-card, un tiquete con talón de fecha), porque el dato
+         singular de este domingo no es una cifra sino el contexto (dónde,
+         contra quién, a qué fuimos).
+       · PIEZAS PROPIAS (formato v5, estreno en esta crónica; markup y
+         reglas en .claude/agents/content-marketer.md):
+           .day-clock    el programa del día como lista vertical con la
+                         separación proporcional al tiempo real entre
+                         salidas (--gap en minutos); el riel se traza con
+                         el scroll. Va UNA vez, antes de la primera manga.
+                         Ajustar los modificadores --club / --quiet /
+                         --award con lo que pasó de verdad.
+           .clock-stamp  la hora grande bajo cada ## de manga, con la barra
+                         del día que avanza hasta esa hora (--t = minutos
+                         desde las 8:00). Si la manga salió tarde, cambiar
+                         la hora escrita Y el --t.
        · Máximo 2 .stat-callout en toda la crónica, dentro de las mangas.
        · El bloque de cierre no es "la general" sino "La medida fuera de
          casa": qué dice el domingo del club a cinco semanas de la válida
@@ -180,19 +193,29 @@ seo:
 ## Ficha de la visita
 
 <!-- Sustituye al .stat-strip de las crónicas de la Copa Valle. Aquí el dato
-     singular no es una cifra sino el contexto. Los valores fijos salen del
-     afiche oficial; los [PENDIENTE] se llenan el domingo. Actualizar la
-     sede cuando se sepa el nombre de la pista. -->
+     singular no es una cifra sino el contexto, así que va como tiquete de
+     viaje (.visit-card): el talón lleva la fecha (decorativo, se repite en
+     la lista) y la lista de definiciones el resto. Los valores fijos salen
+     del afiche oficial; los [PENDIENTE] se llenan el domingo. Actualizar la
+     sede cuando se sepa el nombre de la pista. Máximo 7 ítems (el
+     escalonado de entrada cubre hasta 7). -->
 
-| | |
-|---|---|
-| **Competencia** | Copa Let's Go Interdepartamental XCO (Inter-American XCO Cup) |
-| **Sede** | [PENDIENTE — nombre de la pista], Alcalá, Valle del Cauca |
-| **Día** | Domingo 13 de septiembre de 2026 (el club asistió solo este día) |
-| **Circuito** | 3,3 km por vuelta; pista especial para Kanguritos, Pre Infantil e Infantil A |
-| **Mangas** | Seis salidas, de 8:00 a. m. a 12:00 m.; premiaciones a las 10:40 a. m. y 1:00 p. m. |
-| **Corredores del club** | [PENDIENTE — número] en [PENDIENTE — número] mangas |
-| **Qué se jugaba** | Nada de la general de la Copa Valle: se corrió para medirse fuera de casa |
+<div class="visit-card reveal">
+  <div class="visit-card__stub" aria-hidden="true">
+    <span class="visit-card__stub-day">Dom</span>
+    <span class="visit-card__stub-num">13</span>
+    <span class="visit-card__stub-month">Sep 2026</span>
+  </div>
+  <dl class="visit-card__list">
+    <div class="visit-card__item visit-card__item--wide"><dt>Competencia</dt><dd>Copa Let's Go Interdepartamental XCO (Inter-American XCO Cup)</dd></div>
+    <div class="visit-card__item"><dt>Sede</dt><dd>[PENDIENTE — nombre de la pista], Alcalá, Valle del Cauca</dd></div>
+    <div class="visit-card__item"><dt>Día</dt><dd>Domingo 13 de septiembre de 2026, solo el XCO</dd></div>
+    <div class="visit-card__item"><dt>Circuito</dt><dd>3,3 km por vuelta; pista especial para Kanguritos, Pre Infantil e Infantil A</dd></div>
+    <div class="visit-card__item"><dt>Mangas</dt><dd>Seis salidas de 8:00 a. m. a 12:00 m.; premiaciones a las 10:40 a. m. y 1:00 p. m.</dd></div>
+    <div class="visit-card__item"><dt>Corredores del club</dt><dd>[PENDIENTE — número] en [PENDIENTE — número] mangas</dd></div>
+    <div class="visit-card__item"><dt>Qué se jugaba</dt><dd>Nada de la general de la Copa Valle: se corrió para medirse fuera de casa</dd></div>
+  </dl>
+</div>
 
 ## A qué se vino
 
@@ -203,6 +226,70 @@ seo:
      la Copa Let's Go, reescribir la última frase. -->
 
 La Copa Let's Go es otra competencia, con otro organizador y otro calendario: sus puntos no entran en la general de la **Copa Valle Paraíso de Todos GW Shimano 2026**, la que el club viene peleando desde enero. El programa oficial ocupaba cuatro días —entrenamientos oficiales de jueves a sábado, congreso técnico el viernes, relevos XCR el sábado—, y Trocha y Ruta decidió ir a una sola cosa: el **XCO del domingo**. Ocho días después del [chequeo en casa](/noticias/2026-09-chequeo-profondos-yumbo), y a cinco semanas de recibir la Copa Valle en la Pista Carlos Castro, el domingo en Alcalá servía para lo que no se puede ensayar en el patio propio: correr contra corredores de otros departamentos, en una pista que nadie del club conocía, sin el colchón de los puntos. [PENDIENTE — número] corredores del club salieron en [PENDIENTE — número] de las seis mangas.
+
+## El reloj del domingo
+
+<!-- El programa completo del afiche, de un vistazo y ANTES de las mangas:
+     el lector ve la forma del día (tres salidas en media hora, luego el
+     mediodía largo) y sabe qué secciones vienen. La separación entre
+     paradas es proporcional a los minutos reales (--gap = minutos desde la
+     parada anterior). Modificadores, a ajustar el domingo:
+       --club   el club tuvo corredores en pista (punto lleno)
+       --quiet  manga sin corredores del club (punto hueco, texto atenuado)
+       --award  premiación (rombo lima)
+     Las horas son las del afiche; si una manga salió tarde, corregir aquí
+     la hora, el --gap de ESA parada y el de la siguiente. Los [PENDIENTE]
+     de las notas se llenan con los corredores del club por manga. -->
+
+<ol class="day-clock reveal">
+  <li class="day-clock__stop day-clock__stop--quiet" style="--gap:0">
+    <span class="day-clock__time">8:00</span>
+    <span class="day-clock__label">Manga 1 · Máster A, B, C y D</span>
+    <span class="day-clock__note">3,3 km por vuelta · sin corredores del club</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--club" style="--gap:80">
+    <span class="day-clock__time">9:20</span>
+    <span class="day-clock__label">Manga 2 · Kanguritos y Pre Infantil Mixto A</span>
+    <span class="day-clock__note">Pista especial · [PENDIENTE — corredores del club]</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--club" style="--gap:15">
+    <span class="day-clock__time">9:35</span>
+    <span class="day-clock__label">Manga 3 · Pre Infantil Mixto B, Infantil Femenino A e Infantil Masculino A</span>
+    <span class="day-clock__note">Pista especial · [PENDIENTE — corredores del club]</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--club" style="--gap:15">
+    <span class="day-clock__time">9:50</span>
+    <span class="day-clock__label">Manga 4 · Infantil B y Pre Juvenil A-B, femenino y masculino</span>
+    <span class="day-clock__note">3,3 km por vuelta · [PENDIENTE — corredores del club]</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--award" style="--gap:50">
+    <span class="day-clock__time">10:40</span>
+    <span class="day-clock__label">Primera premiación</span>
+    <span class="day-clock__note">[PENDIENTE — quién del club subió]</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--quiet" style="--gap:5">
+    <span class="day-clock__time">10:45</span>
+    <span class="day-clock__label">Manga 5 · Élite Femenino, Juvenil Femenino, Damas Máster y Novatos</span>
+    <span class="day-clock__note">3,3 km por vuelta · sin corredores del club (CONFIRMAR)</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--club" style="--gap:75">
+    <span class="day-clock__time">12:00</span>
+    <span class="day-clock__label">Manga 6 · Juvenil Masculino y Élite Masculino</span>
+    <span class="day-clock__note">3,3 km por vuelta · la salida más larga del día · [PENDIENTE — corredores del club]</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--award" style="--gap:60">
+    <span class="day-clock__time">1:00</span>
+    <span class="day-clock__label">Premiación final</span>
+    <span class="day-clock__note">[PENDIENTE — quién del club subió]</span>
+  </li>
+</ol>
+
+<p class="day-clock__legend">
+  <span><span class="day-clock__key"></span> el club estuvo en pista</span>
+  <span><span class="day-clock__key day-clock__key--award"></span> premiación</span>
+  <span><span class="day-clock__key day-clock__key--quiet"></span> manga sin corredores del club</span>
+  <span>Horas del afiche oficial, de 8:00 a. m. a 1:00 p. m.</span>
+</p>
 
 <!-- ── BLOQUE 3 · CONTEXTO TÉCNICO DE PISTA (60-120 palabras) ──
      Datos fijos del afiche: vuelta de 3,3 km para las categorías mayores;
@@ -261,6 +348,12 @@ La Copa Let's Go es otra competencia, con otro organizador y otro calendario: su
 
 ## 9:20 a. m. — Manga 2: [PENDIENTE — gancho: los más pequeños en la pista especial]
 
+<div class="clock-stamp reveal" style="--t:80">
+  <span class="clock-stamp__time">9:20 <small>a. m.</small></span>
+  <span class="clock-stamp__label">Manga 2 · pista especial</span>
+  <span class="clock-stamp__day" aria-hidden="true"><span class="clock-stamp__dot"></span></span>
+</div>
+
 <!-- Contexto fijo del afiche: salían juntos Kanguritos y Pre Infantil
      Mixto A, en la pista especial. PENDIENTE: cuántos en la parrilla, en
      qué consistía la pista especial, si la salida fue a las 9:20. -->
@@ -283,6 +376,12 @@ La Copa Let's Go es otra competencia, con otro organizador y otro calendario: su
 
 ## 9:35 a. m. — Manga 3: [PENDIENTE — gancho]
 
+<div class="clock-stamp reveal" style="--t:95">
+  <span class="clock-stamp__time">9:35 <small>a. m.</small></span>
+  <span class="clock-stamp__label">Manga 3 · pista especial</span>
+  <span class="clock-stamp__day" aria-hidden="true"><span class="clock-stamp__dot"></span></span>
+</div>
+
 <!-- Contexto fijo del afiche: Pre Infantil Mixto B, Infantil Femenino A e
      Infantil Masculino A, también en la pista especial. Quince minutos
      después de la manga 2: si el club tuvo corredores en las dos, contar el
@@ -298,6 +397,12 @@ La Copa Let's Go es otra competencia, con otro organizador y otro calendario: su
 </div>
 
 ## 9:50 a. m. — Manga 4: [PENDIENTE — gancho]
+
+<div class="clock-stamp reveal" style="--t:110">
+  <span class="clock-stamp__time">9:50 <small>a. m.</small></span>
+  <span class="clock-stamp__label">Manga 4 · vuelta de 3,3 km</span>
+  <span class="clock-stamp__day" aria-hidden="true"><span class="clock-stamp__dot"></span></span>
+</div>
 
 <!-- Contexto fijo del afiche: Infantil Femenino B, Infantil Masculino B,
      Pre Juvenil Femenino A-B y Pre Juvenil Masculino A-B, ya sobre la
@@ -323,6 +428,12 @@ La Copa Let's Go es otra competencia, con otro organizador y otro calendario: su
 
 ## 10:40 a. m. — Primera premiación
 
+<div class="clock-stamp reveal" style="--t:160">
+  <span class="clock-stamp__time">10:40 <small>a. m.</small></span>
+  <span class="clock-stamp__label">Primera premiación</span>
+  <span class="clock-stamp__day" aria-hidden="true"><span class="clock-stamp__dot"></span></span>
+</div>
+
 <!-- Sección corta. Quién del club subió a recibir y por qué categoría.
      CONFIRMAR hasta qué puesto premió el organizador antes de escribir
      "podio". Si nadie del club fue premiado aquí, borrar la sección y
@@ -331,6 +442,12 @@ La Copa Let's Go es otra competencia, con otro organizador y otro calendario: su
 [PENDIENTE]
 
 ## 12:00 m. — Manga 6: [PENDIENTE — gancho: la más larga del día]
+
+<div class="clock-stamp reveal" style="--t:240">
+  <span class="clock-stamp__time">12:00 <small>m.</small></span>
+  <span class="clock-stamp__label">Manga 6 · vuelta de 3,3 km</span>
+  <span class="clock-stamp__day" aria-hidden="true"><span class="clock-stamp__dot"></span></span>
+</div>
 
 <!-- Contexto fijo del afiche: Juvenil Masculino y Élite Masculino, la
      última salida, a mediodía. Si corre Juan Diego García: la carrera más
@@ -344,6 +461,12 @@ La Copa Let's Go es otra competencia, con otro organizador y otro calendario: su
 [PENDIENTE — corredores del club en esta manga]
 
 ## 1:00 p. m. — Premiación final
+
+<div class="clock-stamp reveal" style="--t:300">
+  <span class="clock-stamp__time">1:00 <small>p. m.</small></span>
+  <span class="clock-stamp__label">Premiación final · cierra el día</span>
+  <span class="clock-stamp__day" aria-hidden="true"><span class="clock-stamp__dot"></span></span>
+</div>
 
 <!-- Sección corta, misma regla que la primera premiación. Cierra el reloj:
      es la última hora de la jornada y da pie al bloque de cierre. -->

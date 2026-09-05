@@ -576,6 +576,27 @@ class="sr-only">` con la cifra final) dentro de `.stat-strip__value`; como el
   guarda) y que el HTML de `/inscripciones` renderiza el checklist con `--stagger`
   correcto por ítem.
 
+### Notas — piezas por crónica, formato v5 (2026-09-05)
+
+- **Cinco componentes nuevos bajo `.prose` en `global.css`**, pensados uno a uno para la
+  forma del evento que cubren y no como juego común: `.visit-card` (tiquete con talón),
+  `.day-clock` (programa del día con separación proporcional al tiempo real y riel
+  scroll-driven), `.clock-stamp` (hora + barra del día), `.ledger` (recibo que se
+  «imprime») y `.check-sheet` (planilla cuyas casillas se marcan). Estrenan en los
+  borradores de Alcalá y del Chequeo Pro-Fondos; markup en
+  `.claude/agents/content-marketer.md`.
+- **Mismas tres reglas de v3/v4**: `reveal` opt-in desde el markdown, todo el «antes» dentro
+  de `no-preference` y de `.reveal:not(.revealed)`, escalonado por `:nth-child` a 80 ms.
+  El riel de `.day-clock` reutiliza `sda-grow-line` con los longhands de
+  `animation-timeline`; el check de `.check-sheet` reutiliza `if-check-draw` e
+  `if-step-pop` (excepción `stroke-dashoffset` ya listada arriba). Los rombos de
+  premiación y el sello del recibo llevan su inclinación en `rotate` (propiedad aparte),
+  por la misma razón que `.club-seal`.
+- **La separación proporcional de `.day-clock` es un margen estático** (`--gap` × 0,9 px por
+  minuto, tope 5 rem), no una animación: no hay CLS. El `<noscript>` de
+  `noticias/[...slug].astro` pasa a cubrir genéricamente `.prose .reveal` más los ítems
+  internos de cada pieza.
+
 ## Gate (tras cada sprint)
 
 `npm run test:run` + `npm run build` en verde; barrido con `prefers-reduced-motion: reduce`; Lighthouse ≥ 95 tras la tarea 2.
