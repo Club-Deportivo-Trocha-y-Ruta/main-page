@@ -43,6 +43,11 @@ y `prejuvenil-paso-de-troncos.webp` (dorsal 90?, ver dudas).
 "90?"), `corredor-club-tramo-piedras.webp` (uniforme del club, sin dorsal a la
 vista) y `circuito-tres-corredores.webp` (plano abierto del trazado).
 
+**Cuarta tanda de carrera**: `open-circuito-arbol-guayaba.webp`,
+`menores-426-curva.webp`, `menores-426-paso-de-troncos.webp`,
+`menores-1257-circuito.webp` y `menores-tramo-piedras.webp`. Son las primeras
+fotos en carrera de las categorías de menores; las planillas siguen faltando.
+
 **Peso del álbum.** El lightbox del sitio (`ImageLightbox.tsx`) pinta la
 miniatura con el archivo completo (`src={img.src}`, sin `srcset`), así que cada
 foto del álbum se descarga entera al hacer scroll. Con eso, dieciocho fotos a
@@ -163,6 +168,9 @@ afiche, o el Open es otra cosa. Ver duda 1.
    no. Por el uniforme son del club: Mariana Coronado (904) o Isabel Quiñones
    (906). Los pies de foto por ahora no las nombran. (El 904 sí se lee claro en
    `mariana-coronado-circuito.webp`.)
+4c. **Dorsal del corredor junto al letrero de guayaba**: la foto venía girada y
+   la placa no la leo con certeza; parece **1906** (Samuel Rodríguez, Cali). El
+   pie de foto no lo nombra. ¿Lo confirmas?
 4b. **Corredor sin identificar**: `corredor-club-tramo-piedras.webp`, uniforme
    del club, culotte con "YUMBO", casco verde y bicicleta Specialized verde
    lima. No se le ve el dorsal. ¿Quién es?
@@ -185,6 +193,18 @@ afiche, o el Open es otra cosa. Ver duda 1.
    noticia no se puede escribir: o llega el dato, o ese bloque se borra.
 10. **Logística del día**: hora real de inicio y cierre, clima, vueltas y
    longitud por categoría, voluntarios y roles (solo adultos, con permiso).
+
+### Los árboles de la pista son los de Trocha Verde
+
+En dos fotos se ven los letreros de madera que identifican los árboles del
+circuito: **GUAYABA** en el tramo llano y **MANGO** junto al paso de troncos.
+Las dos especies están en el inventario del sitio (`src/content/species/`:
+guayaba, guayaba pera, mango, mango tommy, mango manzana), con fichas propias
+en `/trocha-verde`. Es un enlace natural para la crónica y para el álbum: el
+chequeo se corrió entre los árboles que el propio club sembró y catalogó, y la
+plata de las inscripciones va a mantener ese mismo terreno. **Confirmar con el
+club** que los letreros del circuito son en efecto los del inventario de Trocha
+Verde antes de escribirlo.
 
 ### Detalle del trazado visto en las fotos
 
