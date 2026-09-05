@@ -3,96 +3,96 @@
 # imagen confirmada por el club. Orden: previa, largadas, carrera y podios.
 # Se publica antes que la noticia porque el material fotográfico ya está
 # completo; a la crónica todavía le faltan resultados de varias categorías.
-title: "Chequeo Pro-Fondos 2026 — Pista Carlos Castro"
+title: 'Chequeo Pro-Fondos 2026 — Pista Carlos Castro'
 date: 2026-09-05
-cover: "/images/news/chequeo-profondos-2026/prejuvenil-previa.webp"
-coverAlt: "Santiago Cardona, Isabel Quiñones y Mariana Coronado, del Club Trocha y Ruta, con sus bicicletas antes de largar en el Chequeo Pro-Fondos"
-description: "El chequeo organizado por el propio club en su casa, la Pista Carlos Castro de Yumbo, para reunir fondos para el mantenimiento del circuito."
+cover: '/images/news/chequeo-profondos-2026/prejuvenil-previa.webp'
+coverAlt: 'Santiago Cardona, Isabel Quiñones y Mariana Coronado, del Club Trocha y Ruta, con sus bicicletas antes de largar en el Chequeo Pro-Fondos'
+description: 'El chequeo organizado por el propio club en su casa, la Pista Carlos Castro de Yumbo, para reunir fondos para el mantenimiento del circuito.'
 images:
-  - src: "/images/news/chequeo-profondos-2026/prejuvenil-previa.webp"
-    alt: "Santiago Cardona (1859), Isabel Quiñones (906) y Mariana Coronado (904) posan con sus bicicletas antes de largar en el Chequeo Pro-Fondos"
-    caption: "Los prejuveniles del club, antes de la salida."
-  - src: "/images/news/chequeo-profondos-2026/juan-felipe-previa.webp"
-    alt: "Juan Felipe, con casco amarillo y gafas, levanta el pulgar sobre su bicicleta antes de correr el Chequeo Pro-Fondos"
-    caption: "Juan Felipe, listo para largar."
-  - src: "/images/news/chequeo-profondos-2026/open-parrilla-salida.webp"
-    alt: "Corredores de la categoría Open esperan en la línea de salida del Chequeo Pro-Fondos en la Pista Carlos Castro de Yumbo"
-    caption: "La parrilla de la Open, en la línea de salida."
-  - src: "/images/news/chequeo-profondos-2026/menores-parrilla-salida.webp"
-    alt: "Corredores de las categorías menores esperan en la línea de salida del Chequeo Pro-Fondos, acompañados por dos adultos"
-    caption: "Los más pequeños, en la línea de salida."
-  - src: "/images/news/chequeo-profondos-2026/teteros-ambiente.webp"
-    alt: "Niños del Club Trocha y Ruta, con el buzo del club, juegan sentados a la sombra durante el Chequeo Pro-Fondos"
-    caption: "La jornada, entre carrera y carrera."
-  - src: "/images/news/chequeo-profondos-2026/bernardino-montenegro-salto-teatrino.webp"
-    alt: "Bernardino Montenegro (251) salta con su bicicleta desde la plataforma del teatrino de la Pista Carlos Castro, con las rampas de madera abajo"
-    caption: "Bernardino Montenegro (251), saliendo de la plataforma del teatrino."
-  - src: "/images/news/chequeo-profondos-2026/open-bajada-al-teatrino.webp"
-    alt: "Un corredor de la categoría Open baja por el sendero de tierra hacia el teatrino, con la cinta amarilla de delimitación a un lado"
-    caption: "Camino de vuelta al teatrino, entre cintas."
-  - src: "/images/news/chequeo-profondos-2026/juan-felipe-circuito.webp"
-    alt: "Juan Felipe (1908), con casco amarillo, rueda por un tramo de tierra del circuito de la Pista Carlos Castro"
-    caption: "Juan Felipe (1908), en el circuito."
-  - src: "/images/news/chequeo-profondos-2026/juan-diego-garcia-ascenso.webp"
-    alt: "Juan Diego García (1950) sube por un sendero de tierra del circuito de la Pista Carlos Castro, con la loma seca de fondo"
-    caption: "Juan Diego García (1950), en el ascenso del circuito."
-  - src: "/images/news/chequeo-profondos-2026/prejuvenil-paso-de-troncos.webp"
-    alt: "Una corredora del Club Trocha y Ruta cruza el paso de troncos del circuito, con otro corredor al fondo sobre la loma"
-    caption: "El paso de troncos, uno de los obstáculos del trazado."
-  - src: "/images/news/chequeo-profondos-2026/german-recio-bajada.webp"
-    alt: "Germán Recio (1203) baja por el sendero de tierra del circuito, con una llanta pintada delimitando la curva"
-    caption: "Germán Recio (1203), en el descenso."
-  - src: "/images/news/chequeo-profondos-2026/mariana-coronado-circuito.webp"
-    alt: "Mariana Coronado (904) rueda por un tramo de tierra del circuito de la Pista Carlos Castro"
-    caption: "Mariana Coronado (904), camino de la victoria en Prejuvenil femenina."
-  - src: "/images/news/chequeo-profondos-2026/prejuvenil-doble-en-circuito.webp"
-    alt: "Dos corredores del Club Trocha y Ruta, uno detrás del otro, en el mismo tramo de tierra del circuito"
-    caption: "Uno detrás del otro, en el mismo tramo."
-  - src: "/images/news/chequeo-profondos-2026/corredor-club-tramo-piedras.webp"
-    alt: "Un corredor del Club Trocha y Ruta sale de una curva de tierra del circuito, junto a un tramo empedrado y llantas pintadas"
-    caption: "Saliendo de la curva, con el empedrado al lado."
-  - src: "/images/news/chequeo-profondos-2026/circuito-tres-corredores.webp"
-    alt: "Tres corredores en distintos puntos del circuito de la Pista Carlos Castro, entre cintas amarillas y estacas verdes"
-    caption: "El circuito, con tres corredores en distintos tramos."
-  - src: "/images/news/chequeo-profondos-2026/open-circuito-arbol-guayaba.webp"
-    alt: "Un corredor de la categoría Open rueda por el circuito junto al letrero de madera que identifica un árbol de guayaba"
-    caption: "El trazado pasa junto a los árboles señalizados de la pista."
-  - src: "/images/news/chequeo-profondos-2026/menores-426-curva.webp"
-    alt: "El dorsal 426, del Club Trocha y Ruta, toma una curva de tierra entre los árboles del circuito"
-    caption: "El 426, tumbando la bicicleta en la curva."
-  - src: "/images/news/chequeo-profondos-2026/menores-426-paso-de-troncos.webp"
-    alt: "El dorsal 426 cruza el paso de troncos del circuito, con el letrero de la línea opcional al fondo"
-    caption: "El paso de troncos, con la línea opcional señalizada al fondo."
-  - src: "/images/news/chequeo-profondos-2026/menores-1257-circuito.webp"
-    alt: "El dorsal 1257, del Club Trocha y Ruta, rueda por el circuito mientras un adulto observa desde el borde del trazado"
-    caption: "El 1257, con la mirada de un adulto desde el borde."
-  - src: "/images/news/chequeo-profondos-2026/menores-tramo-piedras.webp"
-    alt: "El circuito de la Pista Carlos Castro con dos corredores del Club Trocha y Ruta en distintos tramos, junto al empedrado"
-    caption: "Dos del club, en distintos tramos del mismo giro."
-  - src: "/images/news/chequeo-profondos-2026/menores-813-circuito.webp"
-    alt: "El dorsal 813 rueda por el camino de tierra entre los árboles del circuito de la Pista Carlos Castro"
-    caption: "El 813, entre los árboles del circuito."
-  - src: "/images/news/chequeo-profondos-2026/menores-260-paso-de-troncos.webp"
-    alt: "Un corredor con maillot blanco de Colombia cruza el paso de troncos, con el letrero de la línea opcional y las banderas al fondo"
-    caption: "El paso de troncos, con las banderas de la pista al fondo."
-  - src: "/images/news/chequeo-profondos-2026/menores-1257-paso-de-troncos.webp"
-    alt: "El dorsal 1257 cruza el paso de troncos mientras un adulto del Club Trocha y Ruta lo graba con el celular"
-    caption: "El 1257 en el paso de troncos, grabado desde el borde."
-  - src: "/images/news/chequeo-profondos-2026/german-recio-acompana-menor.webp"
-    alt: "Germán Recio (1203) rueda al lado de un corredor pequeño por el camino de tierra del circuito"
-    caption: "Germán Recio (1203), rodando al lado de uno de los pequeños."
-  - src: "/images/news/chequeo-profondos-2026/podio-prejuvenil-femenino.webp"
-    alt: "Mariana Coronado e Isabel Quiñones en el podio de Prejuvenil femenina del Chequeo Pro-Fondos, en la Pista Carlos Castro de Yumbo"
-    caption: "Mariana Coronado, primera, e Isabel Quiñones, segunda, en Prejuvenil femenina."
-  - src: "/images/news/chequeo-profondos-2026/podio-prejuvenil-masculino.webp"
-    alt: "Santiago Cardona y Johan Samuel Palacios en el podio de Prejuvenil masculina del Chequeo Pro-Fondos"
-    caption: "Santiago Cardona, primero, y Johan Samuel Palacios, segundo, en Prejuvenil masculina."
-  - src: "/images/news/chequeo-profondos-2026/podio-open.webp"
-    alt: "Samuel Ortiz Valencia, Juan Diego García y Jorge Lasso en el podio de la categoría Open del Chequeo Pro-Fondos"
-    caption: "Podio de la Open: Samuel Ortiz Valencia, Juan Diego García y Jorge Lasso."
-relatedEvent: "2026-09-chequeo-profondos-yumbo"
-category: "competencia"
-tags: ["chequeo", "pro-fondos", "pista-carlos-castro", "yumbo", "xco"]
+  - src: '/images/news/chequeo-profondos-2026/prejuvenil-previa.webp'
+    alt: 'Santiago Cardona (1859), Isabel Quiñones (906) y Mariana Coronado (904) posan con sus bicicletas antes de largar en el Chequeo Pro-Fondos'
+    caption: 'Los prejuveniles del club, antes de la salida.'
+  - src: '/images/news/chequeo-profondos-2026/juan-felipe-previa.webp'
+    alt: 'Juan Felipe, con casco amarillo y gafas, levanta el pulgar sobre su bicicleta antes de correr el Chequeo Pro-Fondos'
+    caption: 'Juan Felipe, listo para largar.'
+  - src: '/images/news/chequeo-profondos-2026/open-parrilla-salida.webp'
+    alt: 'Corredores de la categoría Open esperan en la línea de salida del Chequeo Pro-Fondos en la Pista Carlos Castro de Yumbo'
+    caption: 'La parrilla de la Open, en la línea de salida.'
+  - src: '/images/news/chequeo-profondos-2026/menores-parrilla-salida.webp'
+    alt: 'Corredores de las categorías menores esperan en la línea de salida del Chequeo Pro-Fondos, acompañados por dos adultos'
+    caption: 'Los más pequeños, en la línea de salida.'
+  - src: '/images/news/chequeo-profondos-2026/teteros-ambiente.webp'
+    alt: 'Niños del Club Trocha y Ruta, con el buzo del club, juegan sentados a la sombra durante el Chequeo Pro-Fondos'
+    caption: 'La jornada, entre carrera y carrera.'
+  - src: '/images/news/chequeo-profondos-2026/bernardino-montenegro-salto-teatrino.webp'
+    alt: 'Bernardino Montenegro (251) salta con su bicicleta desde la plataforma del teatrino de la Pista Carlos Castro, con las rampas de madera abajo'
+    caption: 'Bernardino Montenegro (251), saliendo de la plataforma del teatrino.'
+  - src: '/images/news/chequeo-profondos-2026/open-bajada-al-teatrino.webp'
+    alt: 'Un corredor de la categoría Open baja por el sendero de tierra hacia el teatrino, con la cinta amarilla de delimitación a un lado'
+    caption: 'Camino de vuelta al teatrino, entre cintas.'
+  - src: '/images/news/chequeo-profondos-2026/juan-felipe-circuito.webp'
+    alt: 'Juan Felipe (1908), con casco amarillo, rueda por un tramo de tierra del circuito de la Pista Carlos Castro'
+    caption: 'Juan Felipe (1908), en el circuito.'
+  - src: '/images/news/chequeo-profondos-2026/juan-diego-garcia-ascenso.webp'
+    alt: 'Juan Diego García (1950) sube por un sendero de tierra del circuito de la Pista Carlos Castro, con la loma seca de fondo'
+    caption: 'Juan Diego García (1950), en el ascenso del circuito.'
+  - src: '/images/news/chequeo-profondos-2026/prejuvenil-paso-de-troncos.webp'
+    alt: 'Una corredora del Club Trocha y Ruta cruza el paso de troncos del circuito, con otro corredor al fondo sobre la loma'
+    caption: 'El paso de troncos, uno de los obstáculos del trazado.'
+  - src: '/images/news/chequeo-profondos-2026/german-recio-bajada.webp'
+    alt: 'Germán Recio (1203) baja por el sendero de tierra del circuito, con una llanta pintada delimitando la curva'
+    caption: 'Germán Recio (1203), en el descenso.'
+  - src: '/images/news/chequeo-profondos-2026/mariana-coronado-circuito.webp'
+    alt: 'Mariana Coronado (904) rueda por un tramo de tierra del circuito de la Pista Carlos Castro'
+    caption: 'Mariana Coronado (904), camino de la victoria en Prejuvenil femenina.'
+  - src: '/images/news/chequeo-profondos-2026/prejuvenil-doble-en-circuito.webp'
+    alt: 'Dos corredores del Club Trocha y Ruta, uno detrás del otro, en el mismo tramo de tierra del circuito'
+    caption: 'Uno detrás del otro, en el mismo tramo.'
+  - src: '/images/news/chequeo-profondos-2026/corredor-club-tramo-piedras.webp'
+    alt: 'Un corredor del Club Trocha y Ruta sale de una curva de tierra del circuito, junto a un tramo empedrado y llantas pintadas'
+    caption: 'Saliendo de la curva, con el empedrado al lado.'
+  - src: '/images/news/chequeo-profondos-2026/circuito-tres-corredores.webp'
+    alt: 'Tres corredores en distintos puntos del circuito de la Pista Carlos Castro, entre cintas amarillas y estacas verdes'
+    caption: 'El circuito, con tres corredores en distintos tramos.'
+  - src: '/images/news/chequeo-profondos-2026/open-circuito-arbol-guayaba.webp'
+    alt: 'Un corredor de la categoría Open rueda por el circuito junto al letrero de madera que identifica un árbol de guayaba'
+    caption: 'El trazado pasa junto a los árboles señalizados de la pista.'
+  - src: '/images/news/chequeo-profondos-2026/menores-426-curva.webp'
+    alt: 'El dorsal 426, del Club Trocha y Ruta, toma una curva de tierra entre los árboles del circuito'
+    caption: 'El 426, tumbando la bicicleta en la curva.'
+  - src: '/images/news/chequeo-profondos-2026/menores-426-paso-de-troncos.webp'
+    alt: 'El dorsal 426 cruza el paso de troncos del circuito, con el letrero de la línea opcional al fondo'
+    caption: 'El paso de troncos, con la línea opcional señalizada al fondo.'
+  - src: '/images/news/chequeo-profondos-2026/menores-1257-circuito.webp'
+    alt: 'El dorsal 1257, del Club Trocha y Ruta, rueda por el circuito mientras un adulto observa desde el borde del trazado'
+    caption: 'El 1257, con la mirada de un adulto desde el borde.'
+  - src: '/images/news/chequeo-profondos-2026/menores-tramo-piedras.webp'
+    alt: 'El circuito de la Pista Carlos Castro con dos corredores del Club Trocha y Ruta en distintos tramos, junto al empedrado'
+    caption: 'Dos del club, en distintos tramos del mismo giro.'
+  - src: '/images/news/chequeo-profondos-2026/menores-813-circuito.webp'
+    alt: 'El dorsal 813 rueda por el camino de tierra entre los árboles del circuito de la Pista Carlos Castro'
+    caption: 'El 813, entre los árboles del circuito.'
+  - src: '/images/news/chequeo-profondos-2026/menores-260-paso-de-troncos.webp'
+    alt: 'Un corredor con maillot blanco de Colombia cruza el paso de troncos, con el letrero de la línea opcional y las banderas al fondo'
+    caption: 'El paso de troncos, con las banderas de la pista al fondo.'
+  - src: '/images/news/chequeo-profondos-2026/menores-1257-paso-de-troncos.webp'
+    alt: 'El dorsal 1257 cruza el paso de troncos mientras un adulto del Club Trocha y Ruta lo graba con el celular'
+    caption: 'El 1257 en el paso de troncos, grabado desde el borde.'
+  - src: '/images/news/chequeo-profondos-2026/german-recio-acompana-menor.webp'
+    alt: 'Germán Recio (1203) rueda al lado de un corredor pequeño por el camino de tierra del circuito'
+    caption: 'Germán Recio (1203), rodando al lado de uno de los pequeños.'
+  - src: '/images/news/chequeo-profondos-2026/podio-prejuvenil-femenino.webp'
+    alt: 'Mariana Coronado e Isabel Quiñones en el podio de Prejuvenil femenina del Chequeo Pro-Fondos, en la Pista Carlos Castro de Yumbo'
+    caption: 'Mariana Coronado, primera, e Isabel Quiñones, segunda, en Prejuvenil femenina.'
+  - src: '/images/news/chequeo-profondos-2026/podio-prejuvenil-masculino.webp'
+    alt: 'Santiago Cardona y Johan Samuel Palacios en el podio de Prejuvenil masculina del Chequeo Pro-Fondos'
+    caption: 'Santiago Cardona, primero, y Johan Samuel Palacios, segundo, en Prejuvenil masculina.'
+  - src: '/images/news/chequeo-profondos-2026/podio-open.webp'
+    alt: 'Samuel Ortiz Valencia, Juan Diego García y Jorge Lasso en el podio de la categoría Open del Chequeo Pro-Fondos'
+    caption: 'Podio de la Open: Samuel Ortiz Valencia, Juan Diego García y Jorge Lasso.'
+relatedEvent: '2026-09-chequeo-profondos-yumbo'
+category: 'competencia'
+tags: ['chequeo', 'pro-fondos', 'pista-carlos-castro', 'yumbo', 'xco']
 featured: false
 draft: false
 ---
