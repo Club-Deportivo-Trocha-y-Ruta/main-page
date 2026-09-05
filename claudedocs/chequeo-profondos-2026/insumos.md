@@ -163,8 +163,8 @@ afiche, o el Open es otra cosa. Ver duda 1.
 - **Open: cuatro vueltas, temperatura promedio de 34 °C.**
 - **Samuel Ortiz** manejó la carrera: dos vueltas con el grupo de punta y las
   dos últimas en solitario.
-- **Juan Diego García** salió controlado y remontó, pero "no fue capaz de
-  alcanzar a Juan Esteban" (ver duda 0).
+- **Juan Diego García** salió controlado y remontó, pero no fue capaz de
+  alcanzar a **Samuel Ortiz** (el club corrigió: había dicho "Juan Esteban").
 - **Bernardino Montenegro**, "otro de la casa", buen arranque y el clima muy
   fuerte.
 - Deportistas de otras ciudades le subieron el nivel a la categoría.
@@ -177,12 +177,6 @@ afiche, o el Open es otra cosa. Ver duda 1.
 Faltan por pasar: cuántos corrieron y los datos de las demás categorías.
 
 ## Dudas abiertas
-
-0. **¿Quién es "Juan Esteban"?** El club dice que Juan Diego no logró
-   alcanzarlo, pero en la planilla de Open no figura ningún Juan Esteban y por
-   tiempos Juan Diego fue **segundo**, con solo Samuel Ortiz por delante.
-   ¿Es el 1120 que la planilla anota como "Jorge Lasso", o alguien que no está
-   en esa hoja? Bloquea la publicación del pasaje de Juan Diego.
 
 1. **La categoría Open.** ¿Se abrió sobre la marcha? Si corrió de verdad —y la
    planilla, el podio y la parrilla dicen que sí—, hay que sumarla a la lista de
@@ -269,6 +263,9 @@ cielo despejado con nubes altas.
 - El podio de dos corredores es **Prejuvenil varones**; la niña que aparece es
   familiar de Santiago Cardona, el ganador.
 - **Hay autorización para publicar las fotos.**
+- El "Juan Esteban" del relato era **Samuel Ortiz**: Juan Diego lo persiguió y
+  no lo alcanzó. Coincide con la planilla, donde Juan Diego es segundo con solo
+  Samuel por delante.
 - Dorsal 1203 identificado en carrera: **Germán Recio**, el corredor veterano
   del maillot Colombina (es también el adulto que aparece en la parrilla de
   menores).

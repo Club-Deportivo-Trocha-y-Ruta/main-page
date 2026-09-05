@@ -58,14 +58,12 @@ seo:
         e Infantiles: hoy no hay planillas transcritas, solo fotos.
      3. En qué categoría corrió Jostin Villamizar y con qué tiempo/puesto:
         no aparece en las planillas de Open ni Prejuvenil.
-     4. Aclarar el conflicto de "Juan Esteban" en el pasaje de Juan Diego
-        García (ver comentario dentro del cuerpo).
-     5. Visto bueno del club para publicar en la tabla los tres nombres
+     4. Visto bueno del club para publicar en la tabla los tres nombres
         nuevos: Santiago Cardona Chate, Johan Samuel Palacios Canizales y
         Anderson Cárdenas Guaca. Autorización de imagen ya confirmada.
-     6. Vueltas y longitud de recorrido de cada categoría: solo está
+     5. Vueltas y longitud de recorrido de cada categoría: solo está
         confirmado que la Open corrió cuatro vueltas.
-     7. Confirmar hora real de inicio y cierre, y si los letreros de madera
+     6. Confirmar hora real de inicio y cierre, y si los letreros de madera
         que se ven en las fotos del circuito (GUAYABA, MANGO) son en efecto
         los del inventario de Trocha Verde — hoy queda fuera del texto. -->
 
@@ -98,7 +96,7 @@ El del sábado tuvo, además, un destino: lo recaudado por las inscripciones va 
 
 La Open corrió cuatro vueltas y ahí estuvo el titular del día. **Samuel Ortiz Valencia**, que en la Copa Valle corre **Prejuvenil A** —fue segundo de su categoría en la [válida de Palmira](/noticias/2026-08-copa-valle-palmira-xco)—, decidió subirse a la Open y medirse con adultos y visitantes de Cali. Manejó la carrera con cabeza: las dos primeras vueltas se quedó con el grupo de punta; en las dos últimas se fue en solitario y no lo alcanzaron. Cruzó la meta en **1:00:11**, primero.
 
-**Juan Diego García Bohórquez** intentó salir controlado y estuvo remontando posiciones vuelta a vuelta hasta cerrar segundo, a **1:03:15**. <!-- PENDIENTE — En el relato del director, Juan Diego "no fue capaz de alcanzar a Juan Esteban". En la planilla de Open no figura ningún Juan Esteban y los tiempos muestran a Juan Diego segundo, con solo Samuel Ortiz por delante. Confirmar con el director quién es "Juan Esteban" antes de publicar; puede ser un apodo, un dato de otra categoría o una confusión. -->
+**Juan Diego García Bohórquez** hizo la carrera contraria: intentó salir controlado y fue remontando posiciones vuelta a vuelta, con el compañero de club siempre en el horizonte. Lo persiguió hasta el final y no lo alcanzó. Cerró **segundo, con 1:03:15**, a tres minutos y cuatro segundos de Samuel.
 
 <figure>
   <img
