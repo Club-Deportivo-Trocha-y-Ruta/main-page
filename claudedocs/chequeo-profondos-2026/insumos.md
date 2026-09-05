@@ -166,7 +166,8 @@ afiche, o el Open es otra cosa. Ver duda 1.
 - **Juan Diego García** salió controlado y remontó, pero no fue capaz de
   alcanzar a **Samuel Ortiz** (el club corrigió: había dicho "Juan Esteban").
 - **Bernardino Montenegro**, "otro de la casa", buen arranque y el clima muy
-  fuerte.
+  fuerte (el club corrigió después: no fue el clima, fue un problema mecánico
+  con los cambios — ver más abajo).
 - Deportistas de otras ciudades le subieron el nivel a la categoría.
 - **Isabel y Mariana** lo tomaron como superentrenamiento, preparadas como para
   una carrera normal, para agarrar ritmo de cara a **Alcalá**.
@@ -241,6 +242,16 @@ Corregido antes de publicar:
 
 Publicada con dos huecos que el club decidió no esperar: planillas de Teteros
 y Preinfantiles, y el ganador de Infantil A.
+
+## Aclaración del club (tras publicar) — Bernardino, mecánica y no calor
+
+**Bernardino Montenegro no abandonó por el calor**: fue un problema mecánico,
+los cambios no le estaban funcionando correctamente. Se corrige en dos sitios
+de la crónica —el párrafo de la Open y el "Se vio" de la `.check-sheet`—, que
+decían "las cuatro vueltas al sol le pasaron factura" / "el calor le cobró a
+Bernardino". Ahora dicen que un problema mecánico con los cambios lo fue
+sacando de ritmo. La tabla de resultados no cambia: seguía siendo DNF en la
+4ª vuelta.
 
 ## Aclaración del club (tras publicar)
 

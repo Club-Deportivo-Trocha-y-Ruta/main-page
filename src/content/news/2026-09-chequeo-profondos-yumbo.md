@@ -125,7 +125,7 @@ La Open corrió cuatro vueltas al circuito completo, la distancia más larga del
   <figcaption>Juan Diego García (1950), en el ascenso del circuito.</figcaption>
 </figure>
 
-El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García de Cali, en **una hora y cinco minutos**: aportó al club el rival de nivel que le hacía falta para chequearse en casa. Cuarto entró Samuel Rodríguez, también de Cali. **Bernardino Montenegro Urrea**, el otro yumbeño de la Open, arrancó fuerte —cerró la primera vuelta con el tercer mejor tiempo, a diecinueve segundos del más rápido— pero las cuatro vueltas al sol le pasaron factura y abandonó en la última.
+El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García de Cali, en **una hora y cinco minutos**: aportó al club el rival de nivel que le hacía falta para chequearse en casa. Cuarto entró Samuel Rodríguez, también de Cali. **Bernardino Montenegro Urrea**, el otro yumbeño de la Open, arrancó fuerte —cerró la primera vuelta con el tercer mejor tiempo, a diecinueve segundos del más rápido— pero un problema mecánico con los cambios lo fue sacando de ritmo y abandonó en la última vuelta.
 
 <figure>
   <img
@@ -242,7 +242,7 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
     <div class="check-sheet__body">
       <span class="check-sheet__name">Categoría Open · 4 vueltas completas</span>
       <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>Manejar una carrera larga bajo 34 °C, con dos vueltas de grupo y dos en solitario.</span>
-      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Samuel Ortiz resolvió la carrera en la tercera vuelta; el calor le cobró a Bernardino en la última.</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Samuel Ortiz resolvió la carrera en la tercera vuelta; a Bernardino le fallaron los cambios en la última.</span>
     </div>
   </li>
   <li class="check-sheet__row">
