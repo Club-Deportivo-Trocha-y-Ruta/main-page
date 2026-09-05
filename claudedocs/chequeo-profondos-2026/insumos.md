@@ -211,6 +211,37 @@ Faltan por pasar: cuántos corrieron y los datos de las demás categorías.
 Lo de las vueltas es el dato que le faltaba al texto: explica por qué los
 tiempos de una categoría no se comparan con los de otra.
 
+## Revisión de producción (5-sep, noche)
+
+Lectura completa como editor + render real con Chromium (escritorio 1280 px y
+móvil 412 px, con scroll para disparar el lazy-loading: 31/31 imágenes cargan).
+
+Corregido antes de publicar:
+
+- **Anderson seguía en la tabla**: una edición anterior no aplicó porque
+  Prettier había rellenado las columnas y el texto ya no coincidía. Fuera.
+- Misma causa: faltaba la etiqueta `trocha-verde`. Puesta.
+- Dos párrafos seguidos repetían el destino de la plata y el 18 de octubre.
+  Fundidos.
+- "con 1:05" en prosa se leía como un minuto y cinco segundos → "una hora y
+  cinco minutos". En la tabla se queda "1:05" (el club no dio los segundos).
+- La tabla de Infantil A con una sola fila (2º) parecía rota → una línea de
+  prosa.
+- "veterano de Cali" (Veteranos es una categoría; Germán corrió Open) →
+  "corredor de Cali".
+- Celdas DNF ("abandonó en la 4ª vuelta") se partían en móvil → "4ª vuelta" +
+  nota al pie de la tabla.
+- Comentarios PENDIENTE → registro de lo que se publicó incompleto.
+- `og-chequeo-profondos.webp` 1200×630 recortado del podio de la Open (misma
+  convención que Palmira). Hero sigue siendo el afiche, como en Palmira.
+- Evento: `status: past` + `relatedNews` + `relatedGallery`, como los demás
+  eventos pasados.
+- `NewsGallery.astro`: el botón "Ver álbum completo (N fotos)" contaba las
+  fotos de la rejilla del pie (20), no las del álbum (27). Ahora lee el álbum.
+
+Publicada con dos huecos que el club decidió no esperar: planillas de Teteros
+y Preinfantiles, y el ganador de Infantil A.
+
 ## Dudas abiertas
 
 1. **La categoría Open.** ¿Se abrió sobre la marcha? Si corrió de verdad —y la

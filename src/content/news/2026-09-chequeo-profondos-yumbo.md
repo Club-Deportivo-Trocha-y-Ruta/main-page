@@ -13,13 +13,14 @@ tags:
     'samuel-ortiz',
     'juan-diego-garcia',
     'prejuvenil',
+    'trocha-verde',
   ]
 image: '/images/news/chequeo-profondos-2026/afiche-chequeo-profondos.webp'
 imageAlt: 'Afiche del Chequeo Pro-Fondos del Club Trocha y Ruta, sábado 5 de septiembre de 2026 en la Pista Carlos Castro de Yumbo'
 imageLayout: contain
 excerpt: 'Samuel Ortiz, prejuvenil del club, se subió a la Open del 2º Chequeo Pro-Fondos y ganó en la Pista Carlos Castro por delante de adultos y de corredores de Cali. Juan Diego García fue segundo.'
 featured: true
-draft: true
+draft: false
 relatedEvent: '2026-09-chequeo-profondos-yumbo'
 relatedGallery: 'chequeo-profondos-2026'
 galleryFolder: '/images/news/chequeo-profondos-2026'
@@ -47,20 +48,20 @@ galleryImages:
 seo:
   metaTitle: 'Chequeo Pro-Fondos: Samuel Ortiz gana la Open en Yumbo'
   metaDescription: 'Samuel Ortiz, prejuvenil del club, se subió a la Open del 2º Chequeo Pro-Fondos y ganó en la Pista Carlos Castro de Yumbo. Juan Diego García, segundo.'
-  ogImage: '/images/news/chequeo-profondos-2026/afiche-chequeo-profondos.webp'
+  ogImage: '/images/news/chequeo-profondos-2026/og-chequeo-profondos.webp'
 ---
 
-<!-- PENDIENTE — Antes de publicar (quitar draft: true):
-     1. Planillas de Teteros sin pedales, Teteros con pedales y Preinfantiles:
-        cuántas vueltas corrieron y cómo terminaron. Hoy esos grupos se
-        mencionan en colectivo y sin nombres.
-     2. De Infantil A masculino falta quién ganó: solo está confirmado el
-        segundo puesto de Jostin.
-
-     Cerrados por el club: recaudo (decidió no publicar cifras exactas, solo
-     el aproximado de inscritos y el destino), tiempo de Jostin (45 minutos
-     aproximados, va como tal), vueltas de Open, Prejuvenil e Infantil A, y
-     horario de la jornada. -->
+<!-- Publicada el 5-sep-2026 con dos huecos que el club decidió no esperar:
+     · Teteros sin pedales, Teteros con pedales y Preinfantiles no tienen
+       planilla transcrita: van en colectivo y sin nombres. Si llegan, entran
+       en "Los más pequeños", en la .check-sheet y en la tabla.
+     · De Infantil A masculino solo se tiene el segundo puesto de Jostin; el
+       ganador se añade en "Cómo terminó cada categoría" cuando el club lo pase.
+     Decisiones del club que no hay que "completar": el recaudo se publica
+     como aproximado y sin recibo (.ledger), y el tiempo de Jostin (45 min)
+     es aproximado y por eso no va en tabla. Fuentes: planillas de jueces de
+     Open y Prejuvenil y relato del director, en
+     claudedocs/chequeo-profondos-2026/insumos.md. -->
 
 Bajo un sol de 34 grados, entre los banderines que cuelgan sobre la loma y las cintas amarillas que peinan el trazado, un letrero de madera clavado junto al paso de troncos repite algo simple: «Cree en ti y todo será posible». Es el fondo con el que el club abrió su casa el sábado 5 de septiembre para el **2º Chequeo Pro-Fondos de ciclomontañismo**, en la Pista Carlos Castro de Yumbo. La primera categoría largó a las **8:45 de la mañana**, la última a las **10:34**, y a las **12 del mediodía** ya estaba todo cerrado.
 
@@ -70,7 +71,7 @@ Un chequeo es lo que su nombre dice: un ensayo con cronómetro para ver cómo ll
 
 El del sábado tuvo, además, un destino: lo recaudado por las inscripciones va al **mantenimiento de la Pista Carlos Castro**, la casa del club. Es la misma pista donde el 18 de octubre se corre la **semifinal de la Copa Valle Paraíso de Todos GW Shimano 2026** y la antesala del **domingo 13 de septiembre**, cuando el club viaja a la [Copa Let's Go de Alcalá](/calendario/#evento-2026-09-copa-lets-go-alcala) solo para el XCO. En medio de esos dos compromisos, el chequeo hizo doble trabajo: puso a punto las piernas y dejó plata para el trazado.
 
-Largaron **alrededor de treinta deportistas** entre todas las categorías, cada uno con su inscripción de $20.000. Esa plata tiene un destino que el club ya definió y que no es abstracto: **adecuar la pista para la semifinal de la Copa Valle**, que se corre aquí mismo el 18 de octubre. Lo que se recogió el sábado se le devuelve al trazado antes de que llegue todo el Valle a rodarlo.
+Largaron **alrededor de treinta deportistas** entre todas las categorías, cada uno con su inscripción de $20.000, y esa plata ya tiene destino concreto: **adecuar la pista para la semifinal**, para que el trazado esté a punto antes de que llegue todo el Valle a rodarlo.
 
 Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tienen nombre**. Clavados en los troncos, letreros de madera van diciendo qué es cada uno —[guayaba](/trocha-verde/guayaba) en el tramo llano, [mango](/trocha-verde/mango) junto al paso de troncos—, porque son los mismos que el club sembró y catalogó en **[Trocha Verde](/trocha-verde)**, su inventario de los árboles de la pista, setenta y siete a la fecha del chequeo. Los corredores del sábado pasaron entre ellos vuelta tras vuelta sin detenerse a leerlos. La plata de las inscripciones se queda justamente ahí: en el terreno que los sostiene.
 
@@ -122,7 +123,7 @@ La Open corrió cuatro vueltas al circuito completo, la distancia más larga del
   <figcaption>Juan Diego García (1950), en el ascenso del circuito.</figcaption>
 </figure>
 
-El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García de Cali, con **1:05**: aportó al club el rival de nivel que le hacía falta para chequearse en casa. Cuarto entró Samuel Rodríguez, también de Cali. **Bernardino Montenegro Urrea**, el otro yumbeño de la Open, arrancó fuerte —cerró la primera vuelta con el tercer mejor tiempo, a diecinueve segundos del más rápido— pero las cuatro vueltas al sol le pasaron factura y abandonó en la última. La foto de su salto desde la plataforma del teatrino cuenta, sin comentarios, cómo iba de suelto antes de que el calor se le atravesara.
+El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García de Cali, en **una hora y cinco minutos**: aportó al club el rival de nivel que le hacía falta para chequearse en casa. Cuarto entró Samuel Rodríguez, también de Cali. **Bernardino Montenegro Urrea**, el otro yumbeño de la Open, arrancó fuerte —cerró la primera vuelta con el tercer mejor tiempo, a diecinueve segundos del más rápido— pero las cuatro vueltas al sol le pasaron factura y abandonó en la última. La foto de su salto desde la plataforma del teatrino cuenta, sin comentarios, cómo iba de suelto antes de que el calor se le atravesara.
 
 <figure>
   <img
@@ -188,11 +189,11 @@ En varones, dos corredores del club: **Santiago Cardona Chate** ganó con **40:2
 
 ## Los más pequeños, entre los mismos banderines
 
-<!-- PENDIENTE — Teteros sin pedales, Teteros con pedales y Preinfantiles:
-     faltan sus vueltas y sus resultados. Cuando lleguen, sumar sus filas a la
-     .check-sheet y a la tabla. Hasta entonces van en colectivo y sin nombres. -->
+<!-- Teteros sin pedales, Teteros con pedales y Preinfantiles: sin planilla.
+     Si llega, aquí va el detalle por grupo, con nombres solo si el club lo
+     autoriza. -->
 
-Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo; a los mayores les tocó lo de siempre en casa: rodar cerca, señalar la curva y agradecer los relevos. En una foto de la mañana, **Germán Recio** —veterano de Cali que abandonó su propia carrera de la Open tras la primera vuelta— aparece rodando al lado de uno de los pequeños. La imagen habla sola.
+Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo; y a los adultos les tocó lo de siempre en casa: rodar cerca y señalar la curva. En una foto de la mañana, **Germán Recio** —corredor de Cali que abandonó su propia carrera de la Open tras la primera vuelta— aparece rodando al lado de uno de los pequeños. La imagen habla sola.
 
 ## Lo que se chequeó
 
@@ -223,24 +224,25 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
   </li>
 </ol>
 
-<!-- PENDIENTE — Filas de Teteros sin pedales, Teteros con pedales y
-     Preinfantiles: entran cuando llegue el "se probó / se vio" del cuerpo
-     técnico. La casilla marcada significa "chequeado": no se dejan vacías. -->
+<!-- Filas de Teteros y Preinfantiles: entran cuando el cuerpo técnico dicte
+     el "se probó / se vio". La casilla marcada significa "chequeado": no se
+     dejan filas vacías. -->
 
 ## Cómo terminó cada categoría
 
 **Open** — 4 vueltas completas
 
-| Puesto | Corredor                    | Club                          | Total                      |
-| ------ | --------------------------- | ----------------------------- | -------------------------- |
-| **1°** | Samuel Ortiz Valencia       | Trocha y Ruta                 | **1:00:11**                |
-| **2°** | Juan Diego García Bohórquez | Trocha y Ruta                 | **1:03:15**                |
-| **3°** | Jorge Lasso                 | Escuela Olguita García (Cali) | **1:05**                   |
-| 4°     | Samuel Rodríguez            | Independiente (Cali)          | 1:13:46                    |
-| DNF    | Bernardino Montenegro Urrea | Independiente (Yumbo)         | abandonó en la 4ª vuelta   |
-| DNF    | Felipe Maya                 | Cali                          | abandonó en la 3ª vuelta   |
-| DNF    | Germán Recio                | Cali                          | abandonó tras la 1ª vuelta |
-| DNP    | Anderson Cárdenas Guaca     | Trocha y Ruta                 | no largó                   |
+| Puesto | Corredor                    | Club                          | Total       |
+| ------ | --------------------------- | ----------------------------- | ----------- |
+| **1°** | Samuel Ortiz Valencia       | Trocha y Ruta                 | **1:00:11** |
+| **2°** | Juan Diego García Bohórquez | Trocha y Ruta                 | **1:03:15** |
+| **3°** | Jorge Lasso                 | Escuela Olguita García (Cali) | **1:05**    |
+| 4°     | Samuel Rodríguez            | Independiente (Cali)          | 1:13:46     |
+| DNF    | Bernardino Montenegro Urrea | Independiente (Yumbo)         | 4ª vuelta   |
+| DNF    | Felipe Maya                 | Cali                          | 3ª vuelta   |
+| DNF    | Germán Recio                | Cali                          | 1ª vuelta   |
+
+<small>DNF: no terminó; se indica la vuelta en la que se retiró.</small>
 
 **Prejuvenil damas** — 2 vueltas completas
 
@@ -256,15 +258,10 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
 | **1°** | Santiago Cardona Chate          | **40:25** |
 | **2°** | Johan Samuel Palacios Canizales | **45:10** |
 
-**Infantil A masculino** — 2 vueltas al 70% del trazado
+**Infantil A masculino** — 2 vueltas al 70% del trazado: **Jostin Villamizar García**, segundo.
 
-| Puesto | Corredor                 |
-| ------ | ------------------------ |
-| **2°** | Jostin Villamizar García |
-
-<!-- PENDIENTE — De Infantil A masculino solo se tiene el segundo puesto de
-     Jostin. Falta el ganador y el resto de la categoría, y no hay nada todavía
-     de Teteros sin pedales, Teteros con pedales ni Preinfantiles. -->
+<!-- Infantil A: el ganador y el resto de la categoría se añaden aquí, como
+     tabla, cuando llegue la planilla. Teteros y Preinfantiles, igual. -->
 
 ## La pista queda lista para lo que viene
 

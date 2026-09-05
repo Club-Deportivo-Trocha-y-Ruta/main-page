@@ -43,11 +43,14 @@ const allImages = imageFiles.map((file, index) => {
 const hasMore = allImages.length > maxVisible;
 
 // Solo enlazamos al álbum si existe y está publicado: un slug mal escrito en el
-// frontmatter de la noticia produciría un 404.
-const albumExists = albumSlug
-  ? (await getCollection('gallery')).some((album) => album.id === albumSlug && !album.data.draft)
-  : false;
-const showAlbumLink = albumExists && hasMore;
+// frontmatter de la noticia produciría un 404. El botón anuncia las fotos del
+// álbum, no las de esta rejilla: la crónica suele embeber varias en el cuerpo y
+// listar aquí solo el resto, y el álbum las tiene todas.
+const album = albumSlug
+  ? (await getCollection('gallery')).find((entry) => entry.id === albumSlug && !entry.data.draft)
+  : undefined;
+const showAlbumLink = Boolean(album) && hasMore;
+const albumPhotoCount = album?.data.images.length ?? allImages.length;
 ---
 
 <section class="border-surface-muted mt-12 border-t pt-8" aria-labelledby="news-gallery-title">
@@ -73,7 +76,7 @@ const showAlbumLink = albumExists && hasMore;
           href={`/galeria/${albumSlug}`}
           class="border-primary text-primary hover:bg-primary inline-flex items-center gap-2 rounded-lg border-2 px-6 py-3 font-semibold transition-colors hover:text-white"
         >
-          Ver álbum completo ({allImages.length} fotos)
+          Ver álbum completo ({albumPhotoCount} fotos)
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"

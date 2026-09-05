@@ -1,22 +1,24 @@
 ---
-title: "Chequeo Pro-Fondos Trocha y Ruta"
-shortName: "Chequeo"
+title: 'Chequeo Pro-Fondos Trocha y Ruta'
+shortName: 'Chequeo'
 date: 2026-09-05
-location: "Pista Carlos Castro - Cra. 14N con Cl. 13BN"
-city: "Yumbo"
-department: "Valle del Cauca"
-category: "xco"
-level: "municipal"
-organizer: "Club Deportivo Trocha y Ruta"
-image: "/images/news/chequeo-profondos-2026/afiche-chequeo-profondos.webp"
-imageAlt: "Afiche del Chequeo Pro-Fondos del Club Trocha y Ruta, sábado 5 de septiembre de 2026 en la Pista Carlos Castro de Yumbo"
-status: "upcoming"
-registrationUrl: "https://forms.gle/nU8ut1gU599GKHB8A"
+location: 'Pista Carlos Castro - Cra. 14N con Cl. 13BN'
+city: 'Yumbo'
+department: 'Valle del Cauca'
+category: 'xco'
+level: 'municipal'
+organizer: 'Club Deportivo Trocha y Ruta'
+image: '/images/news/chequeo-profondos-2026/afiche-chequeo-profondos.webp'
+imageAlt: 'Afiche del Chequeo Pro-Fondos del Club Trocha y Ruta, sábado 5 de septiembre de 2026 en la Pista Carlos Castro de Yumbo'
+status: 'past'
+relatedGallery: 'chequeo-profondos-2026'
+relatedNews: ['2026-09-chequeo-profondos-yumbo']
+registrationUrl: 'https://forms.gle/nU8ut1gU599GKHB8A'
 featured: true
 draft: false
 seo:
-  metaTitle: "Chequeo Pro-Fondos Trocha y Ruta — 5 de septiembre en Yumbo"
-  metaDescription: "Competencia pro-fondos del Club Trocha y Ruta el sábado 5 de septiembre, 8:00 a. m., en la Pista Carlos Castro de Yumbo. Inscripción $20.000."
+  metaTitle: 'Chequeo Pro-Fondos Trocha y Ruta — 5 de septiembre en Yumbo'
+  metaDescription: 'Competencia pro-fondos del Club Trocha y Ruta el sábado 5 de septiembre, 8:00 a. m., en la Pista Carlos Castro de Yumbo. Inscripción $20.000.'
 ---
 
 Competencia organizada por el Club Deportivo Trocha y Ruta el **sábado 5 de septiembre a las 8:00 a. m.** en su casa, la Pista de Ciclomontañismo Carlos Castro de Yumbo. Lo recaudado se destina al **mantenimiento de la pista**: es el circuito donde entrena el club y donde en octubre se corre la séptima válida de la Copa Valle.
