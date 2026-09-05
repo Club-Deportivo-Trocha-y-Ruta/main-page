@@ -37,6 +37,20 @@ Encabezado impreso de las planillas:
 `juan-felipe-circuito.webp` (dorsal 1908), `juan-diego-garcia-ascenso.webp` (dorsal 1950)
 y `prejuvenil-paso-de-troncos.webp` (dorsal 90?, ver dudas).
 
+**Tercera tanda de carrera**: `german-recio-bajada.webp` (dorsal 1203),
+`mariana-coronado-circuito.webp` (dorsal 904, se lee claro),
+`prejuvenil-doble-en-circuito.webp` (dos corredores del club, dorsal delantero
+"90?"), `corredor-club-tramo-piedras.webp` (uniforme del club, sin dorsal a la
+vista) y `circuito-tres-corredores.webp` (plano abierto del trazado).
+
+**Peso del álbum.** El lightbox del sitio (`ImageLightbox.tsx`) pinta la
+miniatura con el archivo completo (`src={img.src}`, sin `srcset`), así que cada
+foto del álbum se descarga entera al hacer scroll. Con eso, dieciocho fotos a
+500 KB eran nueve megas en una sola página, muy por encima del presupuesto del
+sitio. Todas se reprocesaron con un tope de 300 KB —lado mayor 1400 px y la
+calidad que haga falta— y el álbum quedó en **4,1 MB / 18 fotos** (media de
+228 KB, la misma banda que Palmira). **Cualquier foto nueva entra con ese tope.**
+
 Las fotos con autorización ya están en `public/images/news/chequeo-profondos-2026/`
 y cargadas en el álbum (`src/content/gallery/chequeo-profondos-2026.md`, todavía en
 `draft: true`). Las dos planillas **no se publican**: son documento interno.
@@ -144,10 +158,14 @@ afiche, o el Open es otra cosa. Ver duda 1.
    culotte vinotinto Safetti que la foto de la previa. Si es él, corrió en Open
    y fue DNF en la tercera vuelta. Confírmalo y dime el apellido completo, que el
    sitio publica nombre y apellido.
-4. **¿Quién es el dorsal "90?" del paso de troncos?** La placa se lee "90" y el
-   tercer dígito no. Por el uniforme es del club, así que es Mariana Coronado
-   (904) o Isabel Quiñones (906). ¿Cuál de las dos? El pie de foto por ahora no
-   la nombra.
+4. **Dorsales "90?" sin resolver.** En `prejuvenil-paso-de-troncos.webp` y en
+   `prejuvenil-doble-en-circuito.webp` la placa se lee "90" y el tercer dígito
+   no. Por el uniforme son del club: Mariana Coronado (904) o Isabel Quiñones
+   (906). Los pies de foto por ahora no las nombran. (El 904 sí se lee claro en
+   `mariana-coronado-circuito.webp`.)
+4b. **Corredor sin identificar**: `corredor-club-tramo-piedras.webp`, uniforme
+   del club, culotte con "YUMBO", casco verde y bicicleta Specialized verde
+   lima. No se le ve el dorsal. ¿Quién es?
 5. **¿Corrieron juntas la Prejuvenil y la Open?** En esa misma foto hay un
    corredor al fondo con uniforme rojo y azul, que parece el 1950. Si las
    categorías largaron mezcladas, es un dato que cambia cómo se cuenta la
@@ -186,6 +204,9 @@ cielo despejado con nubes altas.
 - El podio de dos corredores es **Prejuvenil varones**; la niña que aparece es
   familiar de Santiago Cardona, el ganador.
 - **Hay autorización para publicar las fotos.**
+- Dorsal 1203 identificado en carrera: **Germán Recio**, el corredor veterano
+  del maillot Colombina (es también el adulto que aparece en la parrilla de
+  menores).
 
 ---
 
