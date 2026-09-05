@@ -248,9 +248,9 @@ Las dos especies están en el inventario del sitio (`src/content/species/`:
 guayaba, guayaba pera, mango, mango tommy, mango manzana), con fichas propias
 en `/trocha-verde`. Es un enlace natural para la crónica y para el álbum: el
 chequeo se corrió entre los árboles que el propio club sembró y catalogó, y la
-plata de las inscripciones va a mantener ese mismo terreno. **Confirmar con el
-club** que los letreros del circuito son en efecto los del inventario de Trocha
-Verde antes de escribirlo.
+plata de las inscripciones va a mantener ese mismo terreno. **El club confirmó** que los letreros del circuito son los del inventario de
+Trocha Verde, así que el dato ya está escrito en la crónica, con enlaces a
+`/trocha-verde/guayaba`, `/trocha-verde/mango` y al índice.
 
 ### Dos cosas que da la última tanda
 
@@ -281,6 +281,7 @@ cielo despejado con nubes altas.
 - El podio de dos corredores es **Prejuvenil varones**; la niña que aparece es
   familiar de Santiago Cardona, el ganador.
 - **Hay autorización para publicar las fotos.**
+- **Los letreros del circuito son los del inventario de Trocha Verde.**
 - El "Juan Esteban" del relato era **Samuel Ortiz**: Juan Diego lo persiguió y
   no lo alcanzó. Coincide con la planilla, donde Juan Diego es segundo con solo
   Samuel por delante.

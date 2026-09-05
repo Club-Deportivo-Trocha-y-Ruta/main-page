@@ -35,7 +35,6 @@ galleryImages:
   - 'prejuvenil-doble-en-circuito.webp'
   - 'corredor-club-tramo-piedras.webp'
   - 'circuito-tres-corredores.webp'
-  - 'open-circuito-arbol-guayaba.webp'
   - 'menores-426-curva.webp'
   - 'menores-426-paso-de-troncos.webp'
   - 'menores-1257-circuito.webp'
@@ -67,9 +66,7 @@ seo:
         confirmado que la Open corrió cuatro vueltas.
      5. Hora de cierre de la jornada (la de largada ya está: 8:45 la primera
         categoría, 10:34 la última).
-     6. Confirmar si los letreros de madera que se ven en las fotos del
-        circuito (GUAYABA, MANGO) son los del inventario de Trocha Verde —
-        hoy queda fuera del texto. -->
+-->
 
 Bajo un sol de 34 grados, entre los banderines que cuelgan sobre la loma y las cintas amarillas que peinan el trazado, un letrero de madera clavado junto al paso de troncos repite algo simple: «Cree en ti y todo será posible». Es el fondo con el que el club abrió su casa el sábado 5 de septiembre para el **2º Chequeo Pro-Fondos de ciclomontañismo**, en la Pista Carlos Castro de Yumbo. La primera categoría largó a las **8:45 de la mañana**; la última, a las **10:34**.
 
@@ -80,6 +77,20 @@ Un chequeo es lo que su nombre dice: un ensayo con cronómetro para ver cómo ll
 El del sábado tuvo, además, un destino: lo recaudado por las inscripciones va al **mantenimiento de la Pista Carlos Castro**, la casa del club. Es la misma pista donde el 18 de octubre se corre la **semifinal de la Copa Valle Paraíso de Todos GW Shimano 2026** y la antesala del **domingo 13 de septiembre**, cuando el club viaja a la [Copa Let's Go de Alcalá](/calendario/#evento-2026-09-copa-lets-go-alcala) solo para el XCO. En medio de esos dos compromisos, el chequeo hizo doble trabajo: puso a punto las piernas y dejó plata para el trazado.
 
 Largaron **alrededor de treinta deportistas** entre todas las categorías, cada uno con su inscripción de $20.000. Esa plata tiene un destino que el club ya definió y que no es abstracto: **adecuar la pista para la semifinal de la Copa Valle**, que se corre aquí mismo el 18 de octubre. Lo que se recogió el sábado se le devuelve al trazado antes de que llegue todo el Valle a rodarlo.
+
+Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tienen nombre**. Clavados en los troncos, letreros de madera van diciendo qué es cada uno —[guayaba](/trocha-verde/guayaba) en el tramo llano, [mango](/trocha-verde/mango) junto al paso de troncos—, porque son los mismos que el club sembró y catalogó en **[Trocha Verde](/trocha-verde)**, su inventario de los árboles de la pista, setenta y siete a la fecha del chequeo. Los corredores del sábado pasaron entre ellos vuelta tras vuelta sin detenerse a leerlos. La plata de las inscripciones se queda justamente ahí: en el terreno que los sostiene.
+
+<figure>
+  <img
+    src="/images/news/chequeo-profondos-2026/open-circuito-arbol-guayaba.webp"
+    alt="Un corredor de la categoría Open rueda por el circuito junto al letrero de madera que identifica un árbol de guayaba"
+    width="960"
+    height="1280"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>El trazado pasa junto a los árboles señalizados de la pista: los del inventario de Trocha Verde.</figcaption>
+</figure>
 
 <!-- PENDIENTE — El bloque de transparencia (.ledger) entra cuando el club pase
      el número EXACTO de inscritos y los pesos recogidos. Los treinta de arriba
