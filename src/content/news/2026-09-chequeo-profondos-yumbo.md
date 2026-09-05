@@ -193,7 +193,7 @@ En varones, dos corredores del club: **Santiago Cardona Chate** ganó con **40:2
      Si llega, aquí va el detalle por grupo, con nombres solo si el club lo
      autoriza. -->
 
-Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo; y a los adultos les tocó lo de siempre en casa: rodar cerca y señalar la curva. En una foto de la mañana, **Germán Recio** —corredor de Cali que abandonó su propia carrera de la Open tras la primera vuelta— aparece rodando al lado de uno de los pequeños. La imagen habla sola.
+Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo; y a los adultos les tocó lo de siempre en casa: rodar cerca y señalar la curva. En una foto de la mañana, **Germán Recio** —corredor de Cali que en la Open tenía que hacer una sola vuelta— aparece rodando al lado de uno de los pequeños. La imagen habla sola.
 
 ## Lo que se chequeó
 
@@ -232,17 +232,17 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
 
 **Open** — 4 vueltas completas
 
-| Puesto | Corredor                    | Club                          | Total       |
-| ------ | --------------------------- | ----------------------------- | ----------- |
-| **1°** | Samuel Ortiz Valencia       | Trocha y Ruta                 | **1:00:11** |
-| **2°** | Juan Diego García Bohórquez | Trocha y Ruta                 | **1:03:15** |
-| **3°** | Jorge Lasso                 | Escuela Olguita García (Cali) | **1:05**    |
-| 4°     | Samuel Rodríguez            | Independiente (Cali)          | 1:13:46     |
-| DNF    | Bernardino Montenegro Urrea | Independiente (Yumbo)         | 4ª vuelta   |
-| DNF    | Felipe Maya                 | Cali                          | 3ª vuelta   |
-| DNF    | Germán Recio                | Cali                          | 1ª vuelta   |
+| Puesto | Corredor                    | Club                          | Total            |
+| ------ | --------------------------- | ----------------------------- | ---------------- |
+| **1°** | Samuel Ortiz Valencia       | Trocha y Ruta                 | **1:00:11**      |
+| **2°** | Juan Diego García Bohórquez | Trocha y Ruta                 | **1:03:15**      |
+| **3°** | Jorge Lasso                 | Escuela Olguita García (Cali) | **1:05**         |
+| 4°     | Samuel Rodríguez            | Independiente (Cali)          | 1:13:46          |
+| DNF    | Bernardino Montenegro Urrea | Independiente (Yumbo)         | 4ª vuelta        |
+| DNF    | Felipe Maya                 | Cali                          | 3ª vuelta        |
+| —      | Germán Recio                | Cali                          | 1 vuelta · 19:53 |
 
-<small>DNF: no terminó; se indica la vuelta en la que se retiró.</small>
+<small>DNF: no terminó; se indica la vuelta en la que se retiró. Germán Recio corrió una sola vuelta, la que le correspondía, y no entra en la clasificación de las cuatro.</small>
 
 **Prejuvenil damas** — 2 vueltas completas
 

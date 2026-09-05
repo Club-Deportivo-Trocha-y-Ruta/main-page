@@ -108,16 +108,16 @@ maillot rojo-negro del club (el mismo del 1907 en la parrilla), el 2º el
 rojo-azul con "YUMBO" (el del 1950) y el 3º el uniforme de la Escuela Olguita
 García.
 
-| Puesto | Dorsal | Corredor                    | Ciudad | Club                   | V1       | V2    | V3    | Total       |
-| ------ | ------ | --------------------------- | ------ | ---------------------- | -------- | ----- | ----- | ----------- |
-| 1º     | 1907   | Samuel Ortiz Valencia       | Yumbo  | Trocha y Ruta          | 14:28:91 | 29:23 | 44:55 | **1:00:11** |
-| 2º     | 1950   | Juan Diego García Bohórquez | Yumbo  | Trocha y Ruta          | 15:12    | 30:26 | 46:20 | **1:03:15** |
-| 3º     | 1120   | Jorge Lasso                 | Cali   | Escuela Olguita García | 14:29:83 | 30:19 | 47:50 | **1:05**    |
-| 4º     | 1906   | Samuel Rodríguez            | Cali   | Independiente          | 17:14    | 35:53 | 54:53 | **1:13:46** |
-| —      | 251    | Bernardino Montenegro Urrea | Yumbo  | Independiente          | 14:47    | 31:20 | 48:36 | DNF         |
-| —      | 1908   | Felipe Maya                 | Cali   | ¿"Invelavia"?          | 18:46    | 40:23 | DNF   | DNF         |
-| —      | 1203   | Germán Recio                | Cali   | ¿"Bombombún"?          | 19:53    | DNF   | DNF   | DNF         |
-| —      | DNP    | Anderson Cárdenas Guaca     | Yumbo  | Trocha y Ruta          | —        | —     | —     | DNP         |
+| Puesto | Dorsal | Corredor                    | Ciudad | Club                   | V1       | V2    | V3    | Total               |
+| ------ | ------ | --------------------------- | ------ | ---------------------- | -------- | ----- | ----- | ------------------- |
+| 1º     | 1907   | Samuel Ortiz Valencia       | Yumbo  | Trocha y Ruta          | 14:28:91 | 29:23 | 44:55 | **1:00:11**         |
+| 2º     | 1950   | Juan Diego García Bohórquez | Yumbo  | Trocha y Ruta          | 15:12    | 30:26 | 46:20 | **1:03:15**         |
+| 3º     | 1120   | Jorge Lasso                 | Cali   | Escuela Olguita García | 14:29:83 | 30:19 | 47:50 | **1:05**            |
+| 4º     | 1906   | Samuel Rodríguez            | Cali   | Independiente          | 17:14    | 35:53 | 54:53 | **1:13:46**         |
+| —      | 251    | Bernardino Montenegro Urrea | Yumbo  | Independiente          | 14:47    | 31:20 | 48:36 | DNF                 |
+| —      | 1908   | Felipe Maya                 | Cali   | ¿"Invelavia"?          | 18:46    | 40:23 | DNF   | DNF                 |
+| —      | 1203   | Germán Recio                | Cali   | ¿"Bombombún"?          | 19:53    | —     | —     | **1 vuelta: 19:53** |
+| —      | DNP    | Anderson Cárdenas Guaca     | Yumbo  | Trocha y Ruta          | —        | —     | —     | DNP                 |
 
 **El titular está aquí:** Samuel Ortiz Valencia corre **Prejuvenil A** en la Copa
 Valle (así lo publica la crónica de Palmira, donde fue segundo de su categoría
@@ -241,6 +241,14 @@ Corregido antes de publicar:
 
 Publicada con dos huecos que el club decidió no esperar: planillas de Teteros
 y Preinfantiles, y el ganador de Infantil A.
+
+## Aclaración del club (tras publicar)
+
+**Germán Recio no se retiró**: solo le tocaba hacer **una vuelta**. Los "DNF"
+de la planilla en las vueltas 2-4 no son un abandono sino que no las corría.
+Corregido en la tabla de la Open (fila propia, fuera de la clasificación de
+cuatro vueltas, con su 19:53) y en el párrafo de los más pequeños, que decía
+que había abandonado.
 
 ## Dudas abiertas
 
