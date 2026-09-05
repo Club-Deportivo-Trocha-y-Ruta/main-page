@@ -18,7 +18,7 @@ tags:
 image: '/images/news/chequeo-profondos-2026/afiche-chequeo-profondos.webp'
 imageAlt: 'Afiche del Chequeo Pro-Fondos del Club Trocha y Ruta, sábado 5 de septiembre de 2026 en la Pista Carlos Castro de Yumbo'
 imageLayout: contain
-excerpt: 'Samuel Ortiz, prejuvenil del club, se subió a la Open del 2º Chequeo Pro-Fondos y ganó en la Pista Carlos Castro por delante de adultos y de corredores de Cali. Juan Diego García fue segundo.'
+excerpt: 'Samuel Ortiz, prejuvenil del club, se subió a la Open del Chequeo Pro-Fondos y ganó en la Pista Carlos Castro por delante de adultos y de corredores de Cali. Juan Diego García fue segundo.'
 featured: true
 draft: false
 relatedEvent: '2026-09-chequeo-profondos-yumbo'
@@ -51,7 +51,7 @@ galleryImages:
   - 'podio-menores-mas-pequenos.webp'
 seo:
   metaTitle: 'Chequeo Pro-Fondos: Samuel Ortiz gana la Open en Yumbo'
-  metaDescription: 'Samuel Ortiz, prejuvenil del club, se subió a la Open del 2º Chequeo Pro-Fondos y ganó en la Pista Carlos Castro de Yumbo. Juan Diego García, segundo.'
+  metaDescription: 'Samuel Ortiz, prejuvenil del club, se subió a la Open del Chequeo Pro-Fondos y ganó en la Pista Carlos Castro de Yumbo. Juan Diego García, segundo.'
   ogImage: '/images/news/chequeo-profondos-2026/og-chequeo-profondos.webp'
 ---
 
@@ -67,17 +67,15 @@ seo:
      Open y Prejuvenil y relato del director, en
      claudedocs/chequeo-profondos-2026/insumos.md. -->
 
-Bajo un sol de 34 grados, entre los banderines que cuelgan sobre la loma y las cintas amarillas que peinan el trazado, un letrero de madera clavado junto al paso de troncos repite algo simple: «Cree en ti y todo será posible». Es el fondo con el que el club abrió su casa el sábado 5 de septiembre para el **2º Chequeo Pro-Fondos de ciclomontañismo**, en la Pista Carlos Castro de Yumbo. La primera categoría largó a las **8:45 de la mañana**, la última a las **10:34**, y a las **12 del mediodía** ya estaba todo cerrado.
+Bajo un sol de 34 grados, entre los banderines que cuelgan sobre la loma y las cintas amarillas que peinan el trazado, un letrero de madera clavado junto al paso de troncos repite algo simple: «Cree en ti y todo será posible». Es el fondo con el que el club abrió su casa el sábado 5 de septiembre para el **Chequeo Pro-Fondos de ciclomontañismo**, en la Pista Carlos Castro de Yumbo. La primera categoría largó a las **8:45 de la mañana**, la última a las **10:34**, y a las **12 del mediodía** ya estaba todo cerrado.
 
 ## Qué es un chequeo y por qué pro-fondos
 
 Un chequeo es lo que su nombre dice: un ensayo con cronómetro para ver cómo llega cada corredor a lo que sigue. No reparte puntos de Copa Valle ni deja campeón, y por eso permite algo que una válida no siempre deja: probar en carrera lo que se entrenó la semana pasada, equivocarse sin costo en la tabla y llevarse una lectura clara al martes de entrenamiento.
 
-El del sábado tuvo, además, un destino: lo recaudado por las inscripciones va al **mantenimiento de la Pista Carlos Castro**, la casa del club. Es la misma pista donde el 18 de octubre se corre la **semifinal de la Copa Valle Paraíso de Todos GW Shimano 2026** y la antesala del **domingo 13 de septiembre**, cuando el club viaja a la [Copa Let's Go de Alcalá](/calendario/#evento-2026-09-copa-lets-go-alcala) solo para el XCO. En medio de esos dos compromisos, el chequeo hizo doble trabajo: puso a punto las piernas y dejó plata para el trazado.
+El del sábado tuvo, además, un destino. Largaron **alrededor de treinta deportistas**, cada uno con su inscripción de $20.000, y esa plata va a **adecuar la Pista Carlos Castro** para el **18 de octubre**, cuando la casa del club recibe la semifinal de la Copa Valle. Con la [Copa Let's Go de Alcalá](/calendario/#evento-2026-09-copa-lets-go-alcala) el fin de semana siguiente, el chequeo hizo doble trabajo: puso a punto las piernas y dejó plata para el trazado.
 
-Largaron **alrededor de treinta deportistas** entre todas las categorías, cada uno con su inscripción de $20.000, y esa plata ya tiene destino concreto: **adecuar la pista para la semifinal**, para que el trazado esté a punto antes de que llegue todo el Valle a rodarlo.
-
-Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tienen nombre**. Clavados en los troncos, letreros de madera van diciendo qué es cada uno —[guayaba](/trocha-verde/guayaba) en el tramo llano, [mango](/trocha-verde/mango) junto al paso de troncos—, porque son los mismos que el club sembró y catalogó en **[Trocha Verde](/trocha-verde)**, su inventario de los árboles de la pista, setenta y siete a la fecha del chequeo. Los corredores del sábado pasaron entre ellos vuelta tras vuelta sin detenerse a leerlos. La plata de las inscripciones se queda justamente ahí: en el terreno que los sostiene.
+Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tienen nombre**. Letreros de madera clavados en los troncos van diciendo qué es cada uno —[guayaba](/trocha-verde/guayaba) en el tramo llano, [mango](/trocha-verde/mango) junto al paso de troncos—, porque son los mismos que el club sembró y catalogó en **[Trocha Verde](/trocha-verde)**, su inventario de la pista: setenta y siete a la fecha del chequeo. La plata de las inscripciones se queda justamente ahí: en el terreno que los sostiene.
 
 <figure>
   <img
@@ -108,10 +106,10 @@ Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tie
     loading="lazy"
     decoding="async"
   />
-  <figcaption>La parrilla de la Open: 251, 1907 y 1950 en la línea de salida.</figcaption>
+  <figcaption>La parrilla de la Open, en la línea de salida.</figcaption>
 </figure>
 
-La Open corrió cuatro vueltas al circuito completo, la distancia más larga del día, y ahí estuvo el titular. **Samuel Ortiz Valencia**, que en la Copa Valle corre **Prejuvenil A** —fue segundo de su categoría en la [válida de Palmira](/noticias/2026-08-copa-valle-palmira-xco)—, decidió subirse a la Open y medirse con adultos y visitantes de Cali. Manejó la carrera con cabeza: las dos primeras vueltas se quedó con el grupo de punta; en las dos últimas se fue en solitario y no lo alcanzaron. Cruzó la meta en **1:00:11**, primero.
+La Open corrió cuatro vueltas al circuito completo, la distancia más larga del día, y ahí estuvo el titular. **Samuel Ortiz Valencia**, que en la Copa Valle corre **Prejuvenil A** —fue segundo de su categoría en la [válida de Palmira](/noticias/2026-08-copa-valle-palmira-xco)—, corrió la Open por una razón sencilla: en su categoría no tiene con quién medirse. Subirse con los adultos y con los visitantes de Cali era la manera de saber en qué nivel está. Manejó la carrera con cabeza: las dos primeras vueltas se quedó con el grupo de punta; en las dos últimas se fue en solitario y no lo alcanzaron. Cruzó la meta en **1:00:11**, primero.
 
 **Juan Diego García Bohórquez** hizo la carrera contraria: intentó salir controlado y fue remontando posiciones vuelta a vuelta, con el compañero de club siempre en el horizonte. Lo persiguió hasta el final y no lo alcanzó. Cerró **segundo, con 1:03:15**, a tres minutos y cuatro segundos de Samuel.
 
@@ -127,7 +125,7 @@ La Open corrió cuatro vueltas al circuito completo, la distancia más larga del
   <figcaption>Juan Diego García (1950), en el ascenso del circuito.</figcaption>
 </figure>
 
-El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García de Cali, en **una hora y cinco minutos**: aportó al club el rival de nivel que le hacía falta para chequearse en casa. Cuarto entró Samuel Rodríguez, también de Cali. **Bernardino Montenegro Urrea**, el otro yumbeño de la Open, arrancó fuerte —cerró la primera vuelta con el tercer mejor tiempo, a diecinueve segundos del más rápido— pero las cuatro vueltas al sol le pasaron factura y abandonó en la última. La foto de su salto desde la plataforma del teatrino cuenta, sin comentarios, cómo iba de suelto antes de que el calor se le atravesara.
+El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García de Cali, en **una hora y cinco minutos**: aportó al club el rival de nivel que le hacía falta para chequearse en casa. Cuarto entró Samuel Rodríguez, también de Cali. **Bernardino Montenegro Urrea**, el otro yumbeño de la Open, arrancó fuerte —cerró la primera vuelta con el tercer mejor tiempo, a diecinueve segundos del más rápido— pero las cuatro vueltas al sol le pasaron factura y abandonó en la última.
 
 <figure>
   <img
@@ -185,7 +183,7 @@ En varones, dos corredores del club: **Santiago Cardona Chate** ganó con **40:2
 
 ## Infantil A: Jostin se prueba en casa
 
-**Jostin Villamizar García** fue **segundo** en Infantil A masculino, en torno a los 45 minutos. Su categoría corrió **dos vueltas al 70% del trazado**: los recorridos no son los mismos para todos, y por eso los tiempos de una categoría no se comparan con los de otra. Aprovechó el chequeo para probarse frente a un contrincante de su categoría de la Copa Valle, y hacerlo en su propia pista: se fogueó, aguantó fuerte buena parte de la carrera y, faltando poco para el final, se le acabó el gas. Es la clase de lectura que un chequeo permite y una válida no —equivocarse sin costo en la tabla—, y quedó anotada para el martes de entrenamiento.
+**Jostin Villamizar García** fue **segundo** en Infantil A masculino, en torno a los 45 minutos. Su categoría corrió **dos vueltas al 70% del trazado**: los recorridos no son los mismos para todos, y por eso los tiempos de una categoría no se comparan con los de otra. Aprovechó el chequeo para probarse frente a un contrincante de su categoría de la Copa Valle, y hacerlo en su propia pista: se fogueó, aguantó fuerte buena parte de la carrera y, faltando poco para el final, se le acabó el gas. Esa lectura se va al martes de entrenamiento.
 
 <!-- El tiempo de Jostin es el aproximado que dio el club (45 minutos): por eso
      va en el cuerpo como tal y NO en la tabla de resultados, donde se leería
@@ -197,7 +195,7 @@ En varones, dos corredores del club: **Santiago Cardona Chate** ganó con **40:2
      Si llega, aquí va el detalle por grupo, con nombres solo si el club lo
      autoriza. -->
 
-Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo; y a los adultos les tocó lo de siempre en casa: rodar cerca y señalar la curva. En una foto de la mañana, **Germán Recio** —corredor de Cali que en la Open tenía que hacer una sola vuelta— aparece rodando al lado de uno de los pequeños. La imagen habla sola.
+Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo; y a los adultos les tocó lo de siempre en casa: rodar cerca y señalar la curva.
 
 <div class="figure-grid">
   <figure>
