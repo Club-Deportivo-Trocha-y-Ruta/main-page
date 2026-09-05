@@ -250,7 +250,41 @@ Corregido en la tabla de la Open (fila propia, fuera de la clasificación de
 cuatro vueltas, con su 19:53) y en el párrafo de los más pequeños, que decía
 que había abandonado.
 
+## Sexta tanda: los más pequeños (llegada tarde, tras publicar)
+
+Cinco fotos que por fin cubren las categorías menores, que hasta ahora solo
+tenían parrilla y ninguna imagen en el cuerpo de la crónica:
+
+- `teteros-1758-circuito.webp` y `teteros-1706-circuito.webp`: dos corredores
+  del club en bicicleta de balance (sin pedales a la vista), con un familiar
+  acompañando a pie. **Van embebidas en "Los más pequeños"**, en `.figure-grid`:
+  esa sección era la única de la crónica sin foto.
+- `podio-menores-varones.webp`: podio de tres, con **un corredor del club en el
+  segundo puesto**. Ver duda nueva.
+- `podio-menores-damas.webp`: podio de tres, con **una corredora del club en el
+  tercer puesto**.
+- `podio-menores-mas-pequenos.webp`: podio de solo dos, ninguno del club,
+  presentado por un adulto del club con micrófono.
+
+Los tres podios van al pie, en la galería. Ninguno se nombra: no hay planilla
+que diga de qué categoría es cada uno ni quién es cada corredor.
+
 ## Dudas abiertas
+
+0b. **¿El podio de `podio-menores-varones.webp` es el de Infantil A?** El
+segundo puesto lo ocupa un corredor con uniforme del club, y el único
+segundo puesto del club en las categorías menores que conocemos es el de
+**Jostin Villamizar en Infantil A masculino**. Si es él, ese podio identifica
+además al **ganador de la categoría** (el del maillot azul y blanco con
+gorra), que es uno de los dos pendientes que quedan. No lo doy por hecho:
+no identifico a un menor por parecido, hace falta que el club lo confirme.
+0c. **¿De qué categorías son los otros dos podios**, y quiénes son la corredora
+del club que fue tercera y los dos pequeños del podio de dos?
+0d. **Menores de otros clubes en los podios.** Las fotos de podio incluyen
+niños de otros clubes (maillot tricolor de Colombia, azul y blanco,
+morado y amarillo). La autorización que dio el club cubre a sus deportistas;
+como organizador del evento debería tener también la de los inscritos
+visitantes, pero conviene confirmarlo antes de dejarlas publicadas.
 
 1. **La categoría Open.** ¿Se abrió sobre la marcha? Si corrió de verdad —y la
    planilla, el podio y la parrilla dicen que sí—, hay que sumarla a la lista de

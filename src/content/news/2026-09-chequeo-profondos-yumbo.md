@@ -45,6 +45,9 @@ galleryImages:
   - 'menores-1257-paso-de-troncos.webp'
   - 'german-recio-acompana-menor.webp'
   - 'podio-prejuvenil-masculino.webp'
+  - 'podio-menores-varones.webp'
+  - 'podio-menores-damas.webp'
+  - 'podio-menores-mas-pequenos.webp'
 seo:
   metaTitle: 'Chequeo Pro-Fondos: Samuel Ortiz gana la Open en Yumbo'
   metaDescription: 'Samuel Ortiz, prejuvenil del club, se subió a la Open del 2º Chequeo Pro-Fondos y ganó en la Pista Carlos Castro de Yumbo. Juan Diego García, segundo.'
@@ -194,6 +197,31 @@ En varones, dos corredores del club: **Santiago Cardona Chate** ganó con **40:2
      autoriza. -->
 
 Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo; y a los adultos les tocó lo de siempre en casa: rodar cerca y señalar la curva. En una foto de la mañana, **Germán Recio** —corredor de Cali que en la Open tenía que hacer una sola vuelta— aparece rodando al lado de uno de los pequeños. La imagen habla sola.
+
+<div class="figure-grid">
+  <figure>
+    <img
+      src="/images/news/chequeo-profondos-2026/teteros-1758-circuito.webp"
+      alt="El dorsal 1758, del Club Trocha y Ruta, rueda por el circuito de tierra mientras un familiar lo acompaña corriendo detrás"
+      width="720"
+      height="1280"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>El 1758, con la carrera propia y el acompañante corriendo detrás.</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/chequeo-profondos-2026/teteros-1706-circuito.webp"
+      alt="El dorsal 1706, del Club Trocha y Ruta, avanza por el circuito de tierra impulsándose con los pies"
+      width="788"
+      height="1400"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>El 1706, midiendo el terreno a su ritmo.</figcaption>
+  </figure>
+</div>
 
 ## Lo que se chequeó
 
