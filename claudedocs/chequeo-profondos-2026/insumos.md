@@ -194,6 +194,23 @@ Faltan por pasar: cuántos corrieron y los datos de las demás categorías.
 - **Bernardino Montenegro** es **independiente, de Yumbo**. El texto y la tabla
   ya lo decían así.
 
+## Datos de jornada cerrados por el club
+
+- **Recaudo**: el club decidió **no publicar valores exactos**. Queda el
+  aproximado de inscritos (alrededor de 30) y el destino (adecuar la pista
+  para la semifinal de la Copa Valle del 18 de octubre). El bloque `.ledger`
+  no se pinta.
+- **Tiempo de Jostin**: 45 minutos **aproximados**, confirmado como tal. Va en
+  el cuerpo, no en la tabla.
+- **Vueltas por categoría**: Open, 4 vueltas al circuito completo; Prejuvenil,
+  2 vueltas completas; Infantil A, 2 vueltas al 70% del trazado. Faltan
+  Teteros (las dos) y Preinfantiles.
+- **Horario**: primera largada 8:45 a. m., última 10:34 a. m., cierre a las
+  12 del mediodía.
+
+Lo de las vueltas es el dato que le faltaba al texto: explica por qué los
+tiempos de una categoría no se comparan con los de otra.
+
 ## Dudas abiertas
 
 1. **La categoría Open.** ¿Se abrió sobre la marcha? Si corrió de verdad —y la

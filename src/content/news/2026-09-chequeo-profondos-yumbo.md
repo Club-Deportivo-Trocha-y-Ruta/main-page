@@ -51,24 +51,18 @@ seo:
 ---
 
 <!-- PENDIENTE — Antes de publicar (quitar draft: true):
-     1. Recaudo exacto. El club estima ALREDEDOR DE 30 inscritos; el texto lo
-        dice como aproximado a propósito. Para pintar el bloque .ledger hace
-        falta el número exacto y los pesos recogidos: un total estimado no
-        cuadra con la regla de la pieza (el total se escribe a mano y tiene
-        que dar). El destino ya está confirmado: adecuar la pista para la
-        semifinal de la Copa Valle del 18 de octubre.
-     2. Planillas de Teteros sin pedales, Teteros con pedales, Preinfantiles
-        e Infantiles. De Infantil A masculino solo se tiene el segundo puesto
-        de Jostin; falta el resto de la categoría y el ganador.
-     3. Tiempo real de Jostin Villamizar. El club estima 45 minutos, así que
-        va como aproximado en el cuerpo y NO entra en ninguna tabla.
-     4. Vueltas y longitud de recorrido de cada categoría: solo está
-        confirmado que la Open corrió cuatro vueltas.
-     5. Hora de cierre de la jornada (la de largada ya está: 8:45 la primera
-        categoría, 10:34 la última).
--->
+     1. Planillas de Teteros sin pedales, Teteros con pedales y Preinfantiles:
+        cuántas vueltas corrieron y cómo terminaron. Hoy esos grupos se
+        mencionan en colectivo y sin nombres.
+     2. De Infantil A masculino falta quién ganó: solo está confirmado el
+        segundo puesto de Jostin.
 
-Bajo un sol de 34 grados, entre los banderines que cuelgan sobre la loma y las cintas amarillas que peinan el trazado, un letrero de madera clavado junto al paso de troncos repite algo simple: «Cree en ti y todo será posible». Es el fondo con el que el club abrió su casa el sábado 5 de septiembre para el **2º Chequeo Pro-Fondos de ciclomontañismo**, en la Pista Carlos Castro de Yumbo. La primera categoría largó a las **8:45 de la mañana**; la última, a las **10:34**.
+     Cerrados por el club: recaudo (decidió no publicar cifras exactas, solo
+     el aproximado de inscritos y el destino), tiempo de Jostin (45 minutos
+     aproximados, va como tal), vueltas de Open, Prejuvenil e Infantil A, y
+     horario de la jornada. -->
+
+Bajo un sol de 34 grados, entre los banderines que cuelgan sobre la loma y las cintas amarillas que peinan el trazado, un letrero de madera clavado junto al paso de troncos repite algo simple: «Cree en ti y todo será posible». Es el fondo con el que el club abrió su casa el sábado 5 de septiembre para el **2º Chequeo Pro-Fondos de ciclomontañismo**, en la Pista Carlos Castro de Yumbo. La primera categoría largó a las **8:45 de la mañana**, la última a las **10:34**, y a las **12 del mediodía** ya estaba todo cerrado.
 
 ## Qué es un chequeo y por qué pro-fondos
 
@@ -92,11 +86,11 @@ Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tie
   <figcaption>El trazado pasa junto a los árboles señalizados de la pista: los del inventario de Trocha Verde.</figcaption>
 </figure>
 
-<!-- PENDIENTE — El bloque de transparencia (.ledger) entra cuando el club pase
-     el número EXACTO de inscritos y los pesos recogidos. Los treinta de arriba
-     son una estimación del club y por eso van como "alrededor de": el recibo
-     no se pinta con un total estimado, porque el total va escrito a mano y
-     tiene que cuadrar. El destino ya está confirmado. -->
+<!-- El bloque .ledger (el recibo de transparencia, con el desglose en pesos)
+     NO se pinta: el club decidió no publicar valores exactos y quedarse con el
+     aproximado de inscritos y el destino, que es lo que dice el párrafo de
+     arriba. Si más adelante quiere el recibo detallado, el markup de la pieza
+     está en .claude/agents/content-marketer.md. -->
 
 ## La Open, con un prejuvenil arriba
 
@@ -112,7 +106,7 @@ Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tie
   <figcaption>La parrilla de la Open: 251, 1907 y 1950 en la línea de salida.</figcaption>
 </figure>
 
-La Open corrió cuatro vueltas y ahí estuvo el titular del día. **Samuel Ortiz Valencia**, que en la Copa Valle corre **Prejuvenil A** —fue segundo de su categoría en la [válida de Palmira](/noticias/2026-08-copa-valle-palmira-xco)—, decidió subirse a la Open y medirse con adultos y visitantes de Cali. Manejó la carrera con cabeza: las dos primeras vueltas se quedó con el grupo de punta; en las dos últimas se fue en solitario y no lo alcanzaron. Cruzó la meta en **1:00:11**, primero.
+La Open corrió cuatro vueltas al circuito completo, la distancia más larga del día, y ahí estuvo el titular. **Samuel Ortiz Valencia**, que en la Copa Valle corre **Prejuvenil A** —fue segundo de su categoría en la [válida de Palmira](/noticias/2026-08-copa-valle-palmira-xco)—, decidió subirse a la Open y medirse con adultos y visitantes de Cali. Manejó la carrera con cabeza: las dos primeras vueltas se quedó con el grupo de punta; en las dos últimas se fue en solitario y no lo alcanzaron. Cruzó la meta en **1:00:11**, primero.
 
 **Juan Diego García Bohórquez** hizo la carrera contraria: intentó salir controlado y fue remontando posiciones vuelta a vuelta, con el compañero de club siempre en el horizonte. Lo persiguió hasta el final y no lo alcanzó. Cerró **segundo, con 1:03:15**, a tres minutos y cuatro segundos de Samuel.
 
@@ -168,7 +162,7 @@ El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García d
   <figcaption>Santiago Cardona, Isabel Quiñones y Mariana Coronado, listos para largar.</figcaption>
 </figure>
 
-En Prejuvenil damas, **Mariana Coronado Delgado** e **Isabel Cristhina Quiñones Batero** lo tomaron como un superentrenamiento: se prepararon como si fuera una carrera común y corriente, con el fin de agarrar ritmo antes del compromiso del **domingo 13 en Alcalá**. Mariana ganó con **37:59**; Isabel entró segunda con **41:55**. Las dos salieron con el trabajo hecho y con la lectura que habían ido a buscar.
+En Prejuvenil damas, **Mariana Coronado Delgado** e **Isabel Cristhina Quiñones Batero** lo tomaron como un superentrenamiento: se prepararon como si fuera una carrera común y corriente, con el fin de agarrar ritmo antes del compromiso del **domingo 13 en Alcalá**. Su categoría corrió **dos vueltas al circuito completo**. Mariana ganó con **37:59**; Isabel entró segunda con **41:55**. Las dos salieron con el trabajo hecho y con la lectura que habían ido a buscar.
 
 <figure>
   <img
@@ -186,20 +180,17 @@ En varones, dos corredores del club: **Santiago Cardona Chate** ganó con **40:2
 
 ## Infantil A: Jostin se prueba en casa
 
-**Jostin Villamizar García** fue **segundo** en Infantil A masculino, en torno a los 45 minutos. Aprovechó el chequeo para probarse frente a un contrincante de su categoría de la Copa Valle, y hacerlo en su propia pista: se fogueó, aguantó fuerte buena parte de la carrera y, faltando poco para el final, se le acabó el gas. Es la clase de lectura que un chequeo permite y una válida no —equivocarse sin costo en la tabla—, y quedó anotada para el martes de entrenamiento.
+**Jostin Villamizar García** fue **segundo** en Infantil A masculino, en torno a los 45 minutos. Su categoría corrió **dos vueltas al 70% del trazado**: los recorridos no son los mismos para todos, y por eso los tiempos de una categoría no se comparan con los de otra. Aprovechó el chequeo para probarse frente a un contrincante de su categoría de la Copa Valle, y hacerlo en su propia pista: se fogueó, aguantó fuerte buena parte de la carrera y, faltando poco para el final, se le acabó el gas. Es la clase de lectura que un chequeo permite y una válida no —equivocarse sin costo en la tabla—, y quedó anotada para el martes de entrenamiento.
 
-<!-- PENDIENTE — El tiempo de Jostin es una estimación del club ("alrededor de
-     45 minutos"), por eso va en el cuerpo como aproximado y NO en la tabla de
-     resultados. Cuando llegue la planilla de Infantil A, poner el tiempo real
-     y el resto de la categoría, empezando por el ganador. -->
+<!-- El tiempo de Jostin es el aproximado que dio el club (45 minutos): por eso
+     va en el cuerpo como tal y NO en la tabla de resultados, donde se leería
+     como cronometrado. Falta el ganador de la categoría. -->
 
 ## Los más pequeños, entre los mismos banderines
 
-<!-- PENDIENTE — Grupos con carrera pero sin planilla transcrita todavía:
-     Teteros sin pedales, Teteros con pedales, Preinfantiles y el resto de
-     Infantiles. Cuando lleguen las planillas del club, sumar sus filas a la
-     .check-sheet de abajo y a la tabla de resultados. Hasta entonces, estos
-     grupos se mencionan de manera colectiva y sin nombres. -->
+<!-- PENDIENTE — Teteros sin pedales, Teteros con pedales y Preinfantiles:
+     faltan sus vueltas y sus resultados. Cuando lleguen, sumar sus filas a la
+     .check-sheet y a la tabla. Hasta entonces van en colectivo y sin nombres. -->
 
 Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo; a los mayores les tocó lo de siempre en casa: rodar cerca, señalar la curva y agradecer los relevos. En una foto de la mañana, **Germán Recio** —veterano de Cali que abandonó su propia carrera de la Open tras la primera vuelta— aparece rodando al lado de uno de los pequeños. La imagen habla sola.
 
@@ -209,7 +200,7 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
   <li class="check-sheet__row">
     <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
     <div class="check-sheet__body">
-      <span class="check-sheet__name">Categoría Open · 4 vueltas</span>
+      <span class="check-sheet__name">Categoría Open · 4 vueltas completas</span>
       <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>Manejar una carrera larga bajo 34 °C, con dos vueltas de grupo y dos en solitario.</span>
       <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Samuel Ortiz resolvió la carrera en la tercera vuelta; el calor le cobró a Bernardino en la última.</span>
     </div>
@@ -217,7 +208,7 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
   <li class="check-sheet__row">
     <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
     <div class="check-sheet__body">
-      <span class="check-sheet__name">Prejuveniles</span>
+      <span class="check-sheet__name">Prejuveniles · 2 vueltas completas</span>
       <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>Ritmo de carrera en pista conocida, a una semana de Alcalá.</span>
       <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Mariana e Isabel sacaron el trabajo hecho; Santiago se llevó la de varones.</span>
     </div>
@@ -225,21 +216,20 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
   <li class="check-sheet__row">
     <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
     <div class="check-sheet__body">
-      <span class="check-sheet__name">Infantil A masculino</span>
+      <span class="check-sheet__name">Infantil A masculino · 2 vueltas al 70%</span>
       <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>Medirse con un rival de la Copa Valle, en pista propia.</span>
       <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Jostin aguantó fuerte y se quedó sin gas al final: segundo.</span>
     </div>
   </li>
 </ol>
 
-<!-- PENDIENTE — Filas de Teteros sin pedales, Teteros con pedales,
-     Preinfantiles e Infantiles: entran cuando llegue el "se probó / se vio"
-     dictado por el cuerpo técnico. La casilla marcada significa "chequeado":
-     no se dejan filas vacías. -->
+<!-- PENDIENTE — Filas de Teteros sin pedales, Teteros con pedales y
+     Preinfantiles: entran cuando llegue el "se probó / se vio" del cuerpo
+     técnico. La casilla marcada significa "chequeado": no se dejan vacías. -->
 
 ## Cómo terminó cada categoría
 
-**Open** — 4 vueltas
+**Open** — 4 vueltas completas
 
 | Puesto | Corredor                    | Club                          | Total                      |
 | ------ | --------------------------- | ----------------------------- | -------------------------- |
@@ -252,31 +242,29 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
 | DNF    | Germán Recio                | Cali                          | abandonó tras la 1ª vuelta |
 | DNP    | Anderson Cárdenas Guaca     | Trocha y Ruta                 | no largó                   |
 
-**Prejuvenil damas**
+**Prejuvenil damas** — 2 vueltas completas
 
 | Puesto | Corredora                        | Total     |
 | ------ | -------------------------------- | --------- |
 | **1ª** | Mariana Coronado Delgado         | **37:59** |
 | **2ª** | Isabel Cristhina Quiñones Batero | **41:55** |
 
-**Prejuvenil varones**
+**Prejuvenil varones** — 2 vueltas completas
 
 | Puesto | Corredor                        | Total     |
 | ------ | ------------------------------- | --------- |
 | **1°** | Santiago Cardona Chate          | **40:25** |
 | **2°** | Johan Samuel Palacios Canizales | **45:10** |
 
-**Infantil A masculino**
+**Infantil A masculino** — 2 vueltas al 70% del trazado
 
 | Puesto | Corredor                 |
 | ------ | ------------------------ |
 | **2°** | Jostin Villamizar García |
 
 <!-- PENDIENTE — De Infantil A masculino solo se tiene el segundo puesto de
-     Jostin, dictado por el club. Falta el ganador, el resto de la categoría y
-     los tiempos: entran con la planilla. Tampoco hay nada todavía de Teteros
-     sin pedales, Teteros con pedales, Preinfantiles ni del resto de
-     Infantiles. -->
+     Jostin. Falta el ganador y el resto de la categoría, y no hay nada todavía
+     de Teteros sin pedales, Teteros con pedales ni Preinfantiles. -->
 
 ## La pista queda lista para lo que viene
 
