@@ -176,6 +176,24 @@ afiche, o el Open es otra cosa. Ver duda 1.
 
 Faltan por pasar: cuántos corrieron y los datos de las demás categorías.
 
+## Datos que pasó el club (segunda tanda)
+
+- **Alrededor de 30 inscritos** entre todas las categorías. Es una **estimación
+  del club**: va en el texto como "alrededor de treinta" y NO se usa para
+  calcular un recaudo exacto.
+- **Destino confirmado**: adecuar la pista por ser la siguiente parada de la
+  Copa Valle XCO (la semifinal del 18 de octubre).
+- **Jostin Villamizar**: **Infantil A masculino, segundo**, con un tiempo
+  estimado de 45 minutos. El puesto va en la tabla; el tiempo, solo en el
+  cuerpo y como aproximado.
+- **Visto bueno para publicar los nombres nuevos**: concedido.
+- **Anderson Cárdenas Guaca no participó** (no alcanzó a llegar). Sale de la
+  tabla publicada: no hay nada que reportar de una carrera que no corrió.
+- **Horarios**: la primera categoría largó a las **8:45 a. m.** y la última, a
+  las **10:34 a. m.** Falta la hora de cierre.
+- **Bernardino Montenegro** es **independiente, de Yumbo**. El texto y la tabla
+  ya lo decían así.
+
 ## Dudas abiertas
 
 1. **La categoría Open.** ¿Se abrió sobre la marcha? Si corrió de verdad —y la
