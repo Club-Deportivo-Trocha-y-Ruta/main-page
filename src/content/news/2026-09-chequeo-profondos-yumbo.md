@@ -329,9 +329,14 @@ En una carrera la placa la lleva quien pedalea —y el sábado hasta los número
     <span class="thanks-wall__note">Pastelería artesanal de Yumbo. Donó los pastelitos de la premiación, que a esa edad se recuerdan tanto como el podio.</span>
   </li>
   <li class="thanks-wall__plate">
+    <span class="thanks-wall__role">Galletas y gomitas</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/bttrecionorte/" target="_blank" rel="noopener noreferrer">Germán Recio</a></span>
+    <span class="thanks-wall__note">Trajo de Cali las galletas y las gomitas Colombina de la premiación, la misma marca de su maillot. Profesor de la escuela BTT Recio Norte.</span>
+  </li>
+  <li class="thanks-wall__plate">
     <span class="thanks-wall__role">Se dieron el viaje</span>
-    <span class="thanks-wall__name">Samuel Rodríguez, Felipe Maya y Germán Recio</span>
-    <span class="thanks-wall__note">Los otros tres caleños de la Open. Sin visitantes, el chequeo habría sido un entrenamiento entre conocidos.</span>
+    <span class="thanks-wall__name">Samuel Rodríguez y Felipe Maya</span>
+    <span class="thanks-wall__note">Los otros dos caleños de la Open. Sin visitantes, el chequeo habría sido un entrenamiento entre conocidos.</span>
   </li>
   <li class="thanks-wall__plate">
     <span class="thanks-wall__role">Cronómetro y planilla</span>
