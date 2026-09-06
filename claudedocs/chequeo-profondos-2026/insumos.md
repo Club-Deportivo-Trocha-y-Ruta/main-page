@@ -355,6 +355,10 @@ visitantes, pero conviene confirmarlo antes de dejarlas publicadas.
    noticia no se puede escribir: o llega el dato, o ese bloque se borra.
 10. **Logística del día**: hora real de inicio y cierre, clima, vueltas y
     longitud por categoría, voluntarios y roles (solo adultos, con permiso).
+    Lo que falta de aquí es justo lo que le falta al **muro de placas** de la
+    crónica (ver abajo): **qué entes y qué personas naturales ayudaron, con
+    nombre y con rol**. Sin esa lista solo se publican las placas que el
+    material del día respalda por sí solo.
 
 ### Los árboles de la pista son los de Trocha Verde
 
@@ -419,3 +423,42 @@ Temporada 2026" hecha únicamente con esta jornada.
 Propuesta: los resultados del chequeo van en la **tabla de la noticia**
 ("Cómo terminó cada categoría"), y `src/content/results/` se reserva para las
 válidas de Copa Valle.
+
+## Agradecimientos: el muro de placas (6-sep, tras publicar)
+
+La crónica cerraba con una línea suelta —«Gracias a las familias que se
+inscribieron y a los corredores de Cali»— que no nombraba a nadie. Se
+reemplaza por una sección propia, **«Las placas que no salieron a correr»**,
+con una pieza nueva del formato v5 (`.thanks-wall`, CSS en `global.css`,
+markup en `.claude/agents/content-marketer.md`): una pared de dorsales donde
+el nombre va en el lugar del número. Modificador `--org` para los entes;
+sin modificador, personas naturales.
+
+**Las cinco placas publicadas son las que el material ya respalda**, ninguna
+inventada:
+
+| Placa                                        | Qué la respalda                                                                                          |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Escuela Olguita García (`--org`)             | Jorge Lasso, 3º de la Open, y las dos corredoras de `podio-menores-damas-b.webp`                         |
+| Samuel Rodríguez, Felipe Maya y Germán Recio | Planilla de la Open: los tres figuran como Cali                                                          |
+| La mesa de jueces                            | Las dos planillas manuscritas, con sus tachones                                                          |
+| Los adultos del club                         | `podio-menores-mas-pequenos.webp` (micrófono) y `premiacion-mas-pequenos.webp` (dos adultos repartiendo) |
+| Las familias del club                        | Inscripciones y los acompañantes a pie de `teteros-1758-circuito.webp` / `teteros-1706-circuito.webp`    |
+
+**Falta la lista del club** (duda 10). Para cada agradecimiento hacen falta
+tres cosas: **nombre** tal como debe publicarse, **rol** en la jornada (dos o
+tres palabras, va en la placa) y **visto bueno** para publicarlo. De menores no
+se publica ningún nombre. Caben **hasta ocho placas** en total: el escalonado
+de la entrada llega hasta ahí, así que si la lista es más larga hay que
+agrupar por rol o partirla en dos muros.
+
+Dos que están a un dato de poder entrar:
+
+- **Germán Recio acompañando a los menores** (`german-recio-acompana-menor.webp`).
+  Si el club confirma que se quedó rodando con los chiquitos después de su
+  vuelta, esa es una placa propia y no una línea compartida con los otros
+  caleños.
+- **Los entes**: hoy no hay ninguno más que la Escuela Olguita García. Si
+  IMDERTY, la Alcaldía o algún patrocinador puso algo en esta jornada
+  concreta, va con lo que puso; el patrocinio general del club no basta para
+  aparecer en la crónica de un día.

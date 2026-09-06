@@ -272,7 +272,7 @@ evento, en lugar del juego común de v4. La regla para inventar una: nace del da
 ese evento tiene (un horario por mangas, un recaudo), se escribe una vez en `global.css`
 bajo `.prose`, y cumple las tres condiciones de siempre — CSS puro con `reveal` opt-in,
 estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`opacity`
-(más `stroke-dashoffset`, la excepción documentada). Cinco existen hoy:
+(más `stroke-dashoffset`, la excepción documentada). Seis existen hoy:
 
 | Pieza | Para qué | Estreno |
 |---|---|---|
@@ -281,6 +281,7 @@ estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`o
 | `.clock-stamp` | La hora grande bajo cada `##` de manga, con barra del día que avanza hasta esa hora. | Alcalá 2026 |
 | `.ledger` | Recibo de un evento pro-fondos: lo que entró (total remarcado) y en qué se va. Se "imprime" línea a línea y remata con un sello. Nunca calcula: el total se escribe a mano y debe cuadrar. | Chequeo 2026 |
 | `.check-sheet` | Planilla de chequeo: una casilla por grupo de categoría que se marca al entrar en pantalla, con campos "Se probó" / "Se vio". Reemplaza a la tabla-diagnóstico. | Chequeo 2026 |
+| `.thanks-wall` | Muro de placas: los agradecimientos de una jornada en casa como pared de dorsales, con el nombre donde iría el número. Sirve para entes (`--org`) y para personas naturales. Nunca se inventa una placa: cada nombre sale de una fuente o del visto bueno del club. | Chequeo 2026 |
 
 ```html
 <!-- Ficha de la visita — el talón es decorativo (la fecha va también en la
@@ -358,6 +359,25 @@ estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`o
     </div>
   </li>
 </ol>
+
+<!-- Muro de placas — máx. 8 (hasta ahí llega el escalonado). `--org` para un
+     ente; sin modificador, persona natural o grupo de personas. Los agujeros
+     de las bridas y la inclinación son decorativos: todo el dato va en el
+     texto. Regla dura: aquí no entra nadie sin fuente. Los nombres propios de
+     voluntarios exigen el visto bueno del club, y de menores no se publica
+     ninguno (ver "Reglas éticas"). -->
+<ul class="thanks-wall reveal">
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Club visitante</span>
+    <span class="thanks-wall__name">Escuela Olguita García</span>
+    <span class="thanks-wall__note">Vino desde Cali con Jorge Lasso, tercero de la Open.</span>
+  </li>
+  <li class="thanks-wall__plate">
+    <span class="thanks-wall__role">Cronómetro y planilla</span>
+    <span class="thanks-wall__name">La mesa de jueces</span>
+    <span class="thanks-wall__note">De ahí sale cada tiempo de esta crónica.</span>
+  </li>
+</ul>
 ```
 
 ## Regla de dos artículos (eventos de dos días)

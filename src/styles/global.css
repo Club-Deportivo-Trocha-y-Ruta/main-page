@@ -1212,7 +1212,7 @@
    thread, standings-board). Desde septiembre de 2026 cada crónica puede
    traer una o dos piezas PROPIAS, dictadas por la forma del evento que cubre:
    una carrera de un solo día con horario por mangas se cuenta con un reloj;
-   un evento pro-fondos, con un recibo. Cinco piezas, tres reglas comunes:
+   un evento pro-fondos, con un recibo. Seis piezas, tres reglas comunes:
 
      1. Todas son CSS puro y viven bajo `.prose`, como las de v3/v4. El autor
         pega el HTML en el markdown (plantillas en
@@ -2030,6 +2030,151 @@
   .prose :where(.check-sheet.reveal.revealed) .check-sheet__row:nth-child(6) {
     --check-delay: 800ms;
     transition-delay: 800ms;
+  }
+}
+
+/* ── Muro de placas (.thanks-wall) ──
+   Los agradecimientos de una jornada en casa. En una carrera la placa la
+   lleva quien corre; esta pieza se la pone a quien la hizo posible: cada
+   tarjeta imita el dorsal de la pista —mismo borde doble y mismo
+   `--radius-plate` que `.race-plate` de `RaceLineup`— y, en el lugar del
+   número, va el nombre. Arriba el rol, abajo la nota de qué hizo.
+
+   Sirve igual para un ente (un club visitante, una empresa, una entidad) que
+   para una persona natural; el modificador `--org` pinta el rol en lima para
+   distinguir de un vistazo unos de otros.
+
+   Los dos agujeros de las bridas son un pseudo-elemento decorativo. Las
+   placas cuelgan con una inclinación mínima alterna que vive en
+   `--plate-tilt` y se aplica con `rotate`, propiedad aparte de `transform`
+   (misma razón que `.day-clock__stop--award`). Que el ángulo sea un custom
+   property es lo que permite al `<noscript>` de `noticias/[...slug].astro`
+   devolver las placas a su reposo sin repetir aquí el escalonado. */
+.prose :where(.thanks-wall) {
+  list-style: none;
+  margin-block: 2rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: 0.875rem;
+}
+.prose :where(.thanks-wall__plate) {
+  position: relative;
+  margin: 0;
+  padding: 1.125rem 0.875rem 0.9375rem;
+  display: grid;
+  gap: 0.3125rem;
+  align-content: start;
+  text-align: center;
+  border: 3px double var(--color-primary-deep);
+  border-radius: var(--radius-plate);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  rotate: var(--plate-tilt, 0deg);
+}
+.prose :where(.thanks-wall__plate:nth-child(odd)) {
+  --plate-tilt: -0.7deg;
+  --plate-swing: -5deg;
+}
+.prose :where(.thanks-wall__plate:nth-child(even)) {
+  --plate-tilt: 0.7deg;
+  --plate-swing: 5deg;
+}
+.prose :where(.thanks-wall__plate--org) {
+  border-color: var(--color-accent-dark);
+}
+/* Los dos agujeros por donde pasarían las bridas. */
+.prose :where(.thanks-wall__plate)::before {
+  content: '';
+  position: absolute;
+  top: 0.4375rem;
+  left: 0;
+  right: 0;
+  height: 0.3125rem;
+  background:
+    radial-gradient(
+      circle at 22% 50%,
+      var(--color-surface-muted) 0 0.15625rem,
+      transparent 0.15625rem
+    ),
+    radial-gradient(
+      circle at 78% 50%,
+      var(--color-surface-muted) 0 0.15625rem,
+      transparent 0.15625rem
+    );
+}
+.prose :where(.thanks-wall__role) {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.625rem;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary-deep);
+}
+.prose :where(.thanks-wall__plate--org .thanks-wall__role) {
+  color: var(--color-accent-deep);
+}
+.prose :where(.thanks-wall__name) {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.0625rem;
+  line-height: 1.25;
+  text-wrap: balance;
+  color: var(--color-text-primary);
+}
+.prose :where(.thanks-wall__note) {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+/* Entrada: la placa entra colgada de lado (`--plate-swing`, ±5°) y se asienta
+   en su inclinación de reposo (`--plate-tilt`, ±0,7°) con el overshoot de
+   `--ease-spring`. Es el peso de una placa que acaban de amarrar, no un
+   efecto aparte, y por eso aquí no hay desplazamiento: el bloque anima
+   `opacity` y `rotate` y NADA MÁS.
+
+   Ese "nada más" es deliberado. Con un `transform: translateY()` en la misma
+   regla, Lightning CSS fusiona las dos propiedades en un solo
+   `transform: translateY(10px) rotate(0)` — comprobado en `dist/` — y con eso
+   el `rotate` de reposo deja de reescribirse: la placa nunca se asienta. Es la
+   misma familia de gotcha que el shorthand `animation` con
+   `animation-timeline`. Si alguna vez hace falta desplazamiento, va en otra
+   regla, no en esta.
+
+   Escalonado por `:nth-child` con la cadencia de 80 ms del resto de las
+   piezas (hasta 8 placas). */
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.thanks-wall.reveal) .thanks-wall__plate {
+    transition:
+      opacity 0.4s ease-out,
+      rotate var(--duration-celebration) var(--ease-spring);
+  }
+  .prose :where(.thanks-wall.reveal):not(.revealed) .thanks-wall__plate {
+    opacity: 0;
+    rotate: var(--plate-swing, 0deg);
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(2) {
+    transition-delay: 80ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(3) {
+    transition-delay: 160ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(4) {
+    transition-delay: 240ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(5) {
+    transition-delay: 320ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(6) {
+    transition-delay: 400ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(7) {
+    transition-delay: 480ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(8) {
+    transition-delay: 560ms;
   }
 }
 

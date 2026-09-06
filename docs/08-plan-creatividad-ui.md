@@ -597,6 +597,30 @@ class="sr-only">` con la cifra final) dentro de `.stat-strip__value`; como el
   `noticias/[...slug].astro` pasa a cubrir genéricamente `.prose .reveal` más los ítems
   internos de cada pieza.
 
+### Notas — sexta pieza: muro de placas (2026-09-06)
+
+- **`.thanks-wall`**: los agradecimientos de una jornada en casa, como pared de dorsales.
+  Cada placa reusa el borde doble y el `--radius-plate` de `.race-plate` (`RaceLineup`) y
+  pone el nombre donde iría el número; el rol va arriba y la nota de qué hizo, abajo. El
+  modificador `--org` distingue a los entes (club visitante, empresa, entidad) de las
+  personas naturales pintando el rol en `--color-accent-deep`. Estrena en la crónica del
+  Chequeo Pro-Fondos.
+- **La inclinación de la placa vive en `--plate-tilt`** (±0,7° alternos por `:nth-child`) y
+  se aplica con `rotate`, propiedad aparte de `transform` — igual que los rombos de
+  `.day-clock`. La entrada arranca en `--plate-swing` (±5°) y la placa se asienta en su
+  reposo con el overshoot de `--ease-spring`. Que ambos ángulos sean custom properties es
+  lo que permite que el `<noscript>` de `noticias/[...slug].astro` devuelva la placa a su
+  reposo sin repetir el escalonado.
+- **Gotcha nuevo de Lightning CSS, verificado en `dist/`**: si una misma regla declara
+  `transform` y `rotate`, los fusiona en un solo `transform: translateY(…) rotate(…)`. La
+  primera versión de la entrada llevaba `transform: translateY(10px)` junto al `rotate` de
+  arranque y el resultado compilado dejaba el `rotate` de reposo sin reescribir — la placa
+  no se asentaba nunca. Por eso el bloque de entrada anima **solo `opacity` y `rotate`**.
+  Misma familia que el shorthand `animation` con `animation-timeline`: si hace falta
+  desplazamiento, va en otra regla.
+- **Tope de 8 placas**: hasta ahí llega el escalonado por `:nth-child` a 80 ms. Una novena
+  entra sin retardo (visible igual, solo pierde la cascada).
+
 ## Gate (tras cada sprint)
 
 `npm run test:run` + `npm run build` en verde; barrido con `prefers-reduced-motion: reduce`; Lighthouse ≥ 95 tras la tarea 2.

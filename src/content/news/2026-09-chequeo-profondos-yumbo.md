@@ -302,8 +302,46 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
 <!-- Infantil A: el ganador y el resto de la categoría se añaden aquí, como
      tabla, cuando llegue la planilla. Teteros y Preinfantiles, igual. -->
 
+## Las placas que no salieron a correr
+
+En una carrera la placa la lleva quien pedalea. El sábado, buena parte del trabajo del día no llevaba número: alguien tomó los tiempos y llenó las planillas a mano, alguien cogió el micrófono y repartió medallas hasta el último de los teteros, y alguien se dio el viaje desde Cali para que los de casa tuvieran contra quién medirse. Aquí va la placa para ellos.
+
+<!-- PENDIENTE — la lista completa la pasa el club (insumos.md, duda 10:
+     voluntarios y roles, solo adultos y con permiso). Por ahora solo se
+     publican las placas que el material del día respalda; quien más ayudó,
+     con nombre propio y con su visto bueno, entra cuando llegue esa lista.
+     Máximo 8 placas: el escalonado de la entrada llega hasta ahí. -->
+
+<ul class="thanks-wall reveal">
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Club visitante</span>
+    <span class="thanks-wall__name">Escuela Olguita García</span>
+    <span class="thanks-wall__note">Vino desde Cali con Jorge Lasso, tercero de la Open, y con dos corredoras que terminaron en el podio de las categorías menores.</span>
+  </li>
+  <li class="thanks-wall__plate">
+    <span class="thanks-wall__role">Se dieron el viaje</span>
+    <span class="thanks-wall__name">Samuel Rodríguez, Felipe Maya y Germán Recio</span>
+    <span class="thanks-wall__note">Los otros tres caleños de la Open. Sin visitantes, el chequeo habría sido un entrenamiento entre conocidos.</span>
+  </li>
+  <li class="thanks-wall__plate">
+    <span class="thanks-wall__role">Cronómetro y planilla</span>
+    <span class="thanks-wall__name">La mesa de jueces</span>
+    <span class="thanks-wall__note">Dos planillas llenas a mano, con sus tachones y sus correcciones. De ahí sale cada tiempo de esta crónica.</span>
+  </li>
+  <li class="thanks-wall__plate">
+    <span class="thanks-wall__role">Micrófono y medallas</span>
+    <span class="thanks-wall__name">Los adultos del club</span>
+    <span class="thanks-wall__note">Llamaron los podios y entregaron medalla y bolsa a todos los que largaron en las categorías pequeñas.</span>
+  </li>
+  <li class="thanks-wall__plate">
+    <span class="thanks-wall__role">Acompañamiento</span>
+    <span class="thanks-wall__name">Las familias del club</span>
+    <span class="thanks-wall__note">Inscribieron, corrieron a pie al lado de los teteros y esperaron en la meta con el agua lista.</span>
+  </li>
+</ul>
+
 ## La pista queda lista para lo que viene
 
 Con el chequeo cerrado, el club vuelve al calendario federado: el próximo domingo, **13 de septiembre**, viaja a Alcalá solo para el **XCO de la Copa Let's Go**; y el **domingo 18 de octubre**, la Pista Carlos Castro recibe a todo el Valle en la **semifinal de la Copa Valle 2026** —el cierre real llega después, en Roldanillo, el 7 y 8 de noviembre—. El [calendario](/calendario) tiene el detalle.
 
-Gracias a las familias que se inscribieron y a los corredores de Cali que se dieron el viaje. Cada $20.000 vuelve a la pista.
+Y cada $20.000 de los que se inscribieron se queda donde se recogió: en la pista.
