@@ -434,44 +434,37 @@ markup en `.claude/agents/content-marketer.md`): una pared de dorsales donde
 el nombre va en el lugar del número. Modificador `--org` para los entes;
 sin modificador, personas naturales.
 
-**Ocho placas publicadas, ninguna inventada, y el muro queda lleno.** Tres las
-confirmó el club; las otras cinco las respalda el material del día. Los tres
-entes van juntos al abrir el muro y las personas después, salvo que las dos
-placas de dulces —Mera Artesanal y Germán Recio— quedan pegadas a uno y otro
-lado del salto de fila:
+**Cuatro placas publicadas (7-sep), todas confirmadas o respaldadas por el
+material del día.** El club pidió quitar las cuatro genéricas —«Se dieron el
+viaje», «Cronómetro y planilla», «Micrófono y medallas», «Acompañamiento»—:
+describían un rol («la mesa de jueces», «los adultos del club», «las familias
+del club») y no una fuente con nombre propio. El muro se quedó solo con las
+placas que sí tienen alguien detrás:
 
-| Placa | Qué la respalda |
-| --- | --- |
-| Super Copa BMX (`--org`) | **Confirmado por el club**: prestó los números y los tableros de la jornada. Instagram `@supercopa_bmx` (ALPHA SOCIAL S.A.S), enlazado desde la placa |
-| Escuela Olguita García (`--org`) | Jorge Lasso, 3º de la Open, y las dos corredoras de `podio-menores-damas-b.webp` |
-| Mera Artesanal (`--org`) | **Confirmado por el club**: donó los pastelitos de la premiación. Pastelería y panadería artesanal de Yumbo, Instagram `@mera_artesanal`, enlazado desde la placa |
-| Germán Recio | **Confirmado por el club**: donó las galletas y las gomitas Colombina de la premiación. El maillot Colombina ya estaba verificado en la tanda 3; profesor de la escuela BTT Recio Norte (Instagram `@bttrecionorte`), enlazada desde la placa |
-| Samuel Rodríguez y Felipe Maya | Planilla de la Open: los dos figuran como Cali |
-| La mesa de jueces | Las dos planillas manuscritas, con sus tachones |
-| Los adultos del club | `podio-menores-mas-pequenos.webp` (micrófono) y `premiacion-mas-pequenos.webp` (dos adultos repartiendo) |
-| Las familias del club | Inscripciones y los acompañantes a pie de `teteros-1758-circuito.webp` / `teteros-1706-circuito.webp` |
+| Placa                            | Qué la respalda                                                                                                                                                                                                                               |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Super Copa BMX (`--org`)         | **Confirmado por el club**: prestó los números y los tableros de la jornada. Instagram `@supercopa_bmx` (ALPHA SOCIAL S.A.S), enlazado desde la placa                                                                                         |
+| Escuela Olguita García (`--org`) | Jorge Lasso, 3º de la Open, y las dos corredoras de `podio-menores-damas-b.webp`                                                                                                                                                              |
+| Mera Artesanal (`--org`)         | **Confirmado por el club**: donó los pastelitos de la premiación. Pastelería y panadería artesanal de Yumbo, Instagram `@mera_artesanal`, enlazado desde la placa                                                                             |
+| Germán Recio                     | **Confirmado por el club**: donó las galletas y las gomitas Colombina de la premiación. El maillot Colombina ya estaba verificado en la tanda 3; profesor de la escuela BTT Recio Norte (Instagram `@bttrecionorte`), enlazada desde la placa |
 
-La placa de Super Copa BMX abre el muro y le da sentido a la pieza entera: las
-placas que llevaron los corredores el sábado eran suyas. La entradilla de la
-sección lo dice —«hasta los números eran prestados»—, así que la metáfora no
-es un adorno, es el dato.
+La placa de Super Copa BMX sigue abriendo el muro y sigue dándole sentido a la
+pieza entera: las placas que llevaron los corredores el sábado eran suyas. La
+entradilla se reescribió para no describir roles que ya no tienen placa
+(cronómetro, micrófono, acompañamiento) y hablar solo de lo que queda: números
+prestados, el club visitante y los dulces de la premiación.
 
-**La lista del club va llegando** (duda 10). Para cada agradecimiento nuevo
-hacen falta tres cosas: **nombre** tal como debe publicarse, **rol** en la
-jornada (dos o tres palabras, va en la placa) y **visto bueno** para
-publicarlo. De menores no se publica ningún nombre. Caben **hasta ocho placas**
-en total: el escalonado de la entrada llega hasta ahí, así que si la lista es
-más larga hay que agrupar por rol o partirla en dos muros. **El muro está
-lleno**: una placa más obliga a fundir dos de las que están (las candidatas
-naturales son «La mesa de jueces» con «Los adultos del club», o los dos
-caleños con Germán Recio) o a levantar el escalonado hasta 10 en `global.css`.
+**Quedan cuatro cupos libres** de los ocho que aguanta el escalonado. Para
+cada agradecimiento nuevo hacen falta tres cosas: **nombre** tal como debe
+publicarse, **rol** en la jornada (dos o tres palabras, va en la placa) y
+**visto bueno** para publicarlo. De menores no se publica ningún nombre.
 
 Lo que sigue abierto:
 
 - **Germán Recio acompañando a los menores** (`german-recio-acompana-menor.webp`).
-  Ya tiene placa por los dulces, así que esto ya no decide si entra: si el
-  club confirma que se quedó rodando con los chiquitos después de su vuelta,
-  es una línea más para su nota y quizá un pie de foto mejor.
+  Ya tiene placa por los dulces; si el club confirma que se quedó rodando con
+  los chiquitos después de su vuelta, es una línea más para su nota y quizá un
+  pie de foto mejor.
 - **Más entes**: van tres — Super Copa BMX, la Escuela Olguita García y Mera
   Artesanal. Si IMDERTY, la Alcaldía o algún patrocinador puso algo en esta
   jornada concreta, va con lo que puso; el patrocinio general del club no

@@ -304,7 +304,7 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
 
 ## Las placas que no salieron a correr
 
-En una carrera la placa la lleva quien pedalea —y el sábado hasta los números eran prestados—. Buena parte del trabajo del día no llevaba placa: alguien tomó los tiempos y llenó las planillas a mano, alguien cogió el micrófono y repartió medallas hasta el último de los teteros, y alguien se dio el viaje desde Cali para que los de casa tuvieran contra quién medirse. Aquí va la placa para ellos.
+En una carrera la placa la lleva quien pedalea —y el sábado hasta los números eran prestados—. Detrás de la Open y de la premiación hubo manos que no llevaron dorsal: quien prestó los números y los tableros, el club que se dio el viaje desde Cali para completar el pelotón, y quienes endulzaron el podio de los más pequeños. Aquí va la placa para ellos.
 
 <!-- PENDIENTE — la lista completa la pasa el club (insumos.md, duda 10:
      voluntarios y roles, solo adultos y con permiso). Por ahora solo se
@@ -332,26 +332,6 @@ En una carrera la placa la lleva quien pedalea —y el sábado hasta los número
     <span class="thanks-wall__role">Galletas y gomitas</span>
     <span class="thanks-wall__name"><a href="https://www.instagram.com/bttrecionorte/" target="_blank" rel="noopener noreferrer">Germán Recio</a></span>
     <span class="thanks-wall__note">Trajo de Cali las galletas y las gomitas Colombina de la premiación, la misma marca de su maillot. Profesor de la escuela BTT Recio Norte.</span>
-  </li>
-  <li class="thanks-wall__plate">
-    <span class="thanks-wall__role">Se dieron el viaje</span>
-    <span class="thanks-wall__name">Samuel Rodríguez y Felipe Maya</span>
-    <span class="thanks-wall__note">Los otros dos caleños de la Open. Sin visitantes, el chequeo habría sido un entrenamiento entre conocidos.</span>
-  </li>
-  <li class="thanks-wall__plate">
-    <span class="thanks-wall__role">Cronómetro y planilla</span>
-    <span class="thanks-wall__name">La mesa de jueces</span>
-    <span class="thanks-wall__note">Dos planillas llenas a mano, con sus tachones y sus correcciones. De ahí sale cada tiempo de esta crónica.</span>
-  </li>
-  <li class="thanks-wall__plate">
-    <span class="thanks-wall__role">Micrófono y medallas</span>
-    <span class="thanks-wall__name">Los adultos del club</span>
-    <span class="thanks-wall__note">Llamaron los podios y entregaron medalla y bolsa a todos los que largaron en las categorías pequeñas.</span>
-  </li>
-  <li class="thanks-wall__plate">
-    <span class="thanks-wall__role">Acompañamiento</span>
-    <span class="thanks-wall__name">Las familias del club</span>
-    <span class="thanks-wall__note">Inscribieron, corrieron a pie al lado de los teteros y esperaron en la meta con el agua lista.</span>
   </li>
 </ul>
 
