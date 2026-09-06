@@ -323,6 +323,11 @@ En una carrera la placa la lleva quien pedalea —y el sábado hasta los número
     <span class="thanks-wall__name">Escuela Olguita García</span>
     <span class="thanks-wall__note">Vino desde Cali con Jorge Lasso, tercero de la Open, y con dos corredoras que terminaron en el podio de las categorías menores.</span>
   </li>
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Los pastelitos</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/mera_artesanal/" target="_blank" rel="noopener noreferrer">Mera Artesanal</a></span>
+    <span class="thanks-wall__note">Pastelería artesanal de Yumbo. Donó los pastelitos de la premiación, que a esa edad se recuerdan tanto como el podio.</span>
+  </li>
   <li class="thanks-wall__plate">
     <span class="thanks-wall__role">Se dieron el viaje</span>
     <span class="thanks-wall__name">Samuel Rodríguez, Felipe Maya y Germán Recio</span>
