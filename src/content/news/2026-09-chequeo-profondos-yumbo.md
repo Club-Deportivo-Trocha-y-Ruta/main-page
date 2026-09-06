@@ -304,7 +304,7 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
 
 ## Las placas que no salieron a correr
 
-En una carrera la placa la lleva quien pedalea. El sábado, buena parte del trabajo del día no llevaba número: alguien tomó los tiempos y llenó las planillas a mano, alguien cogió el micrófono y repartió medallas hasta el último de los teteros, y alguien se dio el viaje desde Cali para que los de casa tuvieran contra quién medirse. Aquí va la placa para ellos.
+En una carrera la placa la lleva quien pedalea —y el sábado hasta los números eran prestados—. Buena parte del trabajo del día no llevaba placa: alguien tomó los tiempos y llenó las planillas a mano, alguien cogió el micrófono y repartió medallas hasta el último de los teteros, y alguien se dio el viaje desde Cali para que los de casa tuvieran contra quién medirse. Aquí va la placa para ellos.
 
 <!-- PENDIENTE — la lista completa la pasa el club (insumos.md, duda 10:
      voluntarios y roles, solo adultos y con permiso). Por ahora solo se
@@ -313,6 +313,11 @@ En una carrera la placa la lleva quien pedalea. El sábado, buena parte del trab
      Máximo 8 placas: el escalonado de la entrada llega hasta ahí. -->
 
 <ul class="thanks-wall reveal">
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Números y tableros</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/supercopa_bmx/" target="_blank" rel="noopener noreferrer">Super Copa BMX</a></span>
+    <span class="thanks-wall__note">Prestó los números que llevaron los corredores y los tableros de la jornada. Sin dorsal no hay planilla, y sin planilla no hay resultados que contar.</span>
+  </li>
   <li class="thanks-wall__plate thanks-wall__plate--org">
     <span class="thanks-wall__role">Club visitante</span>
     <span class="thanks-wall__name">Escuela Olguita García</span>

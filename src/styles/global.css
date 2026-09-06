@@ -2123,6 +2123,23 @@
   text-wrap: balance;
   color: var(--color-text-primary);
 }
+/* La placa de un ente puede llevar enlace a su sitio o a su perfil. Conserva
+   la tipografía de la placa —mismo peso y mismo color que un nombre sin
+   enlace, que si no la pared se vuelve un listado de links— y se distingue
+   solo por el subrayado. El foco lo pinta el `:focus-visible` global. */
+.prose :where(.thanks-wall__name a) {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-primary) 55%, transparent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .prose :where(.thanks-wall__name a:hover) {
+    text-decoration-color: var(--color-primary-deep);
+  }
+}
 .prose :where(.thanks-wall__note) {
   font-size: 0.8125rem;
   line-height: 1.45;

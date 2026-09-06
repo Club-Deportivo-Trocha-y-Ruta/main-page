@@ -363,14 +363,17 @@ estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`o
 <!-- Muro de placas — máx. 8 (hasta ahí llega el escalonado). `--org` para un
      ente; sin modificador, persona natural o grupo de personas. Los agujeros
      de las bridas y la inclinación son decorativos: todo el dato va en el
-     texto. Regla dura: aquí no entra nadie sin fuente. Los nombres propios de
+     texto. El nombre admite enlace al sitio o al perfil del ente (externo:
+     `target="_blank" rel="noopener noreferrer"`, y sin UTM — la convención de
+     docs/05 es para el tráfico que ENTRA al sitio, no para el que sale).
+     Regla dura: aquí no entra nadie sin fuente. Los nombres propios de
      voluntarios exigen el visto bueno del club, y de menores no se publica
      ninguno (ver "Reglas éticas"). -->
 <ul class="thanks-wall reveal">
   <li class="thanks-wall__plate thanks-wall__plate--org">
-    <span class="thanks-wall__role">Club visitante</span>
-    <span class="thanks-wall__name">Escuela Olguita García</span>
-    <span class="thanks-wall__note">Vino desde Cali con Jorge Lasso, tercero de la Open.</span>
+    <span class="thanks-wall__role">Números y tableros</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/supercopa_bmx/" target="_blank" rel="noopener noreferrer">Super Copa BMX</a></span>
+    <span class="thanks-wall__note">Prestó los números que llevaron los corredores.</span>
   </li>
   <li class="thanks-wall__plate">
     <span class="thanks-wall__role">Cronómetro y planilla</span>

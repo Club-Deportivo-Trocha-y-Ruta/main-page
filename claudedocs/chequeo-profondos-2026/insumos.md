@@ -434,23 +434,29 @@ markup en `.claude/agents/content-marketer.md`): una pared de dorsales donde
 el nombre va en el lugar del número. Modificador `--org` para los entes;
 sin modificador, personas naturales.
 
-**Las cinco placas publicadas son las que el material ya respalda**, ninguna
-inventada:
+**Seis placas publicadas, ninguna inventada.** La primera la confirmó el club;
+las otras cinco las respalda el material del día:
 
-| Placa                                        | Qué la respalda                                                                                          |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Escuela Olguita García (`--org`)             | Jorge Lasso, 3º de la Open, y las dos corredoras de `podio-menores-damas-b.webp`                         |
-| Samuel Rodríguez, Felipe Maya y Germán Recio | Planilla de la Open: los tres figuran como Cali                                                          |
-| La mesa de jueces                            | Las dos planillas manuscritas, con sus tachones                                                          |
-| Los adultos del club                         | `podio-menores-mas-pequenos.webp` (micrófono) y `premiacion-mas-pequenos.webp` (dos adultos repartiendo) |
-| Las familias del club                        | Inscripciones y los acompañantes a pie de `teteros-1758-circuito.webp` / `teteros-1706-circuito.webp`    |
+| Placa | Qué la respalda |
+| --- | --- |
+| Super Copa BMX (`--org`) | **Confirmado por el club**: prestó los números y los tableros de la jornada. Instagram `@supercopa_bmx` (ALPHA SOCIAL S.A.S), enlazado desde la placa |
+| Escuela Olguita García (`--org`) | Jorge Lasso, 3º de la Open, y las dos corredoras de `podio-menores-damas-b.webp` |
+| Samuel Rodríguez, Felipe Maya y Germán Recio | Planilla de la Open: los tres figuran como Cali |
+| La mesa de jueces | Las dos planillas manuscritas, con sus tachones |
+| Los adultos del club | `podio-menores-mas-pequenos.webp` (micrófono) y `premiacion-mas-pequenos.webp` (dos adultos repartiendo) |
+| Las familias del club | Inscripciones y los acompañantes a pie de `teteros-1758-circuito.webp` / `teteros-1706-circuito.webp` |
 
-**Falta la lista del club** (duda 10). Para cada agradecimiento hacen falta
-tres cosas: **nombre** tal como debe publicarse, **rol** en la jornada (dos o
-tres palabras, va en la placa) y **visto bueno** para publicarlo. De menores no
-se publica ningún nombre. Caben **hasta ocho placas** en total: el escalonado
-de la entrada llega hasta ahí, así que si la lista es más larga hay que
-agrupar por rol o partirla en dos muros.
+La placa de Super Copa BMX abre el muro y le da sentido a la pieza entera: las
+placas que llevaron los corredores el sábado eran suyas. La entradilla de la
+sección lo dice —«hasta los números eran prestados»—, así que la metáfora no
+es un adorno, es el dato.
+
+**La lista del club va llegando** (duda 10). Para cada agradecimiento nuevo
+hacen falta tres cosas: **nombre** tal como debe publicarse, **rol** en la
+jornada (dos o tres palabras, va en la placa) y **visto bueno** para
+publicarlo. De menores no se publica ningún nombre. Caben **hasta ocho placas**
+en total: el escalonado de la entrada llega hasta ahí, así que si la lista es
+más larga hay que agrupar por rol o partirla en dos muros. Quedan dos libres.
 
 Dos que están a un dato de poder entrar:
 
@@ -458,7 +464,7 @@ Dos que están a un dato de poder entrar:
   Si el club confirma que se quedó rodando con los chiquitos después de su
   vuelta, esa es una placa propia y no una línea compartida con los otros
   caleños.
-- **Los entes**: hoy no hay ninguno más que la Escuela Olguita García. Si
+- **Más entes**: van dos, Super Copa BMX y la Escuela Olguita García. Si
   IMDERTY, la Alcaldía o algún patrocinador puso algo en esta jornada
   concreta, va con lo que puso; el patrocinio general del club no basta para
   aparecer en la crónica de un día.
