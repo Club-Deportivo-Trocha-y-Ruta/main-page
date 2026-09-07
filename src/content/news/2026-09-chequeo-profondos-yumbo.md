@@ -304,7 +304,7 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
 
 ## Las placas que no salieron a correr
 
-En una carrera la placa la lleva quien pedalea —y el sábado hasta los números eran prestados—. Detrás de la Open y de la premiación hubo manos que no llevaron dorsal: quien prestó los números y los tableros, el club que se dio el viaje desde Cali para completar el pelotón, y quienes endulzaron el podio de los más pequeños. Aquí va la placa para ellos.
+En una carrera la placa la lleva quien pedalea —y el sábado hasta las medallas fueron un trabajo en equipo—. Detrás de la Open y de la premiación hubo manos que no llevaron dorsal: quien donó las medallas, quien las marcó con la leyenda de la jornada, el club que se dio el viaje desde Cali para completar el pelotón, y quienes endulzaron el podio de los más pequeños. Aquí va la placa para ellos.
 
 <!-- PENDIENTE — la lista completa la pasa el club (insumos.md, duda 10:
      voluntarios y roles, solo adultos y con permiso). Por ahora solo se
@@ -314,9 +314,14 @@ En una carrera la placa la lleva quien pedalea —y el sábado hasta los número
 
 <ul class="thanks-wall reveal">
   <li class="thanks-wall__plate thanks-wall__plate--org">
-    <span class="thanks-wall__role">Números y tableros</span>
+    <span class="thanks-wall__role">Las medallas</span>
     <span class="thanks-wall__name"><a href="https://www.instagram.com/supercopa_bmx/" target="_blank" rel="noopener noreferrer">Super Copa BMX</a></span>
-    <span class="thanks-wall__note">Prestó los números que llevaron los corredores y los tableros de la jornada. Sin dorsal no hay planilla, y sin planilla no hay resultados que contar.</span>
+    <span class="thanks-wall__note">Donó las medallas que se repartieron en todas las categorías del chequeo.</span>
+  </li>
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Las calcomanías</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/elian_rider_shop/" target="_blank" rel="noopener noreferrer">Elian Rider Shop</a></span>
+    <span class="thanks-wall__note">Puso las calcomanías con la leyenda de la jornada que llevan las medallas. Tienda de calcomanías y personalizado de motos y bicis en Yumbo.</span>
   </li>
   <li class="thanks-wall__plate thanks-wall__plate--org">
     <span class="thanks-wall__role">Club visitante</span>
