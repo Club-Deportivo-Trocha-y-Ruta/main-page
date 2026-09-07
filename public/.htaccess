@@ -101,6 +101,11 @@ Options -Indexes
     Header set Cache-Control "public, max-age=3600, must-revalidate"
   </FilesMatch>
 
+  # Video y audio de las crónicas (clips cortos alojados en el sitio, sin hash)
+  <FilesMatch "\.(mp4|webm|m4a)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+
   # PDFs y documentos
   <FilesMatch "\.(pdf|doc|docx)$">
     Header set Cache-Control "public, max-age=86400, must-revalidate"

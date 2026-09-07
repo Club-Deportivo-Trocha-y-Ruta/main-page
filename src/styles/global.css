@@ -717,6 +717,37 @@
   }
 }
 
+/* Clip: video corto o nota de voz grabados con el teléfono, dentro de una
+   <figure>. Formato v6 (Alcalá 2026): la crónica se cuenta con menos texto y
+   más material del día. Sin JS y sin `reveal`: el navegador pinta el <video>
+   con su póster y no descarga nada hasta que se pulsa play (`preload="none"`),
+   así que no toca el LCP. Vertical (9:16) por defecto, que es como sale del
+   teléfono; `.clip--wide` para 16:9. El `aspect-ratio` reserva el alto antes
+   de que llegue el póster (cero CLS). El <audio> usa la barra nativa. */
+.prose :where(figure.clip) {
+  max-width: 22rem;
+  margin-inline: auto;
+}
+.prose :where(figure.clip--wide) {
+  max-width: none;
+}
+.prose :where(figure.clip video) {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  border-radius: var(--radius-control);
+  background: var(--color-surface-dark);
+}
+.prose :where(figure.clip--wide video) {
+  aspect-ratio: 16 / 9;
+}
+.prose :where(figure.clip audio) {
+  display: block;
+  width: 100%;
+}
+
 /* === Crónicas: componentes editoriales (formato v3) === */
 /* Parte de la válida: tira de cifras grandes al inicio de la crónica */
 .prose :where(.stat-strip) {

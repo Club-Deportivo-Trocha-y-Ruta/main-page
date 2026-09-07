@@ -282,6 +282,7 @@ estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`o
 | `.ledger` | Recibo de un evento pro-fondos: lo que entró (total remarcado) y en qué se va. Se "imprime" línea a línea y remata con un sello. Nunca calcula: el total se escribe a mano y debe cuadrar. | Chequeo 2026 |
 | `.check-sheet` | Planilla de chequeo: una casilla por grupo de categoría que se marca al entrar en pantalla, con campos "Se probó" / "Se vio". Reemplaza a la tabla-diagnóstico. | Chequeo 2026 |
 | `.thanks-wall` | Muro de placas: los agradecimientos de una jornada en casa como pared de dorsales, con el nombre donde iría el número. Sirve para entes (`--org`) y para personas naturales. Nunca se inventa una placa: cada nombre sale de una fuente o del visto bueno del club. | Chequeo 2026 |
+| `.clip` | Un clip vertical de ≤ 15 s o una nota de voz de ≤ 20 s, alojados en el sitio (`public/videos/news/…`), dentro de una `<figure>`. Sin `reveal`: `preload="none"` + póster WebP. Máx. 3 clips y 1 audio por crónica. Es la base del formato v6 (foto y clip primero, ≤ 700 palabras). | Alcalá 2026 |
 
 ```html
 <!-- Ficha de la visita — el talón es decorativo (la fecha va también en la
@@ -381,6 +382,21 @@ estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`o
     <span class="thanks-wall__note">De ahí sale cada tiempo de esta crónica.</span>
   </li>
 </ul>
+
+<!-- Clip — video vertical alojado en el sitio. `preload="none"` y póster
+     obligatorios (nada se descarga hasta pulsar play). `.clip--wide` para
+     16:9. El <figcaption> lleva el dato (quién, manga, hora real). Un
+     <audio> con la misma figura sirve para una nota de voz; la transcripción
+     va debajo en texto, nunca solo en el audio. -->
+<figure class="clip">
+  <video controls playsinline preload="none" width="720" height="1280"
+    poster="/images/news/copa-lets-go-alcala-2026/clip-salida-manga-2-poster.webp">
+    <source src="/videos/news/copa-lets-go-alcala-2026/clip-salida-manga-2.mp4" type="video/mp4" />
+    Tu navegador no reproduce este video.
+    <a href="/videos/news/copa-lets-go-alcala-2026/clip-salida-manga-2.mp4">Descárgalo</a>.
+  </video>
+  <figcaption>Salida de la manga 2, 9:20 a. m.: Kanguritos y Pre Infantil Mixto A en la pista especial.</figcaption>
+</figure>
 ```
 
 ## Regla de dos artículos (eventos de dos días)
