@@ -1,6 +1,7 @@
 ---
 title: 'Samuel Ortiz gana la Open en el Chequeo Pro-Fondos de Yumbo'
 date: 2026-09-05
+updatedDate: 2026-09-07
 author: 'Juan Diego García'
 category: 'club'
 tags:
@@ -79,7 +80,7 @@ Un chequeo es lo que su nombre dice: un ensayo con cronómetro para ver cómo ll
 
 El del sábado tuvo, además, un destino. Largaron **treinta y tres deportistas** de treinta y seis inscritos, cada uno con su inscripción de $20.000, y esa plata va a **adecuar la Pista Carlos Castro** para el **18 de octubre**, cuando la casa del club recibe la semifinal de la Copa Valle. Con la [Copa Let's Go de Alcalá](/calendario/#evento-2026-09-copa-lets-go-alcala) el fin de semana siguiente, el chequeo hizo doble trabajo: puso a punto las piernas y dejó plata para el trazado.
 
-Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tienen nombre**. Letreros de madera clavados en los troncos van diciendo qué es cada uno —[guayaba](/trocha-verde/guayaba) en el tramo llano, [mango](/trocha-verde/mango) junto al paso de troncos—, porque son los mismos que el club sembró y catalogó en **[Trocha Verde](/trocha-verde)**, su inventario de la pista: setenta y siete a la fecha del chequeo. La plata de las inscripciones se queda justamente ahí: en el terreno que los sostiene.
+Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tienen nombre**. Letreros de madera clavados en los troncos van diciendo qué es cada uno —[guayaba](/trocha-verde/guayaba) en el tramo llano, [mango](/trocha-verde/mango) junto al paso de troncos—, porque son los mismos que el club sembró y catalogó en **[Trocha Verde](/trocha-verde)**, su inventario de la pista: setenta y siete a la fecha del chequeo.
 
 <figure>
   <img
@@ -113,7 +114,7 @@ Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tie
   <figcaption>La parrilla de la Open, en la línea de salida.</figcaption>
 </figure>
 
-La Open corrió cuatro vueltas al circuito completo, la distancia más larga del día, y ahí estuvo el titular. **Samuel Ortiz Valencia**, que en la Copa Valle corre **Prejuvenil A** —fue segundo de su categoría en la [válida de Palmira](/noticias/2026-08-copa-valle-palmira-xco)—, corrió la Open por una razón sencilla: en su categoría no tiene con quién medirse. Subirse con los adultos y con los visitantes de Cali era la manera de saber en qué nivel está. Manejó la carrera con cabeza: las dos primeras vueltas se quedó con el grupo de punta; en las dos últimas se fue en solitario y no lo alcanzaron. Cruzó la meta en **1:00:11**, primero.
+La Open corrió cuatro vueltas al circuito completo, la distancia más larga del día, y ahí estuvo el titular. **Samuel Ortiz Valencia**, que en la Copa Valle corre **Prejuvenil A** —fue segundo de su categoría en la [válida de Palmira](/noticias/2026-08-copa-valle-palmira-xco)—, corrió la Open para medirse con los adultos y con los visitantes de Cali y saber en qué nivel está. Manejó la carrera: la primera vuelta la hizo con el grupo de punta, desde la segunda se fue abriendo y en las dos últimas rodó en solitario, sin que lo alcanzaran. Cruzó la meta en **1:00:11**, primero.
 
 **Juan Diego García Bohórquez** hizo la carrera contraria: intentó salir controlado y fue remontando posiciones vuelta a vuelta, con el compañero de club siempre en el horizonte. Lo persiguió hasta el final y no lo alcanzó. Cerró **segundo, con 1:03:15**, a tres minutos y cuatro segundos de Samuel.
 
@@ -174,20 +175,20 @@ En Prejuvenil damas, **Mariana Coronado Delgado** e **Isabel Cristhina Quiñones
 <figure>
   <img
     src="/images/news/chequeo-profondos-2026/podio-prejuvenil-femenino.webp"
-    alt="Mariana Coronado e Isabel Quiñones en el podio de Prejuvenil femenina del Chequeo Pro-Fondos, en la Pista Carlos Castro de Yumbo"
+    alt="Mariana Coronado e Isabel Quiñones en el podio de Prejuvenil damas del Chequeo Pro-Fondos, en la Pista Carlos Castro de Yumbo"
     width="1050"
     height="1400"
     loading="lazy"
     decoding="async"
   />
-  <figcaption>Mariana Coronado, primera, e Isabel Quiñones, segunda, en Prejuvenil femenina.</figcaption>
+  <figcaption>Mariana Coronado, primera, e Isabel Quiñones, segunda, en Prejuvenil damas.</figcaption>
 </figure>
 
 En varones, dos corredores del club: **Santiago Cardona Chate** ganó con **39:25** y **Johan Samuel Palacios Canizales** cerró segundo con **44:10**.
 
 ## Infantiles: Jostin se prueba en casa
 
-**Jostin Villamizar García** fue **segundo** en Infantil A masculino, con **24:40**. Su categoría corrió **dos vueltas al 70% del trazado**: los recorridos no son los mismos para todos, y por eso los tiempos de una categoría no se comparan con los de otra. Aprovechó el chequeo para probarse frente a un contrincante de su categoría de la Copa Valle, y hacerlo en su propia pista: **Nicolás Trullo Soto**, del ICL de Cali, que ganó con **24:11**. La planilla cuenta la carrera sola: al cerrar la primera vuelta Jostin pasó **a un segundo** del líder; en la segunda cedió los otros veintiocho. Se fogueó, aguantó fuerte buena parte de la carrera y, faltando poco para el final, se le acabó el gas. Esa lectura se va al martes de entrenamiento. Tercero fue **Emmanuel Rivera Jaramillo**, de IMDERTY, también de Yumbo.
+**Jostin Villamizar García** fue **segundo** en Infantil A masculino, con **24:40**. Su categoría corrió **dos vueltas al 70% del trazado**. Aprovechó el chequeo para probarse en su propia pista, y lo hizo frente a **Nicolás Trullo Soto**, del ICL de Cali, que ganó con **24:11**. La planilla cuenta la carrera sola: al cerrar la primera vuelta Jostin pasó **a un segundo** del líder; en la segunda cedió los otros veintiocho. Se fogueó, aguantó fuerte buena parte de la carrera y, faltando poco para el final, se le acabó el gas. Esa lectura se va al martes de entrenamiento. Tercero fue **Emmanuel Rivera Jaramillo**, de IMDERTY, también de Yumbo.
 
 En Infantiles damas el club puso dos en el podio: **Sofía Gómez Gómez** fue segunda con **36:17** e **Isabella Quiñones Caicedo**, tercera con **37:00**, detrás de **Emma Mejía Ángel**, de BTT Recio de Cali, que ganó con **32:56**. Y **Matías Montoya Gómez** ganó su grupo de Infantiles varones con **40:54**, después de que su único rival inscrito no largara.
 
@@ -198,7 +199,7 @@ En Infantiles damas el club puso dos en el podio: **Sofía Gómez Gómez** fue s
      rotular cuál es "sin pedales" y cuál "con pedales": por eso el texto no lo
      dice. -->
 
-Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo, a **dos vueltas** de su circuito; y a los adultos les tocó lo de siempre en casa: rodar cerca y señalar la curva. La carrera más apretada del día fue la de ellos: **Victoria Chaguendo Cardona** y **Matthew Bohórquez Vargas** cerraron la primera vuelta **empatados en 4:14** y Victoria ganó por **tres segundos** (8:49 contra 8:52). Ocho terminaron en ese grupo, seis de ellos del club; en el otro grupo de Teteros ganó **Maximiliano Angulo Mera**, con 10:57. En Preinfantiles el podio fue de los visitantes: **María Victoria Lasso** y **Martina Muñoz**, de la Escuela Olguita García, en damas; **Emanuel Pérez** y **Tomás Lopera Bastidas**, de BTT Recio, en varones.
+Los más pequeños también corrieron su chequeo entre los mismos banderines y el mismo polvo, a **dos vueltas** de su circuito; y a los adultos les tocó lo de siempre en casa: correr al lado y señalar la curva. La carrera más apretada del día fue la de ellos: **Victoria Chaguendo Cardona** y **Matthew Bohórquez Vargas** cerraron la primera vuelta **empatados en 4:14** y Victoria ganó por **tres segundos** (8:49 contra 8:52). Ocho terminaron en ese grupo, seis de ellos del club; en el otro grupo de Teteros ganó **Maximiliano Angulo Mera**, con 10:57. En Preinfantiles el podio fue de otros clubes: **María Victoria Lasso** y **Martina Muñoz**, de la Escuela Olguita García, en damas; **Emanuel Pérez** y **Tomás Lopera Bastidas**, de BTT Recio, en varones.
 
 <div class="figure-grid">
   <figure>
@@ -234,7 +235,7 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
     loading="lazy"
     decoding="async"
   />
-  <figcaption>La premiación de los más pequeños: medalla para todos los que largaron.</figcaption>
+  <figcaption>La premiación de los más pequeños, con medalla y bolsa de premio.</figcaption>
 </figure>
 
 ## Lo que se chequeó
@@ -244,8 +245,8 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
     <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
     <div class="check-sheet__body">
       <span class="check-sheet__name">Categoría Open · 4 vueltas completas</span>
-      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>Manejar una carrera larga bajo 34 °C, con dos vueltas de grupo y dos en solitario.</span>
-      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Samuel Ortiz resolvió la carrera en la tercera vuelta; a Bernardino le fallaron los cambios en la última.</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>Manejar una carrera larga bajo 34 °C, con una vuelta de grupo y tres abriendo hueco.</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Samuel Ortiz se fue en solitario desde la segunda vuelta; a Bernardino le fallaron los cambios en la última.</span>
     </div>
   </li>
   <li class="check-sheet__row">
@@ -341,30 +342,30 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
 
 **Teteros, primer grupo** — 2 vueltas
 
-| Puesto | Corredor                       | Club                  | Total     |
-| ------ | ------------------------------ | --------------------- | --------- |
-| **1°** | Victoria Chaguendo Cardona     | Trocha y Ruta         | **8:49**  |
-| **2°** | Matthew Bohórquez Vargas       | Trocha y Ruta         | **8:52**  |
-| **3°** | Jorge Muñoz                    | Independiente (Cali)  | **9:49**  |
-| 4°     | Liam Fernando Guevara Quintero | Trocha y Ruta         | 10:31     |
-| 5°     | Ihsan Garcés Romero            | Trocha y Ruta         | 12:23     |
-| 6°     | Martina Betancourt Vásquez     | Trocha y Ruta         | 12:33     |
-| 7°     | Celeste Muriel Merchán         | Trocha y Ruta         | 13:24     |
-| 8°     | Gael Trejos Rengifo            | Independiente (Yumbo) | 14:09     |
-| DNF    | Aylin Pastrana Balanta         | Trocha y Ruta         | 1ª vuelta |
+| Puesto | Corredor                       | Club                  | Total           |
+| ------ | ------------------------------ | --------------------- | --------------- |
+| **1°** | Victoria Chaguendo Cardona     | Trocha y Ruta         | **8:49**        |
+| **2°** | Matthew Bohórquez Vargas       | Trocha y Ruta         | **8:52**        |
+| **3°** | Jorge Muñoz                    | Independiente (Cali)  | **9:49**        |
+| 4°     | Liam Fernando Guevara Quintero | Trocha y Ruta         | 10:31           |
+| 5°     | Ihsan Garcés Romero            | Trocha y Ruta         | 12:23           |
+| 6°     | Martina Betancourt Vásquez     | Trocha y Ruta         | 12:33           |
+| 7°     | Celeste Muriel Merchán         | Trocha y Ruta         | 13:24           |
+| 8°     | Gael Trejos Rengifo            | Independiente (Yumbo) | 14:09           |
+| —      | Aylin Pastrana Balanta         | Trocha y Ruta         | DNF · 1ª vuelta |
 
 **Teteros, segundo grupo** — 2 vueltas
 
-| Puesto | Corredor                | Club          | Total     |
-| ------ | ----------------------- | ------------- | --------- |
-| **1°** | Maximiliano Angulo Mera | Trocha y Ruta | **10:57** |
-| DNF    | Thiago Duque Cardona    | Trocha y Ruta | 1ª vuelta |
+| Puesto | Corredor                | Club          | Total           |
+| ------ | ----------------------- | ------------- | --------------- |
+| **1°** | Maximiliano Angulo Mera | Trocha y Ruta | **10:57**       |
+| —      | Thiago Duque Cardona    | Trocha y Ruta | DNF · 1ª vuelta |
 
-<small>La planilla oficial agrupa a los teteros bajo un solo rótulo, «sin/con pedales», y los clasifica en dos grupos sin decir cuál es cuál. Los tiempos de cada categoría son sobre su propio recorrido y no se comparan entre sí.</small>
+<small>DNF: no terminó; se indica la vuelta en la que se retiró. La planilla oficial agrupa a los teteros bajo un solo rótulo, «sin/con pedales», y los clasifica en dos grupos sin decir cuál es cuál. Los tiempos de cada categoría son sobre su propio recorrido y no se comparan entre sí.</small>
 
 ## Las placas que no salieron a correr
 
-En una carrera la placa la lleva quien pedalea —y el sábado hasta las medallas fueron un trabajo en equipo—. Detrás de la Open y de la premiación hubo manos que no llevaron dorsal: quien donó las medallas, quien las marcó con la leyenda de la jornada, el club que se dio el viaje desde Cali para completar el pelotón, y quienes endulzaron el podio de los más pequeños. Aquí va la placa para ellos.
+En una carrera la placa la lleva quien pedalea, pero el sábado hasta las medallas fueron un trabajo en equipo. Detrás de la Open y de la premiación hubo manos que no llevaron dorsal: quien donó las medallas, quien las marcó con la leyenda de la jornada, el club que se dio el viaje desde Cali para completar el pelotón, y quienes endulzaron el podio de los más pequeños. Aquí va la placa para ellos.
 
 <!-- PENDIENTE — la lista completa la pasa el club (insumos.md, duda 10:
      voluntarios y roles, solo adultos y con permiso). Por ahora solo se
@@ -376,7 +377,7 @@ En una carrera la placa la lleva quien pedalea —y el sábado hasta las medalla
   <li class="thanks-wall__plate thanks-wall__plate--org">
     <span class="thanks-wall__role">Las medallas</span>
     <span class="thanks-wall__name"><a href="https://www.instagram.com/supercopa_bmx/" target="_blank" rel="noopener noreferrer">Super Copa BMX</a></span>
-    <span class="thanks-wall__note">Donó las medallas que se repartieron en todas las categorías del chequeo.</span>
+    <span class="thanks-wall__note">Donó las medallas de la premiación.</span>
   </li>
   <li class="thanks-wall__plate thanks-wall__plate--org">
     <span class="thanks-wall__role">Las calcomanías</span>

@@ -557,3 +557,26 @@ quitan las filas y se deja el resultado en colectivo**, como estaba.
   cuerpo técnico.
 - El encabezado dice «2do Chequeo»: si el club quiere que la crónica lo
   presente como el segundo, hace falta saber cuándo fue el primero.
+
+## Revisión editorial final (7-sep)
+
+Ajustes aplicados tras una lectura completa contra la planilla: Emanuel Pérez
+es de Yumbo (la prosa lo llamaba visitante); la Open ya no dice que Samuel
+corrió «porque en su categoría no tiene con quién medirse» (ese mismo día
+corrió Prejuvenil varones) ni que rodó dos vueltas «con el grupo de punta»: la
+planilla lo da 10 s arriba tras la vuelta 1 y 56 s tras la 2, así que se
+atenuó a «desde la segunda se fue abriendo»; Nicolás Trullo se presenta como
+rival del chequeo, no como «de su categoría de la Copa Valle» (la planilla no
+lo dice); formato de DNF unificado en las tablas; «Prejuvenil damas» en todo
+el artículo; frases sin fuente recortadas (medalla «para todos los que
+largaron», medallas «en todas las categorías», la plata «se queda ahí» tres
+veces); `updatedDate: 2026-09-07`.
+
+Dudas nuevas para el club:
+
+- **Infantil A o B.** En las crónicas de Copa Valle 2026 (Ginebra, Pavas,
+  Palmira) Jostin corre **Infantil B**; para el chequeo el club dijo
+  «Infantil A». ¿Subió de categoría o es el rótulo del chequeo? Hoy la crónica
+  dice «Infantil A masculino».
+- **«Juan Felipe» en el álbum** sigue siendo el dorsal 1908, que la planilla
+  rotula Felipe Maya (duda 3). Los pies del álbum no se tocaron.
