@@ -23,35 +23,62 @@
  * antes (a propósito no se migró a `<StatFigure countUp>`: su escala
  * (`text-3xl sm:text-4xl`) es más chica que la de esta banda,
  * `text-4xl sm:text-5xl`, y no hay un pedido explícito de achicarla).
+ *
+ * Las cifras se leen de las collections como el resto de secciones de la
+ * portada (`Hero`, `ProgramsGrid`, `SeasonOverview`…), pero se aceptan también
+ * por prop. El motivo es de testabilidad: el container de Astro no carga el
+ * data store de contenido, así que `getCollection()` devuelve vacío dentro de
+ * Vitest y la banda se renderizaba con una sola cifra —la de años, que no
+ * viene de collections—. Con eso, el test de escalonado fallaba en checkout
+ * limpio y los demás pasaban sin comprobar casi nada. La prop es el punto de
+ * inyección: en producción `index.astro` sigue montando `<StatsCounter />` sin
+ * argumentos y el componente lee el contenido real; el test le pasa un fixture
+ * y comprueba la plantilla. Que las cifras salgan del contenido lo garantizan
+ * `home.test.ts` (sobre `buildClubFigures`) y `content-validation.test.ts`.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 import SectionShell from '@components/editorial/SectionShell.astro';
 import { getYearsActive } from '@lib/constants';
-import { buildClubFigures } from '@lib/home';
+import { buildClubFigures, type ClubFigure } from '@lib/home';
 import { summarizeTrees } from '@lib/trocha-verde';
 
 type Event = CollectionEntry<'events'>;
 type Program = CollectionEntry<'programs'>;
 type Tree = CollectionEntry<'trees'>;
 
-const events = (await getCollection('events')).filter((e: Event) => !e.data.draft);
-const trees = (await getCollection('trees')).filter((t: Tree) => !t.data.draft);
-const programs = (await getCollection('programs'))
-  .filter((p: Program) => !p.data.draft && p.data.active)
-  .map((p: Program) => ({
-    ageMin: p.data.ageMin,
-    ageMax: p.data.ageMax,
-    schedule: p.data.schedule,
-    maxStudents: p.data.maxStudents,
-  }));
+interface Props {
+  /**
+   * Cifras ya calculadas. Sin esta prop —el caso de producción— el componente
+   * las deriva del contenido real. Existe para que los tests de container
+   * puedan inyectar un fixture (ver el comentario de cabecera).
+   */
+  figures?: ClubFigure[];
+}
 
-const figures = buildClubFigures({
-  years: getYearsActive(),
-  programs,
-  events,
-  trees: summarizeTrees(trees.map((tree: Tree) => tree.data)).totalTrees,
-});
+const { figures: injectedFigures } = Astro.props;
+
+async function loadFigures(): Promise<ClubFigure[]> {
+  const events = (await getCollection('events')).filter((e: Event) => !e.data.draft);
+  const trees = (await getCollection('trees')).filter((t: Tree) => !t.data.draft);
+  const programs = (await getCollection('programs'))
+    .filter((p: Program) => !p.data.draft && p.data.active)
+    .map((p: Program) => ({
+      ageMin: p.data.ageMin,
+      ageMax: p.data.ageMax,
+      schedule: p.data.schedule,
+      maxStudents: p.data.maxStudents,
+    }));
+
+  return buildClubFigures({
+    years: getYearsActive(),
+    programs,
+    events,
+    trees: summarizeTrees(trees.map((tree: Tree) => tree.data)).totalTrees,
+  });
+}
+
+const figures = injectedFigures ?? (await loadFigures());
 
 // Fallback sin JS (mismo criterio que TrochaVerde.astro): sin el
 // IntersectionObserver de BaseLayout.astro, `.revealed` no llega nunca y
