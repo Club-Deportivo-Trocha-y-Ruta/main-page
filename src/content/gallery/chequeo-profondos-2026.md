@@ -1,8 +1,8 @@
 ---
 # Álbum del Chequeo Pro-Fondos 2026. Todas las fotos tienen autorización de
 # imagen confirmada por el club. Orden: previa, largadas, carrera y podios.
-# Se publica antes que la noticia porque el material fotográfico ya está
-# completo; a la crónica todavía le faltan resultados de varias categorías.
+# Se publicó antes que la noticia porque el material fotográfico ya estaba
+# completo; la crónica se cerró el 7-sep con la planilla oficial de resultados.
 title: 'Chequeo Pro-Fondos 2026 — Pista Carlos Castro'
 date: 2026-09-05
 cover: '/images/news/chequeo-profondos-2026/prejuvenil-previa.webp'

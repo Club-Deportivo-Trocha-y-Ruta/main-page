@@ -486,3 +486,74 @@ Lo que sigue abierto:
   `premiacion-mas-pequenos.webp` o si se repartieron aparte. El pie de foto y
   el cuerpo siguen diciendo solo «medalla y bolsa»; si el club lo aclara, ahí
   hay una frase mejor para «Los más pequeños».
+
+## Planilla oficial de resultados (7-sep, tras publicar)
+
+El club pasó la planilla oficial en PDF —una sola hoja, con el logo del club:
+`RESULTADOS_II_CHEQUEO_PROFONDOS_TROCHA_Y_RUTA.pdf`, encabezado «Convocatoria
+2do Chequeo Pro-Fondos de ciclomontañismo (XCO), Yumbo 05 de septiembre de
+2026»—. Es la fuente que manda desde ahora: 36 inscritos, 33 largaron
+(orden 1-33), 3 DNS (Anderson Cárdenas Guaca, Mateo Giraldo, Martín Osorio
+Jiménez) que, por la regla ya fijada, no van en tabla. No se publica el PDF:
+sigue siendo documento interno como las planillas de jueces.
+
+### Qué cambió en la crónica
+
+- **Prejuvenil**: los cuatro tiempos bajaron respecto a la transcripción de la
+  planilla de jueces. Mariana 37:59 → **36:54**; Isabel 41:55 → **40:55**;
+  Santiago 40:25 → **39:25**; Johan 45:10 → **44:10**. (En la planilla la
+  vuelta 1 de Mariana dice «18:52:00»: error de formato, el total sí cuadra.)
+- **Open**: Jorge Lasso «1:05» → **1:05:49**. Bernardino cerró la vuelta 1 a
+  **29 s** del más rápido (14:47 contra 14:18), no a 19. Felipe Maya figura
+  como Independiente de Cali; Germán Recio como BTT Recio. La planilla ordena
+  a los que no completaron las cuatro vueltas por vueltas cumplidas
+  (Bernardino 5°, Felipe 6°, Germán 7°): la tabla lo refleja y conserva la
+  aclaración de que Germán solo corría una vuelta.
+- **Infantil A masculino** (rótulo del club; la planilla dice solo
+  «Infantiles»): Nicolás Trullo Soto (ICL Cali, Jamundí) **24:11**, Jostin
+  **24:40** (segundo, a 29 s; en la vuelta 1 pasó a 1 s del líder), Emmanuel
+  Rivera Jaramillo (IMDERTY, Yumbo) 31:18. El «45 minutos aproximados» del
+  club queda descartado por el cronómetro.
+- **Infantiles damas**: Emma Mejía Ángel (BTT Recio, Cali) 32:56; **Sofía
+  Gómez Gómez** (1257) 36:17; **Isabella Quiñones Caicedo** (1704) 37:00.
+  Resuelve la duda 0c: la corredora del club tercera de
+  `podio-menores-damas.webp` sería Isabella (sigue sin confirmarse por foto).
+- **Infantiles varones, segundo grupo**: Matías Montoya Gómez (426) 40:54,
+  solo; su rival inscrito (Mateo Giraldo, ICL) no largó.
+- **Preinfantiles**: damas, María Victoria Lasso 22:05 y Martina Muñoz 23:19
+  (las dos de la Escuela Olguita García: son las de `podio-menores-damas-b`
+  y la placa del muro ya lo dice con nombre); varones, Emanuel Pérez (813)
+  12:37 y Tomás Lopera Bastidas 15:12, ambos de BTT Recio. Sin corredores del
+  club en la categoría.
+- **Teteros**: la planilla los agrupa bajo «Tetero sin/con pedales» y los
+  clasifica en dos grupos sin decir cuál es cuál. Grupo 1 (8 clasificados y
+  1 DNF): Victoria Chaguendo Cardona 8:49, Matthew Bohórquez Vargas 8:52 (los
+  dos empatados en 4:14 en la vuelta 1), Jorge Muñoz (Cali) 9:49, Liam
+  Fernando Guevara Quintero (1758) 10:31, Ihsan Garcés Romero 12:23, Martina
+  Betancourt Vásquez (1706) 12:33, Celeste Muriel Merchán 13:24, Gael Trejos
+  Rengifo 14:09, Aylin Pastrana Balanta DNF. Grupo 2: Maximiliano Angulo Mera
+  10:57, Thiago Duque Cardona DNF.
+- **Inscritos**: «alrededor de treinta» → **33 largados de 36 inscritos**.
+- El muro de placas nombra ahora a las dos corredoras de la Olguita.
+
+### Nombres
+
+Los nombres de Teteros, Preinfantiles e Infantiles salen **tal como los
+publica la planilla oficial del club**, con ortografía normalizada (mayúsculas
+y tildes: Bohórquez, Gómez, Pérez, Garcés, Merchán, Vásquez, Ángel, Sofía,
+Tomás). «GARCES ROMERO IHSAN» se leyó como apellidos-nombre. Son menores, casi
+todos de otros clubes: **si el club prefiere no nombrarlos en el sitio, se
+quitan las filas y se deja el resultado en colectivo**, como estaba.
+
+### Dudas que la planilla no cierra
+
+- Cuál de los dos grupos de Teteros es «sin pedales» y cuál «con pedales».
+  Por las fotos (1758 y 1706, en bici de balance, están en el grupo 1) el
+  grupo 1 parecería el de sin pedales, pero no se afirma en la crónica.
+- Con qué rótulo (Infantil A / Infantil B) van los dos grupos masculinos de
+  Infantiles. El de Jostin se llama Infantil A porque así lo dijo el club.
+- Longitud del recorrido de Teteros, Preinfantiles e Infantiles damas y el
+  «se probó / se vio» de esas categorías para la `.check-sheet`: lo dicta el
+  cuerpo técnico.
+- El encabezado dice «2do Chequeo»: si el club quiere que la crónica lo
+  presente como el segundo, hace falta saber cuándo fue el primero.

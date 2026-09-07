@@ -55,16 +55,20 @@ seo:
   ogImage: '/images/news/chequeo-profondos-2026/og-chequeo-profondos.webp'
 ---
 
-<!-- Publicada el 5-sep-2026 con dos huecos que el club decidió no esperar:
-     · Teteros sin pedales, Teteros con pedales y Preinfantiles no tienen
-       planilla transcrita: van en colectivo y sin nombres. Si llegan, entran
-       en "Los más pequeños", en la .check-sheet y en la tabla.
-     · De Infantil A masculino solo se tiene el segundo puesto de Jostin; el
-       ganador se añade en "Cómo terminó cada categoría" cuando el club lo pase.
-     Decisiones del club que no hay que "completar": el recaudo se publica
-     como aproximado y sin recibo (.ledger), y el tiempo de Jostin (45 min)
-     es aproximado y por eso no va en tabla. Fuentes: planillas de jueces de
-     Open y Prejuvenil y relato del director, en
+<!-- Publicada el 5-sep-2026 con las planillas de Open y Prejuvenil y el relato
+     del director. El 7-sep el club pasó la planilla OFICIAL de resultados
+     (RESULTADOS_II_CHEQUEO_PROFONDOS_TROCHA_Y_RUTA.pdf, una hoja, 36 inscritos
+     y 33 largados) y con ella se completaron Teteros, Preinfantiles e
+     Infantiles y se corrigieron los tiempos de Prejuvenil (todos bajaron
+     entre 1:00 y 1:05) y el de Jostin (24:40 cronometrado, no "45 min").
+     Lo que la planilla NO dice y por eso no se afirma: cuál de los dos grupos
+     de Teteros es "sin pedales" y cuál "con pedales", y con qué rótulo
+     (Infantil A / B) va cada uno de los dos grupos masculinos de Infantiles;
+     el de Jostin se llama Infantil A porque así lo dijo el club.
+     Decisión del club que no hay que "completar": el recaudo se publica como
+     aproximado y sin recibo (.ledger). Los DNS (Anderson Cárdenas, Mateo
+     Giraldo, Martín Osorio) no van en tabla: no hay nada que reportar de una
+     carrera que no corrieron. Bitácora en
      claudedocs/chequeo-profondos-2026/insumos.md. -->
 
 Bajo un sol de 34 grados, entre los banderines que cuelgan sobre la loma y las cintas amarillas que peinan el trazado, un letrero de madera clavado junto al paso de troncos repite algo simple: «Cree en ti y todo será posible». Es el fondo con el que el club abrió su casa el sábado 5 de septiembre para el **Chequeo Pro-Fondos de ciclomontañismo**, en la Pista Carlos Castro de Yumbo. La primera categoría largó a las **8:45 de la mañana**, la última a las **10:34**, y a las **12 del mediodía** ya estaba todo cerrado.
@@ -73,7 +77,7 @@ Bajo un sol de 34 grados, entre los banderines que cuelgan sobre la loma y las c
 
 Un chequeo es lo que su nombre dice: un ensayo con cronómetro para ver cómo llega cada corredor a lo que sigue. No reparte puntos de Copa Valle ni deja campeón, y por eso permite algo que una válida no siempre deja: probar en carrera lo que se entrenó la semana pasada, equivocarse sin costo en la tabla y llevarse una lectura clara al martes de entrenamiento.
 
-El del sábado tuvo, además, un destino. Largaron **alrededor de treinta deportistas**, cada uno con su inscripción de $20.000, y esa plata va a **adecuar la Pista Carlos Castro** para el **18 de octubre**, cuando la casa del club recibe la semifinal de la Copa Valle. Con la [Copa Let's Go de Alcalá](/calendario/#evento-2026-09-copa-lets-go-alcala) el fin de semana siguiente, el chequeo hizo doble trabajo: puso a punto las piernas y dejó plata para el trazado.
+El del sábado tuvo, además, un destino. Largaron **treinta y tres deportistas** de treinta y seis inscritos, cada uno con su inscripción de $20.000, y esa plata va a **adecuar la Pista Carlos Castro** para el **18 de octubre**, cuando la casa del club recibe la semifinal de la Copa Valle. Con la [Copa Let's Go de Alcalá](/calendario/#evento-2026-09-copa-lets-go-alcala) el fin de semana siguiente, el chequeo hizo doble trabajo: puso a punto las piernas y dejó plata para el trazado.
 
 Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tienen nombre**. Letreros de madera clavados en los troncos van diciendo qué es cada uno —[guayaba](/trocha-verde/guayaba) en el tramo llano, [mango](/trocha-verde/mango) junto al paso de troncos—, porque son los mismos que el club sembró y catalogó en **[Trocha Verde](/trocha-verde)**, su inventario de la pista: setenta y siete a la fecha del chequeo. La plata de las inscripciones se queda justamente ahí: en el terreno que los sostiene.
 
@@ -125,7 +129,7 @@ La Open corrió cuatro vueltas al circuito completo, la distancia más larga del
   <figcaption>Juan Diego García (1950), en el ascenso del circuito.</figcaption>
 </figure>
 
-El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García de Cali, en **una hora y cinco minutos**: aportó al club el rival de nivel que le hacía falta para chequearse en casa. Cuarto entró Samuel Rodríguez, también de Cali. **Bernardino Montenegro Urrea**, el otro yumbeño de la Open, arrancó fuerte —cerró la primera vuelta con el tercer mejor tiempo, a diecinueve segundos del más rápido— pero un problema mecánico con los cambios lo fue sacando de ritmo y abandonó en la última vuelta.
+El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García de Cali, en **1:05:49**: aportó al club el rival de nivel que le hacía falta para chequearse en casa. Cuarto entró Samuel Rodríguez, también de Cali. **Bernardino Montenegro Urrea**, el otro yumbeño de la Open, arrancó fuerte —cerró la primera vuelta con el tercer mejor tiempo, a veintinueve segundos del más rápido— pero un problema mecánico con los cambios lo fue sacando de ritmo y abandonó en la última vuelta.
 
 <figure>
   <img
@@ -165,7 +169,7 @@ El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García d
   <figcaption>Santiago Cardona, Isabel Quiñones y Mariana Coronado, listos para largar.</figcaption>
 </figure>
 
-En Prejuvenil damas, **Mariana Coronado Delgado** e **Isabel Cristhina Quiñones Batero** lo tomaron como un superentrenamiento: se prepararon como si fuera una carrera común y corriente, con el fin de agarrar ritmo antes del compromiso del **domingo 13 en Alcalá**. Su categoría corrió **dos vueltas al circuito completo**. Mariana ganó con **37:59**; Isabel entró segunda con **41:55**. Las dos salieron con el trabajo hecho y con la lectura que habían ido a buscar.
+En Prejuvenil damas, **Mariana Coronado Delgado** e **Isabel Cristhina Quiñones Batero** lo tomaron como un superentrenamiento: se prepararon como si fuera una carrera común y corriente, con el fin de agarrar ritmo antes del compromiso del **domingo 13 en Alcalá**. Su categoría corrió **dos vueltas al circuito completo**. Mariana ganó con **36:54**; Isabel entró segunda con **40:55**. Las dos salieron con el trabajo hecho y con la lectura que habían ido a buscar.
 
 <figure>
   <img
@@ -179,23 +183,22 @@ En Prejuvenil damas, **Mariana Coronado Delgado** e **Isabel Cristhina Quiñones
   <figcaption>Mariana Coronado, primera, e Isabel Quiñones, segunda, en Prejuvenil femenina.</figcaption>
 </figure>
 
-En varones, dos corredores del club: **Santiago Cardona Chate** ganó con **40:25** y **Johan Samuel Palacios Canizales** cerró segundo con **45:10**.
+En varones, dos corredores del club: **Santiago Cardona Chate** ganó con **39:25** y **Johan Samuel Palacios Canizales** cerró segundo con **44:10**.
 
-## Infantil A: Jostin se prueba en casa
+## Infantiles: Jostin se prueba en casa
 
-**Jostin Villamizar García** fue **segundo** en Infantil A masculino, en torno a los 45 minutos. Su categoría corrió **dos vueltas al 70% del trazado**: los recorridos no son los mismos para todos, y por eso los tiempos de una categoría no se comparan con los de otra. Aprovechó el chequeo para probarse frente a un contrincante de su categoría de la Copa Valle, y hacerlo en su propia pista: se fogueó, aguantó fuerte buena parte de la carrera y, faltando poco para el final, se le acabó el gas. Esa lectura se va al martes de entrenamiento.
+**Jostin Villamizar García** fue **segundo** en Infantil A masculino, con **24:40**. Su categoría corrió **dos vueltas al 70% del trazado**: los recorridos no son los mismos para todos, y por eso los tiempos de una categoría no se comparan con los de otra. Aprovechó el chequeo para probarse frente a un contrincante de su categoría de la Copa Valle, y hacerlo en su propia pista: **Nicolás Trullo Soto**, del ICL de Cali, que ganó con **24:11**. La planilla cuenta la carrera sola: al cerrar la primera vuelta Jostin pasó **a un segundo** del líder; en la segunda cedió los otros veintiocho. Se fogueó, aguantó fuerte buena parte de la carrera y, faltando poco para el final, se le acabó el gas. Esa lectura se va al martes de entrenamiento. Tercero fue **Emmanuel Rivera Jaramillo**, de IMDERTY, también de Yumbo.
 
-<!-- El tiempo de Jostin es el aproximado que dio el club (45 minutos): por eso
-     va en el cuerpo como tal y NO en la tabla de resultados, donde se leería
-     como cronometrado. Falta el ganador de la categoría. -->
+En Infantiles damas el club puso dos en el podio: **Sofía Gómez Gómez** fue segunda con **36:17** e **Isabella Quiñones Caicedo**, tercera con **37:00**, detrás de **Emma Mejía Ángel**, de BTT Recio de Cali, que ganó con **32:56**. Y **Matías Montoya Gómez** ganó su grupo de Infantiles varones con **40:54**, después de que su único rival inscrito no largara.
 
 ## Los más pequeños, entre los mismos banderines
 
-<!-- Teteros sin pedales, Teteros con pedales y Preinfantiles: sin planilla.
-     Si llega, aquí va el detalle por grupo, con nombres solo si el club lo
-     autoriza. -->
+<!-- Nombres de Teteros y Preinfantiles: salen tal como los publica la planilla
+     oficial del club. La planilla clasifica a los teteros en dos grupos sin
+     rotular cuál es "sin pedales" y cuál "con pedales": por eso el texto no lo
+     dice. -->
 
-Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo; y a los adultos les tocó lo de siempre en casa: rodar cerca y señalar la curva.
+Los más pequeños del club también corrieron su chequeo entre los mismos banderines y el mismo polvo, a **dos vueltas** de su circuito; y a los adultos les tocó lo de siempre en casa: rodar cerca y señalar la curva. La carrera más apretada del día fue la de ellos: **Victoria Chaguendo Cardona** y **Matthew Bohórquez Vargas** cerraron la primera vuelta **empatados en 4:14** y Victoria ganó por **tres segundos** (8:49 contra 8:52). Ocho terminaron en ese grupo, seis de ellos del club; en el otro grupo de Teteros ganó **Maximiliano Angulo Mera**, con 10:57. En Preinfantiles el podio fue de los visitantes: **María Victoria Lasso** y **Martina Muñoz**, de la Escuela Olguita García, en damas; **Emanuel Pérez** y **Tomás Lopera Bastidas**, de BTT Recio, en varones.
 
 <div class="figure-grid">
   <figure>
@@ -258,14 +261,15 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
     <div class="check-sheet__body">
       <span class="check-sheet__name">Infantil A masculino · 2 vueltas al 70%</span>
       <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>Medirse con un rival de la Copa Valle, en pista propia.</span>
-      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Jostin aguantó fuerte y se quedó sin gas al final: segundo.</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Jostin pasó a un segundo del líder en la primera vuelta y cedió veintiocho en la segunda: segundo, a 29 segundos.</span>
     </div>
   </li>
 </ol>
 
-<!-- Filas de Teteros y Preinfantiles: entran cuando el cuerpo técnico dicte
-     el "se probó / se vio". La casilla marcada significa "chequeado": no se
-     dejan filas vacías. -->
+<!-- Filas de Teteros, Preinfantiles e Infantiles damas: los resultados ya
+     están en la tabla de abajo, pero el "se probó / se vio" lo dicta el cuerpo
+     técnico, no la planilla. Entran cuando lo pase. La casilla marcada
+     significa "chequeado": no se dejan filas vacías. -->
 
 ## Cómo terminó cada categoría
 
@@ -275,32 +279,88 @@ Los más pequeños del club también corrieron su chequeo entre los mismos bande
 | ------ | --------------------------- | ----------------------------- | ---------------- |
 | **1°** | Samuel Ortiz Valencia       | Trocha y Ruta                 | **1:00:11**      |
 | **2°** | Juan Diego García Bohórquez | Trocha y Ruta                 | **1:03:15**      |
-| **3°** | Jorge Lasso                 | Escuela Olguita García (Cali) | **1:05**         |
+| **3°** | Jorge Lasso                 | Escuela Olguita García (Cali) | **1:05:49**      |
 | 4°     | Samuel Rodríguez            | Independiente (Cali)          | 1:13:46          |
-| DNF    | Bernardino Montenegro Urrea | Independiente (Yumbo)         | 4ª vuelta        |
-| DNF    | Felipe Maya                 | Cali                          | 3ª vuelta        |
-| —      | Germán Recio                | Cali                          | 1 vuelta · 19:53 |
+| 5°     | Bernardino Montenegro Urrea | Independiente (Yumbo)         | DNF · 4ª vuelta  |
+| 6°     | Felipe Maya                 | Independiente (Cali)          | DNF · 3ª vuelta  |
+| 7°     | Germán Recio                | BTT Recio (Cali)              | 1 vuelta · 19:53 |
 
-<small>DNF: no terminó; se indica la vuelta en la que se retiró. Germán Recio corrió una sola vuelta, la que le correspondía, y no entra en la clasificación de las cuatro.</small>
+<small>DNF: no terminó; se indica la vuelta en la que se retiró. La planilla oficial ordena a los que no completaron las cuatro vueltas por vueltas cumplidas. Germán Recio corrió una sola vuelta, la que le correspondía.</small>
 
 **Prejuvenil damas** — 2 vueltas completas
 
 | Puesto | Corredora                        | Total     |
 | ------ | -------------------------------- | --------- |
-| **1ª** | Mariana Coronado Delgado         | **37:59** |
-| **2ª** | Isabel Cristhina Quiñones Batero | **41:55** |
+| **1ª** | Mariana Coronado Delgado         | **36:54** |
+| **2ª** | Isabel Cristhina Quiñones Batero | **40:55** |
 
 **Prejuvenil varones** — 2 vueltas completas
 
 | Puesto | Corredor                        | Total     |
 | ------ | ------------------------------- | --------- |
-| **1°** | Santiago Cardona Chate          | **40:25** |
-| **2°** | Johan Samuel Palacios Canizales | **45:10** |
+| **1°** | Santiago Cardona Chate          | **39:25** |
+| **2°** | Johan Samuel Palacios Canizales | **44:10** |
 
-**Infantil A masculino** — 2 vueltas al 70% del trazado: **Jostin Villamizar García**, segundo.
+**Infantil A masculino** — 2 vueltas al 70% del trazado
 
-<!-- Infantil A: el ganador y el resto de la categoría se añaden aquí, como
-     tabla, cuando llegue la planilla. Teteros y Preinfantiles, igual. -->
+| Puesto | Corredor                  | Club               | Total     |
+| ------ | ------------------------- | ------------------ | --------- |
+| **1°** | Nicolás Trullo Soto       | ICL Cali (Jamundí) | **24:11** |
+| **2°** | Jostin Villamizar García  | Trocha y Ruta      | **24:40** |
+| **3°** | Emmanuel Rivera Jaramillo | IMDERTY (Yumbo)    | **31:18** |
+
+**Infantiles damas** — 2 vueltas
+
+| Puesto | Corredora                 | Club             | Total     |
+| ------ | ------------------------- | ---------------- | --------- |
+| **1ª** | Emma Mejía Ángel          | BTT Recio (Cali) | **32:56** |
+| **2ª** | Sofía Gómez Gómez         | Trocha y Ruta    | **36:17** |
+| **3ª** | Isabella Quiñones Caicedo | Trocha y Ruta    | **37:00** |
+
+**Infantiles varones, segundo grupo** — 2 vueltas
+
+| Puesto | Corredor             | Club          | Total     |
+| ------ | -------------------- | ------------- | --------- |
+| **1°** | Matías Montoya Gómez | Trocha y Ruta | **40:54** |
+
+<small>La planilla oficial clasifica a los infantiles varones en dos grupos aparte y no rotula el segundo; el único rival inscrito de Matías no largó.</small>
+
+**Preinfantiles damas** — 2 vueltas
+
+| Puesto | Corredora            | Club                          | Total     |
+| ------ | -------------------- | ----------------------------- | --------- |
+| **1ª** | María Victoria Lasso | Escuela Olguita García (Cali) | **22:05** |
+| **2ª** | Martina Muñoz        | Escuela Olguita García (Cali) | **23:19** |
+
+**Preinfantiles varones** — 2 vueltas
+
+| Puesto | Corredor              | Club              | Total     |
+| ------ | --------------------- | ----------------- | --------- |
+| **1°** | Emanuel Pérez         | BTT Recio (Yumbo) | **12:37** |
+| **2°** | Tomás Lopera Bastidas | BTT Recio (Cali)  | **15:12** |
+
+**Teteros, primer grupo** — 2 vueltas
+
+| Puesto | Corredor                       | Club                  | Total     |
+| ------ | ------------------------------ | --------------------- | --------- |
+| **1°** | Victoria Chaguendo Cardona     | Trocha y Ruta         | **8:49**  |
+| **2°** | Matthew Bohórquez Vargas       | Trocha y Ruta         | **8:52**  |
+| **3°** | Jorge Muñoz                    | Independiente (Cali)  | **9:49**  |
+| 4°     | Liam Fernando Guevara Quintero | Trocha y Ruta         | 10:31     |
+| 5°     | Ihsan Garcés Romero            | Trocha y Ruta         | 12:23     |
+| 6°     | Martina Betancourt Vásquez     | Trocha y Ruta         | 12:33     |
+| 7°     | Celeste Muriel Merchán         | Trocha y Ruta         | 13:24     |
+| 8°     | Gael Trejos Rengifo            | Independiente (Yumbo) | 14:09     |
+| DNF    | Aylin Pastrana Balanta         | Trocha y Ruta         | 1ª vuelta |
+
+**Teteros, segundo grupo** — 2 vueltas
+
+| Puesto | Corredor                | Club          | Total     |
+| ------ | ----------------------- | ------------- | --------- |
+| **1°** | Maximiliano Angulo Mera | Trocha y Ruta | **10:57** |
+| DNF    | Thiago Duque Cardona    | Trocha y Ruta | 1ª vuelta |
+
+<small>La planilla oficial agrupa a los teteros bajo un solo rótulo, «sin/con pedales», y los clasifica en dos grupos sin decir cuál es cuál. Los tiempos de cada categoría son sobre su propio recorrido y no se comparan entre sí.</small>
 
 ## Las placas que no salieron a correr
 
@@ -326,7 +386,7 @@ En una carrera la placa la lleva quien pedalea —y el sábado hasta las medalla
   <li class="thanks-wall__plate thanks-wall__plate--org">
     <span class="thanks-wall__role">Club visitante</span>
     <span class="thanks-wall__name">Escuela Olguita García</span>
-    <span class="thanks-wall__note">Vino desde Cali con Jorge Lasso, tercero de la Open, y con dos corredoras que terminaron en el podio de las categorías menores.</span>
+    <span class="thanks-wall__note">Vino desde Cali con Jorge Lasso, tercero de la Open, y con María Victoria Lasso y Martina Muñoz, primera y segunda de Preinfantiles damas.</span>
   </li>
   <li class="thanks-wall__plate thanks-wall__plate--org">
     <span class="thanks-wall__role">Los pastelitos</span>
