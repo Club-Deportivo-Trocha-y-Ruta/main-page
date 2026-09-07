@@ -116,12 +116,12 @@ const albumPhotoCount = album?.data.images.length ?? allImages.length;
      estático —no es animación— así que va en una regla base incondicional;
      solo la transición y la rotación quedan detrás de la media query,
      igual que el margen incondicional + rotación condicional de
-     AlbumCard.astro. El selector lleva además `[type="button"]`: el mismo
-     island también imprime el modal (cerrar/anterior/siguiente) dentro de
-     este wrapper, y esos tres `<button>` no traen ese atributo —solo la
-     miniatura de la rejilla lo tiene explícito (ver ImageLightbox.tsx)—,
-     así que sin el calificador el polaroid se filtraba a los controles del
-     visor. */
+     AlbumCard.astro. El selector lleva además `[type="button"]`: el modal
+     (cerrar/anterior/siguiente) de ImageLightbox.tsx se monta por portal en
+     `document.body`, fuera de este wrapper, así que hoy ya no lo alcanzaría
+     de todas formas; el calificador queda como cinturón —esos tres
+     `<button>` nunca traen ese atributo, solo la miniatura de la rejilla lo
+     tiene explícito— por si el modal vuelve a vivir aquí dentro. */
   .news-gallery-grid button[type='button'] {
     background-color: var(--color-surface);
     padding: 0.5rem 0.5rem 1rem;

@@ -137,9 +137,12 @@ export default function ImageLightbox({ images }: Props) {
           `isOpen` pasa a true, así que no hace falta `transition-discrete`.
           Va por portal a `document.body` (mismo criterio que MobileMenu y
           SiteSearch): si se queda dentro del `<section relative isolate>` de
-          SectionShell, ese `isolate` encierra su z-50 en un contexto de
-          apilamiento propio y el Header (`sticky z-40`, fuera de esa sección)
-          se sigue pintando encima, sin importar el z-index interno. */}
+          SectionShell, ese `isolate` —y, aunque se quite, el
+          `view-transition-name` permanente que `<main>` lleva por
+          `transition:name="page-main"` (BaseLayout.astro), que por spec
+          también forma contexto de apilamiento— encierran su z-50 en un
+          contexto propio y el Header (`sticky z-40`, fuera de ambos) se sigue
+          pintando encima, sin importar el z-index interno. */}
       {mounted &&
         isOpen &&
         currentImage &&
