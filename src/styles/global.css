@@ -860,6 +860,142 @@
   color: var(--color-text-secondary);
 }
 
+/* ── Salida a mitad de crónica (.mid-cta) ──
+   El `InscriptionCTA` de `noticias/[...slug].astro` cierra la página, y ahí
+   solo llega una minoría: en la crónica del Chequeo (GA4, 5-7 sep 2026) 30
+   usuarios abrieron la nota, 21 pasaron el 75 % de scroll y 7 llegaron al
+   100 %. Este bloque es la misma salida colocada donde todavía queda el ~70 %
+   de la audiencia. CSS puro y sin `reveal`: es una acción, no un adorno, y
+   tiene que verse aunque el IntersectionObserver no corra.
+   El enlace se escribe sin `:where()` a propósito —a diferencia del resto del
+   archivo— para ganarle al `.prose :where(a)` de @tailwindcss/typography, que
+   pisaría color y subrayado con una especificidad idéntica. */
+.prose :where(.mid-cta) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-block: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface));
+}
+@media (min-width: 640px) {
+  .prose :where(.mid-cta) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+}
+.prose :where(.mid-cta__text) {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+.prose .mid-cta__link {
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-control);
+  /* Grafito sobre lima: el lima (#8be000) no cumple contraste como texto,
+     pero sí como fondo con `--color-surface-dark` encima (misma regla que
+     el tono `brand` del sistema editorial). */
+  background: var(--color-accent);
+  color: var(--color-surface-dark);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform var(--duration-micro) var(--ease-pop);
+}
+.prose .mid-cta__link:hover {
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .prose .mid-cta__link {
+    transition: none;
+  }
+  .prose .mid-cta__link:hover {
+    transform: none;
+  }
+}
+
+/* ── Ficha plegada (.visit-details) ──
+   La ficha administrativa de una visita (sede, organizador, qué se jugaba) es
+   dato de referencia, no gancho: abría la crónica de Alcalá y empujaba el
+   resultado hacia abajo. Plegada al final no le quita nada al que la busca y
+   le devuelve el arranque al que solo quiere saber cómo le fue al club.
+   La `.visit-card` de dentro va SIN `reveal`: con el `<details>` cerrado el
+   bloque está en `display: none` y el IntersectionObserver de `BaseLayout`
+   nunca lo intersecta, así que la clase lo dejaría invisible al abrirlo. */
+.prose :where(details.visit-details) {
+  margin-block: 2.5rem;
+  border-top: 1px solid var(--color-surface-muted);
+  padding-top: 1rem;
+}
+.prose :where(details.visit-details > summary) {
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-primary-deep);
+}
+.prose :where(details.visit-details > summary:focus-visible) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-chip);
+}
+
+/* ── Salto rápido (.jump-nav) ──
+   Índice de anclas para crónicas largas. En la del Chequeo (3.300 palabras,
+   30 pantallas de celular) la tabla de resultados cae al 60 % de la página y
+   solo un tercio de los lectores llega hasta ahí; con esto se alcanza desde el
+   8 %. Chips en vez de una línea de enlaces sueltos porque en 390 px la línea
+   se parte en tres y los separadores quedan colgando. Sin `:where()` en el
+   enlace, por la misma razón que `.mid-cta__link`. */
+.prose :where(.jump-nav) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block: 1.75rem;
+}
+.prose :where(.jump-nav__label) {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.prose .jump-nav a {
+  padding: 0.3125rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface));
+  color: var(--color-primary-deep);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--duration-micro) var(--ease-pop);
+}
+.prose .jump-nav a:hover {
+  background: color-mix(in srgb, var(--color-primary) 16%, var(--color-surface));
+}
+@media (prefers-reduced-motion: reduce) {
+  .prose .jump-nav a {
+    transition: none;
+  }
+}
+
+/* Destino de las anclas: el header es `position: sticky` con altura
+   `--header-h` (la fija el script inline de `BaseLayout`), así que sin esto el
+   titular al que se salta queda debajo de la barra. Comprobado en móvil: con
+   `scroll-margin-top: 0` el h2 aterrizaba a 0 px y el header lo tapaba hasta
+   los 64. El fallback de 64px cubre el primer render, antes de que el script
+   escriba la variable. */
+.prose :where(h2[id], h3[id]) {
+  scroll-margin-top: calc(var(--header-h, 64px) + 0.75rem);
+}
+
 /* Voz: cita textual de corredores o familias (solo con autorización) */
 .prose :where(.pull-quote) {
   margin-block: 2.5rem;

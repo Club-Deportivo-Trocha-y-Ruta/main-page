@@ -1,7 +1,7 @@
 ---
 title: 'Samuel Ortiz gana la Open en el Chequeo Pro-Fondos de Yumbo'
 date: 2026-09-05
-updatedDate: 2026-09-07
+updatedDate: 2026-09-08
 author: 'Juan Diego García'
 category: 'club'
 tags:
@@ -73,6 +73,20 @@ seo:
      claudedocs/chequeo-profondos-2026/insumos.md. -->
 
 Bajo un sol de 34 grados, entre los banderines que cuelgan sobre la loma y las cintas amarillas que peinan el trazado, un letrero de madera clavado junto al paso de troncos repite algo simple: «Cree en ti y todo será posible». Es el fondo con el que el club abrió su casa el sábado 5 de septiembre para el **Chequeo Pro-Fondos de ciclomontañismo**, en la Pista Carlos Castro de Yumbo. La primera categoría largó a las **8:45 de la mañana**, la última a las **10:34**, y a las **12 del mediodía** ya estaba todo cerrado.
+
+<!-- Salto rápido. Con 3.300 palabras y el 93 % de la lectura en celular, quien
+     entra a buscar cómo le fue a un corredor tenía que bajar a pulso: la tabla
+     completa está al 67 % de la página y solo un tercio de los lectores llega
+     ahí (GA4, 5-7 sep 2026). Anclas a los ids que genera Astro desde los ##. -->
+
+<nav class="jump-nav" aria-label="Salto rápido dentro de la crónica">
+  <span class="jump-nav__label">Salta a</span>
+  <a href="#la-open-con-un-prejuvenil-arriba">La Open</a>
+  <a href="#prejuvenil-ensayo-antes-de-alcalá">Prejuvenil</a>
+  <a href="#infantiles-jostin-se-prueba-en-casa">Infantiles</a>
+  <a href="#los-más-pequeños-entre-los-mismos-banderines">Los más pequeños</a>
+  <a href="#cómo-terminó-cada-categoría">Resultados completos</a>
+</nav>
 
 ## Qué es un chequeo y por qué pro-fondos
 
@@ -238,6 +252,8 @@ Los más pequeños también corrieron su chequeo entre los mismos banderines y e
   <figcaption>La premiación de los más pequeños, con medalla y bolsa de premio.</figcaption>
 </figure>
 
+Los podios de las demás categorías y el resto de las fotos del sábado están en el [álbum del chequeo](/galeria/chequeo-profondos-2026).
+
 ## Lo que se chequeó
 
 <ol class="check-sheet reveal">
@@ -271,6 +287,57 @@ Los más pequeños también corrieron su chequeo entre los mismos banderines y e
      están en la tabla de abajo, pero el "se probó / se vio" lo dicta el cuerpo
      técnico, no la planilla. Entran cuando lo pase. La casilla marcada
      significa "chequeado": no se dejan filas vacías. -->
+
+<!-- Salida a la inscripción. El InscriptionCTA del final de la plantilla lo ve
+     el 23 % de los lectores; aquí queda alrededor del 70 %. -->
+
+<aside class="mid-cta" aria-label="Inscripciones al club">
+  <p class="mid-cta__text">
+    Los que salen en estas fotos empezaron igual: sin experiencia y con una bici
+    prestada. En el club se arranca desde los 4 años y la primera clase es gratis.
+  </p>
+  <a class="mid-cta__link" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
+    Agendar la clase de prueba
+  </a>
+</aside>
+
+## Las placas que no salieron a correr
+
+En una carrera la placa la lleva quien pedalea, pero el sábado hasta las medallas fueron un trabajo en equipo. Detrás de la Open y de la premiación hubo manos que no llevaron dorsal: quien donó las medallas, quien las marcó con la leyenda de la jornada, el club que se dio el viaje desde Cali para completar el pelotón, y quienes endulzaron el podio de los más pequeños. Aquí va la placa para ellos.
+
+<!-- PENDIENTE — la lista completa la pasa el club (insumos.md, duda 10:
+     voluntarios y roles, solo adultos y con permiso). Por ahora solo se
+     publican las placas que el material del día respalda; quien más ayudó,
+     con nombre propio y con su visto bueno, entra cuando llegue esa lista.
+     Máximo 8 placas: el escalonado de la entrada llega hasta ahí. -->
+
+<ul class="thanks-wall reveal">
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Las medallas</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/supercopa_bmx/" target="_blank" rel="noopener noreferrer">Super Copa BMX</a></span>
+    <span class="thanks-wall__note">Donó las medallas de la premiación.</span>
+  </li>
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Las calcomanías</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/elian_rider_shop/" target="_blank" rel="noopener noreferrer">Elian Rider Shop</a></span>
+    <span class="thanks-wall__note">Puso las calcomanías con la leyenda de la jornada que llevan las medallas. Tienda de calcomanías y personalizado de motos y bicis en Yumbo.</span>
+  </li>
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Club visitante</span>
+    <span class="thanks-wall__name">Escuela Olguita García</span>
+    <span class="thanks-wall__note">Vino desde Cali con Jorge Lasso, tercero de la Open, y con María Victoria Lasso y Martina Muñoz, primera y segunda de Preinfantiles damas.</span>
+  </li>
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Los pastelitos</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/mera_artesanal/" target="_blank" rel="noopener noreferrer">Mera Artesanal</a></span>
+    <span class="thanks-wall__note">Pastelería artesanal de Yumbo. Donó los pastelitos de la premiación, que a esa edad se recuerdan tanto como el podio.</span>
+  </li>
+  <li class="thanks-wall__plate">
+    <span class="thanks-wall__role">Galletas y gomitas</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/bttrecionorte/" target="_blank" rel="noopener noreferrer">Germán Recio</a></span>
+    <span class="thanks-wall__note">Trajo de Cali las galletas y las gomitas Colombina de la premiación, la misma marca de su maillot. Profesor de la escuela BTT Recio Norte.</span>
+  </li>
+</ul>
 
 ## Cómo terminó cada categoría
 
@@ -362,44 +429,6 @@ Los más pequeños también corrieron su chequeo entre los mismos banderines y e
 | —      | Thiago Duque Cardona    | Trocha y Ruta | DNF · 1ª vuelta |
 
 <small>DNF: no terminó; se indica la vuelta en la que se retiró. La planilla oficial agrupa a los teteros bajo un solo rótulo, «sin/con pedales», y los clasifica en dos grupos sin decir cuál es cuál. Los tiempos de cada categoría son sobre su propio recorrido y no se comparan entre sí.</small>
-
-## Las placas que no salieron a correr
-
-En una carrera la placa la lleva quien pedalea, pero el sábado hasta las medallas fueron un trabajo en equipo. Detrás de la Open y de la premiación hubo manos que no llevaron dorsal: quien donó las medallas, quien las marcó con la leyenda de la jornada, el club que se dio el viaje desde Cali para completar el pelotón, y quienes endulzaron el podio de los más pequeños. Aquí va la placa para ellos.
-
-<!-- PENDIENTE — la lista completa la pasa el club (insumos.md, duda 10:
-     voluntarios y roles, solo adultos y con permiso). Por ahora solo se
-     publican las placas que el material del día respalda; quien más ayudó,
-     con nombre propio y con su visto bueno, entra cuando llegue esa lista.
-     Máximo 8 placas: el escalonado de la entrada llega hasta ahí. -->
-
-<ul class="thanks-wall reveal">
-  <li class="thanks-wall__plate thanks-wall__plate--org">
-    <span class="thanks-wall__role">Las medallas</span>
-    <span class="thanks-wall__name"><a href="https://www.instagram.com/supercopa_bmx/" target="_blank" rel="noopener noreferrer">Super Copa BMX</a></span>
-    <span class="thanks-wall__note">Donó las medallas de la premiación.</span>
-  </li>
-  <li class="thanks-wall__plate thanks-wall__plate--org">
-    <span class="thanks-wall__role">Las calcomanías</span>
-    <span class="thanks-wall__name"><a href="https://www.instagram.com/elian_rider_shop/" target="_blank" rel="noopener noreferrer">Elian Rider Shop</a></span>
-    <span class="thanks-wall__note">Puso las calcomanías con la leyenda de la jornada que llevan las medallas. Tienda de calcomanías y personalizado de motos y bicis en Yumbo.</span>
-  </li>
-  <li class="thanks-wall__plate thanks-wall__plate--org">
-    <span class="thanks-wall__role">Club visitante</span>
-    <span class="thanks-wall__name">Escuela Olguita García</span>
-    <span class="thanks-wall__note">Vino desde Cali con Jorge Lasso, tercero de la Open, y con María Victoria Lasso y Martina Muñoz, primera y segunda de Preinfantiles damas.</span>
-  </li>
-  <li class="thanks-wall__plate thanks-wall__plate--org">
-    <span class="thanks-wall__role">Los pastelitos</span>
-    <span class="thanks-wall__name"><a href="https://www.instagram.com/mera_artesanal/" target="_blank" rel="noopener noreferrer">Mera Artesanal</a></span>
-    <span class="thanks-wall__note">Pastelería artesanal de Yumbo. Donó los pastelitos de la premiación, que a esa edad se recuerdan tanto como el podio.</span>
-  </li>
-  <li class="thanks-wall__plate">
-    <span class="thanks-wall__role">Galletas y gomitas</span>
-    <span class="thanks-wall__name"><a href="https://www.instagram.com/bttrecionorte/" target="_blank" rel="noopener noreferrer">Germán Recio</a></span>
-    <span class="thanks-wall__note">Trajo de Cali las galletas y las gomitas Colombina de la premiación, la misma marca de su maillot. Profesor de la escuela BTT Recio Norte.</span>
-  </li>
-</ul>
 
 ## La pista queda lista para lo que viene
 

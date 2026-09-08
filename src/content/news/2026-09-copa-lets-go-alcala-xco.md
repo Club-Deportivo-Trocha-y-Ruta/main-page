@@ -1,6 +1,9 @@
 ---
 # TÍTULO PROVISIONAL — reemplazar con el hito real del domingo (50-65 caracteres).
 # Patrón: "[Hito del club] en el XCO de Alcalá". Nunca "Trocha y Ruta arrasó".
+# El título hace trabajo medible: el del Chequeo ("Samuel Ortiz gana la Open…")
+# trajo 12 sesiones orgánicas de Google en tres días. Un título sin nombre ni
+# resultado no tiene con qué rankear.
 title: "Trocha y Ruta se mide fuera de casa en el XCO de Alcalá"
 # Fecha del XCO: domingo 13 de septiembre. El evento va del jueves 10 al
 # domingo 13, pero el club asiste solo el domingo: la crónica lleva ese día.
@@ -51,12 +54,27 @@ seo:
 
      POR QUÉ v6 Y NO EL «RELOJ» LARGO
      Las crónicas de Palmira y del Chequeo pasan de 3.000 palabras (12-15 min
-     de lectura) y el 82 % de las visitas llega desde el celular. Esta fecha
-     no reparte puntos ni general: no hay tablero que explicar. Así que el
-     domingo se cuenta con lo que se trae de Alcalá —fotos, clips de 15 s,
-     una nota de voz— y el texto justo para que cada pieza tenga sentido.
-     Presupuesto: ≤ 700 palabras visibles (3-4 min), ≤ 3 clips, 1 audio,
-     ≤ 300 KB por foto, ≤ 3 MB por clip.
+     de lectura) y el 93 % de las visitas a la del Chequeo llegó desde el
+     celular. Esta fecha no reparte puntos ni general: no hay tablero que
+     explicar. Así que el domingo se cuenta con lo que se trae de Alcalá
+     —fotos, clips de 15 s, una nota de voz— y el texto justo para que cada
+     pieza tenga sentido. Presupuesto: ≤ 700 palabras visibles (3-4 min),
+     ≤ 3 clips, 1 audio, ≤ 300 KB por foto, ≤ 3 MB por clip.
+
+     POR QUÉ ESTE ORDEN (GA4, crónica del Chequeo, 5-7 sep 2026)
+     De 30 usuarios que abrieron la nota: 27 pasaron el 25 % de scroll, 24 el
+     50 %, 21 el 75 % y solo 7 llegaron al final. El tiempo medio fue 3:37
+     para un texto de 13-15 min. Entre el 75 % y el 100 % se pierden dos de
+     cada tres lectores, y ahí era justo donde estaban la tabla de resultados
+     (67 % de la página) y el cierre. De ahí las tres decisiones de este
+     esqueleto:
+       · Los resultados van ARRIBA, antes del reloj. Es lo que trae al lector.
+       · La salida a /inscripciones y el enlace al álbum van a la MITAD, donde
+         todavía queda el ~70 % de la audiencia. El InscriptionCTA que pinta
+         `noticias/[...slug].astro` al final se queda, pero no se cuenta con él.
+       · La ficha administrativa de la visita va PLEGADA al final: es
+         referencia, no gancho, y abriendo la crónica empujaba el resultado
+         fuera de la primera pantalla.
 
      REGLAS DEL FORMATO
        · Una «postal» por manga en la que corrió el club: hora real + 3-4
@@ -68,7 +86,9 @@ seo:
        · Clips: <figure class="clip"> con <video preload="none" poster>.
          MP4 H.264, 720×1280 vertical, ≤ 15 s, ≤ 3 MB, alojado en
          public/videos/news/copa-lets-go-alcala-2026/. YouTube va en el
-         álbum (campo `videos`), no aquí.
+         álbum (campo `videos`), no aquí. Con 93 % de lectura en celular, si
+         hay que sacrificar un clip cae el paneo de pista: es el único que no
+         lleva a un corredor dentro.
        · Voces: nota de voz de ≤ 20 s (<audio>) con su transcripción en
          texto debajo, o cita de ≤ 120 caracteres. Sin material real, el
          bloque se borra.
@@ -88,23 +108,21 @@ seo:
 
 [PENDIENTE — cold open, dos frases]
 
-## Ficha de la visita
+## Cómo le fue al club
 
-<div class="visit-card reveal">
-  <div class="visit-card__stub" aria-hidden="true">
-    <span class="visit-card__stub-day">Dom</span>
-    <span class="visit-card__stub-num">13</span>
-    <span class="visit-card__stub-month">Sep 2026</span>
-  </div>
-  <dl class="visit-card__list">
-    <div class="visit-card__item visit-card__item--wide"><dt>Competencia</dt><dd>Copa Let's Go Interdepartamental XCO (Inter-American XCO Cup)</dd></div>
-    <div class="visit-card__item"><dt>Sede</dt><dd>[PENDIENTE — nombre de la pista], Alcalá, Valle del Cauca</dd></div>
-    <div class="visit-card__item"><dt>Día</dt><dd>Domingo 13 de septiembre de 2026, solo el XCO</dd></div>
-    <div class="visit-card__item"><dt>Circuito</dt><dd>3,3 km por vuelta; pista especial para Kanguritos, Pre Infantil e Infantil A</dd></div>
-    <div class="visit-card__item"><dt>Corredores del club</dt><dd>[PENDIENTE — número] en [PENDIENTE — número] mangas</dd></div>
-    <div class="visit-card__item"><dt>Qué se jugaba</dt><dd>Nada de la general de la Copa Valle: se corrió para medirse fuera de casa</dd></div>
-  </dl>
-</div>
+<!-- LA TABLA VA AQUÍ, NO AL FINAL. Es la pregunta que trae a la mayoría de
+     los lectores («¿cómo le fue a mi hijo?») y en esta posición la alcanza
+     el 80-90 % de la audiencia; al final la veía el 23 %.
+
+     De la planilla oficial del organizador. Sin columna de puntos de la
+     Copa Valle (no aplica). Negrita solo a los premiados según lo que el
+     organizador haya premiado (CONFIRMAR hasta qué puesto). Tiempo H:MM:SS ·
+     "-1 vuelta" si fue doblado · DNF solo aquí. Orden: por manga y, dentro
+     de cada manga, por puesto. -->
+
+| Deportista  | Categoría (oficial) | Manga | Pos. | Tiempo | Dif. |
+| ----------- | ------------------- | :---: | :--: | ------ | ---- |
+| [PENDIENTE] |                     |       |  de  |        |      |
 
 <!-- ── CLIP 1 · LA PISTA EN 15 SEGUNDOS ──
      Un paneo lento del circuito (o el tramo más vistoso) grabado a pie,
@@ -238,6 +256,14 @@ seo:
   </figure>
 </div>
 
+<!-- ── ENLACE AL ÁLBUM, TEMPRANO ──
+     El álbum ya se pinta al final por `relatedGallery`, pero ahí lo ve poca
+     gente: en el Chequeo la galería recibió 23 vistas de 7 usuarios. Este
+     enlace va en cuanto el lector ha visto la primera tanda de fotos, que es
+     cuando la oferta «hay más» tiene sentido. Ajustar el número al cerrar. -->
+
+En el álbum del domingo hay [PENDIENTE — número] fotos más: [todas las fotos de Alcalá](/galeria/copa-lets-go-alcala-2026).
+
 ## 9:35 a. m. — Manga 3: [PENDIENTE — gancho]
 
 <div class="clock-stamp reveal" style="--t:95">
@@ -339,6 +365,23 @@ seo:
   <span class="stat-callout__text">[PENDIENTE — el número del domingo y su frase]</span>
 </div>
 
+<!-- ── SALIDA A LA INSCRIPCIÓN, A LA MITAD ──
+     Aquí todavía queda el ~70 % de los lectores. El InscriptionCTA del final
+     de `noticias/[...slug].astro` sigue existiendo; este no lo reemplaza, lo
+     adelanta. En el Chequeo, con el CTA solo al final, se registró UN
+     `cta_inscripcion_click` en 30 usuarios. Si al cerrar la crónica se ve que
+     el bloque parte una postal por la mitad, moverlo una sección, no borrarlo. -->
+
+<aside class="mid-cta" aria-label="Inscripciones al club">
+  <p class="mid-cta__text">
+    Los que salen en estas fotos empezaron igual: sin experiencia y con una bici
+    prestada. En el club se arranca desde los 4 años y la primera clase es gratis.
+  </p>
+  <a class="mid-cta__link" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
+    Agendar la clase de prueba
+  </a>
+</aside>
+
 ## 10:40 a. m. — Primera premiación
 
 <div class="clock-stamp reveal" style="--t:160">
@@ -422,25 +465,17 @@ seo:
   <p class="pull-quote__attribution">— [Nombre Apellido], [categoría]</p>
 </div>
 
-## Resultados del club — XCO
-
-<!-- De la planilla oficial del organizador. Sin columna de puntos de la
-     Copa Valle (no aplica). Negrita solo a los premiados según lo que el
-     organizador haya premiado (CONFIRMAR hasta qué puesto). Tiempo H:MM:SS ·
-     "-1 vuelta" si fue doblado · DNF solo aquí. Orden: por manga y, dentro
-     de cada manga, por puesto. -->
-
-| Deportista | Categoría (oficial) | Manga | Pos. | Tiempo | Dif. |
-|------------|---------------------|:-----:|:----:|--------|------|
-| [PENDIENTE] | | | de | | |
-
 ## En tres frases
 
 <!-- El cierre analítico de v4 («La medida fuera de casa») en ≤ 60 palabras:
      1) contra quién se corrió (clubes y departamentos en las categorías
      del club); 2) lo que se vio que no se ve en casa; 3) lo que se lleva
      al entrenamiento de cara al 18 de octubre en Yumbo. Sin épica: si fue
-     regular, se dice. -->
+     regular, se dice.
+
+     Si al cerrar la crónica estas tres frases repiten el cold open, se borran:
+     en esta posición las lee menos de un cuarto de la audiencia, así que no
+     compensa duplicar. Lo que valga la pena de aquí sube al cold open. -->
 
 [PENDIENTE — tres frases]
 
@@ -465,3 +500,31 @@ seo:
      calendario. Enlace a /calendario. -->
 
 [PENDIENTE — dos frases y enlace al calendario]
+
+<!-- ── FICHA DE LA VISITA, PLEGADA ──
+     Datos de referencia: sede, organizador, qué se jugaba. Abría la crónica y
+     empujaba el resultado fuera de la primera pantalla; aquí no le estorba a
+     nadie y sigue disponible para quien la busca (y para el buscador: el
+     contenido de un <details> se indexa igual).
+     La .visit-card va SIN `reveal` a propósito: con el <details> cerrado el
+     bloque está en display:none y el IntersectionObserver de BaseLayout nunca
+     lo intersecta, así que la clase lo dejaría invisible al abrirlo. -->
+
+<details class="visit-details">
+  <summary>Ficha de la visita: sede, circuito y qué se jugaba</summary>
+  <div class="visit-card">
+    <div class="visit-card__stub" aria-hidden="true">
+      <span class="visit-card__stub-day">Dom</span>
+      <span class="visit-card__stub-num">13</span>
+      <span class="visit-card__stub-month">Sep 2026</span>
+    </div>
+    <dl class="visit-card__list">
+      <div class="visit-card__item visit-card__item--wide"><dt>Competencia</dt><dd>Copa Let's Go Interdepartamental XCO (Inter-American XCO Cup)</dd></div>
+      <div class="visit-card__item"><dt>Sede</dt><dd>[PENDIENTE — nombre de la pista], Alcalá, Valle del Cauca</dd></div>
+      <div class="visit-card__item"><dt>Día</dt><dd>Domingo 13 de septiembre de 2026, solo el XCO</dd></div>
+      <div class="visit-card__item"><dt>Circuito</dt><dd>3,3 km por vuelta; pista especial para Kanguritos, Pre Infantil e Infantil A</dd></div>
+      <div class="visit-card__item"><dt>Corredores del club</dt><dd>[PENDIENTE — número] en [PENDIENTE — número] mangas</dd></div>
+      <div class="visit-card__item"><dt>Qué se jugaba</dt><dd>Nada de la general de la Copa Valle: se corrió para medirse fuera de casa</dd></div>
+    </dl>
+  </div>
+</details>
