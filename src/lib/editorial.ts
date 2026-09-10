@@ -61,6 +61,15 @@ export interface ToneTokens {
  * Los tonos de marca (`brand`) llevan texto grafito, no blanco: el teal #20b7c9
  * solo alcanza 2.4:1 contra blanco y no cumple WCAG AA. Misma razón por la que
  * en fondos claros el eyebrow usa los tonos `-deep`.
+ *
+ * `hairline` y `card` usan los tokens `border-hairline` / `bg-surface-raised`
+ * en vez de literales (`border-black/10`, `bg-surface`) en los tonos sobre
+ * fondo claro/tinte: son los dos tokens que el tema oscuro remapea (ver
+ * `src/styles/global.css`), así que una tarjeta o un separador dentro de
+ * estos tonos se leen bien en ambos temas sin que este archivo sepa nada de
+ * temas. `tinted` conserva su propio `border-primary/15` (un hairline de
+ * color, no neutro) y `dark`/`brand` no reciben `hairline` de token porque
+ * sus fondos son fijos y no cambian con el tema.
  */
 export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
   plain: {
@@ -68,8 +77,8 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     heading: 'text-text-primary',
     muted: 'text-text-secondary',
     eyebrow: 'text-primary-deep',
-    hairline: 'border-black/10',
-    card: 'bg-surface',
+    hairline: 'border-hairline',
+    card: 'bg-surface-raised',
     pattern: 'text-primary/14',
     skyline: 'text-primary/25',
     inverted: false,
@@ -79,8 +88,8 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     heading: 'text-text-primary',
     muted: 'text-text-secondary',
     eyebrow: 'text-primary-deep',
-    hairline: 'border-black/10',
-    card: 'bg-surface',
+    hairline: 'border-hairline',
+    card: 'bg-surface-raised',
     pattern: 'text-primary/16',
     skyline: 'text-primary/25',
     inverted: false,
@@ -91,7 +100,7 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     muted: 'text-text-secondary',
     eyebrow: 'text-primary-deep',
     hairline: 'border-primary/15',
-    card: 'bg-surface',
+    card: 'bg-surface-raised',
     pattern: 'text-primary/14',
     skyline: 'text-primary/25',
     inverted: false,
@@ -113,7 +122,7 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     muted: 'text-surface-dark/80',
     eyebrow: 'text-surface-dark',
     hairline: 'border-surface-dark/20',
-    card: 'bg-surface',
+    card: 'bg-surface-raised',
     pattern: 'text-surface-dark/15',
     skyline: 'text-surface-dark/20',
     inverted: false,
@@ -244,7 +253,7 @@ export function elevationProfile({
  */
 export function elevationPointAt(
   t: number,
-  { height = 260 }: Pick<ElevationOptions, 'height'> = {}
+  { height = 260 }: Pick<ElevationOptions, 'height'> = {},
 ): { xPct: number; yPct: number } {
   const clamped = Math.min(Math.max(t, 0), 1);
   return {

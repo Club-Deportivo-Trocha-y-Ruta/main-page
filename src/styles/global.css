@@ -28,9 +28,28 @@
   --color-surface-dark: #2f2f2f;
   --color-surface-muted: #d8d8d8;
   --color-surface-tint: #f7f8f8;
+  /* Superficie que "flota" sobre la página: tarjetas, diálogos, drawer. En
+     light es igual a --color-surface (cero cambio visual); en dark se separa
+     y queda más clara que surface/tint, así el relieve se lee sin sombra. */
+  --color-surface-raised: #ffffff;
 
   --color-text-primary: #2f2f2f;
   --color-text-secondary: #5a5a5a;
+
+  /* Texto/ícono sobre fondos `bg-primary-deep` / `bg-accent-deep`: blanco en
+     light (5.9:1), grafito en dark (9.5:1) — el bloque `[data-theme='dark']`
+     de más abajo lo remapea. */
+  --color-on-deep: #ffffff;
+  /* Líneas finas (bordes, separadores) coherentes con el tema: sustituye
+     `border-black/10`, `border-gray-100/200` sueltos, que en dark se leerían
+     como una línea negra invisible sobre fondo oscuro. */
+  --color-hairline: rgb(0 0 0 / 0.1);
+  /* Texto/estado de error. Sustituye `text-red-600` como color de TEXTO
+     (los rellenos siguen usando la paleta `red-*` de Tailwind cuando no son
+     texto). */
+  --color-danger: #b42318;
+  /* Texto/estado informativo — hoy solo lo usa `.standings-board__move--new`. */
+  --color-info: #1d4ed8;
 
   /* Tipografía */
   --font-sans: 'Inter Variable', system-ui, sans-serif;
@@ -113,6 +132,87 @@
 
   --duration-micro: 200ms; /* micro-interacciones: 150–300ms */
   --duration-celebration: 500ms; /* celebraciones: 400–600ms */
+}
+
+/* === Tema claro/oscuro ===
+   El tema lo decide el atributo `data-theme` de `<html>` — no
+   `prefers-color-scheme` directamente — porque tiene que poder forzarse con
+   un toggle y persistir en `localStorage` a través de View Transitions. El
+   script `is:inline` de `BaseLayout.astro` calcula el valor inicial (system
+   o guardado) y lo escribe en `data-theme` antes del primer paint; `dark:`
+   se apoya en ese atributo, no en la media query.
+   `:where(...)` deja la especificidad del selector en 0: una utility con
+   `dark:` no debe pelear en especificidad con ninguna otra clase del sitio,
+   solo con el orden de aparición, como el resto de variantes de Tailwind. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* Remapeo de tokens semánticos. SIN capa (`@layer`) a propósito: Tailwind 4
+   emite los tokens de `@theme` dentro de `@layer theme`, y en CSS moderno
+   (cascade layers) una regla sin capa gana siempre sobre cualquier regla en
+   capa, sin importar el orden de aparición ni la especificidad del
+   selector — así este bloque re-pinta `:root` entero sin tener que repetir
+   `!important` ni pelear posición en el archivo.
+   Además, esto solo funciona porque arriba se usó `@theme` normal y no
+   `@theme inline`: `@theme` genera las utilities leyendo el valor en tiempo
+   de uso a través de `var(--color-x)`, así que redefinir la custom property
+   más abajo cambia lo que pinta cada utility ya generada. `@theme inline`
+   en cambio incrusta el valor literal en cada utility en build y este
+   remapeo no tendría ningún efecto.
+
+   Contraste verificado (WCAG 2.x, ver src/test/theme.test.ts):
+   text-primary/surface 14.48 · text-secondary/surface 8.43 ·
+   text-secondary/surface-raised 6.80 · primary-deep/surface 9.46 ·
+   primary-deep/surface-raised 7.63 · accent-deep/surface 11.10 ·
+   on-deep/primary-deep 9.46 · on-deep/accent-deep 11.10 ·
+   danger/surface 7.32 · info/surface 7.12. Sin remapear, primary-deep y
+   danger se quedan en 2.84 y 2.54 sobre el fondo oscuro — de ahí que los
+   dos entren en la lista de tokens que cambian.
+
+   Regla de elevación: en dark lo que "flota" es MÁS claro que la página
+   (surface-raised > surface-tint > surface); en light no cambia nada porque
+   surface-raised == surface. */
+:root {
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-surface: #1c1e20;
+  --color-surface-tint: #24272a;
+  --color-surface-muted: #3a3d40;
+  --color-surface-raised: #2b2f33;
+  --color-text-primary: #eceff1;
+  --color-text-secondary: #b3b9bd;
+  --color-primary-deep: #5fd3e0;
+  --color-accent-deep: #a3e63d;
+  --color-on-deep: #1c1e20;
+  --color-hairline: rgb(255 255 255 / 0.12);
+  --color-danger: #ff8a80;
+  --color-info: #7fa8ff;
+}
+
+/* `@tailwindcss/typography` fija sus variables `--tw-prose-*` en light desde
+   la propia hoja del plugin; en dark las reasignamos a los tokens semánticos
+   de arriba para que el cuerpo de una crónica (`.prose`) siga leyendo bien
+   sin declarar un segundo set de estilos. Light no cambia: el plugin ya
+   trae sus valores por defecto y no los tocamos. */
+:root[data-theme='dark'] .prose {
+  --tw-prose-body: var(--color-text-primary);
+  --tw-prose-headings: var(--color-text-primary);
+  --tw-prose-lead: var(--color-text-secondary);
+  --tw-prose-links: var(--color-primary-deep);
+  --tw-prose-bold: var(--color-text-primary);
+  --tw-prose-counters: var(--color-text-secondary);
+  --tw-prose-bullets: var(--color-text-secondary);
+  --tw-prose-hr: var(--color-hairline);
+  --tw-prose-quotes: var(--color-text-primary);
+  --tw-prose-quote-borders: var(--color-hairline);
+  --tw-prose-captions: var(--color-text-secondary);
+  --tw-prose-kbd: var(--color-text-primary);
+  --tw-prose-code: var(--color-text-primary);
+  --tw-prose-pre-code: var(--color-text-primary);
+  --tw-prose-pre-bg: var(--color-surface-raised);
+  --tw-prose-th-borders: var(--color-hairline);
+  --tw-prose-td-borders: var(--color-hairline);
 }
 
 /* Fuentes locales — subsets `-latin` generados con pyftsubset.
@@ -1186,15 +1286,18 @@
   background: color-mix(in srgb, var(--color-accent) 16%, var(--color-surface));
   color: var(--color-accent-deep);
 }
-/* Rojo y azul de estado: viven aquí y no en @theme porque solo los usa este
-   componente. Contraste sobre blanco: 6,2:1 y 6,3:1 — cumplen WCAG AA. */
+/* Rojo y azul de estado: `--color-danger`/`--color-info` (@theme, arriba),
+   tokens con nombre propio aunque hoy solo los use este componente — así el
+   tema oscuro los remapea igual que al resto de colores semánticos.
+   Contraste sobre blanco: 6,2:1 y 6,3:1 — cumplen WCAG AA (7,3:1 y 7,1:1 en
+   dark, ver src/test/theme.test.ts). */
 .prose :where(.standings-board__move--down) {
-  background: color-mix(in srgb, #b42318 10%, var(--color-surface));
-  color: #b42318;
+  background: color-mix(in srgb, var(--color-danger) 10%, var(--color-surface));
+  color: var(--color-danger);
 }
 .prose :where(.standings-board__move--new) {
-  background: color-mix(in srgb, #1d4ed8 10%, var(--color-surface));
-  color: #1d4ed8;
+  background: color-mix(in srgb, var(--color-info) 10%, var(--color-surface));
+  color: var(--color-info);
 }
 
 .prose :where(.standings-board__legend) {
@@ -3051,10 +3154,10 @@
    este fundido sus dos costados se leían como los bordes de un bloque. El pie
    no se funde porque coincide con el borde de la sección. */
 .yumbo-skyline {
-  -webkit-mask-image: var(--yumbo-mask),
-    linear-gradient(to right, transparent, #000 24%, #000 76%, transparent);
-  mask-image: var(--yumbo-mask),
-    linear-gradient(to right, transparent, #000 24%, #000 76%, transparent);
+  -webkit-mask-image:
+    var(--yumbo-mask), linear-gradient(to right, transparent, #000 24%, #000 76%, transparent);
+  mask-image:
+    var(--yumbo-mask), linear-gradient(to right, transparent, #000 24%, #000 76%, transparent);
   -webkit-mask-size:
     auto 100%,
     100% 100%;

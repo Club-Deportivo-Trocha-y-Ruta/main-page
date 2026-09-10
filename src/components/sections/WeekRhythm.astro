@@ -39,7 +39,7 @@ const busiest = Math.max(1, ...grid.flatMap((row) => row.cells.map((cell) => cel
  * para incluirla en el CSS.
  */
 function fillClass(sessions: number): string {
-  if (sessions === 0) return 'bg-black/[0.04] ring-1 ring-inset ring-black/5';
+  if (sessions === 0) return 'bg-text-primary/[0.04] ring-1 ring-inset ring-hairline';
   const step = Math.ceil((sessions / busiest) * 3);
   if (step <= 1) return 'bg-primary/30';
   if (step === 2) return 'bg-primary/60';

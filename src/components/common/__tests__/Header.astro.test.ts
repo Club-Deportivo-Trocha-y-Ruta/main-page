@@ -76,4 +76,35 @@ describe('Header', () => {
   it('no queda rastro del texto antiguo del CTA', () => {
     expect(doc.body.textContent).not.toContain('Preinscríbete');
   });
+
+  describe('Toggle de tema', () => {
+    it('hay exactamente un toggle de tema en la cabecera', () => {
+      const toggles = doc.querySelectorAll('header [data-theme-toggle]');
+      expect(toggles).toHaveLength(1);
+    });
+
+    it('está oculto bajo `sm` y visible desde `sm` (opción 2 de la decisión B)', () => {
+      const toggle = doc.querySelector('header [data-theme-toggle]')!;
+      const classes = toggle.className.split(/\s+/);
+      // `max-sm:hidden` y no `hidden sm:inline-flex`: el botón ya lleva
+      // `inline-flex` en sus clases base, y en el CSS compilado de Tailwind 4
+      // `.inline-flex` sale DESPUÉS de `.hidden`, así que las dos juntas
+      // dejaban el toggle visible en todas las tallas (lo destapó la prueba
+      // en navegador a 390px). La variante con media query se emite después
+      // de las utilities sin variante y sí gana.
+      expect(classes).toContain('max-sm:hidden');
+      expect(classes).toContain('inline-flex');
+      expect(classes).not.toContain('hidden');
+    });
+
+    it('tiene el nombre accesible fijo "Modo oscuro"', () => {
+      const toggle = doc.querySelector('header [data-theme-toggle]')!;
+      expect(toggle.getAttribute('aria-label')).toBe('Modo oscuro');
+    });
+
+    it('no lleva aria-live (el repintado de la página es el feedback)', () => {
+      const toggle = doc.querySelector('header [data-theme-toggle]')!;
+      expect(toggle.hasAttribute('aria-live')).toBe(false);
+    });
+  });
 });

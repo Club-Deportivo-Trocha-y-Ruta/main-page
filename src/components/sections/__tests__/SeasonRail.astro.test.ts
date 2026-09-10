@@ -81,9 +81,9 @@ describe('SeasonRail', () => {
     const doc = await render({ season });
     const stops = [...doc.querySelectorAll('ol > li')];
     const cancelada = stops[2];
-    expect(cancelada.innerHTML).toContain('bg-[#b42318]');
+    expect(cancelada.innerHTML).toContain('bg-danger');
     expect(cancelada.innerHTML).toContain('-rotate-45');
-    expect(stops.filter((li) => li.innerHTML.includes('bg-[#b42318]'))).toHaveLength(1);
+    expect(stops.filter((li) => li.innerHTML.includes('bg-danger'))).toHaveLength(1);
   });
 
   it('agranda la que sigue además de teñirla de lima', async () => {

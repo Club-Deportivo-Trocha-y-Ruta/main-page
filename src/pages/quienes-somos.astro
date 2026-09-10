@@ -298,7 +298,7 @@ const albums = (await getCollection('gallery'))
       {
         credentials.map((item, index) => (
           <li
-            class="reveal group bg-surface relative flex flex-col rounded-2xl p-6 shadow-sm ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-md"
+            class="reveal group bg-surface relative flex flex-col rounded-2xl p-6 shadow-sm ring-1 ring-hairline transition duration-300 hover:-translate-y-1 hover:shadow-md"
             style={`--stagger:${Math.min(index, 3) * 80}ms`}
           >
             <span class="bg-primary/10 text-primary-deep flex size-11 items-center justify-center rounded-xl">

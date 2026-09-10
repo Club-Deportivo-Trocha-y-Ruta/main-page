@@ -37,7 +37,7 @@ const dot: Record<string, string> = {
   past: 'size-2.5 bg-primary-deep',
   ongoing: 'size-2.5 bg-primary-deep',
   upcoming: 'size-2.5 bg-surface ring-2 ring-primary-deep/25',
-  cancelled: 'size-2.5 bg-surface ring-2 ring-black/25',
+  cancelled: 'size-2.5 bg-surface ring-2 ring-hairline',
 };
 
 const dotFor = (stop: Stop) => (isNext(stop) ? NEXT_DOT : (dot[stop.status] ?? dot.upcoming));
@@ -72,7 +72,7 @@ const summary = `Temporada ${season.year}: ${season.completed} de ${season.total
             >
               <span class:list={['block rounded-full', dotFor(stop)]} />
               {isCancelled(stop) && (
-                <span class="absolute h-0.5 w-4 -rotate-45 rounded-full bg-[#b42318]" />
+                <span class="absolute h-0.5 w-4 -rotate-45 rounded-full bg-danger" />
               )}
             </li>
           ))}

@@ -34,7 +34,7 @@ const dot: Record<string, string> = {
   past: 'size-3 bg-primary-deep/50',
   ongoing: 'size-5 bg-accent ring-4 ring-accent/30',
   upcoming: 'size-3.5 bg-surface ring-2 ring-primary-deep/40',
-  cancelled: 'size-3.5 bg-surface ring-2 ring-black/20',
+  cancelled: 'size-3.5 bg-surface ring-2 ring-hairline',
 };
 
 type Stop = SeasonStop<{ id: string; data: { title: string } }>;
@@ -85,7 +85,7 @@ const dotFor = (stop: Stop) =>
     >
       <div class="relative w-max min-w-full">
         <!-- Riel: gris de punta a punta, lima hasta donde va la temporada -->
-        <div class="absolute inset-x-0 top-6 h-1 rounded-full bg-black/10" aria-hidden="true"></div>
+        <div class="absolute inset-x-0 top-6 h-1 rounded-full bg-text-primary/10" aria-hidden="true"></div>
         <div
           class="absolute left-0 top-6 h-1 rounded-full bg-gradient-to-r from-primary to-accent"
           style={`width:${season.progressPct}%`}
@@ -161,7 +161,7 @@ const dotFor = (stop: Stop) =>
                 )}
 
                 {isCancelled(stop) && (
-                  <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-black/[0.06] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-text-secondary">
+                  <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-text-primary/[0.06] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-text-secondary">
                     Cancelada
                   </span>
                 )}

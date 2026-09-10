@@ -18,13 +18,18 @@ const { variant = 'primary', size = 'md', href, class: className, ...rest } = As
 // existentes cuando los hay, color-mix() cuando no (secondary, sobre gris).
 const variants: Record<string, string> = {
   primary:
-    'bg-primary text-surface-dark hover:bg-primary-deep hover:text-white [--btn-shadow-color:var(--color-primary-dark)]',
+    'bg-primary text-surface-dark hover:bg-primary-deep hover:text-on-deep [--btn-shadow-color:var(--color-primary-dark)]',
+  // `hover:bg-gray-200` era un gris fijo de la escala por defecto de Tailwind:
+  // en dark quedaba tan claro como en light y perdía casi todo el contraste
+  // contra `bg-surface-muted` (que sí se remapea). `surface-muted/70` deriva
+  // del mismo token que el fondo base, así el hover se sigue leyendo como
+  // "un poco más" en los dos temas.
   secondary:
-    'bg-surface-muted text-text-primary hover:bg-gray-200 [--btn-shadow-color:color-mix(in_srgb,var(--color-surface-muted)_55%,black)]',
+    'bg-surface-muted text-text-primary hover:bg-surface-muted/70 [--btn-shadow-color:color-mix(in_srgb,var(--color-surface-muted)_55%,black)]',
   accent:
     'bg-accent text-surface-dark hover:bg-accent-dark [--btn-shadow-color:var(--color-accent-dark)]',
   outline:
-    'border-2 border-primary-deep text-primary-deep hover:bg-primary-deep hover:text-white [--btn-shadow-color:var(--color-primary-deep)]',
+    'border-2 border-primary-deep text-primary-deep hover:bg-primary-deep hover:text-on-deep [--btn-shadow-color:var(--color-primary-deep)]',
 };
 
 const sizes: Record<string, string> = {

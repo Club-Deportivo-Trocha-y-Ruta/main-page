@@ -58,6 +58,133 @@ const heroPoster = isHome ? await getHeroPoster() : null;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Tema claro/oscuro — va lo primero posible en <head>, antes de cualquier
+      CSS o imagen, para evitar el flash de tema equivocado (FOUC): si
+      esperara a `DOMContentLoaded` o a un script al final del <body>, la
+      página pintaría primero en el tema por defecto (light) y saltaría al
+      tema correcto un instante después.
+
+      `astro:after-swap` es obligatorio, no una mejora: con `ClientRouter`
+      (View Transitions), `swapRootAttributes()` de Astro copia los atributos
+      del `<html>` de la página ENTRANTE sobre el de la página actual en cada
+      navegación —incluido `data-theme`, que la entrante nunca trae porque
+      este mismo script todavía no corrió ahí— y lo borra
+      (node_modules/astro/dist/transitions/swap-functions.js). Sin este
+      listener, cada navegación interna dejaría el sitio en el tema por
+      defecto del navegador aunque hubiera una preferencia guardada.
+
+      El toggle no lleva script propio: se detecta por delegación de clic en
+      `document`, igual que `Analytics.astro` con sus `data-analytics-*`. Así
+      el botón funciona también dentro del portal donde `MobileMenu` monta el
+      drawer, y ningún componente nuevo necesita montar su propio elemento
+      de script.
+
+      ES5 a propósito (var/function, sin arrow functions ni template
+      literals) y con try/catch alrededor de `localStorage`: mismo criterio
+      que `ConsentBanner.astro`, que puede fallar en navegación privada o con
+      almacenamiento bloqueado. Sin `define:vars`: Astro 7 reescribe los
+      scripts que lo usan y les quita atributos como `src`/`async` (ver la
+      nota de `Analytics.astro` en CLAUDE.md); este script no los necesita,
+      pero se mantiene la misma convención en todo el sitio.
+    -->
+    <script is:inline>
+      (function () {
+        var KEY = 'trocha-theme';
+        var mq = window.matchMedia('(prefers-color-scheme: dark)');
+
+        function stored() {
+          try {
+            var value = localStorage.getItem(KEY);
+            return value === 'light' || value === 'dark' ? value : null;
+          } catch (_e) {
+            return null;
+          }
+        }
+
+        function system() {
+          return mq.matches ? 'dark' : 'light';
+        }
+
+        function resolve() {
+          return stored() || system();
+        }
+
+        function forget() {
+          try {
+            localStorage.removeItem(KEY);
+          } catch (_e) {
+            // Sin almacenamiento no hay nada que olvidar.
+          }
+        }
+
+        // `forced` solo lo usa `set()`; los listeners de eventos llaman a
+        // `apply` con un `Event`, que se ignora.
+        function apply(forced) {
+          // Regla de convergencia (theme-ux-spec.md, decisión A): la clave solo
+          // existe mientras sea un override real. Si lo guardado coincide con
+          // lo que ya pide el sistema, se borra y el sitio vuelve a seguir al
+          // dispositivo sin un tercer estado "Sistema" en el botón.
+          if (stored() && stored() === system()) forget();
+          var theme = forced === 'light' || forced === 'dark' ? forced : resolve();
+          document.documentElement.setAttribute('data-theme', theme);
+
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) {
+            meta.setAttribute('content', theme === 'dark' ? '#1c1e20' : '#20b7c9');
+          }
+
+          var toggles = document.querySelectorAll('[data-theme-toggle]');
+          for (var i = 0; i < toggles.length; i++) {
+            toggles[i].setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+          }
+        }
+
+        function set(value) {
+          if (value === null || value === system()) {
+            // `null` (tests/otros scripts) y "lo mismo que el sistema" son el
+            // mismo caso: no hay override que guardar.
+            forget();
+          } else {
+            try {
+              localStorage.setItem(KEY, value);
+            } catch (_e) {
+              // localStorage bloqueado (navegación privada, política del
+              // dispositivo): el tema sigue funcionando para esta carga, solo
+              // no persiste entre visitas.
+            }
+          }
+          // Sin almacenamiento, `resolve()` volvería al sistema y el clic no
+          // haría nada visible: se pinta el valor pedido de forma explícita.
+          apply(value);
+        }
+
+        // Pinta el tema antes del primer paint.
+        apply();
+
+        // El sistema cambia de tema mientras la pestaña está abierta (p. ej.
+        // el dispositivo pasa a modo noche). `apply()` ya decide: sin override
+        // sigue al sistema; con override que lo contradiga, lo conserva; con
+        // override que ahora coincide, lo olvida.
+        mq.addEventListener('change', function () {
+          apply();
+        });
+
+        // Ver nota de arriba: obligatorio con ClientRouter.
+        document.addEventListener('astro:after-swap', apply);
+        // Sincroniza `aria-pressed` de toggles montados después del primer
+        // paint (p. ej. el que vive dentro del drawer de MobileMenu).
+        document.addEventListener('astro:page-load', apply);
+
+        document.addEventListener('click', function (e) {
+          var toggle = e.target && e.target.closest && e.target.closest('[data-theme-toggle]');
+          if (!toggle) return;
+          set(resolve() === 'dark' ? 'light' : 'dark');
+        });
+
+        window.__trochaTheme = { get: resolve, set: set };
+      })();
+    </script>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

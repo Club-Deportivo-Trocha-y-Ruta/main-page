@@ -109,7 +109,7 @@ const afterMark = cut >= 0 && highlight ? title.slice(cut + highlight.length) : 
     <div class="grid gap-x-12 gap-y-10 lg:grid-cols-12 lg:items-center">
       <div class="lg:col-span-7 lg:col-start-1 lg:row-start-1">
         <p
-          class="text-text-secondary inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-4 py-1.5 text-xs font-semibold tracking-widest uppercase"
+          class="text-text-secondary inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-raised/80 px-4 py-1.5 text-xs font-semibold tracking-widest uppercase"
         >
           <span class="bg-accent inline-block size-1.5 rounded-full" aria-hidden="true"></span>
           Yumbo · Valle del Cauca · Desde {SITE.founded}
@@ -172,7 +172,7 @@ const afterMark = cut >= 0 && highlight ? title.slice(cut + highlight.length) : 
       {
         pulse && (
           <div class="lg:col-span-7 lg:col-start-1 lg:row-start-2">
-            <div class="bg-surface shadow-raised max-w-[35rem] rounded-2xl border border-black/5 p-5 sm:p-6">
+            <div class="bg-surface shadow-raised max-w-[35rem] rounded-2xl border border-hairline/50 p-5 sm:p-6">
               {/* El conteo de fechas corridas no se escribe aquí: lo publica
                   la banda de credibilidad de la sección siguiente, y repetirlo
                   a un scroll de distancia es la misma cifra dos veces. Lo que

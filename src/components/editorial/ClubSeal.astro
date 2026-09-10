@@ -59,8 +59,14 @@ const tiltDeg = Math.max(-15, Math.min(15, rotate));
 // El escudo es un degradado teal→lima sobre fondo transparente: sobre el teal
 // de marca o sobre grafito se pierde. El disco siempre es claro; lo único que
 // cambia con el tono es el aro que lo recorta contra el fondo.
+// `bg-white` a propósito (no `bg-surface`): el disco es la placa que sostiene
+// el logo, diseñado sobre blanco, y no debe oscurecerse en tema oscuro o el
+// degradado teal→lima perdería contraste contra su propio fondo. El aro
+// (`ring-black/5`, no `ring-hairline`) también se deja fijo: `hairline` se
+// invierte a blanco en tema oscuro, y sobre un disco que siempre es blanco
+// eso lo dejaría invisible.
 const tokens = getTone(tone);
-const disc = tokens.inverted ? 'bg-white ring-white/25' : 'bg-surface ring-black/5';
+const disc = tokens.inverted ? 'bg-white ring-white/25' : 'bg-white ring-black/5';
 
 // Sin el IntersectionObserver de BaseLayout.astro, `.revealed` no llega nunca
 // y el sello se quedaría en `opacity: 0`. Va como string + `set:html` (no como

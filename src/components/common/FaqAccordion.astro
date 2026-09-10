@@ -29,7 +29,7 @@ const { items, class: className } = Astro.props;
   {items.map((item) => (
     <details
       id={item.id}
-      class="faq-item group scroll-mt-24 rounded-xl bg-surface shadow-sm ring-1 ring-black/5 transition-shadow duration-200 hover:shadow-md"
+      class="faq-item group scroll-mt-24 rounded-xl bg-surface shadow-sm ring-1 ring-hairline transition-shadow duration-200 hover:shadow-md"
     >
       <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 font-display font-semibold text-text-primary text-lg select-none list-none [&::-webkit-details-marker]:hidden">
         <span>{item.question}</span>

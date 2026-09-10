@@ -37,7 +37,7 @@ const levelStyle = obstacleLevelColors[data.level] ?? {
 >
   <a
     href={`/la-pista/${entry.id}`}
-    class="group rounded-card shadow-card hover:shadow-raised focus-visible:shadow-raised block h-full overflow-hidden bg-white transition-shadow"
+    class="group rounded-card shadow-card hover:shadow-raised focus-visible:shadow-raised block h-full overflow-hidden bg-surface-raised transition-shadow"
   >
     {
       image ? (
@@ -61,7 +61,7 @@ const levelStyle = obstacleLevelColors[data.level] ?? {
     <div class="p-5">
       <div class="flex flex-wrap items-center gap-2">
         <span
-          class="bg-accent-deep grid size-7 place-items-center rounded-full text-xs font-bold text-white"
+          class="bg-accent-deep grid size-7 place-items-center rounded-full text-xs font-bold text-on-deep"
           aria-hidden="true"
         >
           {number}

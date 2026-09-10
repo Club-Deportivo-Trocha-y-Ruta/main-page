@@ -120,7 +120,7 @@ const facts: (Fact | null)[] = [
       <div>
         <div class="flex flex-wrap items-center gap-3">
           <span
-            class="bg-accent-deep grid size-8 place-items-center rounded-full text-sm font-bold text-white"
+            class="bg-accent-deep grid size-8 place-items-center rounded-full text-sm font-bold text-on-deep"
             aria-label={`Obstáculo ${number} del recorrido`}
           >
             {number}
@@ -200,7 +200,7 @@ const facts: (Fact | null)[] = [
             <a
               href={`/la-pista/${previous.id}`}
               aria-label={`Obstáculo anterior: ${previous.data.name}`}
-              class="group rounded-card hover:border-primary-deep flex items-center gap-3 border border-black/10 p-4 transition-colors"
+              class="group rounded-card hover:border-primary-deep flex items-center gap-3 border border-hairline p-4 transition-colors"
             >
               <Icon
                 name="ph:arrow-left-bold"
@@ -222,7 +222,7 @@ const facts: (Fact | null)[] = [
             <a
               href={`/la-pista/${next.id}`}
               aria-label={`Obstáculo siguiente: ${next.data.name}`}
-              class="group rounded-card hover:border-primary-deep flex items-center justify-end gap-3 border border-black/10 p-4 text-right transition-colors"
+              class="group rounded-card hover:border-primary-deep flex items-center justify-end gap-3 border border-hairline p-4 text-right transition-colors"
             >
               <span>
                 <span class="text-text-secondary block text-xs tracking-wider uppercase">

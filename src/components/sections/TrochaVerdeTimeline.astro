@@ -93,7 +93,7 @@ const last = stops[stops.length - 1];
             y1={toSvgY(y)}
             x2="100"
             y2={toSvgY(y)}
-            class:list={[tokens.inverted ? 'text-white/15' : 'text-black/10']}
+            class:list={[tokens.inverted ? 'text-white/15' : 'text-hairline']}
             stroke="currentColor"
             stroke-width="0.5"
             vector-effect="non-scaling-stroke"
@@ -115,7 +115,7 @@ const last = stops[stops.length - 1];
         <span
           class:list={[
             'absolute size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2',
-            tokens.inverted ? 'bg-accent-light ring-surface-dark' : 'bg-primary-deep ring-white',
+            tokens.inverted ? 'bg-accent-light ring-surface-dark' : 'bg-primary-deep ring-surface',
           ]}
           style={`left:${stop.xPct}%;top:${toSvgY(stop.cumulativePct)}%`}
           aria-hidden="true"
@@ -124,10 +124,10 @@ const last = stops[stops.length - 1];
     </div>
 
     <!-- Regla de semanas -->
-    <div class="relative mt-1 h-2.5 border-t border-black/10" aria-hidden="true">
+    <div class="relative mt-1 h-2.5 border-t border-hairline" aria-hidden="true">
       {weekTicks.map((tick) => (
         <span
-          class:list={['absolute top-0 w-px', tick.major ? 'bg-black/25' : 'bg-black/10']}
+          class:list={['absolute top-0 w-px', tick.major ? 'bg-text-primary/25' : 'bg-text-primary/10']}
           style={`left:${tick.pct}%;height:${tick.major ? '10px' : '5px'}`}
         ></span>
       ))}
