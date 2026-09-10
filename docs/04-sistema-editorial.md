@@ -1487,3 +1487,100 @@ válida: son dos números distintos y el texto dice cuál es cuál.
 `src/content.config.ts` sí—, así que el servidor de desarrollo sigue sirviendo
 el frontmatter parseado con el schema viejo y el campo nuevo llega `undefined`
 con el archivo correcto. Hay que borrar ese archivo y reiniciar.
+
+---
+
+## 29. Tema claro y oscuro
+
+El sitio sigue el tema del dispositivo (`prefers-color-scheme`) y deja forzar el
+contrario con un interruptor. La decisión de fondo es **no** sembrar `dark:` por
+los 340 sitios que ya usan tokens: el tema oscuro es un **remapeo de los tokens
+semánticos** de `@theme` en `src/styles/global.css`, y todo lo que ya estaba
+escrito con `bg-surface`, `text-text-primary`, `text-primary-deep`… se re-pinta
+solo.
+
+### Cómo funciona
+
+- `<html data-theme="light|dark">`, siempre presente. Lo fija un script
+  `is:inline` en el `<head>` de `BaseLayout.astro`, antes de cualquier CSS, para
+  que no haya flash del tema equivocado. Orden de resolución: preferencia
+  guardada en `localStorage['trocha-theme']` → si no hay, el sistema.
+- Tailwind 4 emite los tokens de `@theme` como custom properties en `@layer
+  theme`; un bloque **sin capa** `:root[data-theme='dark'] { --color-surface: …
+  }` gana siempre y remapea cada utility que los lee (incluidas las variantes con
+  opacidad, que usan `color-mix`). Esto funciona porque el sitio usa `@theme`
+  normal, no `@theme inline`.
+- `@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *))`
+  existe para los pocos ajustes explícitos (`dark:hidden` en los iconos del
+  toggle, `dark:border-hairline` en pie y cinta). `:where` deja la especificidad
+  en cero.
+- **`astro:after-swap` es obligatorio.** Con `ClientRouter`, `swapRootAttributes()`
+  copia los atributos del `<html>` entrante sobre el actual en cada navegación y
+  borra `data-theme`. El listener vuelve a aplicarlo antes del paint.
+- `color-scheme: light|dark` acompaña al atributo (controles nativos, scrollbars,
+  autofill de Chrome Android). `<meta name="theme-color">` cambia con el tema.
+- `/enlaces` (`LinktreeLayout`) queda fuera: es la landing del QR, siempre oscura.
+
+### Tokens que cambian (light → dark)
+
+| token | light | dark | para qué |
+|---|---|---|---|
+| `surface` | `#ffffff` | `#1c1e20` | página |
+| `surface-tint` | `#f7f8f8` | `#24272a` | banda `muted` |
+| `surface-muted` | `#d8d8d8` | `#3a3d40` | chips, píldora de navegación |
+| `surface-raised` | `#ffffff` | `#2b2f33` | tarjetas, diálogos, drawer: lo que flota |
+| `text-primary` / `text-secondary` | `#2f2f2f` / `#5a5a5a` | `#eceff1` / `#b3b9bd` | texto |
+| `primary-deep` / `accent-deep` | `#0f6f79` / `#456f00` | `#5fd3e0` / `#a3e63d` | teal y lima **legibles como texto** |
+| `on-deep` | `#ffffff` | `#1c1e20` | texto sobre `bg-primary-deep` / `bg-accent-deep` |
+| `hairline` | negro al 10 % | blanco al 12 % | líneas finas |
+| `danger` / `info` | `#b42318` / `#1d4ed8` | `#ff8a80` / `#7fa8ff` | estados |
+
+`surface-dark` (`#2f2f2f`) **no cambia**: pie, cinta de anuncio, banner de
+consentimiento y el tono `dark` de `SectionShell` son superficies fijas y su
+texto blanco vale en los dos temas. En oscuro quedan más claras que la página, así
+que leen como losa elevada; la cinta lleva `dark:border-b dark:border-hairline`
+como línea de corte, y el pie no la necesita: su silueta de elevación ya hace de
+borde (una línea recta encima la partiría).
+Los rellenos de marca (`primary`, `accent` y sus `-dark`/`-light`) tampoco
+cambian: llevan texto grafito en ambos temas.
+
+Regla de elevación en oscuro: lo que flota es **más claro** (`raised` > `tint` >
+`surface`). En claro `raised` es igual a `surface`, así que el cambio no movió un
+píxel del tema claro. `src/test/theme.test.ts` lee los hex del propio CSS y
+comprueba que los pares texto/fondo de esa tabla cumplen 4.5:1 en los dos temas.
+
+### Reglas para escribir componentes nuevos
+
+- Tarjeta, diálogo, panel o input: `bg-surface-raised`, no `bg-white`.
+- Línea fina: `border-hairline`, no `border-black/10` ni `border-gray-*`.
+- Tinta al N % sobre la página: `bg-text-primary/5`, no `bg-black/5` (se invierte
+  con el tema). Sobre superficies fijas oscuras, `bg-white/10` sigue siendo correcto.
+- Texto sobre `bg-primary-deep` / `bg-accent-deep`: `text-on-deep`, no `text-white`.
+- Errores y estados: `text-danger` / `bg-danger/10`, no `text-red-600`.
+- Placas de logos (patrocinadores, `ClubSeal`) se quedan blancas a propósito
+  (`bg-white` o `dark:bg-white` cuando en claro la placa era gris): los logos
+  están diseñados sobre blanco y el de Smurfit Westrock es texto azul marino
+  sobre transparente. Se comenta en el sitio.
+- Nada de `transition` de color en `html`/`body`: el barrido a media transición se
+  ve como un fallo.
+
+### El interruptor
+
+Dos estados, no tres (decisión del UX Researcher, `theme-ux-spec`): sin
+preferencia se sigue al sistema; el botón existe solo para el override. Regla de
+convergencia: la clave se guarda únicamente si contradice al sistema y se borra
+en cuanto coincide, así quien vuelve al tema de su teléfono recupera el
+seguimiento automático sin un estado «Sistema» que explicar.
+
+- `ThemeToggle.astro` en la cabecera desde `sm` (a 320 px un cuarto control no
+  cabe junto al CTA); bajo `sm` el mismo `<button data-theme-toggle>` vive al
+  final del drawer de `MobileMenu`, con texto visible.
+- Sin script propio: el clic se detecta por delegación en `document` desde
+  `BaseLayout`, igual que `data-analytics-event`. Funciona dentro del portal del
+  drawer.
+- `aria-pressed` con nombre fijo «Modo oscuro»; el HTML servido sale con
+  `aria-pressed="false"` y el script lo corrige antes del primer paint y en
+  `astro:page-load`. El icono muestra el destino: luna en claro, sol en oscuro,
+  intercambiados por CSS (`dark:hidden` / `hidden dark:block`).
+- Única animación: `active:scale-95` con `duration-micro` y `motion-reduce`.
+- `window.__trochaTheme.get()` / `.set('light'|'dark'|null)` para tests y scripts.

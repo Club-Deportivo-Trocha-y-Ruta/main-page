@@ -17,7 +17,7 @@ const emailUrl = `mailto:${CONTACT.email}?subject=Programa%20corporativo%20Troch
   class="mb-16 scroll-mt-28"
   aria-labelledby="sponsors-title"
 >
-  <div class="rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white px-6 py-12 text-center sm:px-10">
+  <div class="rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-surface px-6 py-12 text-center sm:px-10">
     {/* Ícono */}
     <div
       class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
@@ -61,7 +61,7 @@ const emailUrl = `mailto:${CONTACT.email}?subject=Programa%20corporativo%20Troch
       {/* CTA secundario: email */}
       <a
         href={emailUrl}
-        class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-6 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+        class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-surface-raised px-6 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
         aria-label={`Enviar email a ${CONTACT.email} sobre programa corporativo`}
       >
         <Icon name="ph:envelope-bold" class="h-5 w-5" aria-hidden="true" />
@@ -71,15 +71,15 @@ const emailUrl = `mailto:${CONTACT.email}?subject=Programa%20corporativo%20Troch
 
     {/* Indicador de impacto corporativo */}
     <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
-      <div class="rounded-xl border border-emerald-100 bg-white p-4">
+      <div class="rounded-xl border border-emerald-100 bg-surface-raised p-4">
         <p class="font-display text-2xl font-bold text-emerald-700">1 árbol</p>
         <p class="mt-1 text-xs text-text-secondary">Impacto mínimo por empresa patrocinadora</p>
       </div>
-      <div class="rounded-xl border border-emerald-100 bg-white p-4">
+      <div class="rounded-xl border border-emerald-100 bg-surface-raised p-4">
         <p class="font-display text-2xl font-bold text-emerald-700">Placa propia</p>
         <p class="mt-1 text-xs text-text-secondary">Tu marca en el árbol, visible en la pista</p>
       </div>
-      <div class="rounded-xl border border-emerald-100 bg-white p-4">
+      <div class="rounded-xl border border-emerald-100 bg-surface-raised p-4">
         <p class="font-display text-2xl font-bold text-emerald-700">Reporte anual</p>
         <p class="mt-1 text-xs text-text-secondary">Fotos de seguimiento y datos de crecimiento</p>
       </div>

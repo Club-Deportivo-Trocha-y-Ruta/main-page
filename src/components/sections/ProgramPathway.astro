@@ -96,7 +96,7 @@ const band = (startPct: number, widthPct: number) => ({
     <!-- Perfil de elevación -->
     <div class="sda-trail relative mt-3 h-28 sm:h-36 md:h-44">
       <svg
-        class="absolute inset-0 h-full w-full text-black/15"
+        class="absolute inset-0 h-full w-full text-hairline"
         viewBox="0 0 1000 260"
         preserveAspectRatio="none"
         aria-hidden="true"
@@ -165,7 +165,7 @@ const band = (startPct: number, widthPct: number) => ({
             stage.level.ink,
             stage.id === activeId
               ? 'z-10 size-8 ring-[3px] ring-offset-2 ring-primary-deep'
-              : 'size-7 ring-2 ring-white',
+              : 'size-7 ring-2 ring-surface',
           ]}
           style={`left:${xPct}%;top:${yPct}%`}
           aria-hidden="true"
@@ -176,10 +176,10 @@ const band = (startPct: number, widthPct: number) => ({
     </div>
 
     <!-- Regla de años: marca mayor en cada cambio de etapa -->
-    <div class="relative mt-1 h-2.5 border-t border-black/10" aria-hidden="true">
+    <div class="relative mt-1 h-2.5 border-t border-hairline" aria-hidden="true">
       {ticks.map((tick) => (
         <span
-          class:list={['absolute top-0 w-px', tick.major ? 'bg-black/25' : 'bg-black/10']}
+          class:list={['absolute top-0 w-px', tick.major ? 'bg-text-primary/25' : 'bg-text-primary/10']}
           style={`left:${tick.pct}%;height:${tick.major ? '10px' : '5px'}`}
         ></span>
       ))}

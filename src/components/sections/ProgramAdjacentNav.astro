@@ -35,7 +35,7 @@ const { previous, next, class: className } = Astro.props;
         <a
           href={`/programas/${previous.id}`}
           aria-label={`Etapa anterior: ${previous.title}, ${previous.ageRange}`}
-          class="group flex items-center gap-3 rounded-xl border border-black/10 p-4 transition-colors hover:border-primary-deep"
+          class="group flex items-center gap-3 rounded-xl border border-hairline p-4 transition-colors hover:border-primary-deep"
         >
           <Icon name="ph:arrow-left-bold" class="size-5 shrink-0 text-primary-deep" aria-hidden="true" />
           <span class="min-w-0">
@@ -55,7 +55,7 @@ const { previous, next, class: className } = Astro.props;
         <a
           href={`/programas/${next.id}`}
           aria-label={`Siguiente etapa: ${next.title}, ${next.ageRange}`}
-          class="group flex items-center justify-between gap-3 rounded-xl border border-black/10 p-4 transition-colors hover:border-primary-deep sm:justify-end"
+          class="group flex items-center justify-between gap-3 rounded-xl border border-hairline p-4 transition-colors hover:border-primary-deep sm:justify-end"
         >
           <span class="min-w-0 sm:text-right">
             <span class="block text-[11px] font-semibold uppercase tracking-wider text-text-secondary">

@@ -66,7 +66,9 @@ describe('Button', () => {
     const doc = parseHtml(html);
     const btn = doc.querySelector('button')!;
     expect(btn.className).toContain('bg-primary');
-    expect(btn.className).toContain('text-white');
+    // `text-on-deep`: blanco en light, grafito en dark (token remapeado en
+    // `global.css`) — no un `text-white` fijo que se leería mal en dark.
+    expect(btn.className).toContain('hover:text-on-deep');
   });
 
   it('aplica variante secondary', async () => {

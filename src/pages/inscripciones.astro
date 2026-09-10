@@ -150,7 +150,7 @@ const faqJsonLd = generateFAQPageJsonLd(faqs);
               >
                 <Icon name={doc.icon} class="text-primary-deep size-4" aria-hidden="true" />
                 <svg
-                  class="checklist-check bg-primary absolute -right-1 -bottom-1 size-3.5 rounded-full p-0.5 text-white"
+                  class="checklist-check bg-primary absolute -right-1 -bottom-1 size-3.5 rounded-full p-0.5 text-surface-dark"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -273,7 +273,7 @@ const faqJsonLd = generateFAQPageJsonLd(faqs);
       <FaqAccordion items={faqs} />
     </div>
 
-    <div class="mt-12 flex flex-col items-center gap-4 border-t border-black/10 pt-8 text-center">
+    <div class="mt-12 flex flex-col items-center gap-4 border-t border-hairline pt-8 text-center">
       <a
         href={`${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, tengo una duda sobre la inscripción')}`}
         target="_blank"

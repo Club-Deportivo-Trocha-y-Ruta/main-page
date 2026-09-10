@@ -95,13 +95,12 @@ describe('ClubSeal', () => {
     const doc = await render({ tone: 'dark' });
     const classes = seal(doc)?.className ?? '';
     expect(classes).toContain('bg-white');
-    expect(classes).not.toContain('bg-surface ');
   });
 
-  it('sobre tonos claros el disco usa la superficie del sistema editorial', async () => {
+  it('sobre tonos claros el disco es blanco fijo: placa de logo, no superficie del tema', async () => {
     for (const tone of ['plain', 'muted', 'tinted', 'brand'] as const) {
       const doc = await render({ tone });
-      expect(seal(doc)?.className).toContain('bg-surface');
+      expect(seal(doc)?.className).toContain('bg-white');
     }
   });
 

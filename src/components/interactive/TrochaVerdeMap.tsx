@@ -177,7 +177,7 @@ export default function TrochaVerdeMap({ trees }: TrochaVerdeMapProps) {
           id="species-filter"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="rounded-lg border border-surface-muted bg-white px-3 py-1.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-emerald-600"
+          className="rounded-lg border border-surface-muted bg-surface-raised px-3 py-1.5 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-emerald-600"
           aria-label="Filtrar árboles del mapa por especie"
         >
           <option value="todas">Todas las especies</option>

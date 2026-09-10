@@ -143,7 +143,7 @@ const distanceKm = geometry ? (geometry.lengthMeters / 1000).toFixed(1).replace(
             {placed.map((marker) => (
               <a
                 href={`/la-pista/${marker.slug}`}
-                class="bg-accent-deep shadow-raised absolute grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2 border-white text-xs font-bold text-white transition-transform hover:scale-110 focus-visible:scale-110"
+                class="bg-accent-deep shadow-raised absolute grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2 border-white text-xs font-bold text-on-deep transition-transform hover:scale-110 focus-visible:scale-110"
                 style={`left:${marker.left};top:${marker.top}`}
                 aria-label={`Obstáculo ${marker.number}: ${marker.name}`}
               >
@@ -175,7 +175,7 @@ const distanceKm = geometry ? (geometry.lengthMeters / 1000).toFixed(1).replace(
                 class="rounded-control text-text-primary hover:bg-primary/5 flex items-center gap-3 px-3 py-2 text-sm font-semibold transition-colors"
               >
                 <span
-                  class="bg-accent-deep grid size-6 shrink-0 place-items-center rounded-full text-xs font-bold text-white"
+                  class="bg-accent-deep grid size-6 shrink-0 place-items-center rounded-full text-xs font-bold text-on-deep"
                   aria-hidden="true"
                 >
                   {marker.number}

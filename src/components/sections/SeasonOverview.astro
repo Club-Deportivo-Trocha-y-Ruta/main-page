@@ -49,7 +49,7 @@ const eyebrow = season.total > 0 ? `Temporada ${season.year}` : 'Temporada';
 const columnHeading = 'text-xs font-bold uppercase tracking-[0.18em] text-primary-deep';
 
 const outlineLink =
-  'inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+  'inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-on-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
 ---
 
 <SectionShell tone="muted" width="wide" labelledby="temporada-heading">
@@ -95,10 +95,10 @@ const outlineLink =
         cancelled.length > 0 && (
           <ul class="mt-4 flex flex-col gap-2">
             {cancelled.map((event: Event) => (
-              <li class="text-text-secondary flex flex-wrap items-baseline gap-2 rounded-xl border border-dashed border-black/15 p-3 text-sm">
+              <li class="text-text-secondary flex flex-wrap items-baseline gap-2 rounded-xl border border-dashed border-hairline p-3 text-sm">
                 {/* El rojo de estado no dice nada por sí solo: el chip lleva la
-                    palabra. Es el mismo #b42318 del tablero de la general. */}
-                <span class="rounded-full bg-[#b42318]/10 px-2 py-0.5 text-xs font-bold tracking-wide text-[#b42318] uppercase">
+                    palabra. Es el mismo token `danger` del tablero de la general. */}
+                <span class="rounded-full bg-danger/10 px-2 py-0.5 text-xs font-bold tracking-wide text-danger uppercase">
                   Cancelada
                 </span>
                 {/* Solo el título: si se reprograma o no es cosa de la
@@ -129,9 +129,9 @@ const outlineLink =
         <div>
           <h3 class={columnHeading}>Lo último en carrera</h3>
 
-          <ul class="bg-surface shadow-card mt-4 overflow-hidden rounded-2xl border border-black/5">
+          <ul class="bg-surface shadow-card mt-4 overflow-hidden rounded-2xl border border-hairline/50">
             {news.map((post: NewsEntry, index: number) => (
-              <li class:list={[index > 0 && 'border-t border-black/10']}>
+              <li class:list={[index > 0 && 'border-t border-hairline']}>
                 <a
                   href={`/noticias/${post.id}`}
                   class="group hover:bg-surface-muted focus-visible:outline-primary flex items-center gap-4 p-4 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 sm:p-5"

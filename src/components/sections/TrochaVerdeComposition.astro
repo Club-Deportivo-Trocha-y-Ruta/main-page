@@ -41,7 +41,7 @@ const fillFor = (category: string) => CATEGORY_FILL[category] ?? 'bg-primary';
       .
     </figcaption>
 
-    <div class="flex h-3 w-full overflow-hidden rounded-full bg-black/5" aria-hidden="true">
+    <div class="flex h-3 w-full overflow-hidden rounded-full bg-text-primary/5" aria-hidden="true">
       {composition.map((slice) => (
         <span
           class:list={[fillFor(slice.category), 'h-full first:rounded-l-full last:rounded-r-full']}

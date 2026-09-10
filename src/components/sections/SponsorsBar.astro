@@ -31,6 +31,12 @@ const sponsors = (await getCollection('sponsors'))
     class="mx-auto max-w-2xl"
   />
 
+  <!--
+    En el tema oscuro cada logo va sobre una placa blanca (`dark:bg-white`):
+    los logos de los patrocinadores están diseñados sobre blanco (texto azul
+    marino en el de Smurfit Westrock) y sobre la superficie oscura desaparecían.
+    Misma excepción que en /patrocinadores, docs/04 §29.
+  -->
   {
     sponsors.length > 0 && (
       <div class="relative mt-10 overflow-hidden">
@@ -42,7 +48,7 @@ const sponsors = (await getCollection('sponsors'))
               rel={s.data.url ? 'noopener noreferrer' : undefined}
               data-analytics-event={s.data.url ? 'sponsor_click' : undefined}
               data-analytics-sponsor-id={s.data.url ? s.id : undefined}
-              class="shrink-0"
+              class="shrink-0 dark:rounded-lg dark:bg-white dark:px-4 dark:py-2"
             >
               <img
                 src={s.data.logo}

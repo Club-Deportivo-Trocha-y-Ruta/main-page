@@ -477,14 +477,14 @@ export default function SiteSearch({
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
-              className="ease-spring relative flex max-h-[80vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl transition-[opacity,scale] duration-[var(--duration-micro)] motion-reduce:transition-none starting:scale-95 starting:opacity-0"
+              className="ease-spring bg-surface-raised relative flex max-h-[80vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl shadow-2xl transition-[opacity,scale] duration-[var(--duration-micro)] motion-reduce:transition-none starting:scale-95 starting:opacity-0"
             >
               <h2 id={titleId} className="sr-only">
                 Buscar en el sitio
               </h2>
 
               {/* Campo de búsqueda */}
-              <div className="flex items-center gap-3 border-b border-black/10 px-4 py-3">
+              <div className="border-hairline flex items-center gap-3 border-b px-4 py-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
@@ -518,10 +518,10 @@ export default function SiteSearch({
                   aria-describedby={hintId}
                   aria-controls={flatHits.length > 0 ? resultsId : undefined}
                   aria-activedescendant={flatHits.length > 0 ? optionId(activeIndex) : undefined}
-                  className="text-text-primary placeholder:text-text-secondary/70 min-w-0 flex-1 bg-transparent text-base outline-none"
+                  className="text-text-primary placeholder:text-text-secondary min-w-0 flex-1 bg-transparent text-base outline-none"
                 />
 
-                <kbd className="bg-surface-muted/30 text-text-secondary hidden shrink-0 rounded-md border border-black/10 px-1.5 py-0.5 text-[11px] font-medium sm:inline-block">
+                <kbd className="bg-surface-muted/30 text-text-secondary border-hairline hidden shrink-0 rounded-md border px-1.5 py-0.5 text-[11px] font-medium sm:inline-block">
                   esc
                 </kbd>
                 <button
@@ -649,18 +649,19 @@ export default function SiteSearch({
               </div>
 
               {/* Pie con ayudas de teclado */}
-              <div className="bg-surface-muted/20 text-text-secondary flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-black/10 px-4 py-2 text-[11px]">
+              <div className="bg-surface-muted/20 text-text-secondary border-hairline flex flex-wrap items-center gap-x-4 gap-y-1 border-t px-4 py-2 text-[11px]">
                 <span>
-                  <kbd className="rounded border border-black/10 bg-white px-1">↑</kbd>{' '}
-                  <kbd className="rounded border border-black/10 bg-white px-1">↓</kbd> para moverte
+                  <kbd className="border-hairline bg-surface-raised rounded border px-1">↑</kbd>{' '}
+                  <kbd className="border-hairline bg-surface-raised rounded border px-1">↓</kbd>{' '}
+                  para moverte
                 </span>
                 <span>
-                  <kbd className="rounded border border-black/10 bg-white px-1">Enter</kbd> para
-                  abrir
+                  <kbd className="border-hairline bg-surface-raised rounded border px-1">Enter</kbd>{' '}
+                  para abrir
                 </span>
                 <span>
-                  <kbd className="rounded border border-black/10 bg-white px-1">Esc</kbd> para
-                  cerrar
+                  <kbd className="border-hairline bg-surface-raised rounded border px-1">Esc</kbd>{' '}
+                  para cerrar
                 </span>
               </div>
             </div>
