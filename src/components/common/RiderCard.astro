@@ -41,12 +41,23 @@ const specialtyLabels: Record<string, string> = {
   ]}
 >
   <div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-muted">
+    {/*
+      `aspect-[3/4]` en vez de `h-full`: el `layout` global del sitio
+      («constrained») hace que Astro fuerce `height:auto` en todo
+      `[data-astro-image]` (su CSS vive en `@layer astro.images`, declarada
+      después que `@layer utilities` de Tailwind en el bundle, así que gana
+      sin importar la especificidad — mismo bug que se corrigió en
+      `YumboLandmark.astro`, docs/04 §29). Con `h-full` la imagen crecía a su
+      proporción natural sin límite de alto real. `aspect-[3/4]` no lo toca
+      Astro: iguala la proporción de la caja y `object-cover` recorta la
+      foto (400×500, 4:5) para llenarla sin distorsión.
+    */}
     <Image
       src={photo}
       alt={`Foto de ${name}`}
       width={400}
       height={500}
-      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+      class="aspect-[3/4] w-full object-cover transition-transform duration-300 group-hover:scale-105"
       loading="lazy"
       inferSize={false}
     />

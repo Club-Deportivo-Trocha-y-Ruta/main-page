@@ -41,12 +41,33 @@ import { YUMBO_LANDMARKS } from '@lib/yumbo';
             la misma altura que las dos siluetas verticales, queda angosto y sin
             peso al lado de ellas. Ocupa el ancho de su columna y menos alto,
             para que las tres pesen parecido.
+
+            Hotfix 2026-09-10: las verticales (`monumento`, `iglesia`) se
+            desbordaban hacia arriba, tapando el titular de la sección de
+            encima. La causa: `<Image>` con el `layout` global del sitio
+            («constrained», en `astro.config.mjs`) trae su propio CSS
+            (`@layer astro.images` en `node_modules/astro/dist/assets/utils/
+            generateImageStylesCSS.js`) que fuerza `height:auto` en TODO
+            `[data-astro-image]`. Esa capa se declara después que
+            `@layer utilities` de Tailwind en el CSS compilado, así que gana
+            sobre `h-full` (misma especificidad, pero capa posterior manda)
+            sin importar el orden de las clases. Con `height:auto` forzado,
+            el `w-auto` de la lámina vertical dejaba de tener ancho límite
+            real y la imagen crecía a su proporción completa (809/520 ≈
+            1.56) sobre el ancho de la columna: 384px de ancho a 1280px de
+            viewport se volvían ~597px de alto contra los 192px de la caja.
+            `max-h-full` esquiva el choque: Astro no toca `max-height`, así
+            que el límite se respeta y `height:auto` (que de todos modos ya
+            fuerza Astro) sigue siendo el valor correcto para una imagen que
+            debe conservar su proporción. La lámina apaisada (`h-auto
+            w-full`) nunca se vio afectada porque ya usaba `height:auto`
+            desde antes: coincidía con lo que Astro fuerza.
           */}
           <div class="flex h-40 items-end justify-center sm:h-48">
             <YumboLandmark
               landmark={landmark.id}
               width={520}
-              class={landmark.shape === 'wide' ? 'h-auto w-full' : 'h-full w-auto'}
+              class={landmark.shape === 'wide' ? 'h-auto w-full' : 'max-h-full w-auto'}
             />
           </div>
           <h3 class="font-display text-text-primary mt-6 text-lg font-bold">{landmark.title}</h3>

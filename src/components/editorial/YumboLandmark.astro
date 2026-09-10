@@ -85,6 +85,19 @@ const mask =
 // La proporción se fija desde el asset: la máscara es un `<span>` vacío y sin
 // ella no ocuparía alto (CLS).
 const ratio = `${source.width} / ${source.height}`;
+
+/**
+ * `fit="contain"` explícito: sin esto, el `layout` global del sitio
+ * («constrained», en `astro.config.mjs`) hace que Astro emita
+ * `data-astro-image-fit="cover"` por defecto, y su CSS
+ * (`@layer astro.images`, declarada después que `@layer utilities` de
+ * Tailwind en el bundle) le gana a la clase `object-contain` de más abajo
+ * sin importar el orden ni la especificidad — misma causa que el desborde
+ * corregido en `YumboRoots.astro` (docs/04 §29). La lámina es contenido
+ * —lleva `alt` real—, así que no puede recortarse, aunque hoy, con el ancho
+ * sin límite fijo de `YumboRoots`, el recuadro ya calce con su proporción y
+ * el recorte no llegue a notarse.
+ */
 ---
 
 {
@@ -94,6 +107,7 @@ const ratio = `${source.width} / ${source.height}`;
       alt={alt ?? info.alt}
       width={width}
       loading={loading}
+      fit="contain"
       class:list={['max-w-full object-contain', className]}
     />
   ) : (
