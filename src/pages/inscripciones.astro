@@ -84,8 +84,8 @@ const faqJsonLd = generateFAQPageJsonLd(faqs);
 ---
 
 <BaseLayout
-  title="Inscripciones"
-  description="Preinscribe a tu hijo o hija en el Club Trocha y Ruta: el proceso paso a paso, el programa según su edad y el seguro deportivo incluido."
+  title="Inscripción a la escuela de ciclismo para niños en Yumbo"
+  description="Cómo inscribir a tu hijo o hija en la escuela de ciclismo Trocha y Ruta: preinscripción en línea, programa según su edad, documentos y seguro deportivo."
   jsonLd={faqJsonLd}
 >
   <!-- Apertura: qué es este formulario y qué no es -->
@@ -137,15 +137,32 @@ const faqJsonLd = generateFAQPageJsonLd(faqs);
       <p class="text-text-secondary text-[11px] font-semibold tracking-wider uppercase">
         Qué debes presentar en el paso {documentsStepNumber}
       </p>
-      <ul class="mt-3 grid gap-2 sm:grid-cols-2">
+      <ul class="mt-3 grid gap-3 sm:grid-cols-2">
         {
-          ENROLLMENT_DOCUMENTS.map((doc) => (
-            <li class="text-text-primary flex items-start gap-2 text-sm leading-snug">
-              <Icon
-                name={doc.icon}
-                class="text-primary-deep mt-0.5 size-4 shrink-0"
+          ENROLLMENT_DOCUMENTS.map((doc, index) => (
+            <li
+              class="reveal text-text-primary flex items-start gap-3 text-sm leading-snug"
+              style={`--stagger:${index * 90}ms`}
+            >
+              <span
+                class="bg-primary/10 relative mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full"
                 aria-hidden="true"
-              />
+              >
+                <Icon name={doc.icon} class="text-primary-deep size-4" aria-hidden="true" />
+                <svg
+                  class="checklist-check bg-primary absolute -right-1 -bottom-1 size-3.5 rounded-full p-0.5 text-surface-dark"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </span>
               <span>{doc.label}</span>
             </li>
           ))
@@ -256,7 +273,7 @@ const faqJsonLd = generateFAQPageJsonLd(faqs);
       <FaqAccordion items={faqs} />
     </div>
 
-    <div class="mt-12 flex flex-col items-center gap-4 border-t border-black/10 pt-8 text-center">
+    <div class="mt-12 flex flex-col items-center gap-4 border-t border-hairline pt-8 text-center">
       <a
         href={`${CONTACT.whatsapp}?text=${encodeURIComponent('Hola, tengo una duda sobre la inscripción')}`}
         target="_blank"

@@ -4,6 +4,7 @@ import {
   buildSeason,
   cancelledAhead,
   clubToday,
+  clubTimeOfDay,
   eventDay,
   dayLabel,
   monthShort,
@@ -67,6 +68,20 @@ describe('resolveEventStatus', () => {
 
   it('lee el día del evento en UTC, tal como se escribió', () => {
     expect(eventDay(at('2026-01-31'))).toBe('2026-01-31');
+  });
+});
+
+describe('clubTimeOfDay', () => {
+  it('da la hora del club en 24 horas y con ceros a la izquierda', () => {
+    // Colombia va cinco horas atrás de UTC y no cambia de hora en el año.
+    expect(clubTimeOfDay(new Date('2026-08-26T21:05:00Z'))).toBe('16:05');
+    expect(clubTimeOfDay(new Date('2026-08-27T05:00:00Z'))).toBe('00:00');
+  });
+
+  it('ordena como texto, que es para lo que se usa', () => {
+    const manana = clubTimeOfDay(new Date('2026-08-26T12:00:00Z'));
+    const tarde = clubTimeOfDay(new Date('2026-08-26T21:00:00Z'));
+    expect(manana < tarde).toBe(true);
   });
 });
 
@@ -198,6 +213,82 @@ describe('buildSeason', () => {
     expect(season.stops).toEqual([]);
     expect(season.progressPct).toBe(0);
     expect(season.next).toBeNull();
+  });
+
+  // Dos paradas en la misma ciudad se leían como una fecha repetida: la
+  // temporada 2026 pasa dos veces por Yumbo (chequeo del club + válida) y dos
+  // por Ginebra (válida + campeonato departamental).
+  describe('ciudades que se repiten', () => {
+    const dosEnYumbo = [
+      evento('sevilla', '2026-01-31', { city: 'Sevilla', shortName: 'Válida I' }),
+      evento('chequeo', '2026-09-05', { city: 'Yumbo', shortName: 'Chequeo' }),
+      evento('valida-yumbo', '2026-10-18', { city: 'Yumbo', shortName: 'Válida VII' }),
+    ];
+
+    it('desambigua con el nombre corto las paradas de la ciudad repetida', () => {
+      const { stops } = buildSeason(dosEnYumbo, hoy);
+      expect(stops.map((s) => s.qualifier)).toEqual([null, 'Chequeo', 'Válida VII']);
+    });
+
+    it('no repite el nombre corto donde la ciudad ya identifica la parada', () => {
+      // Sevilla tiene `shortName`, pero es la única parada de su ciudad: el
+      // riel no gana nada mostrándolo y se llenaría de ruido.
+      expect(buildSeason(dosEnYumbo, hoy).stops[0].qualifier).toBeNull();
+    });
+
+    it('deja el qualifier en null si la ciudad se repite sin nombre corto', () => {
+      const sinNombre = [
+        evento('chequeo', '2026-09-05', { city: 'Yumbo' }),
+        evento('valida-yumbo', '2026-10-18', { city: 'Yumbo' }),
+      ];
+      expect(buildSeason(sinNombre, hoy).stops.map((s) => s.qualifier)).toEqual([null, null]);
+    });
+
+    it('no marca como repetida una ciudad que solo aparece una vez', () => {
+      expect(buildSeason(temporada, hoy).stops.every((s) => s.qualifier === null)).toBe(true);
+    });
+  });
+});
+
+// ============================================================
+// Canceladas que todavía no pasaron
+// ============================================================
+
+describe('cancelledAhead', () => {
+  const hoy = new Date('2026-08-15T17:00:00Z');
+  const eventos = [
+    evento('sevilla', '2026-01-31', { city: 'Sevilla' }),
+    evento('cali', '2026-05-10', { city: 'Cali', status: 'cancelled' }),
+    evento('palmira', '2026-08-01', { city: 'Palmira' }),
+    evento('roldanillo', '2026-09-26', { city: 'Roldanillo', status: 'cancelled' }),
+  ];
+
+  it('deja solo las canceladas que faltan, en orden', () => {
+    expect(cancelledAhead(eventos, hoy).map((e) => e.id)).toEqual(['roldanillo']);
+  });
+
+  it('conserva la cancelada del día mismo hasta que termine el día del club', () => {
+    // 2026-09-26T00:00Z ya es "pasado" según Date.now() desde las 7 p.m. del
+    // 25 en Bogotá: el corte va por día, no por milisegundos.
+    const enLaNoche = new Date('2026-09-26T02:00:00Z');
+    expect(cancelledAhead(eventos, enLaNoche).map((e) => e.id)).toEqual(['roldanillo']);
+    expect(cancelledAhead(eventos, new Date('2026-09-27T17:00:00Z'))).toEqual([]);
+  });
+
+  it('respeta la fecha de cierre de las canceladas de varios días', () => {
+    const larga = [
+      evento('nacional', '2026-08-14', { endDate: at('2026-08-16'), status: 'cancelled' }),
+    ];
+    expect(cancelledAhead(larga, hoy)).toHaveLength(1);
+  });
+
+  it('no se limita al año de la temporada en curso', () => {
+    const otroAno = [evento('2027', '2027-03-01', { status: 'cancelled' })];
+    expect(cancelledAhead(otroAno, hoy)).toHaveLength(1);
+  });
+
+  it('no devuelve nada sin canceladas', () => {
+    expect(cancelledAhead([evento('palmira', '2026-09-01')], hoy)).toEqual([]);
   });
 });
 

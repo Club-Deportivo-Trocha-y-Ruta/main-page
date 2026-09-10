@@ -155,10 +155,10 @@ Google Search Console:
 - CTR por página
 - Páginas indexadas vs generadas (~146 páginas; la mayoría son fichas de árboles/especies de Trocha Verde)
 
-Cloudflare Analytics (activo en el proyecto):
+GA4 (activo en el proyecto, con Consent Mode v2):
 - Tráfico por país/ciudad (verificar Yumbo/Cali dominan)
 - Páginas más visitadas
-- Fuentes de tráfico
+- Fuentes de tráfico (los enlaces de WhatsApp llegan como «Direct» si no llevan UTM — docs/05-convencion-utm.md)
 
 Core Web Vitals (GSC > Core Web Vitals):
 - LCP, INP, CLS en campo real (vs laboratorio de Lighthouse)

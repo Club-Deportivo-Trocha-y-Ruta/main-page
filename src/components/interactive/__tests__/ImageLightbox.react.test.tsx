@@ -46,6 +46,20 @@ describe('ImageLightbox', () => {
     expect(fullImage).toBeInTheDocument();
   });
 
+  it('monta el visor fuera del contenedor del island, como hijo de document.body (portal)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ImageLightbox images={images} />);
+
+    await user.click(screen.getByLabelText('Ver imagen: Carrera XCO 2026'));
+
+    const dialog = screen.getByRole('dialog');
+    // Si el visor se quedara dentro del árbol del island, un ancestro con
+    // `isolate` o `view-transition-name` (SectionShell, <main>) le atraparía
+    // el z-index y el header del sitio se pintaría encima en móvil.
+    expect(container.contains(dialog)).toBe(false);
+    expect(dialog.parentElement!.parentElement).toBe(document.body);
+  });
+
   it('muestra caption en el lightbox', async () => {
     const user = userEvent.setup();
     render(<ImageLightbox images={images} />);

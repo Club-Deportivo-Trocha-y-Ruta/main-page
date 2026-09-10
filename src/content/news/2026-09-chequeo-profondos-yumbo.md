@@ -1,0 +1,437 @@
+---
+title: 'Samuel Ortiz gana la Open en el Chequeo Pro-Fondos de Yumbo'
+date: 2026-09-05
+updatedDate: 2026-09-08
+author: 'Juan Diego García'
+category: 'club'
+tags:
+  [
+    'chequeo',
+    'pro-fondos',
+    'pista-carlos-castro',
+    'yumbo',
+    'xco',
+    'samuel-ortiz',
+    'juan-diego-garcia',
+    'prejuvenil',
+    'trocha-verde',
+  ]
+image: '/images/news/chequeo-profondos-2026/afiche-chequeo-profondos.webp'
+imageAlt: 'Afiche del Chequeo Pro-Fondos del Club Trocha y Ruta, sábado 5 de septiembre de 2026 en la Pista Carlos Castro de Yumbo'
+imageLayout: contain
+excerpt: 'Samuel Ortiz, prejuvenil del club, se subió a la Open del Chequeo Pro-Fondos y ganó en la Pista Carlos Castro por delante de adultos y de corredores de Cali. Juan Diego García fue segundo.'
+featured: true
+draft: false
+relatedEvent: '2026-09-chequeo-profondos-yumbo'
+relatedGallery: 'chequeo-profondos-2026'
+galleryFolder: '/images/news/chequeo-profondos-2026'
+galleryImages:
+  - 'juan-felipe-previa.webp'
+  - 'menores-parrilla-salida.webp'
+  - 'teteros-ambiente.webp'
+  - 'open-bajada-al-teatrino.webp'
+  - 'juan-felipe-circuito.webp'
+  - 'prejuvenil-paso-de-troncos.webp'
+  - 'german-recio-bajada.webp'
+  - 'mariana-coronado-circuito.webp'
+  - 'prejuvenil-doble-en-circuito.webp'
+  - 'corredor-club-tramo-piedras.webp'
+  - 'circuito-tres-corredores.webp'
+  - 'menores-426-curva.webp'
+  - 'menores-426-paso-de-troncos.webp'
+  - 'menores-1257-circuito.webp'
+  - 'menores-tramo-piedras.webp'
+  - 'menores-813-circuito.webp'
+  - 'menores-260-paso-de-troncos.webp'
+  - 'menores-1257-paso-de-troncos.webp'
+  - 'german-recio-acompana-menor.webp'
+  - 'podio-prejuvenil-masculino.webp'
+  - 'podio-menores-varones.webp'
+  - 'podio-menores-damas.webp'
+  - 'podio-menores-damas-b.webp'
+  - 'podio-menores-mas-pequenos.webp'
+seo:
+  metaTitle: 'Chequeo Pro-Fondos: Samuel Ortiz gana la Open en Yumbo'
+  metaDescription: 'Samuel Ortiz, prejuvenil del club, se subió a la Open del Chequeo Pro-Fondos y ganó en la Pista Carlos Castro de Yumbo. Juan Diego García, segundo.'
+  ogImage: '/images/news/chequeo-profondos-2026/og-chequeo-profondos.webp'
+---
+
+<!-- Publicada el 5-sep-2026 con las planillas de Open y Prejuvenil y el relato
+     del director. El 7-sep el club pasó la planilla OFICIAL de resultados
+     (RESULTADOS_II_CHEQUEO_PROFONDOS_TROCHA_Y_RUTA.pdf, una hoja, 36 inscritos
+     y 33 largados) y con ella se completaron Teteros, Preinfantiles e
+     Infantiles y se corrigieron los tiempos de Prejuvenil (todos bajaron
+     entre 1:00 y 1:05) y el de Jostin (24:40 cronometrado, no "45 min").
+     Lo que la planilla NO dice y por eso no se afirma: cuál de los dos grupos
+     de Teteros es "sin pedales" y cuál "con pedales", y con qué rótulo
+     (Infantil A / B) va cada uno de los dos grupos masculinos de Infantiles;
+     el de Jostin se llama Infantil A porque así lo dijo el club.
+     Decisión del club que no hay que "completar": el recaudo se publica como
+     aproximado y sin recibo (.ledger). Los DNS (Anderson Cárdenas, Mateo
+     Giraldo, Martín Osorio) no van en tabla: no hay nada que reportar de una
+     carrera que no corrieron. Bitácora en
+     claudedocs/chequeo-profondos-2026/insumos.md. -->
+
+Bajo un sol de 34 grados, entre los banderines que cuelgan sobre la loma y las cintas amarillas que peinan el trazado, un letrero de madera clavado junto al paso de troncos repite algo simple: «Cree en ti y todo será posible». Es el fondo con el que el club abrió su casa el sábado 5 de septiembre para el **Chequeo Pro-Fondos de ciclomontañismo**, en la Pista Carlos Castro de Yumbo. La primera categoría largó a las **8:45 de la mañana**, la última a las **10:34**, y a las **12 del mediodía** ya estaba todo cerrado.
+
+<!-- Salto rápido. Con 3.300 palabras y el 93 % de la lectura en celular, quien
+     entra a buscar cómo le fue a un corredor tenía que bajar a pulso: la tabla
+     completa está al 67 % de la página y solo un tercio de los lectores llega
+     ahí (GA4, 5-7 sep 2026). Anclas a los ids que genera Astro desde los ##. -->
+
+<nav class="jump-nav" aria-label="Salto rápido dentro de la crónica">
+  <span class="jump-nav__label">Salta a</span>
+  <a href="#la-open-con-un-prejuvenil-arriba">La Open</a>
+  <a href="#prejuvenil-ensayo-antes-de-alcalá">Prejuvenil</a>
+  <a href="#infantiles-jostin-se-prueba-en-casa">Infantiles</a>
+  <a href="#los-más-pequeños-entre-los-mismos-banderines">Los más pequeños</a>
+  <a href="#cómo-terminó-cada-categoría">Resultados completos</a>
+</nav>
+
+## Qué es un chequeo y por qué pro-fondos
+
+Un chequeo es lo que su nombre dice: un ensayo con cronómetro para ver cómo llega cada corredor a lo que sigue. No reparte puntos de Copa Valle ni deja campeón, y por eso permite algo que una válida no siempre deja: probar en carrera lo que se entrenó la semana pasada, equivocarse sin costo en la tabla y llevarse una lectura clara al martes de entrenamiento.
+
+El del sábado tuvo, además, un destino. Largaron **treinta y tres deportistas** de treinta y seis inscritos, cada uno con su inscripción de $20.000, y esa plata va a **adecuar la Pista Carlos Castro** para el **18 de octubre**, cuando la casa del club recibe la semifinal de la Copa Valle. Con la [Copa Let's Go de Alcalá](/calendario/#evento-2026-09-copa-lets-go-alcala) el fin de semana siguiente, el chequeo hizo doble trabajo: puso a punto las piernas y dejó plata para el trazado.
+
+Y hay un detalle que solo se ve corriendo aquí: **los árboles del circuito tienen nombre**. Letreros de madera clavados en los troncos van diciendo qué es cada uno —[guayaba](/trocha-verde/guayaba) en el tramo llano, [mango](/trocha-verde/mango) junto al paso de troncos—, porque son los mismos que el club sembró y catalogó en **[Trocha Verde](/trocha-verde)**, su inventario de la pista: setenta y siete a la fecha del chequeo.
+
+<figure>
+  <img
+    src="/images/news/chequeo-profondos-2026/open-circuito-arbol-guayaba.webp"
+    alt="Un corredor de la categoría Open rueda por el circuito junto al letrero de madera que identifica un árbol de guayaba"
+    width="960"
+    height="1280"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>El trazado pasa junto a los árboles señalizados de la pista: los del inventario de Trocha Verde.</figcaption>
+</figure>
+
+<!-- El bloque .ledger (el recibo de transparencia, con el desglose en pesos)
+     NO se pinta: el club decidió no publicar valores exactos y quedarse con el
+     aproximado de inscritos y el destino, que es lo que dice el párrafo de
+     arriba. Si más adelante quiere el recibo detallado, el markup de la pieza
+     está en .claude/agents/content-marketer.md. -->
+
+## La Open, con un prejuvenil arriba
+
+<figure>
+  <img
+    src="/images/news/chequeo-profondos-2026/open-parrilla-salida.webp"
+    alt="Corredores de la categoría Open esperan en la línea de salida del Chequeo Pro-Fondos en la Pista Carlos Castro de Yumbo"
+    width="960"
+    height="1280"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>La parrilla de la Open, en la línea de salida.</figcaption>
+</figure>
+
+La Open corrió cuatro vueltas al circuito completo, la distancia más larga del día, y ahí estuvo el titular. **Samuel Ortiz Valencia**, que en la Copa Valle corre **Prejuvenil A** —fue segundo de su categoría en la [válida de Palmira](/noticias/2026-08-copa-valle-palmira-xco)—, corrió la Open para medirse con los adultos y con los visitantes de Cali y saber en qué nivel está. Manejó la carrera: la primera vuelta la hizo con el grupo de punta, desde la segunda se fue abriendo y en las dos últimas rodó en solitario, sin que lo alcanzaran. Cruzó la meta en **1:00:11**, primero.
+
+**Juan Diego García Bohórquez** hizo la carrera contraria: intentó salir controlado y fue remontando posiciones vuelta a vuelta, con el compañero de club siempre en el horizonte. Lo persiguió hasta el final y no lo alcanzó. Cerró **segundo, con 1:03:15**, a tres minutos y cuatro segundos de Samuel.
+
+<figure>
+  <img
+    src="/images/news/chequeo-profondos-2026/juan-diego-garcia-ascenso.webp"
+    alt="Juan Diego García (1950) sube por un sendero de tierra del circuito de la Pista Carlos Castro, con la loma seca de fondo"
+    width="960"
+    height="1280"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Juan Diego García (1950), en el ascenso del circuito.</figcaption>
+</figure>
+
+El tercer escalón se lo llevó **Jorge Lasso**, de la Escuela Olguita García de Cali, en **1:05:49**: aportó al club el rival de nivel que le hacía falta para chequearse en casa. Cuarto entró Samuel Rodríguez, también de Cali. **Bernardino Montenegro Urrea**, el otro yumbeño de la Open, arrancó fuerte —cerró la primera vuelta con el tercer mejor tiempo, a veintinueve segundos del más rápido— pero un problema mecánico con los cambios lo fue sacando de ritmo y abandonó en la última vuelta.
+
+<figure>
+  <img
+    src="/images/news/chequeo-profondos-2026/bernardino-montenegro-salto-teatrino.webp"
+    alt="Bernardino Montenegro (251) salta con su bicicleta desde la plataforma del teatrino de la Pista Carlos Castro, con las rampas de madera abajo"
+    width="1050"
+    height="1400"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Bernardino Montenegro (251), saliendo de la plataforma del teatrino.</figcaption>
+</figure>
+
+<figure>
+  <img
+    src="/images/news/chequeo-profondos-2026/podio-open.webp"
+    alt="Samuel Ortiz Valencia, Juan Diego García y Jorge Lasso en el podio de la categoría Open del Chequeo Pro-Fondos en la Pista Carlos Castro de Yumbo"
+    width="1050"
+    height="1400"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Podio de la Open: Samuel Ortiz Valencia, Juan Diego García y Jorge Lasso.</figcaption>
+</figure>
+
+## Prejuvenil: ensayo antes de Alcalá
+
+<figure>
+  <img
+    src="/images/news/chequeo-profondos-2026/prejuvenil-previa.webp"
+    alt="Santiago Cardona (1859), Isabel Quiñones (906) y Mariana Coronado (904) posan con sus bicicletas antes de largar en el Chequeo Pro-Fondos"
+    width="1400"
+    height="1050"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Santiago Cardona, Isabel Quiñones y Mariana Coronado, listos para largar.</figcaption>
+</figure>
+
+En Prejuvenil damas, **Mariana Coronado Delgado** e **Isabel Cristhina Quiñones Batero** lo tomaron como un superentrenamiento: se prepararon como si fuera una carrera común y corriente, con el fin de agarrar ritmo antes del compromiso del **domingo 13 en Alcalá**. Su categoría corrió **dos vueltas al circuito completo**. Mariana ganó con **36:54**; Isabel entró segunda con **40:55**. Las dos salieron con el trabajo hecho y con la lectura que habían ido a buscar.
+
+<figure>
+  <img
+    src="/images/news/chequeo-profondos-2026/podio-prejuvenil-femenino.webp"
+    alt="Mariana Coronado e Isabel Quiñones en el podio de Prejuvenil damas del Chequeo Pro-Fondos, en la Pista Carlos Castro de Yumbo"
+    width="1050"
+    height="1400"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Mariana Coronado, primera, e Isabel Quiñones, segunda, en Prejuvenil damas.</figcaption>
+</figure>
+
+En varones, dos corredores del club: **Santiago Cardona Chate** ganó con **39:25** y **Johan Samuel Palacios Canizales** cerró segundo con **44:10**.
+
+## Infantiles: Jostin se prueba en casa
+
+**Jostin Villamizar García** fue **segundo** en Infantil A masculino, con **24:40**. Su categoría corrió **dos vueltas al 70% del trazado**. Aprovechó el chequeo para probarse en su propia pista, y lo hizo frente a **Nicolás Trullo Soto**, del ICL de Cali, que ganó con **24:11**. La planilla cuenta la carrera sola: al cerrar la primera vuelta Jostin pasó **a un segundo** del líder; en la segunda cedió los otros veintiocho. Se fogueó, aguantó fuerte buena parte de la carrera y, faltando poco para el final, se le acabó el gas. Esa lectura se va al martes de entrenamiento. Tercero fue **Emmanuel Rivera Jaramillo**, de IMDERTY, también de Yumbo.
+
+En Infantiles damas el club puso dos en el podio: **Sofía Gómez Gómez** fue segunda con **36:17** e **Isabella Quiñones Caicedo**, tercera con **37:00**, detrás de **Emma Mejía Ángel**, de BTT Recio de Cali, que ganó con **32:56**. Y **Matías Montoya Gómez** ganó su grupo de Infantiles varones con **40:54**, después de que su único rival inscrito no largara.
+
+## Los más pequeños, entre los mismos banderines
+
+<!-- Nombres de Teteros y Preinfantiles: salen tal como los publica la planilla
+     oficial del club. La planilla clasifica a los teteros en dos grupos sin
+     rotular cuál es "sin pedales" y cuál "con pedales": por eso el texto no lo
+     dice. -->
+
+Los más pequeños también corrieron su chequeo entre los mismos banderines y el mismo polvo, a **dos vueltas** de su circuito; y a los adultos les tocó lo de siempre en casa: correr al lado y señalar la curva. La carrera más apretada del día fue la de ellos: **Victoria Chaguendo Cardona** y **Matthew Bohórquez Vargas** cerraron la primera vuelta **empatados en 4:14** y Victoria ganó por **tres segundos** (8:49 contra 8:52). Ocho terminaron en ese grupo, seis de ellos del club; en el otro grupo de Teteros ganó **Maximiliano Angulo Mera**, con 10:57. En Preinfantiles el podio fue de otros clubes: **María Victoria Lasso** y **Martina Muñoz**, de la Escuela Olguita García, en damas; **Emanuel Pérez** y **Tomás Lopera Bastidas**, de BTT Recio, en varones.
+
+<div class="figure-grid">
+  <figure>
+    <img
+      src="/images/news/chequeo-profondos-2026/teteros-1758-circuito.webp"
+      alt="El dorsal 1758, del Club Trocha y Ruta, rueda por el circuito de tierra mientras un familiar lo acompaña corriendo detrás"
+      width="720"
+      height="1280"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>El 1758, con la carrera propia y el acompañante corriendo detrás.</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/chequeo-profondos-2026/teteros-1706-circuito.webp"
+      alt="El dorsal 1706, del Club Trocha y Ruta, avanza por el circuito de tierra impulsándose con los pies"
+      width="788"
+      height="1400"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>El 1706, midiendo el terreno a su ritmo.</figcaption>
+  </figure>
+</div>
+
+<figure>
+  <img
+    src="/images/news/chequeo-profondos-2026/premiacion-mas-pequenos.webp"
+    alt="Una decena de niños de las categorías más pequeñas posan con sus medallas y sus bolsas de premio junto al podio, acompañados por dos adultos del Club Trocha y Ruta"
+    width="1280"
+    height="960"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>La premiación de los más pequeños, con medalla y bolsa de premio.</figcaption>
+</figure>
+
+Los podios de las demás categorías y el resto de las fotos del sábado están en el [álbum del chequeo](/galeria/chequeo-profondos-2026).
+
+## Lo que se chequeó
+
+<ol class="check-sheet reveal">
+  <li class="check-sheet__row">
+    <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
+    <div class="check-sheet__body">
+      <span class="check-sheet__name">Categoría Open · 4 vueltas completas</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>Manejar una carrera larga bajo 34 °C, con una vuelta de grupo y tres abriendo hueco.</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Samuel Ortiz se fue en solitario desde la segunda vuelta; a Bernardino le fallaron los cambios en la última.</span>
+    </div>
+  </li>
+  <li class="check-sheet__row">
+    <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
+    <div class="check-sheet__body">
+      <span class="check-sheet__name">Prejuveniles · 2 vueltas completas</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>Ritmo de carrera en pista conocida, a una semana de Alcalá.</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Mariana e Isabel sacaron el trabajo hecho; Santiago se llevó la de varones.</span>
+    </div>
+  </li>
+  <li class="check-sheet__row">
+    <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
+    <div class="check-sheet__body">
+      <span class="check-sheet__name">Infantil A masculino · 2 vueltas al 70%</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>Medirse con un rival de la Copa Valle, en pista propia.</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Jostin pasó a un segundo del líder en la primera vuelta y cedió veintiocho en la segunda: segundo, a 29 segundos.</span>
+    </div>
+  </li>
+</ol>
+
+<!-- Filas de Teteros, Preinfantiles e Infantiles damas: los resultados ya
+     están en la tabla de abajo, pero el "se probó / se vio" lo dicta el cuerpo
+     técnico, no la planilla. Entran cuando lo pase. La casilla marcada
+     significa "chequeado": no se dejan filas vacías. -->
+
+<!-- Salida a la inscripción. El InscriptionCTA del final de la plantilla lo ve
+     el 23 % de los lectores; aquí queda alrededor del 70 %. -->
+
+<aside class="mid-cta" aria-label="Inscripciones al club">
+  <p class="mid-cta__text">
+    Los que salen en estas fotos empezaron igual: sin experiencia y con una bici
+    prestada. En el club se arranca desde los 4 años y la primera clase es gratis.
+  </p>
+  <a class="mid-cta__link" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
+    Agendar la clase de prueba
+  </a>
+</aside>
+
+## Las placas que no salieron a correr
+
+En una carrera la placa la lleva quien pedalea, pero el sábado hasta las medallas fueron un trabajo en equipo. Detrás de la Open y de la premiación hubo manos que no llevaron dorsal: quien donó las medallas, quien las marcó con la leyenda de la jornada, el club que se dio el viaje desde Cali para completar el pelotón, y quienes endulzaron el podio de los más pequeños. Aquí va la placa para ellos.
+
+<!-- PENDIENTE — la lista completa la pasa el club (insumos.md, duda 10:
+     voluntarios y roles, solo adultos y con permiso). Por ahora solo se
+     publican las placas que el material del día respalda; quien más ayudó,
+     con nombre propio y con su visto bueno, entra cuando llegue esa lista.
+     Máximo 8 placas: el escalonado de la entrada llega hasta ahí. -->
+
+<ul class="thanks-wall reveal">
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Las medallas</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/supercopa_bmx/" target="_blank" rel="noopener noreferrer">Super Copa BMX</a></span>
+    <span class="thanks-wall__note">Donó las medallas de la premiación.</span>
+  </li>
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Las calcomanías</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/elian_rider_shop/" target="_blank" rel="noopener noreferrer">Elian Rider Shop</a></span>
+    <span class="thanks-wall__note">Puso las calcomanías con la leyenda de la jornada que llevan las medallas. Tienda de calcomanías y personalizado de motos y bicis en Yumbo.</span>
+  </li>
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Club visitante</span>
+    <span class="thanks-wall__name">Escuela Olguita García</span>
+    <span class="thanks-wall__note">Vino desde Cali con Jorge Lasso, tercero de la Open, y con María Victoria Lasso y Martina Muñoz, primera y segunda de Preinfantiles damas.</span>
+  </li>
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Los pastelitos</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/mera_artesanal/" target="_blank" rel="noopener noreferrer">Mera Artesanal</a></span>
+    <span class="thanks-wall__note">Pastelería artesanal de Yumbo. Donó los pastelitos de la premiación, que a esa edad se recuerdan tanto como el podio.</span>
+  </li>
+  <li class="thanks-wall__plate">
+    <span class="thanks-wall__role">Galletas y gomitas</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/bttrecionorte/" target="_blank" rel="noopener noreferrer">Germán Recio</a></span>
+    <span class="thanks-wall__note">Trajo de Cali las galletas y las gomitas Colombina de la premiación, la misma marca de su maillot. Profesor de la escuela BTT Recio Norte.</span>
+  </li>
+</ul>
+
+## Cómo terminó cada categoría
+
+**Open** — 4 vueltas completas
+
+| Puesto | Corredor                    | Club                          | Total            |
+| ------ | --------------------------- | ----------------------------- | ---------------- |
+| **1°** | Samuel Ortiz Valencia       | Trocha y Ruta                 | **1:00:11**      |
+| **2°** | Juan Diego García Bohórquez | Trocha y Ruta                 | **1:03:15**      |
+| **3°** | Jorge Lasso                 | Escuela Olguita García (Cali) | **1:05:49**      |
+| 4°     | Samuel Rodríguez            | Independiente (Cali)          | 1:13:46          |
+| 5°     | Bernardino Montenegro Urrea | Independiente (Yumbo)         | DNF · 4ª vuelta  |
+| 6°     | Felipe Maya                 | Independiente (Cali)          | DNF · 3ª vuelta  |
+| 7°     | Germán Recio                | BTT Recio (Cali)              | 1 vuelta · 19:53 |
+
+<small>DNF: no terminó; se indica la vuelta en la que se retiró. La planilla oficial ordena a los que no completaron las cuatro vueltas por vueltas cumplidas. Germán Recio corrió una sola vuelta, la que le correspondía.</small>
+
+**Prejuvenil damas** — 2 vueltas completas
+
+| Puesto | Corredora                        | Total     |
+| ------ | -------------------------------- | --------- |
+| **1ª** | Mariana Coronado Delgado         | **36:54** |
+| **2ª** | Isabel Cristhina Quiñones Batero | **40:55** |
+
+**Prejuvenil varones** — 2 vueltas completas
+
+| Puesto | Corredor                        | Total     |
+| ------ | ------------------------------- | --------- |
+| **1°** | Santiago Cardona Chate          | **39:25** |
+| **2°** | Johan Samuel Palacios Canizales | **44:10** |
+
+**Infantil A masculino** — 2 vueltas al 70% del trazado
+
+| Puesto | Corredor                  | Club               | Total     |
+| ------ | ------------------------- | ------------------ | --------- |
+| **1°** | Nicolás Trullo Soto       | ICL Cali (Jamundí) | **24:11** |
+| **2°** | Jostin Villamizar García  | Trocha y Ruta      | **24:40** |
+| **3°** | Emmanuel Rivera Jaramillo | IMDERTY (Yumbo)    | **31:18** |
+
+**Infantiles damas** — 2 vueltas
+
+| Puesto | Corredora                 | Club             | Total     |
+| ------ | ------------------------- | ---------------- | --------- |
+| **1ª** | Emma Mejía Ángel          | BTT Recio (Cali) | **32:56** |
+| **2ª** | Sofía Gómez Gómez         | Trocha y Ruta    | **36:17** |
+| **3ª** | Isabella Quiñones Caicedo | Trocha y Ruta    | **37:00** |
+
+**Infantiles varones, segundo grupo** — 2 vueltas
+
+| Puesto | Corredor             | Club          | Total     |
+| ------ | -------------------- | ------------- | --------- |
+| **1°** | Matías Montoya Gómez | Trocha y Ruta | **40:54** |
+
+<small>La planilla oficial clasifica a los infantiles varones en dos grupos aparte y no rotula el segundo; el único rival inscrito de Matías no largó.</small>
+
+**Preinfantiles damas** — 2 vueltas
+
+| Puesto | Corredora            | Club                          | Total     |
+| ------ | -------------------- | ----------------------------- | --------- |
+| **1ª** | María Victoria Lasso | Escuela Olguita García (Cali) | **22:05** |
+| **2ª** | Martina Muñoz        | Escuela Olguita García (Cali) | **23:19** |
+
+**Preinfantiles varones** — 2 vueltas
+
+| Puesto | Corredor              | Club              | Total     |
+| ------ | --------------------- | ----------------- | --------- |
+| **1°** | Emanuel Pérez         | BTT Recio (Yumbo) | **12:37** |
+| **2°** | Tomás Lopera Bastidas | BTT Recio (Cali)  | **15:12** |
+
+**Teteros, primer grupo** — 2 vueltas
+
+| Puesto | Corredor                       | Club                  | Total           |
+| ------ | ------------------------------ | --------------------- | --------------- |
+| **1°** | Victoria Chaguendo Cardona     | Trocha y Ruta         | **8:49**        |
+| **2°** | Matthew Bohórquez Vargas       | Trocha y Ruta         | **8:52**        |
+| **3°** | Jorge Muñoz                    | Independiente (Cali)  | **9:49**        |
+| 4°     | Liam Fernando Guevara Quintero | Trocha y Ruta         | 10:31           |
+| 5°     | Ihsan Garcés Romero            | Trocha y Ruta         | 12:23           |
+| 6°     | Martina Betancourt Vásquez     | Trocha y Ruta         | 12:33           |
+| 7°     | Celeste Muriel Merchán         | Trocha y Ruta         | 13:24           |
+| 8°     | Gael Trejos Rengifo            | Independiente (Yumbo) | 14:09           |
+| —      | Aylin Pastrana Balanta         | Trocha y Ruta         | DNF · 1ª vuelta |
+
+**Teteros, segundo grupo** — 2 vueltas
+
+| Puesto | Corredor                | Club          | Total           |
+| ------ | ----------------------- | ------------- | --------------- |
+| **1°** | Maximiliano Angulo Mera | Trocha y Ruta | **10:57**       |
+| —      | Thiago Duque Cardona    | Trocha y Ruta | DNF · 1ª vuelta |
+
+<small>DNF: no terminó; se indica la vuelta en la que se retiró. La planilla oficial agrupa a los teteros bajo un solo rótulo, «sin/con pedales», y los clasifica en dos grupos sin decir cuál es cuál. Los tiempos de cada categoría son sobre su propio recorrido y no se comparan entre sí.</small>
+
+## La pista queda lista para lo que viene
+
+Con el chequeo cerrado, el club vuelve al calendario federado: el próximo domingo, **13 de septiembre**, viaja a Alcalá solo para el **XCO de la Copa Let's Go**; y el **domingo 18 de octubre**, la Pista Carlos Castro recibe a todo el Valle en la **semifinal de la Copa Valle 2026** —el cierre real llega después, en Roldanillo, el 7 y 8 de noviembre—. El [calendario](/calendario) tiene el detalle.
+
+Y cada $20.000 de los que se inscribieron se queda donde se recogió: en la pista.

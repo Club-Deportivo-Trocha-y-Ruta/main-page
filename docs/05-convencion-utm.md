@@ -38,6 +38,10 @@ de canales deja de cuadrar.
 
 `whatsapp` · `instagram` · `facebook` · `youtube` · `tiktok` · `boletin` · `volante`
 
+Los botones de compartir añaden dos más, que salen de `SHARE_SOURCES` en
+`src/lib/utm.ts`: `twitter` y `compartir-nativo` (el que usa la hoja de compartir
+del sistema operativo).
+
 ### `utm_campaign`: minúsculas y guiones
 
 Nombra **la acción**, no la fecha suelta. Ejemplos: `cronica-roldanillo`,
@@ -90,10 +94,14 @@ https://clubdeportivotrochayruta.org/inscripciones/?utm_source=volante&utm_mediu
 
 ## Lo que ya va automático
 
-Los botones «Compartir» del sitio (`src/components/common/ShareButtons.astro`) etiquetan
-solos mediante `src/lib/utm.ts`, con `utm_campaign=compartir-desde-web`. Eso separa lo
-que reenvía una familia por su cuenta de lo que publica el club — dos cosas que hasta
+Los dos botones de compartir del sitio —`ShareButtons.astro` y
+`WhatsappShareButton.astro`, el del pie de las crónicas— etiquetan solos mediante
+`src/lib/utm.ts`, con `utm_campaign=compartir-desde-web`. Eso separa lo que
+reenvía una familia por su cuenta de lo que publica el club — dos cosas que hasta
 ahora eran el mismo número.
+
+Compartir no emite ningún evento de GA4: no hay un `share_click` en el catálogo de
+`src/lib/events.ts`, así que la única señal es el UTM de la sesión que vuelve.
 
 Para enlaces internos del código, `withUtm()` y `shareUrl()` viven en `src/lib/utm.ts`.
 
@@ -104,3 +112,26 @@ GA4 › Adquisición › Adquisición de tráfico, y cambiar la dimensión a
 
 La señal de que esto funciona: que «Direct» baje del 50%. Si sigue en la mitad, es que
 se están compartiendo enlaces sin etiquetar.
+
+## Divergencias conocidas en el código
+
+Dos sitios etiquetan sin seguir estas reglas. Están anotados aquí para que la
+próxima persona no los tome como ejemplo.
+
+- **`/enlaces`** (`src/pages/enlaces.astro`) arma su propia cadena
+  `utm_source=qr&utm_medium=offline&utm_campaign=enlaces` y se la pega a cuatro
+  enlaces **internos**. Rompe dos reglas: el medium del QR debería ser `qr`
+  —`offline` no lo reconoce GA4 y cae en «Unassigned»— y la regla 1 prohíbe
+  etiquetar enlaces internos, porque cada clic abre una sesión nueva. Hoy no ha
+  hecho daño medible: entre el 10 de junio y el 8 de septiembre de 2026 GA4 no
+  registró **ni una sola sesión** con ese medium, señal de que el QR aún no
+  circula. Conviene arreglarlo antes de que se imprima.
+- **`/la-pista/[slug]`** etiqueta el enlace al video del obstáculo con
+  `utm_medium=ficha`, un valor inventado, y además la URL apunta a YouTube: es
+  tráfico saliente, que nuestro GA4 nunca va a ver.
+
+## Cuándo volver a medir
+
+El dato de partida (50 % de sesiones en «Direct») se midió sobre el trimestre que
+cerró el 20 de agosto de 2026. La próxima lectura debería hacerse cuando haya al
+menos un mes completo de enlaces etiquetados en circulación.

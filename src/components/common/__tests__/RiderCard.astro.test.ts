@@ -128,4 +128,25 @@ describe('RiderCard', () => {
     const h3 = doc.querySelector('h3')!;
     expect(h3.className).toContain('group-hover:text-primary');
   });
+
+  it('la tarjeta se eleva con sombra al hover, mismo tratamiento que NewsCard', async () => {
+    const html = await container.renderToString(RiderCard, {
+      props: baseProps,
+    });
+    const doc = parseHtml(html);
+    const anchor = doc.querySelector('a')!;
+    expect(anchor.className).toContain('hover:-translate-y-1');
+    expect(anchor.className).toContain('hover:shadow-lg');
+    expect(anchor.className).toContain('ease-spring');
+  });
+
+  it('anula el desplazamiento de hover bajo prefers-reduced-motion', async () => {
+    const html = await container.renderToString(RiderCard, {
+      props: baseProps,
+    });
+    const doc = parseHtml(html);
+    const anchor = doc.querySelector('a')!;
+    expect(anchor.className).toContain('motion-reduce:transition-none');
+    expect(anchor.className).toContain('motion-reduce:hover:translate-y-0');
+  });
 });

@@ -28,9 +28,28 @@
   --color-surface-dark: #2f2f2f;
   --color-surface-muted: #d8d8d8;
   --color-surface-tint: #f7f8f8;
+  /* Superficie que "flota" sobre la página: tarjetas, diálogos, drawer. En
+     light es igual a --color-surface (cero cambio visual); en dark se separa
+     y queda más clara que surface/tint, así el relieve se lee sin sombra. */
+  --color-surface-raised: #ffffff;
 
   --color-text-primary: #2f2f2f;
   --color-text-secondary: #5a5a5a;
+
+  /* Texto/ícono sobre fondos `bg-primary-deep` / `bg-accent-deep`: blanco en
+     light (5.9:1), grafito en dark (9.5:1) — el bloque `[data-theme='dark']`
+     de más abajo lo remapea. */
+  --color-on-deep: #ffffff;
+  /* Líneas finas (bordes, separadores) coherentes con el tema: sustituye
+     `border-black/10`, `border-gray-100/200` sueltos, que en dark se leerían
+     como una línea negra invisible sobre fondo oscuro. */
+  --color-hairline: rgb(0 0 0 / 0.1);
+  /* Texto/estado de error. Sustituye `text-red-600` como color de TEXTO
+     (los rellenos siguen usando la paleta `red-*` de Tailwind cuando no son
+     texto). */
+  --color-danger: #b42318;
+  /* Texto/estado informativo — hoy solo lo usa `.standings-board__move--new`. */
+  --color-info: #1d4ed8;
 
   /* Tipografía */
   --font-sans: 'Inter Variable', system-ui, sans-serif;
@@ -43,6 +62,9 @@
   --radius-control: 0.75rem;
   --radius-card: 1rem;
   --radius-pill: 999px;
+  /* Placa de dorsal (RaceLineup): esquina propia, distinta de --radius-chip,
+     para que la placa no se confunda visualmente con un chip/badge normal. */
+  --radius-plate: 0.25rem;
 
   /* Sombras — mismo motivo: nombres propios en vez de --shadow-sm/md/lg. */
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.05);
@@ -112,19 +134,117 @@
   --duration-celebration: 500ms; /* celebraciones: 400–600ms */
 }
 
-/* Fuentes locales */
+/* === Tema claro/oscuro ===
+   El tema lo decide el atributo `data-theme` de `<html>` — no
+   `prefers-color-scheme` directamente — porque tiene que poder forzarse con
+   un toggle y persistir en `localStorage` a través de View Transitions. El
+   script `is:inline` de `BaseLayout.astro` calcula el valor inicial (system
+   o guardado) y lo escribe en `data-theme` antes del primer paint; `dark:`
+   se apoya en ese atributo, no en la media query.
+   `:where(...)` deja la especificidad del selector en 0: una utility con
+   `dark:` no debe pelear en especificidad con ninguna otra clase del sitio,
+   solo con el orden de aparición, como el resto de variantes de Tailwind. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* Remapeo de tokens semánticos. SIN capa (`@layer`) a propósito: Tailwind 4
+   emite los tokens de `@theme` dentro de `@layer theme`, y en CSS moderno
+   (cascade layers) una regla sin capa gana siempre sobre cualquier regla en
+   capa, sin importar el orden de aparición ni la especificidad del
+   selector — así este bloque re-pinta `:root` entero sin tener que repetir
+   `!important` ni pelear posición en el archivo.
+   Además, esto solo funciona porque arriba se usó `@theme` normal y no
+   `@theme inline`: `@theme` genera las utilities leyendo el valor en tiempo
+   de uso a través de `var(--color-x)`, así que redefinir la custom property
+   más abajo cambia lo que pinta cada utility ya generada. `@theme inline`
+   en cambio incrusta el valor literal en cada utility en build y este
+   remapeo no tendría ningún efecto.
+
+   Contraste verificado (WCAG 2.x, ver src/test/theme.test.ts):
+   text-primary/surface 14.48 · text-secondary/surface 8.43 ·
+   text-secondary/surface-raised 6.80 · primary-deep/surface 9.46 ·
+   primary-deep/surface-raised 7.63 · accent-deep/surface 11.10 ·
+   on-deep/primary-deep 9.46 · on-deep/accent-deep 11.10 ·
+   danger/surface 7.32 · info/surface 7.12. Sin remapear, primary-deep y
+   danger se quedan en 2.84 y 2.54 sobre el fondo oscuro — de ahí que los
+   dos entren en la lista de tokens que cambian.
+
+   Regla de elevación: en dark lo que "flota" es MÁS claro que la página
+   (surface-raised > surface-tint > surface); en light no cambia nada porque
+   surface-raised == surface. */
+:root {
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-surface: #1c1e20;
+  --color-surface-tint: #24272a;
+  --color-surface-muted: #3a3d40;
+  --color-surface-raised: #2b2f33;
+  --color-text-primary: #eceff1;
+  --color-text-secondary: #b3b9bd;
+  --color-primary-deep: #5fd3e0;
+  --color-accent-deep: #a3e63d;
+  --color-on-deep: #1c1e20;
+  --color-hairline: rgb(255 255 255 / 0.12);
+  --color-danger: #ff8a80;
+  --color-info: #7fa8ff;
+}
+
+/* `@tailwindcss/typography` fija sus variables `--tw-prose-*` en light desde
+   la propia hoja del plugin; en dark las reasignamos a los tokens semánticos
+   de arriba para que el cuerpo de una crónica (`.prose`) siga leyendo bien
+   sin declarar un segundo set de estilos. Light no cambia: el plugin ya
+   trae sus valores por defecto y no los tocamos. */
+:root[data-theme='dark'] .prose {
+  --tw-prose-body: var(--color-text-primary);
+  --tw-prose-headings: var(--color-text-primary);
+  --tw-prose-lead: var(--color-text-secondary);
+  --tw-prose-links: var(--color-primary-deep);
+  --tw-prose-bold: var(--color-text-primary);
+  --tw-prose-counters: var(--color-text-secondary);
+  --tw-prose-bullets: var(--color-text-secondary);
+  --tw-prose-hr: var(--color-hairline);
+  --tw-prose-quotes: var(--color-text-primary);
+  --tw-prose-quote-borders: var(--color-hairline);
+  --tw-prose-captions: var(--color-text-secondary);
+  --tw-prose-kbd: var(--color-text-primary);
+  --tw-prose-code: var(--color-text-primary);
+  --tw-prose-pre-code: var(--color-text-primary);
+  --tw-prose-pre-bg: var(--color-surface-raised);
+  --tw-prose-th-borders: var(--color-hairline);
+  --tw-prose-td-borders: var(--color-hairline);
+}
+
+/* Fuentes locales — subsets `-latin` generados con pyftsubset.
+   Cobertura: Latin básico + Latin-1 Supplement + Latin Extended-A parcial +
+   puntuación general + símbolos de moneda, más las flechas (U+2190-2193),
+   los triángulos de posición (U+25B2/U+25BC) y la estrella (U+2605) que sí
+   aparecen en el texto visible del sitio (crónicas, `SeasonTrack`, hero).
+   Los ejes variables se conservan sin instanciar: Inter mantiene `opsz`
+   14-32 y `wght` 100-900; Plus Jakarta Sans mantiene `wght` 200-800.
+   El `unicode-range` evita que el navegador descargue la fuente en páginas
+   cuyo texto no la necesite y documenta la cobertura real del archivo.
+   Regenerar con `scripts/subset-fonts.sh` si cambia el juego de caracteres. */
 @font-face {
   font-family: 'Inter Variable';
-  src: url('/fonts/InterVariable.woff2') format('woff2');
+  src: url('/fonts/InterVariable-latin.woff2') format('woff2');
   font-weight: 100 900;
   font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0300-0301, U+0303-0304,
+    U+0308-0309, U+0323, U+0329, U+2000-206F, U+20A0-20CF, U+2122, U+2190-2193, U+2212, U+2215,
+    U+25B2, U+25BC, U+2605, U+FEFF, U+FFFD;
 }
 
 @font-face {
   font-family: 'Plus Jakarta Sans';
-  src: url('/fonts/PlusJakartaSans-Variable.woff2') format('woff2');
+  src: url('/fonts/PlusJakartaSans-Variable-latin.woff2') format('woff2');
   font-weight: 200 800;
   font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0300-0301, U+0303-0304,
+    U+0308-0309, U+0323, U+0329, U+2000-206F, U+20A0-20CF, U+2122, U+2190-2193, U+2212, U+2215,
+    U+25B2, U+25BC, U+2605, U+FEFF, U+FFFD;
 }
 
 /* Base global */
@@ -156,13 +276,26 @@
    Va como fondo del texto y no como pseudo-elemento: con `box-decoration-break`
    el trazo se corta y se repite en cada línea, así que sigue al titular cuando
    la frase resaltada parte en dos. Como pseudo-elemento se estiraba a todo el
-   ancho del bloque. */
+   ancho del bloque.
+   `background-size` (en vez de `transform`/`opacity`) es la excepción explícita
+   de docs/08-plan-creatividad-ui.md tarea 4: no dispara layout —el fondo pinta
+   dentro de una caja cuyo tamaño ya está fijado por el texto— y es la única
+   propiedad que permite "dibujar" el trazo de izquierda a derecha; un
+   `scaleX` tendría que ir en un pseudo-elemento aparte y eso es justo lo que
+   el comentario de arriba descarta por el corte de línea. */
 .editorial-mark {
   background-image: linear-gradient(
     to top,
     color-mix(in srgb, var(--color-accent) 55%, transparent) 0.34em,
     transparent 0.34em
   );
+  background-repeat: no-repeat;
+  background-position: left;
+  /* Estado final, visible sin JS y sin soporte de `.reveal`: el trazo pintado
+     entero. El único sitio donde se declara un `background-size` menor es el
+     bloque `no-preference` de más abajo, y solo mientras el `.reveal`
+     ancestro no tiene todavía `.revealed`. */
+  background-size: 100% 100%;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   padding-inline: 0.1em;
@@ -194,6 +327,83 @@
   .reveal.revealed {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Trazo de `.editorial-mark` que se dibuja al entrar en pantalla
+   (docs/08-plan-creatividad-ui.md, Sprint 0 tarea 4). Mejora progresiva:
+   TODO el "antes" (background-size 0%) vive dentro de
+   `prefers-reduced-motion: no-preference` Y de `.reveal:not(.revealed)`. Sin
+   soporte de `.reveal` como ancestro (la mayoría de usos de `SectionIntro`
+   fuera de una rejilla `.reveal`), bajo `reduce`, o sin JS con un `.reveal`
+   que ya llegó a `.revealed`, la regla de base de `.editorial-mark`
+   (`background-size: 100%`) es la única que aplica y el trazo se ve completo
+   desde el primer render. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal:not(.revealed) .editorial-mark {
+    background-size: 0% 100%;
+  }
+
+  .reveal .editorial-mark {
+    transition: background-size var(--duration-celebration) var(--ease-pop);
+    /* Pequeño retardo: el trazo empieza a dibujarse justo después de que el
+       titular termina su propio fundido de `.reveal` (0.4s), no a la vez. */
+    transition-delay: 150ms;
+  }
+}
+
+/* Sello del club — `ClubSeal.astro` (docs/08-plan-creatividad-ui.md, Sprint 2
+   tarea 9). El escudo se "estampa" al entrar en pantalla: llega grande y
+   transparente y aterriza en su tamaño con el rebote de `--ease-pop`.
+
+   Reparto de propiedades, y por qué es así:
+     - La inclinación va en la propiedad independiente `rotate`, no dentro de
+       `transform`: es una posición fija que debe sobrevivir a los dos estados
+       de `.reveal` (que ocupa `transform` con su `translateY(20px)`) sin que
+       ninguno de los dos tenga que repetirla.
+     - El estampado sí va en `transform` y reescribe ambos estados de
+       `.reveal` — NO en la propiedad independiente `scale`, aunque sería lo
+       natural. **Lightning CSS trata `scale`/`rotate`/`translate` como
+       longhands de `transform` (no lo son: el spec las aplica antes y por
+       separado) y, si conviven en la misma regla, se queda con una sola.**
+       Comprobado: `{ scale: 1.4; transform: none }` compila a
+       `{ transform: none }` — el estampado desaparecía sin un solo warning.
+       `rotate` sobrevive porque vive en una regla aparte, sin `transform`.
+   Ambas son propiedades compositables: no disparan layout (CLS < 0.05).
+
+   Estado de reposo = sello completo, en las tres capas de mejora progresiva:
+     1. Sin soporte de `rotate` (navegador viejo): la declaración se descarta
+        y queda el escudo derecho, a tamaño, visible.
+     2. Bajo `prefers-reduced-motion: reduce`: el bloque de abajo no se aplica,
+        así que no hay `scale(1.4)` de partida y el catch-all global de
+        `reduce` (`.reveal { opacity: 1; transform: none }`) resuelve la
+        entrada. La inclinación se conserva: es una posición fija, no
+        movimiento.
+     3. Sin JS: `.revealed` nunca llega y el sello se quedaría en `opacity: 0`
+        — lo repara el `<noscript>` que emite el propio componente.
+
+   Sin animación en bucle: el sello no gira ni late una vez estampado. */
+.club-seal {
+  rotate: var(--club-seal-rotate, -6deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .club-seal.reveal {
+    /* Sustituye el `translateY(20px)` → `translateY(0)` de `.reveal`: un sello
+       no sube desde abajo, cae en el sitio. La opacidad de `.reveal` sí se
+       aprovecha tal cual.
+       `--ease-pop` sobrepasa 1 y devuelve: en la escala eso es el
+       aplastamiento del sello contra el papel (1.4 → ~0.94 → 1). En `opacity`
+       el sobrepaso se recorta a 1, así que la tinta satura pronto y se queda
+       — buscado, no un descuido. */
+    transform: scale(1);
+    transition-property: transform, opacity;
+    transition-duration: var(--duration-celebration);
+    transition-timing-function: var(--ease-pop);
+  }
+
+  .club-seal.reveal:not(.revealed) {
+    transform: scale(1.4);
   }
 }
 
@@ -380,6 +590,147 @@
   }
 }
 
+/* Cabecera compacta al hacer scroll (`Header.astro`): ligada al scroll del
+   documento igual que `.conversion-bar`, por eso también usa `scroll(root)`.
+   Nunca anima `height`/`padding` (dispararía layout): el "compactado" es solo
+   una lectura visual —logo más chico, CTA con aspecto presionado— que no
+   mueve al resto de la página ni un píxel. Recorrido de 0 a 200px de scroll:
+   pasado ese punto la cabecera queda en su estado final "compacto".
+
+   Sin soporte o con menos movimiento, ninguna de las dos reglas aplica y la
+   cabecera se queda en su único estado de siempre (logo a tamaño completo,
+   CTA sin sombra) — no hay un estado "compacto" que mostrar de entrada. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes header-logo-compact {
+      from {
+        transform: scale(1);
+      }
+      to {
+        transform: scale(0.85);
+      }
+    }
+
+    .header-logo {
+      transform-origin: left center;
+      /* Longhands a propósito: ver la nota de más arriba sobre el shorthand
+         `animation` y Lightning CSS. */
+      animation-name: header-logo-compact;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 200px;
+    }
+
+    /* El CTA no puede animar `box-shadow` directamente (no es `transform`/
+       `opacity`, y de fondo es una propiedad cara de interpolar). En su lugar,
+       la sombra "dura" del botón `pressable` (ver `Button.astro`) vive ya
+       dibujada en un `::after` del mismo tamaño y solo se anima su `opacity`
+       de 0 a 1: el navegador nunca recalcula la sombra en sí, solo su
+       visibilidad. */
+    @keyframes header-cta-shadow-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .header-cta {
+      position: relative;
+      /* Mismo tono que la variante `accent` de `Button.astro`. */
+      --btn-shadow-color: var(--color-accent-dark);
+    }
+
+    .header-cta::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: var(--shadow-pressable);
+      pointer-events: none;
+      animation-name: header-cta-shadow-in;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 200px;
+    }
+  }
+}
+
+/* ============================================================
+   Barra de progreso de lectura en las crónicas
+   (`src/pages/noticias/[...slug].astro`, docs/08-plan-creatividad-ui.md
+   tarea 14). Decorativa (`aria-hidden`): no repite información que no esté
+   ya en el "N min de lectura" de la cabecera.
+
+   `position: sticky`, no `fixed` — aunque la tarea la pide "fija bajo el
+   header", `fixed` no sirve aquí por dos motivos ya verificados en este
+   archivo:
+
+   1. El `<main>` de `BaseLayout.astro` lleva `transition:name="page-main"`
+      (nota de la sección "Hilo de ruta", más abajo): un descendiente
+      `fixed` se ancla a ese `<main>` en vez de al viewport y se va con el
+      scroll. La barra vive dentro del `<article>`, así que le pasaría
+      igual.
+   2. `AnnouncementBar` es `relative` y se desplaza con la página; el
+      `<header>` es `sticky top-0` pero, mientras el banner es visible, no
+      está clavado en la parte superior del viewport (está más abajo, en su
+      posición natural de flujo). Un `fixed` con `top: var(--header-h)`
+      quedaría montado sobre el banner en la carga inicial: `--header-h`
+      solo mide el alto del `<header>`, no el del banner que tiene encima.
+
+   `sticky` resuelve los dos: en flujo normal desde donde se coloca —justo
+   al abrir el `<article>`, debajo de la miga de pan— y solo se clava en
+   `top: var(--header-h)` cuando el scroll la alcanza, momento en el que el
+   `<header>` ya está clavado en `top: 0` y no hay banner de por medio. Es
+   el mismo recurso que ya usan `TrochaVerdeNav` y el riel del hilo de ruta
+   para "pegado bajo el header".
+
+   El barrido usa `scroll(root)` —como `.conversion-bar` y la cabecera
+   compacta— porque mide el avance de todo el documento, no la visibilidad
+   de un elemento. Sin rango explícito el timeline cubre el 0%–100% del
+   scroll completo de la página (incluye el pie): se deja así a propósito,
+   calcular dónde termina el cuerpo de la crónica exigiría JS.
+
+   Sin soporte de `scroll()` o con `prefers-reduced-motion: reduce` no se
+   declara ninguna transformación: la barra queda en su único estado —
+   `scaleX(1)`, trazo completo— desde el primer render. No hay estado a
+   medias que reparar. */
+.reading-progress {
+  position: sticky;
+  top: var(--header-h, 4rem);
+  z-index: 20;
+  height: 3px;
+  background: var(--color-primary);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes reading-progress-fill {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    .reading-progress {
+      /* Longhands a propósito: ver la nota de más arriba sobre el shorthand
+         `animation` y Lightning CSS. */
+      animation-name: reading-progress-fill;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root);
+      animation-range: 0% 100%;
+    }
+  }
+}
+
 /* Navigation progress bar */
 #nav-progress {
   position: fixed;
@@ -466,6 +817,37 @@
   }
 }
 
+/* Clip: video corto o nota de voz grabados con el teléfono, dentro de una
+   <figure>. Formato v6 (Alcalá 2026): la crónica se cuenta con menos texto y
+   más material del día. Sin JS y sin `reveal`: el navegador pinta el <video>
+   con su póster y no descarga nada hasta que se pulsa play (`preload="none"`),
+   así que no toca el LCP. Vertical (9:16) por defecto, que es como sale del
+   teléfono; `.clip--wide` para 16:9. El `aspect-ratio` reserva el alto antes
+   de que llegue el póster (cero CLS). El <audio> usa la barra nativa. */
+.prose :where(figure.clip) {
+  max-width: 22rem;
+  margin-inline: auto;
+}
+.prose :where(figure.clip--wide) {
+  max-width: none;
+}
+.prose :where(figure.clip video) {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  border-radius: var(--radius-control);
+  background: var(--color-surface-dark);
+}
+.prose :where(figure.clip--wide video) {
+  aspect-ratio: 16 / 9;
+}
+.prose :where(figure.clip audio) {
+  display: block;
+  width: 100%;
+}
+
 /* === Crónicas: componentes editoriales (formato v3) === */
 /* Parte de la válida: tira de cifras grandes al inicio de la crónica */
 .prose :where(.stat-strip) {
@@ -508,7 +890,53 @@
   color: var(--color-text-secondary);
 }
 
-/* Cifra destacada: un número que cuenta la historia, entre párrafos */
+/* Entrada de `.stat-strip`/`.stat-callout` al hacer scroll (docs/08-plan-
+   creatividad-ui.md, Sprint 3 tarea 15). Cero JS nuevo: el autor de la
+   crónica agrega la clase `reveal` al bloque en el markdown (plantilla en
+   `.claude/agents/content-marketer.md`) y hereda el mismo
+   IntersectionObserver de `BaseLayout.astro` que ya usa el resto del sitio
+   — un `.stat-callout` sin `reveal` se sigue viendo exactamente igual que
+   hoy, siempre visible.
+
+   El contenedor usa el fade/translateY de `.reveal` tal cual (nada que
+   declarar aparte). Lo que se agrega aquí es el escalonado de los 4-6
+   ítems de `.stat-strip`: a diferencia de `StatsCounter`/`SeasonOverview`
+   (Astro, `--stagger` calculado por índice en build), el markdown no tiene
+   forma de calcular un índice, así que el retardo por ítem sale de
+   `:nth-child` con la misma cadencia de 80ms ya establecida por esos
+   componentes. Solo `opacity`/`transform`: no dispara layout. */
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.stat-strip.reveal) .stat-strip__item {
+    transition:
+      opacity 0.4s ease-out,
+      transform 0.4s ease-out;
+  }
+  .prose :where(.stat-strip.reveal):not(.revealed) .stat-strip__item {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  .prose :where(.stat-strip.reveal.revealed) .stat-strip__item:nth-child(2) {
+    transition-delay: 80ms;
+  }
+  .prose :where(.stat-strip.reveal.revealed) .stat-strip__item:nth-child(3) {
+    transition-delay: 160ms;
+  }
+  .prose :where(.stat-strip.reveal.revealed) .stat-strip__item:nth-child(4) {
+    transition-delay: 240ms;
+  }
+  .prose :where(.stat-strip.reveal.revealed) .stat-strip__item:nth-child(5) {
+    transition-delay: 320ms;
+  }
+  .prose :where(.stat-strip.reveal.revealed) .stat-strip__item:nth-child(6) {
+    transition-delay: 400ms;
+  }
+}
+
+/* Cifra destacada: un número que cuenta la historia, entre párrafos.
+   Entrada por scroll: agregar `reveal` al `<div class="stat-callout">` en
+   el markdown, sin nada más — es un bloque único (no una rejilla), así que
+   el fade/translateY de `.reveal` de base ya es toda la entrada que hace
+   falta; no necesita el escalonado por `:nth-child` de `.stat-strip`. */
 .prose :where(.stat-callout) {
   margin-block: 2.5rem;
   padding-block: 1.25rem;
@@ -530,6 +958,142 @@
   font-size: 0.9375rem;
   line-height: 1.45;
   color: var(--color-text-secondary);
+}
+
+/* ── Salida a mitad de crónica (.mid-cta) ──
+   El `InscriptionCTA` de `noticias/[...slug].astro` cierra la página, y ahí
+   solo llega una minoría: en la crónica del Chequeo (GA4, 5-7 sep 2026) 30
+   usuarios abrieron la nota, 21 pasaron el 75 % de scroll y 7 llegaron al
+   100 %. Este bloque es la misma salida colocada donde todavía queda el ~70 %
+   de la audiencia. CSS puro y sin `reveal`: es una acción, no un adorno, y
+   tiene que verse aunque el IntersectionObserver no corra.
+   El enlace se escribe sin `:where()` a propósito —a diferencia del resto del
+   archivo— para ganarle al `.prose :where(a)` de @tailwindcss/typography, que
+   pisaría color y subrayado con una especificidad idéntica. */
+.prose :where(.mid-cta) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-block: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface));
+}
+@media (min-width: 640px) {
+  .prose :where(.mid-cta) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+}
+.prose :where(.mid-cta__text) {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+.prose .mid-cta__link {
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-control);
+  /* Grafito sobre lima: el lima (#8be000) no cumple contraste como texto,
+     pero sí como fondo con `--color-surface-dark` encima (misma regla que
+     el tono `brand` del sistema editorial). */
+  background: var(--color-accent);
+  color: var(--color-surface-dark);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform var(--duration-micro) var(--ease-pop);
+}
+.prose .mid-cta__link:hover {
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .prose .mid-cta__link {
+    transition: none;
+  }
+  .prose .mid-cta__link:hover {
+    transform: none;
+  }
+}
+
+/* ── Ficha plegada (.visit-details) ──
+   La ficha administrativa de una visita (sede, organizador, qué se jugaba) es
+   dato de referencia, no gancho: abría la crónica de Alcalá y empujaba el
+   resultado hacia abajo. Plegada al final no le quita nada al que la busca y
+   le devuelve el arranque al que solo quiere saber cómo le fue al club.
+   La `.visit-card` de dentro va SIN `reveal`: con el `<details>` cerrado el
+   bloque está en `display: none` y el IntersectionObserver de `BaseLayout`
+   nunca lo intersecta, así que la clase lo dejaría invisible al abrirlo. */
+.prose :where(details.visit-details) {
+  margin-block: 2.5rem;
+  border-top: 1px solid var(--color-surface-muted);
+  padding-top: 1rem;
+}
+.prose :where(details.visit-details > summary) {
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-primary-deep);
+}
+.prose :where(details.visit-details > summary:focus-visible) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-chip);
+}
+
+/* ── Salto rápido (.jump-nav) ──
+   Índice de anclas para crónicas largas. En la del Chequeo (3.300 palabras,
+   30 pantallas de celular) la tabla de resultados cae al 60 % de la página y
+   solo un tercio de los lectores llega hasta ahí; con esto se alcanza desde el
+   8 %. Chips en vez de una línea de enlaces sueltos porque en 390 px la línea
+   se parte en tres y los separadores quedan colgando. Sin `:where()` en el
+   enlace, por la misma razón que `.mid-cta__link`. */
+.prose :where(.jump-nav) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block: 1.75rem;
+}
+.prose :where(.jump-nav__label) {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.prose .jump-nav a {
+  padding: 0.3125rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface));
+  color: var(--color-primary-deep);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--duration-micro) var(--ease-pop);
+}
+.prose .jump-nav a:hover {
+  background: color-mix(in srgb, var(--color-primary) 16%, var(--color-surface));
+}
+@media (prefers-reduced-motion: reduce) {
+  .prose .jump-nav a {
+    transition: none;
+  }
+}
+
+/* Destino de las anclas: el header es `position: sticky` con altura
+   `--header-h` (la fija el script inline de `BaseLayout`), así que sin esto el
+   titular al que se salta queda debajo de la barra. Comprobado en móvil: con
+   `scroll-margin-top: 0` el h2 aterrizaba a 0 px y el header lo tapaba hasta
+   los 64. El fallback de 64px cubre el primer render, antes de que el script
+   escriba la variable. */
+.prose :where(h2[id], h3[id]) {
+  scroll-margin-top: calc(var(--header-h, 64px) + 0.75rem);
 }
 
 /* Voz: cita textual de corredores o familias (solo con autorización) */
@@ -722,15 +1286,18 @@
   background: color-mix(in srgb, var(--color-accent) 16%, var(--color-surface));
   color: var(--color-accent-deep);
 }
-/* Rojo y azul de estado: viven aquí y no en @theme porque solo los usa este
-   componente. Contraste sobre blanco: 6,2:1 y 6,3:1 — cumplen WCAG AA. */
+/* Rojo y azul de estado: `--color-danger`/`--color-info` (@theme, arriba),
+   tokens con nombre propio aunque hoy solo los use este componente — así el
+   tema oscuro los remapea igual que al resto de colores semánticos.
+   Contraste sobre blanco: 6,2:1 y 6,3:1 — cumplen WCAG AA (7,3:1 y 7,1:1 en
+   dark, ver src/test/theme.test.ts). */
 .prose :where(.standings-board__move--down) {
-  background: color-mix(in srgb, #b42318 10%, var(--color-surface));
-  color: #b42318;
+  background: color-mix(in srgb, var(--color-danger) 10%, var(--color-surface));
+  color: var(--color-danger);
 }
 .prose :where(.standings-board__move--new) {
-  background: color-mix(in srgb, #1d4ed8 10%, var(--color-surface));
-  color: #1d4ed8;
+  background: color-mix(in srgb, var(--color-info) 10%, var(--color-surface));
+  color: var(--color-info);
 }
 
 .prose :where(.standings-board__legend) {
@@ -909,8 +1476,1116 @@
   font-size: 0.8125rem;
 }
 
-/* Respect reduced motion preference */
+/* === Crónicas: piezas por crónica (formato v5) ===
+
+   Hasta v4 todas las crónicas compartían el mismo juego de piezas (stat-strip,
+   thread, standings-board). Desde septiembre de 2026 cada crónica puede
+   traer una o dos piezas PROPIAS, dictadas por la forma del evento que cubre:
+   una carrera de un solo día con horario por mangas se cuenta con un reloj;
+   un evento pro-fondos, con un recibo. Seis piezas, tres reglas comunes:
+
+     1. Todas son CSS puro y viven bajo `.prose`, como las de v3/v4. El autor
+        pega el HTML en el markdown (plantillas en
+        .claude/agents/content-marketer.md) y añade `reveal` al contenedor
+        para la entrada; sin esa clase el bloque se ve igual, siempre
+        visible. El disparador es el IntersectionObserver de BaseLayout.
+     2. Estado de reposo = estado FINAL, en las tres capas de mejora
+        progresiva: sin `.reveal`, bajo `prefers-reduced-motion: reduce` y
+        sin JS (el `<noscript>` de `noticias/[...slug].astro` repara la
+        tercera). Todo "antes" vive dentro de `no-preference` y de
+        `.reveal:not(.revealed)`.
+     3. Solo `transform`/`opacity`, salvo el trazo del check de
+        `.check-sheet` (`stroke-dashoffset`, excepción documentada en
+        docs/08-plan-creatividad-ui.md) y el riel de `.day-clock`, que es
+        `scaleY` scroll-driven con los mismos longhands que
+        `.timeline-progress`. El escalonado sale de `:nth-child` (cadencia
+        de 80 ms) porque el markdown no tiene índice para `--stagger`.
+
+   Todo gráfico es decorativo (`aria-hidden` o pseudo-elemento) y el dato
+   entero viaja en texto. */
+
+/* ── Reloj del domingo (.day-clock) ──
+   Programa del día como lista vertical: hora a la izquierda, riel, parada.
+   La separación entre paradas es PROPORCIONAL al tiempo real que pasó
+   entre una y otra (`--gap`, en minutos, × `--clock-scale`): se ve de un
+   vistazo que la mañana fue densa (tres mangas en treinta minutos) y el
+   mediodía, largo. Es un margen estático, no animado: cero CLS.
+     --gap          minutos desde la parada anterior (en cada __stop)
+     --clock-scale  px por minuto (en .day-clock; 0.9px por defecto)
+   Modificadores de parada: --club (el club corrió: punto lleno),
+   --award (premiación: rombo lima), --quiet (sin corredores del club:
+   punto hueco y texto atenuado). */
+.prose :where(.day-clock) {
+  --clock-scale: 0.9px;
+  --clock-rail: 4.125rem;
+  --clock-inset: 5.5rem;
+  position: relative;
+  list-style: none;
+  margin-block: 2rem;
+  padding: 0.25rem 0 0.25rem var(--clock-inset);
+  display: flex;
+  flex-direction: column;
+}
+/* Riel punteado de base: visible siempre, con o sin scroll-driven. */
+.prose :where(.day-clock)::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: var(--clock-rail);
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--color-surface-muted) 0 6px,
+    transparent 6px 12px
+  );
+}
+.prose :where(.day-clock__stop) {
+  position: relative;
+  margin: 0;
+  margin-top: min(calc(var(--gap, 0) * var(--clock-scale)), 5rem);
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  display: grid;
+  gap: 0.125rem;
+}
+/* Punto sobre el riel. El riel está en --clock-rail desde el borde del
+   contenedor y la parada empieza en --clock-inset: el centro del punto cae
+   en (--clock-rail − --clock-inset) respecto a la caja de la parada. */
+.prose :where(.day-clock__stop)::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: calc(var(--clock-rail) - var(--clock-inset) - 0.375rem + 1px);
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 2px solid var(--color-surface-muted);
+}
+.prose :where(.day-clock__stop--club)::before {
+  background: var(--color-primary-deep);
+  border-color: var(--color-primary-deep);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 22%, var(--color-surface));
+}
+/* Rombo de premiación: la inclinación va en `rotate` (propiedad aparte) y
+   no dentro de `transform`, que la entrada animada de más abajo reescribe.
+   Misma razón que `.club-seal` (nota de Lightning CSS en esa regla). */
+.prose :where(.day-clock__stop--award)::before {
+  border-radius: 0.125rem;
+  rotate: 45deg;
+  background: var(--color-accent);
+  border-color: var(--color-accent-dark);
+}
+.prose :where(.day-clock__time) {
+  position: absolute;
+  top: 0.25rem;
+  left: calc(var(--clock-inset) * -1);
+  width: 3.375rem;
+  text-align: right;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+.prose :where(.day-clock__label) {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+}
+.prose :where(.day-clock__note) {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+.prose :where(.day-clock__stop--quiet .day-clock__time),
+.prose :where(.day-clock__stop--quiet .day-clock__label) {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+.prose :where(.day-clock__legend) {
+  margin-block: 0.75rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 1rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+.prose :where(.day-clock__legend > *) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.prose :where(.day-clock__key) {
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--color-primary-deep);
+}
+.prose :where(.day-clock__key--award) {
+  border-radius: 0.125rem;
+  rotate: 45deg;
+  background: var(--color-accent);
+  border: 1px solid var(--color-accent-dark);
+}
+.prose :where(.day-clock__key--quiet) {
+  background: var(--color-surface);
+  border: 2px solid var(--color-surface-muted);
+}
+
+/* Entrada de las paradas (fade + deslizamiento desde el riel) y "pop" del
+   punto con `--ease-pop`, escalonados por `:nth-child` (hasta 8 paradas:
+   seis mangas y dos premiaciones). */
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.day-clock.reveal) .day-clock__stop {
+    transition:
+      opacity 0.4s ease-out,
+      transform 0.4s ease-out;
+  }
+  .prose :where(.day-clock.reveal) .day-clock__stop::before {
+    transition: transform var(--duration-celebration) var(--ease-pop);
+    transition-delay: 200ms;
+  }
+  .prose :where(.day-clock.reveal):not(.revealed) .day-clock__stop {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  .prose :where(.day-clock.reveal):not(.revealed) .day-clock__stop::before {
+    transform: scale(0);
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(2) {
+    transition-delay: 80ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(2)::before {
+    transition-delay: 280ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(3) {
+    transition-delay: 160ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(3)::before {
+    transition-delay: 360ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(4) {
+    transition-delay: 240ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(4)::before {
+    transition-delay: 440ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(5) {
+    transition-delay: 320ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(5)::before {
+    transition-delay: 520ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(6) {
+    transition-delay: 400ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(6)::before {
+    transition-delay: 600ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(7) {
+    transition-delay: 480ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(7)::before {
+    transition-delay: 680ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(8) {
+    transition-delay: 560ms;
+  }
+  .prose :where(.day-clock.reveal.revealed) .day-clock__stop:nth-child(8)::before {
+    transition-delay: 760ms;
+  }
+}
+
+/* Trazo del riel que se dibuja conforme se baja, encima del punteado de
+   base: mismo mecanismo y mismos longhands que `.timeline-progress`. Sin
+   soporte o con menos movimiento el pseudo-elemento no existe y queda el
+   riel punteado, que ya es el estado final legible. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .prose :where(.day-clock)::after {
+      content: '';
+      position: absolute;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      left: var(--clock-rail);
+      width: 2px;
+      background: var(--color-primary-deep);
+      transform-origin: top;
+      animation-name: sda-grow-line;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 85%;
+    }
+  }
+}
+
+/* ── Sello de hora (.clock-stamp) ──
+   Abre cada sección de manga: la hora grande, la manga y una barra del día
+   (8:00 → 1:00 p. m.) con la posición de esa hora. La barra es decorativa;
+   la hora ya está en el texto.
+     --t           minutos desde las 8:00 (en cada .clock-stamp)
+     --clock-span  minutos que dura el día (300 por defecto) */
+.prose :where(.clock-stamp) {
+  --clock-span: 300;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  margin-block: -0.5rem 1.5rem;
+}
+.prose :where(.clock-stamp__time) {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.75rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-primary-deep);
+}
+.prose :where(.clock-stamp__time small) {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.prose :where(.clock-stamp__label) {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.prose :where(.clock-stamp__day) {
+  position: relative;
+  flex-basis: 100%;
+  height: 0.25rem;
+  margin-top: 0.375rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-surface-muted) 55%, var(--color-surface));
+}
+/* Lo que ya pasó del día: relleno hasta la hora de la manga. */
+.prose :where(.clock-stamp__day)::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: calc(min(var(--t, 0), var(--clock-span)) / var(--clock-span) * 100%);
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  transform-origin: left;
+}
+.prose :where(.clock-stamp__dot) {
+  position: absolute;
+  top: 50%;
+  left: calc(min(var(--t, 0), var(--clock-span)) / var(--clock-span) * 100%);
+  width: 0.875rem;
+  height: 0.875rem;
+  margin: -0.4375rem 0 0 -0.4375rem;
+  border-radius: 50%;
+  background: var(--color-primary-deep);
+  border: 2px solid var(--color-surface);
+  box-shadow: var(--shadow-raised);
+}
+/* La barra avanza hasta la hora y el punto aterriza al final: "el día llegó
+   hasta aquí". El relleno crece con `scaleX` desde la izquierda (no se
+   anima `width`) y el punto entra con `--ease-pop`. */
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.clock-stamp.reveal) .clock-stamp__day::before {
+    transition: transform var(--duration-celebration) ease-out;
+    transition-delay: 150ms;
+  }
+  .prose :where(.clock-stamp.reveal) .clock-stamp__dot {
+    transition:
+      transform var(--duration-celebration) var(--ease-pop),
+      opacity 0.2s ease-out;
+    transition-delay: 450ms;
+  }
+  .prose :where(.clock-stamp.reveal):not(.revealed) .clock-stamp__day::before {
+    transform: scaleX(0);
+  }
+  .prose :where(.clock-stamp.reveal):not(.revealed) .clock-stamp__dot {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+/* ── Ficha de la visita (.visit-card) ──
+   La "parte" de una carrera fuera de casa no es una cifra sino el contexto,
+   así que en lugar del stat-strip va un tiquete: talón con la fecha a la
+   izquierda (decorativo: la fecha se repite en la lista) y lista de
+   definiciones a la derecha. El talón se separa con una perforación
+   (borde discontinuo + dos muescas). En pantallas angostas el talón pasa
+   arriba como banda y las muescas desaparecen. */
+.prose :where(.visit-card) {
+  --visit-stub: 5.5rem;
+  position: relative;
+  display: grid;
+  margin-block: 2rem;
+  border-radius: var(--radius-card);
+  background: var(--color-surface-tint);
+  border: 1px solid color-mix(in srgb, var(--color-surface-muted) 70%, var(--color-surface));
+  box-shadow: var(--shadow-card);
+}
+.prose :where(.visit-card__stub) {
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  background: var(--color-primary-deep);
+  color: var(--color-surface);
+  font-family: var(--font-display);
+  border-bottom: 2px dashed color-mix(in srgb, var(--color-surface) 55%, transparent);
+}
+.prose :where(.visit-card__stub-day),
+.prose :where(.visit-card__stub-month) {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.prose :where(.visit-card__stub-num) {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.prose :where(.visit-card__list) {
+  margin: 0;
+  padding: 1rem 1.25rem 1.125rem;
+  display: grid;
+  gap: 0.75rem 1.25rem;
+}
+.prose :where(.visit-card__item) {
+  margin: 0;
+}
+.prose :where(.visit-card__item dt) {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.prose :where(.visit-card__item dd) {
+  margin: 0.125rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+@media (min-width: 480px) {
+  .prose :where(.visit-card) {
+    grid-template-columns: var(--visit-stub) 1fr;
+  }
+  .prose :where(.visit-card__stub) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.125rem;
+    padding: 1rem 0.5rem;
+    text-align: center;
+    border-radius: var(--radius-card) 0 0 var(--radius-card);
+    border-bottom: 0;
+    border-right: 2px dashed color-mix(in srgb, var(--color-surface) 55%, transparent);
+  }
+  .prose :where(.visit-card__stub-num) {
+    font-size: 2.25rem;
+  }
+  /* Muescas de la perforación: dos círculos del color del fondo de la
+     página, a caballo entre talón y cuerpo. */
+  .prose :where(.visit-card)::before,
+  .prose :where(.visit-card)::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--visit-stub) - 0.5rem);
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1px solid color-mix(in srgb, var(--color-surface-muted) 70%, var(--color-surface));
+  }
+  .prose :where(.visit-card)::before {
+    top: -0.5625rem;
+    border-top-color: transparent;
+  }
+  .prose :where(.visit-card)::after {
+    bottom: -0.5625rem;
+    border-bottom-color: transparent;
+  }
+}
+@media (min-width: 640px) {
+  .prose :where(.visit-card__list) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .prose :where(.visit-card__item--wide) {
+    grid-column: 1 / -1;
+  }
+}
+/* Entrada: el talón se desliza desde la izquierda y los datos se escriben
+   uno tras otro (hasta 7). */
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.visit-card.reveal) .visit-card__stub,
+  .prose :where(.visit-card.reveal) .visit-card__item {
+    transition:
+      opacity 0.4s ease-out,
+      transform 0.4s ease-out;
+  }
+  .prose :where(.visit-card.reveal):not(.revealed) .visit-card__stub {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  .prose :where(.visit-card.reveal):not(.revealed) .visit-card__item {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .prose :where(.visit-card.reveal.revealed) .visit-card__item:nth-child(1) {
+    transition-delay: 120ms;
+  }
+  .prose :where(.visit-card.reveal.revealed) .visit-card__item:nth-child(2) {
+    transition-delay: 200ms;
+  }
+  .prose :where(.visit-card.reveal.revealed) .visit-card__item:nth-child(3) {
+    transition-delay: 280ms;
+  }
+  .prose :where(.visit-card.reveal.revealed) .visit-card__item:nth-child(4) {
+    transition-delay: 360ms;
+  }
+  .prose :where(.visit-card.reveal.revealed) .visit-card__item:nth-child(5) {
+    transition-delay: 440ms;
+  }
+  .prose :where(.visit-card.reveal.revealed) .visit-card__item:nth-child(6) {
+    transition-delay: 520ms;
+  }
+  .prose :where(.visit-card.reveal.revealed) .visit-card__item:nth-child(7) {
+    transition-delay: 600ms;
+  }
+}
+
+/* ── Recibo de la pista (.ledger) ──
+   Bloque de transparencia de un evento pro-fondos: lo que entró y en qué
+   se va, como tirilla de recibo (borde dentado abajo, líneas con puntos
+   guía, total remarcado y un sello). Los números van con cifras tabulares
+   para que las columnas cuadren. Solo cifras reales: el componente no
+   calcula nada. */
+.prose :where(.ledger) {
+  position: relative;
+  max-width: 26rem;
+  margin: 2.5rem auto;
+  padding: 1.25rem 1.25rem 1.5rem;
+  background: var(--color-surface-tint);
+  border: 1px solid color-mix(in srgb, var(--color-surface-muted) 70%, var(--color-surface));
+  border-bottom: 0;
+  border-radius: var(--radius-chip) var(--radius-chip) 0 0;
+  box-shadow: var(--shadow-raised);
+  font-variant-numeric: tabular-nums;
+}
+/* Borde dentado: dos degradados en diagonal que dibujan triángulos del
+   mismo color del papel, colgando del borde inferior. */
+.prose :where(.ledger)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.5rem;
+  height: 0.5rem;
+  background:
+    linear-gradient(-45deg, transparent 50%, var(--color-surface-tint) 50%) 0 0 / 1rem 0.5rem
+      repeat-x,
+    linear-gradient(45deg, transparent 50%, var(--color-surface-tint) 50%) 0.5rem 0 / 1rem 0.5rem
+      repeat-x;
+}
+.prose :where(.ledger__head) {
+  margin: 0 0 0.75rem;
+  padding: 0 6.5rem 0.625rem 0;
+  display: grid;
+  gap: 0.125rem;
+  border-bottom: 1px dashed var(--color-surface-muted);
+}
+.prose :where(.ledger__title) {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+.prose :where(.ledger__date) {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+.prose :where(.ledger__lines) {
+  margin: 0;
+}
+.prose :where(.ledger__line) {
+  margin: 0;
+  padding: 0.375rem 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.prose :where(.ledger__line dt) {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+/* Puntos guía entre concepto y cifra, como en un recibo de verdad. */
+.prose :where(.ledger__line dt)::after {
+  content: '';
+  flex: 1;
+  margin: 0 0.5rem;
+  border-bottom: 1px dotted var(--color-surface-muted);
+  transform: translateY(-0.3em);
+}
+.prose :where(.ledger__line dd) {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  color: var(--color-text-primary);
+}
+.prose :where(.ledger__line--total) {
+  margin-top: 0.5rem;
+  padding-top: 0.625rem;
+  border-top: 2px solid var(--color-text-primary);
+}
+.prose :where(.ledger__line--total dt) {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.prose :where(.ledger__line--total dd) {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.375rem;
+  line-height: 1;
+  color: var(--color-primary-deep);
+}
+.prose :where(.ledger__section) {
+  margin: 1.125rem 0 0.25rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.prose :where(.ledger__uses) {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.prose :where(.ledger__uses > li) {
+  position: relative;
+  margin: 0;
+  padding: 0.25rem 0 0.25rem 1.125rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--color-text-primary);
+}
+.prose :where(.ledger__uses > li)::before {
+  content: '';
+  position: absolute;
+  top: 0.65em;
+  left: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 0.125rem;
+  background: var(--color-accent);
+  border: 1px solid var(--color-accent-dark);
+}
+/* Sello: inclinación en `rotate` (propiedad aparte), para que sobreviva al
+   `transform: scale()` de la entrada — ver la nota de `.club-seal`. Texto
+   en lima profundo sobre el papel: 5,3:1, cumple AA. */
+.prose :where(.ledger__stamp) {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.25rem 0.5rem;
+  border: 2px solid var(--color-accent-deep);
+  border-radius: var(--radius-chip);
+  rotate: -8deg;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-deep);
+}
+/* El recibo se "imprime": cada línea baja en su sitio una tras otra (las
+   líneas de cuenta primero, luego los destinos) y al final se estampa el
+   sello con `--ease-pop`. */
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.ledger.reveal) .ledger__line,
+  .prose :where(.ledger.reveal) .ledger__uses > li {
+    transition:
+      opacity 0.3s ease-out,
+      transform 0.3s ease-out;
+  }
+  .prose :where(.ledger.reveal) .ledger__stamp {
+    transition:
+      transform var(--duration-celebration) var(--ease-pop),
+      opacity 0.2s ease-out;
+    transition-delay: 900ms;
+  }
+  .prose :where(.ledger.reveal):not(.revealed) .ledger__line,
+  .prose :where(.ledger.reveal):not(.revealed) .ledger__uses > li {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  .prose :where(.ledger.reveal):not(.revealed) .ledger__stamp {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  .prose :where(.ledger.reveal.revealed) .ledger__line:nth-child(1) {
+    transition-delay: 120ms;
+  }
+  .prose :where(.ledger.reveal.revealed) .ledger__line:nth-child(2) {
+    transition-delay: 220ms;
+  }
+  .prose :where(.ledger.reveal.revealed) .ledger__line:nth-child(3) {
+    transition-delay: 320ms;
+  }
+  .prose :where(.ledger.reveal.revealed) .ledger__line:nth-child(4) {
+    transition-delay: 420ms;
+  }
+  .prose :where(.ledger.reveal.revealed) .ledger__uses > li:nth-child(1) {
+    transition-delay: 540ms;
+  }
+  .prose :where(.ledger.reveal.revealed) .ledger__uses > li:nth-child(2) {
+    transition-delay: 640ms;
+  }
+  .prose :where(.ledger.reveal.revealed) .ledger__uses > li:nth-child(3) {
+    transition-delay: 740ms;
+  }
+  .prose :where(.ledger.reveal.revealed) .ledger__uses > li:nth-child(4) {
+    transition-delay: 840ms;
+  }
+}
+
+/* ── Planilla de chequeo (.check-sheet) ──
+   Diagnóstico por grupo de categoría: casilla, nombre del grupo y dos
+   campos ("Se probó" / "Se vio"). Al entrar en pantalla las casillas se van
+   marcando una a una, con el mismo trazo que el checklist de /inscripciones
+   (reutiliza los keyframes `if-check-draw` e `if-step-pop`, no los
+   duplica). Sin la preferencia de movimiento el check ya está dibujado: la
+   casilla marcada es la forma, no una animación. */
+.prose :where(.check-sheet) {
+  list-style: none;
+  margin-block: 2rem;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.prose :where(.check-sheet__row) {
+  margin: 0;
+  padding: 0.875rem 1rem;
+  display: grid;
+  grid-template-columns: 1.625rem 1fr;
+  gap: 0.25rem 0.875rem;
+  align-items: start;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--color-surface-muted) 25%, var(--color-surface));
+}
+.prose :where(.check-sheet__box) {
+  width: 1.625rem;
+  height: 1.625rem;
+  margin-top: 0.0625rem;
+  overflow: visible;
+}
+.prose :where(.check-sheet__box rect) {
+  fill: var(--color-surface);
+  stroke: var(--color-primary-deep);
+  stroke-width: 2;
+}
+.prose :where(.check-sheet__tick) {
+  fill: none;
+  stroke: var(--color-primary-deep);
+  stroke-width: 2.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.prose :where(.check-sheet__body) {
+  display: grid;
+  gap: 0.375rem;
+}
+.prose :where(.check-sheet__name) {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+}
+.prose :where(.check-sheet__field) {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--color-text-primary);
+}
+.prose :where(.check-sheet__tag) {
+  display: inline-block;
+  margin-right: 0.375rem;
+  padding: 0.0625rem 0.4375rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-primary-deep);
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));
+}
+@media (min-width: 640px) {
+  .prose :where(.check-sheet__body) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.375rem 1.25rem;
+  }
+  .prose :where(.check-sheet__name) {
+    grid-column: 1 / -1;
+  }
+}
+/* Filas que entran escalonadas y casillas que se marcan una tras otra: el
+   trazo arranca cuando la fila terminó su propia entrada (0,4 s + su
+   retardo) y el "pop" de la casilla acompaña. 24 = longitud del dash con
+   holgura sobre el path `M7 12.5l3.5 3.5L17 8.5` (~13,3 u). */
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.check-sheet.reveal) .check-sheet__row {
+    transition:
+      opacity 0.4s ease-out,
+      transform 0.4s ease-out;
+  }
+  .prose :where(.check-sheet.reveal):not(.revealed) .check-sheet__row {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  .prose :where(.check-sheet.reveal):not(.revealed) .check-sheet__tick {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+  }
+  .prose :where(.check-sheet.reveal.revealed) .check-sheet__tick {
+    stroke-dasharray: 24;
+    animation-name: if-check-draw;
+    animation-duration: calc(var(--duration-celebration) * 0.5);
+    animation-timing-function: ease-out;
+    animation-delay: calc(var(--check-delay, 0ms) + 400ms);
+    animation-fill-mode: backwards;
+  }
+  .prose :where(.check-sheet.reveal.revealed) .check-sheet__box {
+    animation-name: if-step-pop;
+    animation-duration: var(--duration-micro);
+    animation-timing-function: var(--ease-pop);
+    animation-delay: calc(var(--check-delay, 0ms) + 400ms);
+  }
+  .prose :where(.check-sheet.reveal.revealed) .check-sheet__row:nth-child(2) {
+    --check-delay: 160ms;
+    transition-delay: 160ms;
+  }
+  .prose :where(.check-sheet.reveal.revealed) .check-sheet__row:nth-child(3) {
+    --check-delay: 320ms;
+    transition-delay: 320ms;
+  }
+  .prose :where(.check-sheet.reveal.revealed) .check-sheet__row:nth-child(4) {
+    --check-delay: 480ms;
+    transition-delay: 480ms;
+  }
+  .prose :where(.check-sheet.reveal.revealed) .check-sheet__row:nth-child(5) {
+    --check-delay: 640ms;
+    transition-delay: 640ms;
+  }
+  .prose :where(.check-sheet.reveal.revealed) .check-sheet__row:nth-child(6) {
+    --check-delay: 800ms;
+    transition-delay: 800ms;
+  }
+}
+
+/* ── Muro de placas (.thanks-wall) ──
+   Los agradecimientos de una jornada en casa. En una carrera la placa la
+   lleva quien corre; esta pieza se la pone a quien la hizo posible: cada
+   tarjeta imita el dorsal de la pista —mismo borde doble y mismo
+   `--radius-plate` que `.race-plate` de `RaceLineup`— y, en el lugar del
+   número, va el nombre. Arriba el rol, abajo la nota de qué hizo.
+
+   Sirve igual para un ente (un club visitante, una empresa, una entidad) que
+   para una persona natural; el modificador `--org` pinta el rol en lima para
+   distinguir de un vistazo unos de otros.
+
+   Los dos agujeros de las bridas son un pseudo-elemento decorativo. Las
+   placas cuelgan con una inclinación mínima alterna que vive en
+   `--plate-tilt` y se aplica con `rotate`, propiedad aparte de `transform`
+   (misma razón que `.day-clock__stop--award`). Que el ángulo sea un custom
+   property es lo que permite al `<noscript>` de `noticias/[...slug].astro`
+   devolver las placas a su reposo sin repetir aquí el escalonado. */
+.prose :where(.thanks-wall) {
+  list-style: none;
+  margin-block: 2rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: 0.875rem;
+}
+.prose :where(.thanks-wall__plate) {
+  position: relative;
+  margin: 0;
+  padding: 1.125rem 0.875rem 0.9375rem;
+  display: grid;
+  gap: 0.3125rem;
+  align-content: start;
+  text-align: center;
+  border: 3px double var(--color-primary-deep);
+  border-radius: var(--radius-plate);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  rotate: var(--plate-tilt, 0deg);
+}
+.prose :where(.thanks-wall__plate:nth-child(odd)) {
+  --plate-tilt: -0.7deg;
+  --plate-swing: -5deg;
+}
+.prose :where(.thanks-wall__plate:nth-child(even)) {
+  --plate-tilt: 0.7deg;
+  --plate-swing: 5deg;
+}
+.prose :where(.thanks-wall__plate--org) {
+  border-color: var(--color-accent-dark);
+}
+/* Los dos agujeros por donde pasarían las bridas. */
+.prose :where(.thanks-wall__plate)::before {
+  content: '';
+  position: absolute;
+  top: 0.4375rem;
+  left: 0;
+  right: 0;
+  height: 0.3125rem;
+  background:
+    radial-gradient(
+      circle at 22% 50%,
+      var(--color-surface-muted) 0 0.15625rem,
+      transparent 0.15625rem
+    ),
+    radial-gradient(
+      circle at 78% 50%,
+      var(--color-surface-muted) 0 0.15625rem,
+      transparent 0.15625rem
+    );
+}
+.prose :where(.thanks-wall__role) {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.625rem;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary-deep);
+}
+.prose :where(.thanks-wall__plate--org .thanks-wall__role) {
+  color: var(--color-accent-deep);
+}
+.prose :where(.thanks-wall__name) {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.0625rem;
+  line-height: 1.25;
+  text-wrap: balance;
+  color: var(--color-text-primary);
+}
+/* La placa de un ente puede llevar enlace a su sitio o a su perfil. Conserva
+   la tipografía de la placa —mismo peso y mismo color que un nombre sin
+   enlace, que si no la pared se vuelve un listado de links— y se distingue
+   solo por el subrayado. El foco lo pinta el `:focus-visible` global. */
+.prose :where(.thanks-wall__name a) {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-primary) 55%, transparent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .prose :where(.thanks-wall__name a:hover) {
+    text-decoration-color: var(--color-primary-deep);
+  }
+}
+.prose :where(.thanks-wall__note) {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+/* Entrada: la placa entra colgada de lado (`--plate-swing`, ±5°) y se asienta
+   en su inclinación de reposo (`--plate-tilt`, ±0,7°) con el overshoot de
+   `--ease-spring`. Es el peso de una placa que acaban de amarrar, no un
+   efecto aparte, y por eso aquí no hay desplazamiento: el bloque anima
+   `opacity` y `rotate` y NADA MÁS.
+
+   Ese "nada más" es deliberado. Con un `transform: translateY()` en la misma
+   regla, Lightning CSS fusiona las dos propiedades en un solo
+   `transform: translateY(10px) rotate(0)` — comprobado en `dist/` — y con eso
+   el `rotate` de reposo deja de reescribirse: la placa nunca se asienta. Es la
+   misma familia de gotcha que el shorthand `animation` con
+   `animation-timeline`. Si alguna vez hace falta desplazamiento, va en otra
+   regla, no en esta.
+
+   Escalonado por `:nth-child` con la cadencia de 80 ms del resto de las
+   piezas (hasta 8 placas). */
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.thanks-wall.reveal) .thanks-wall__plate {
+    transition:
+      opacity 0.4s ease-out,
+      rotate var(--duration-celebration) var(--ease-spring);
+  }
+  .prose :where(.thanks-wall.reveal):not(.revealed) .thanks-wall__plate {
+    opacity: 0;
+    rotate: var(--plate-swing, 0deg);
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(2) {
+    transition-delay: 80ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(3) {
+    transition-delay: 160ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(4) {
+    transition-delay: 240ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(5) {
+    transition-delay: 320ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(6) {
+    transition-delay: 400ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(7) {
+    transition-delay: 480ms;
+  }
+  .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(8) {
+    transition-delay: 560ms;
+  }
+}
+
+/* ============================================================
+   Count-up: utilidad compartida (docs/08-plan-creatividad-ui.md,
+   Sprint 1 tarea 6). Extraída del count-up original de
+   `TrochaVerde.astro` (docs/06-plan-animaciones.md, Fase 4 Tarea 11) para
+   reusarla también desde `StatFigure.astro` (prop `countUp`), sin duplicar
+   la declaración `@property`. Solo para valores enteros.
+
+   Markup que espera cada consumidor:
+     <span class="count-up" style="--count-target:N;--count-digits:D">
+       <span class="count-up__digits" aria-hidden="true"></span>
+       <span class="sr-only">N</span>
+     </span>
+   El dígito animado es `aria-hidden`; el `sr-only` siempre lleva la cifra
+   final (nunca el conteo intermedio) — los lectores de pantalla no deben
+   escuchar el número subir.
+
+   Cero JS nuevo: el disparador es el cambio de clase `.reveal` →
+   `.revealed` que ya añade el IntersectionObserver de BaseLayout.astro.
+   Un `.count-up` sin ancestro `.reveal` nunca arranca el conteo bajo
+   `no-preference` (se queda en `--count-value: 0`): cada consumidor nuevo
+   debe envolverlo en `.reveal` y replicar el `<noscript>` de abajo.
+
+   Estado de reposo = cifra final SIEMPRE, en las tres capas de mejora
+   progresiva:
+     1. Sin `@property` (o sin soporte de `@supports at-rule()`, la forma
+        correcta de detectarlo — `@supports (prop: value)` no sirve para
+        probar un at-rule): el bloque de abajo nunca se activa y
+        `--count-value` queda en `var(--count-target)`.
+     2. Con `@property` pero `prefers-reduced-motion: reduce`: la regla que
+        arranca en 0 vive dentro de `@media (prefers-reduced-motion:
+        no-preference)`, así que tampoco se activa.
+     3. Con soporte y sin esa preferencia, pero sin JS: `.revealed` nunca
+        llega (BaseLayout.astro es quien lo añade) y `--count-value` se
+        quedaría en 0 para siempre. Cada consumidor debe reparar esto con su
+        propio `<noscript is:inline>` que fuerce `--count-value:
+        var(--count-target) !important` Y `.reveal { opacity: 1 !important;
+        transform: none !important }` — sin lo segundo, la sección entera
+        (no solo la cifra) se queda invisible sin JS.
+
+   `--count-digits` reserva en `min-width` el ancho final del número, en
+   `ch`: sin esto, el conteo empieza mostrando "0" (1 dígito) y ensancha su
+   caja a medida que sube — un layout shift real que hoy no se dispara por
+   casualidad (la etiqueta de al lado suele mandar el ancho de la columna),
+   no porque esté prevenido. Cada consumidor calcula
+   `String(target).length` una sola vez, en build. */
+.count-up__digits {
+  display: inline-block;
+  min-width: calc(var(--count-digits, 1) * 1ch);
+  --count-value: var(--count-target);
+  counter-reset: count-up var(--count-value);
+}
+.count-up__digits::before {
+  content: counter(count-up);
+}
+
+@supports at-rule(@property) {
+  @property --count-value {
+    syntax: '<integer>';
+    inherits: false;
+    initial-value: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .count-up__digits {
+      --count-value: 0;
+      /* Duración fija fuera de --duration-micro/--duration-celebration a
+         propósito: el plan pide ~1–1.5s para este conteo, más largo que
+         ambos tokens (200ms/500ms) — mismo criterio que el shake de campo
+         inválido (300ms fijo, ver el bloque `field-` más abajo). */
+      transition: --count-value 1.2s ease-out;
+    }
+
+    .reveal.revealed .count-up__digits {
+      --count-value: var(--count-target);
+    }
+  }
+}
+
+/* ============================================================
+   Red de seguridad global — `prefers-reduced-motion: reduce`
+   (docs/08-plan-creatividad-ui.md, Sprint 0 tarea 1)
+
+   Catch-all: cualquier `animation`/`transition` que se nos escape (propia,
+   de un plugin, o inyectada por markdown/CMS) queda casi instantánea en vez
+   de reproducirse. No usamos `animation: none`/`transition: none` aquí
+   porque eso borraría también `animation-name`/`transition-property` y
+   ocultaría el estado final en los pocos casos con `animation-fill-mode:
+   forwards` fuera de este archivo; forzar la duración a ~0 dispara el mismo
+   frame final sin ese riesgo. `!important` es intencional: es la única
+   forma de que un catch-all universal gane sobre reglas con selectores más
+   específicos declaradas después en la cascada.
+
+   Ya verificado que no rompe nada existente:
+   - `.reveal`/`SponsorsBar`/el stepper de inscripción/el confetti ya
+     resuelven su propio estado bajo `reduce` con `transition: none` o con
+     bloques enteros dentro de `@media (prefers-reduced-motion:
+     no-preference)` — el catch-all nunca llega a pisar un `animation-name`
+     o `transition-property` real, solo refuerza la duración.
+   - El count-up compartido (`.count-up`, `--count-value`, usado por
+     `TrochaVerde.astro` y por `StatFigure.astro` vía la prop `countUp`)
+     solo declara su `transition` dentro de `no-preference`; bajo `reduce`
+     nunca se registra, así que no hay nada que este bloque pueda acelerar.
+   - Ningún componente interactivo (`src/components/interactive/`) escucha
+     `transitionend`/`animationend` para avanzar su propia lógica, así que
+     una duración de `.01ms` no deja timers de JS colgados.
+   - Astro ya anula sus propias view transitions bajo
+     `prefers-reduced-motion` (`::view-transition-*` y
+     `[data-astro-transition-scope]` con `animation: none !important`,
+     ver `astro/components/viewtransitions.css`); este bloque es
+     redundante ahí a propósito, no conflictivo.
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
   .reveal {
     opacity: 1;
     transform: none;
@@ -1019,6 +2694,32 @@
   letter-spacing: 0.02em;
 }
 
+/*
+ * Dorsal: la categoría se presenta como una placa de número de carrera en
+ * vez de texto suelto — borde doble (`border-style: double`, no dos reglas
+ * separadas) y tipografía tabular, por si algún día el dato incluye un
+ * número real (hoy `athlete.category` es el nombre de categoría que entrega
+ * la federación, p. ej. "Prejuvenil A Femenina" o "Teteros Con Pedales").
+ *
+ * Sin color por categoría vía `LEVEL_STYLES` (`src/lib/programs.ts`): ese
+ * mapa está indexado por el nivel del programa del club
+ * (iniciación/formación/competición/recreativo), no por la categoría de
+ * carrera de la federación — son dos taxonomías distintas sin
+ * correspondencia 1:1 fiable (p. ej. "Élite" no es "competición", es una
+ * categoría de edad/rendimiento de la federación). Inventar ese mapeo aquí
+ * sería una regla frágil basada en coincidencias de texto, así que la
+ * placa usa un único tono de marca para todas las categorías.
+ */
+.race-plate {
+  display: inline-block;
+  margin-top: 0.125rem;
+  padding: 0.1rem 0.65rem;
+  border: 3px double var(--color-primary-deep);
+  border-radius: var(--radius-plate);
+  background: var(--color-surface);
+  font-variant-numeric: tabular-nums;
+}
+
 /* Hover (solo dispositivos con puntero fino) */
 @media (hover: hover) and (pointer: fine) {
   .race-lineup__poster-wrap {
@@ -1026,6 +2727,15 @@
   }
   .race-lineup__card:hover .race-lineup__glare {
     opacity: 1;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .race-plate {
+    transition: rotate var(--duration-micro) var(--ease-spring);
+  }
+  .race-lineup__card:hover .race-plate {
+    rotate: 2deg;
   }
 }
 
@@ -1124,6 +2834,44 @@
     animation-name: if-step-pop;
     animation-duration: var(--duration-micro);
     animation-timing-function: var(--ease-pop);
+  }
+}
+
+/* ============================================================
+   Checklist «qué llevar» — /inscripciones y éxito de InscriptionForm
+   (docs/08-plan-creatividad-ui.md, Sprint 3 tarea 17, prefijo `checklist-`)
+
+   Mejora progresiva, mismo criterio que el resto del archivo: TODO va
+   dentro de `prefers-reduced-motion: no-preference`. Sin la preferencia no
+   se declara ni `stroke-dasharray` ni `animation`, así que el check se
+   pinta entero de una vez — nunca es la única señal de que el documento
+   está en la lista (el círculo de fondo y el texto ya lo comunican).
+   Reutiliza el keyframe `if-check-draw` definido arriba para el stepper de
+   inscripción, no lo duplica.
+
+   El disparador de `.revealed` en cada `<li class="reveal">` es distinto
+   según el sitio: en `/inscripciones` (Astro estático) es el mismo
+   IntersectionObserver global de `BaseLayout.astro`; en la pantalla de
+   éxito de `InscriptionForm.tsx` (contenido montado por React después de
+   la carga de la página, fuera del alcance de ese observer) el propio
+   island dispara su `.revealed` un frame después de montarse. Ambos casos
+   comparten este mismo CSS.
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .checklist-check {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+  }
+
+  /* Arranca cuando el propio ítem ya terminó su fundido de entrada: mismo
+     `--stagger` que gobierna el `transition-delay` del `.reveal` (línea
+     ~214), más los 0.4s de esa transición. */
+  .reveal.revealed .checklist-check {
+    animation-name: if-check-draw;
+    animation-duration: calc(var(--duration-celebration) * 0.5);
+    animation-timing-function: ease-out;
+    animation-delay: calc(var(--stagger, 0ms) + 400ms);
+    animation-fill-mode: backwards;
   }
 }
 
@@ -1278,5 +3026,158 @@
     animation-delay: var(--confetti-delay, 0ms);
     animation-timing-function: linear;
     animation-fill-mode: both;
+  }
+}
+
+/* ============================================================
+   Selector de edad de /programas
+   (docs/08-plan-creatividad-ui.md, Sprint 1 tarea 5)
+
+   Qué hace: al elegir una edad en el `<fieldset>` de `ProgramAgePicker`, la
+   sección del programa que cubre esa edad y su tramo en la regla de
+   `ProgramPathway` ganan un aro, y la foto de los demás programas se apaga.
+   Cero JavaScript: todo sale de `:has()` leyendo qué radio quedó `:checked`.
+
+   Cómo se conectan las dos mitades. CSS no sabe comparar el `value` de un radio
+   con un rango numérico, así que el puente se genera en build: `ProgramAgePicker`
+   emite una regla por edad —`…:has(input[value="7"]:checked) [data-ages~="7"]
+   { --age-emphasis: 1 }`— y aquí abajo todas las declaraciones leen esa variable
+   con `var(--age-emphasis, 0)`. El resultado es que el diseño vive completo en
+   este archivo y lo generado son solo N líneas mecánicas. `--age-emphasis` se
+   hereda, así que basta con encenderla en la sección para que la foto de dentro
+   también lo sepa.
+
+   Las tres cadenas acopladas (`program-age-scope`, `edad-programa`, `todas`)
+   están declaradas en `src/lib/programs.ts` (`AGE_SCOPE_CLASS`,
+   `AGE_INPUT_NAME`, `AGE_ALL_VALUE`) y repetidas aquí a mano porque una hoja de
+   estilos no puede importarlas. Si cambian allí, hay que cambiarlas aquí.
+
+   Degradación: todas las reglas de énfasis llevan `:has()` en el selector, así
+   que un navegador sin soporte las descarta enteras y la página se ve como
+   siempre. Lo mismo pasa con el estado inicial: el radio «todas» arranca
+   marcado, y con él ningún selector de abajo llega a coincidir.
+
+   Por qué NO se apaga el texto. El plan pedía bajar a ~0.55 la opacidad de los
+   programas que no corresponden, pero `opacity` sobre un bloque baja también el
+   contraste de su texto: `text-secondary` (#5a5a5a) al 55% sobre blanco queda en
+   3.3:1 y deja de cumplir WCAG 2.1 AA (1.4.3), y no hay ningún valor por debajo
+   de 1 que lo salve. Las secciones que no corresponden no son un control
+   inactivo —se siguen leyendo y sus enlaces siguen funcionando—, así que no
+   aplica la excepción del criterio. Se apaga entonces solo la ilustración (la
+   foto y su mancha de color, `[data-age-media]`), que no tiene requisito de
+   contraste, y el peso del mensaje lo lleva el énfasis: el aro y el zoom del
+   tramo. Ni una palabra de la página pierde legibilidad al filtrar.
+
+   Sobre el aro: aparece de golpe, sin curva propia — mismo criterio que
+   `Button.astro`, que nunca pone `box-shadow` ni `outline` en un `transition`.
+   Lo único que se anima es `opacity` y `transform`.
+   ============================================================ */
+
+.program-age-scope:has(input[name='edad-programa']:checked:not([value='todas'])) {
+  /* La sección del programa que corresponde. Aro por dentro (`outline-offset`
+     negativo): la sección ocupa todo el ancho de la ventana y un aro por fuera
+     no se vería. Con `--age-emphasis` en 0 el ancho es 0 y no se pinta nada. */
+  & section[data-ages] {
+    outline: calc(3px * var(--age-emphasis, 0)) solid var(--color-primary-deep);
+    outline-offset: -3px;
+  }
+
+  /* La ilustración de cada programa: se apaga en los que no corresponden.
+     `scale` mínimo en el que sí, lo justo para que el ojo aterrice ahí. La
+     sección recorta (`overflow-clip`/`hidden`), así que crecer no desborda. */
+  & section[data-ages] [data-age-media] {
+    opacity: calc(0.55 + 0.45 * var(--age-emphasis, 0));
+    transform: scale(calc(1 + 0.02 * var(--age-emphasis, 0)));
+  }
+
+  /* El tramo de la regla de edades. `position`/`z-index` solo entran en juego
+     con una edad elegida: el tramo que crece pasa por encima de sus vecinos,
+     que son hermanos absolutos y si no lo taparían por orden de pintado. */
+  & li[data-ages] > a {
+    position: relative;
+    z-index: calc(var(--age-emphasis, 0));
+    outline: calc(2px * var(--age-emphasis, 0)) solid var(--color-primary-deep);
+    outline-offset: 2px;
+    transform: scale(calc(1 + 0.06 * var(--age-emphasis, 0)));
+  }
+}
+
+/* La transición se declara fuera del `:has()` a propósito: si viviera dentro,
+   volver a «todas las edades» apagaría la regla y el cambio de vuelta sería un
+   salto seco. Al declararla aquí, el filtro entra y sale con la misma curva.
+
+   Nota: esta regla gana por especificidad al `transition-colors` que
+   `ProgramPathway` le pone al tramo. No se pierde nada — el único efecto de
+   hover de ese enlace es `brightness-95`, un `filter` que `transition-colors`
+   nunca cubrió. */
+@media (prefers-reduced-motion: no-preference) {
+  .program-age-scope [data-age-media],
+  .program-age-scope li[data-ages] > a {
+    transition-property: opacity, transform;
+    transition-duration: var(--duration-micro);
+    transition-timing-function: var(--ease-spring);
+  }
+}
+
+/* ============================================================
+   Láminas de Yumbo (docs/04-sistema-editorial.md §2.7)
+   ============================================================
+
+   Las ilustraciones del cerro, el monumento y el santuario se pintan como
+   máscara sobre `currentColor`: el color lo pone el tono de la sección y una
+   sola lámina sirve sobre fondo claro, sobre grafito y sobre el teal de marca.
+   El componente solo aporta la URL del asset en `--yumbo-mask`; todo lo demás
+   vive aquí porque necesita dos cosas que un `style` inline no puede tener:
+   una consulta `@supports` y una máscara compuesta.
+
+   Sin soporte de `mask-image` la lámina se esconde. Es la diferencia entre no
+   ver nada —correcto: es decoración— y ver un rectángulo sólido de color, que
+   es lo que se vería si `background-color` se aplicara solo. */
+.yumbo-mask {
+  background-color: currentColor;
+  -webkit-mask-image: var(--yumbo-mask);
+  mask-image: var(--yumbo-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* El horizonte al pie de una sección.
+   La caja que lo lleva (SectionShell) tiene la proporción exacta de la lámina
+   (`aspect-ratio` del asset) y se centra sola, así que `auto 100%` la llena sin
+   deformarla —estirarla al ancho del viewport la dejaba hasta 6.8x más ancha y
+   el letrero YUMBO ilegible—. El segundo degradado se mide sobre esa misma caja,
+   no sobre la sección: la lámina es un rectángulo con la cima recortada y sin
+   este fundido sus dos costados se leían como los bordes de un bloque. El pie
+   no se funde porque coincide con el borde de la sección. */
+.yumbo-skyline {
+  -webkit-mask-image:
+    var(--yumbo-mask), linear-gradient(to right, transparent, #000 24%, #000 76%, transparent);
+  mask-image:
+    var(--yumbo-mask), linear-gradient(to right, transparent, #000 24%, #000 76%, transparent);
+  -webkit-mask-size:
+    auto 100%,
+    100% 100%;
+  mask-size:
+    auto 100%,
+    100% 100%;
+  -webkit-mask-position:
+    bottom center,
+    0 0;
+  mask-position:
+    bottom center,
+    0 0;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+@supports not (
+  (mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))
+) {
+  .yumbo-mask {
+    display: none;
   }
 }

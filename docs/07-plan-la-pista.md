@@ -2,8 +2,106 @@
 
 - **Fuente**: propuesta acordada en sesión (2026-08-22) a partir del primer clip de los nuevos obstáculos de la pista (`IMG_2455.mov`, 14 s, 1920×1080, HEVC). Decisión del club: **no** se publica como crónica ni como álbum; se construye como página propia `/la-pista`.
 - **Estrategia**: incremental — cada fase es desplegable por sí sola vía `develop` → QA → `main`. La Fase 1 (contenido + ficha estática) ya es publicable sin el flipbook.
-- **Estado**: planificado, sin ejecutar. Bloqueado por insumos del club (ver §9) para pasar de la Fase 1 a la 2.
+- **Estado**: **`/la-pista` está publicable, con mapa satelital interactivo**. Hechas las tareas **1, 2, 4, 5, 6, 10, 11 y 17** (ver §0.5) (schema, lógica derivada, colección en el CMS y trazado del mapa desde el GPX) y **media tarea 3**: hay una primera ficha, `drop-recibidor-madera.md`, en `draft: true` a la espera de que el entrenador confirme habilidades y capa pedagógica (§0.2). **Mientras siga en draft, la página se construye sin obstáculos ni marcadores**: solo apertura, mapa y CTA. Falta la Fase 2 (flipbook) y la 4 (crecimiento).
 - **Cómo retomar con Claude**: `Ejecuta la siguiente tarea pendiente de docs/07-plan-la-pista.md con el modelo asignado` (o `/loop` con ese mismo prompt). Marcar `[x]` al mergear a `develop`.
+
+---
+
+## 0. Lo que ya se sabe de la pista (entrevista a los fundadores, 4-sep-2026)
+
+Fuente: `claudedocs/analisis-entrevista-fundadores-2026-09-04.md` (con verificación externa). Esto ya alcanza para redactar la apertura y la ficha histórica de la Fase 1 sin esperar al club.
+
+- **Dónde**: en el **teatrino del barrio Pizarro**, Yumbo. Carlos Castro lo encontró cubierto de maleza en una salida a trotar, el IMDERTY lo guadañó y él trazó los primeros recorridos; el espacio era zona de rumba y se ganó con unos 12 niños entrenando. El sitio tiene dos direcciones distintas para la pista (`CONTACT.address` y el evento de octubre): confirmar antes del `geo` del JSON-LD.
+- **Línea de tiempo**: primeros trazados hacia 2011 · primera válida Copa Valle en 2012 · válida de 2018 con la que la Comisión Nacional de MTB conoció la pista · rediseño con criterio nacional por el diseñador de pistas de la Federación («Pacho») · **subsede del XCO de los Juegos Nacionales 2019** (MinDeporte: 4,2 km) · nuevos ajustes para los **I Juegos Panamericanos Junior 2021** (oro de Martín Vidaurre, campeón mundial sub-23) · circuito de 3,8 km para la válida del 18-oct-2026.
+- **Criterio de diseño** (Carlos Castro, 0:37): pistas exigentes «pero cero accidentes»; cada salto lo prueban primero los corredores del club. Es la frase que sostiene la capa pedagógica de cada obstáculo.
+- **Infraestructura 2026** (1:23–1:24): baños nuevos, iluminación y seguridad con apoyo de la gestora social, infraestructura e IMDERTY.
+- **Quién construye**: el club es «la mano de obra» de los senderos (a pica y pala); el trazado de competencia lo revisa la Comisión. Sirve como `builtBy` genérico mientras no haya dato por obstáculo.
+- **Qué sigue bloqueado de §9**: la lista de obstáculos, los clips/fotos por obstáculo, el texto pedagógico por obstáculo y los consentimientos de imagen. La historia, el criterio de diseño, el `builtBy` general y —desde el GPX— el trazado y las coordenadas ya no bloquean.
+
+## 0.1 Lo que dice el GPX (vuelta grabada el 5-sep-2026)
+
+`src/data/la-pista.gpx`: 929 puntos a 1 Hz, una vuelta completa de 15:28.
+
+- **3.717 m** de recorrido y un bucle que cierra a **6,5 m** del punto de partida. Ojo con la cifra: es *la vuelta grabada*, no el circuito homologado de 3,8 km de la válida del 18-oct — son dos números distintos y hay que decir cuál es cuál.
+- Caja envolvente de **231 m (E-O) × 488 m (N-S)**: el mapa sale vertical, casi el doble de alto que ancho.
+- **Centro en `3.596386, -76.486128`** — es la coordenada del `geo` del JSON-LD (tarea 6), que ya no depende de cuál de las dos direcciones del club es la de la pista.
+- **La elevación no se publica**: el primer punto marca 852,6 m y un segundo después 866,2, y el desnivel acumulado varía entre 2 y 76 m según cómo se filtre el ruido. Sin fuente confiable, no hay cifra (regla del proyecto). El trazado en planta sí es sólido.
+
+## 0.2 Primer obstáculo cargado (9-sep-2026)
+
+`src/content/obstaculos/drop-recibidor-madera.md`, **en `draft: true`**: no se publica hasta que el entrenador revise.
+
+- **Qué es**, según el club: un *drop* desde el borde de la placa de concreto, con un **recibidor de madera** abajo. Al lado hay un **segundo recibidor sin hueco**, que es la línea de progresión. Nivel **intermedio**.
+- **Dónde**: `3.596855, -76.486564` → marcador `map: { x: 29, y: 39.3 }`. Cae a **3 m del trazado**, en el 83 % de la vuelta grabada.
+- **Foto**: `src/assets/images/la-pista/drop-recibidor-madera.jpg` (1600 × 2133, 390 KB, sin EXIF ni GPS). Son **adultos con autorización de imagen** — así que esta ficha no depende de los consentimientos pendientes de §9.
+- **Lo que falta y por eso está en `draft`**: las `skills` son una propuesta, no las del entrenador; el nombre de la ficha es descriptivo y el club puede tener otro; `programs` está vacío (no se sabe desde qué programa se trabaja); no hay `builtOn` ni `builtBy`; y el hueco entre el borde y el recibidor es una lectura de la foto, no un dato confirmado.
+
+---
+
+---
+
+## 0.3 Cómo quedó la página (9-sep-2026, revisado Horizonte A)
+
+**Índice + ficha por obstáculo**, no una página larga (ver §0.4).
+
+- `/la-pista` (`src/pages/la-pista/index.astro`): apertura `tinted`+`topo` → mapa `plain` (sin yumbo) → historia `muted`+`yumbo` (`Timeline` con 4 hitos) → rejilla de tarjetas `plain` (solo si `ordered.length >= MIN_OBSTACLES_FOR_GRID = 2`) → habilidades `tinted` (solo si `summary?.totalObstacles >= MIN_OBSTACLES_FOR_SKILLS = 4`) → `InscriptionCTA`.
+- `/la-pista/[slug]`: foto grande, habilidades, ficha técnica, la capa pedagógica completa, navegación anterior/siguiente y CTA. Aquí irá el flipbook de la Fase 2.
+
+Cambios del Horizonte A (2026-09-09):
+
+- H1 nuevo: "La Pista Carlos Castro: donde el club entrena cada semana" (`highlight="entrena cada semana"`). Lead sin dependencia de fichas publicadas.
+- Stat grid condicional: si solo hay el km (sin obstáculos), se muestra un stat solo sin grid wrapper. Con obstáculos, grid de hasta 4 columnas.
+- Tolerancia del GPX: `simplifyTrack(points, 6)` y `buildTrackPath(points, { toleranceMeters: 6 })` — el bucle sigue cerrando y la longitud no varía (usa los puntos originales).
+- Mapa: sin `pattern="yumbo"`, `max-w-xl` (era `max-w-[480px]`).
+- Historia: nueva sección `muted`+`yumbo` con `Timeline` filtrado a `TRACK_MILESTONE_IDS`.
+- Umbrales con nombre: `MIN_OBSTACLES_FOR_GRID = 2`, `MIN_OBSTACLES_FOR_SKILLS = 4`, exportados de `src/lib/la-pista.ts` con tests.
+
+Entrada en `SECONDARY_NAV` y en el grupo "El club" del pie.
+
+Decisiones que se tomaron al construirla:
+
+- **Los drafts se ven en `dev`, no en el build.** `import.meta.env.DEV` decide: así se revisa una ficha antes de publicarla sin tener que quitarle el `draft`.
+- **La textura `topo` no va dentro del SVG del mapa.** El tile de 160 unidades sobre un `viewBox` de 1000 pintado a 280 px aplasta las curvas de nivel en un rayado. El recuadro lleva un fondo `primary/5` y ya.
+- **Los marcadores son HTML encima del SVG**, no `<circle>`: enlaces reales, con foco de teclado y `aria-label`, y su texto no se deforma con la escala. `TrackMap` convierte el `map.x/y` de la ficha (% de la caja del trazado) a % del `viewBox`, que incluye el margen; sin esa conversión quedan corridos ese margen.
+- **`src/lib/track-images.ts`** resuelve la foto por nombre de archivo con `import.meta.glob` eager, igual que `refresh-images.ts`.
+- El evento de analítica del clip (`track_video_click`, tarea 14) **no** está instrumentado: el atributo se quitó de `ObstacleCard` porque un evento fuera de `EVENT_NAMES` lo descarta la whitelist de `Analytics.astro`.
+
+**Trampa que costó una depuración**: al agregar un campo a un schema de `src/lib/schemas.ts`, el dev server sigue sirviendo el frontmatter parseado con el schema viejo — `image` llegaba `undefined` con el archivo y el glob correctos. El *content layer* cachea en `.astro/data-store.json` y **no lo invalida un cambio en `schemas.ts`** (sí en `content.config.ts`). Hay que borrar ese archivo y reiniciar.
+
+---
+
+## 0.4 Por qué el índice no despliega las fichas
+
+Medido en el navegador con una ficha completa desplegada en el índice (desktop, viewport 1238 px):
+
+| Obstáculos | Índice con fichas completas | Índice con tarjetas |
+|---|---|---|
+| 1 | 4.220 px (3,4 pantallas) | 4.020 px (3,2) |
+| 6 | 8.015 px (6,5 pantallas) | ~4.550 px (3,7) |
+| 12 | 12.569 px (10,2 pantallas) | ~5.600 px (4,5) |
+
+Cada ficha completa suma **695 px** en desktop y cerca del doble en móvil, donde foto y texto se apilan — y el **82 % del tráfico del sitio es móvil**. El flipbook de la Fase 2 añadiría además una escena de 220 svh *por obstáculo*. Con el dato de lectura de las crónicas (solo 7 de cada 30 lectores llegan al final), una página que crece sin techo se lee cada vez menos.
+
+La tarjeta suma **503 px** y va en rejilla de tres columnas: el índice crece ~170 px por obstáculo en vez de 700.
+
+**Por qué no un modal**: un contenedor con scroll propio ancla `animation-timeline: view()` a sí mismo y congela el flipbook (trampa 1 de §2.5 de docs/04); el HTML de todos los obstáculos seguiría viajando en la misma página; y un overlay accesible exige focus trap y Escape, o sea un island React —JS nuevo, que la regla 2 del sistema editorial prohíbe—. Con `ClientRouter` ya montado, ir al detalle usa View Transitions y se siente parecido, sin JS nuevo. Además, cada obstáculo con URL propia es contenido long-tail indexable, que es justo lo que le falta al sitio.
+
+---
+
+## 0.5 Mapa satelital interactivo (9-sep-2026)
+
+Tras la investigación de `claudedocs/investigacion-mapbox-la-pista-2026-09-09.md` se descartó Mapbox y se implementó el **nivel B**: el island `TrackMapInteractive` sobre el Leaflet que ya usa `TrochaVerdeMap`.
+
+**Mejora progresiva, no reemplazo.** El SVG del trazado sigue llegando en el HTML —es lo que mide el LCP y lo único que se ve sin JavaScript— y viaja como `children` del island. Cuando la sección entra en pantalla (`client:visible`), Leaflet monta encima y el SVG se retira. La caja tiene `aspect-[3/4]` fija en las dos capas: cero CLS en el cambio.
+
+- **Teselas**: ESRI World Imagery, sin llave ni cuenta. Atribución «Esri, Maxar, Earthstar Geographics» visible en el mapa. CSP: `server.arcgisonline.com` añadido a `img-src` en `public/.htaccess`.
+- **`maxNativeZoom: 19` es obligatorio**, no cosmético. Sobre Yumbo, ESRI solo tiene imagen hasta z19: a partir de z20 responde **HTTP 200 con una tesela gris** («Map data not yet available»), que Leaflet no distingue de una foto real. Sin esa opción, acercarse deja el mapa en blanco sin ningún error. Verificado el 2026-09-09 pidiendo las teselas z19/z20/z21 de la pista.
+- **El GPX no viaja al cliente**: `simplifyTrack(points, 2)` en build reduce los 929 puntos y solo salen los pares `[lat, lng]`. El archivo de 106 KB se queda en el build.
+- **El mapa no se roba el scroll**: `scrollWheelZoom: false` hasta que el usuario hace clic en el mapa (`map.once('click', …)`), con un aviso debajo. Es el error más repetido de los mapas embebidos en móvil.
+- **`lat`/`lng` son ahora el dato primario** del obstáculo, no el `map: {x, y}` en porcentaje. De las coordenadas salen las dos posiciones: el marcador de Leaflet y —vía `latLonToPercent`— el del SVG. `map` queda como respaldo para una ficha sin GPS. Los dos campos van juntos o no van (`refine` en el schema).
+- **Peso**: `leaflet-src` pesa **43 KB gzip** en el build real, y solo se descarga al llegar a la sección. Mapbox GL habría costado 417 KB gzip (medido en Bundlephobia, no estimado).
+- **Leaflet 1.9.4 es la última estable**; 2.0.0 solo tiene `alpha.1`. No hay actualización pendiente.
+- **Test del contenedor con island**: `TrackMap.astro.test.ts` necesita registrar el renderer de React. En Astro 7, `getContainerRenderer` se importa de `@astrojs/react/container-renderer` — desde la raíz del paquete está deprecado.
 
 ---
 
@@ -107,6 +205,8 @@ export const obstaculosSchema = z.object({
 Reglas derivadas en `src/lib/la-pista.ts` (con test): `summarizeTrack()` devuelve `null` si no hay obstáculos activos → la apertura omite las cifras; `skillsByFrequency()` alimenta el `FactGrid`; `programsUsingTrack()` cruza `programs[]` con la colección `programs` y descarta slugs inexistentes **en build** (error claro, no silencio).
 
 El cuerpo markdown del `.md` es la capa pedagógica (2–4 párrafos: qué se aprende, cómo se progresa, qué supervisa el entrenador).
+
+**Cambios al ejecutar las tareas 1 y 3**: se agregaron `image` + `imageAlt` (con `imageAlt` obligatorio si hay `image`, como en `milestonesSchema`) porque una ficha necesita una foto fija antes de que exista el flipbook, y `sequence` no sirve para eso: exige entre 4 y 16 fotogramas. Y `sequence` quedó **opcional**, no obligatorio como en la propuesta de arriba. La lista de obstáculos es un dato que el club puede entregar hoy; los clips y los consentimientos de imagen no. Con `sequence` obligatorio, un consentimiento pendiente bloquea toda la colección; sin él, la ficha se publica sin ilustración y el bloque no se pinta —el mismo criterio de Trocha Verde—. Se agregó además una validación: `poster` no puede pasarse de `count`. `src/content/obstaculos/README.md` documenta el formato y queda fuera del loader.
 
 ### 3.2 Ejemplo de entrada (el obstáculo del clip de muestra)
 
@@ -260,28 +360,34 @@ Convenciones: `Sonnet` para trabajo bien especificado; `Opus` para decisiones de
 
 | # | Tarea | Modelo | Agente | Archivos | Depende de | Complejidad | Riesgo |
 |---|-------|--------|--------|----------|------------|-------------|--------|
-| 1 | `[ ]` Schema `obstaculosSchema` + enums `OBSTACLE_TYPES`/`OBSTACLE_LEVELS` + colección en `content.config.ts` + tests de schema | Sonnet | content-manager | `src/lib/schemas.ts`, `src/content.config.ts`, `src/lib/__tests__/schemas.test.ts` | — | Baja | Bajo |
-| 2 | `[ ]` Lógica derivada `src/lib/la-pista.ts` (`summarizeTrack`, `skillsByFrequency`, `programsUsingTrack`, labels/colores por tipo y nivel) con tests; `null` cuando no hay datos | Sonnet | astro-dev | `src/lib/la-pista.ts`, `src/lib/__tests__/la-pista.test.ts` | 1 | Media | Bajo |
-| 3 | `[ ]` Primer obstáculo: extraer 10 fotogramas del clip de muestra (Apéndice A), escribir `cajon-grava-bajada.md` con capa pedagógica revisada por el entrenador | Sonnet | content-marketer + photo-video-editor | `src/content/obstaculos/`, `src/assets/images/la-pista/cajon-grava-bajada/` | 1, insumos §9 | Baja | Medio — consentimiento de imagen |
-| 4 | `[ ]` Sveltia: colección `obstaculos` en `config.yml` en sync con el schema | Sonnet | content-manager | `public/admin/config.yml` | 1 | Baja | Bajo |
-| 5 | `[ ]` Página `/la-pista` con apertura, `ObstacleCard` (ficha + poster estático, aún sin flipbook), `FactGrid` de habilidades, `WeekRhythm` filtrado y CTA; navegación (`SECONDARY_NAV`, footer) y enlaces contextuales desde programas/quiénes somos | **Opus** | astro-dev | `src/pages/la-pista.astro`, `src/components/sections/ObstacleCard.astro`, `src/lib/navigation.ts`, `ProgramPathway.astro` | 2, 3 | Alta | Medio — primera página nueva con el sistema editorial desde cero |
-| 6 | `[ ]` SEO: `generateTrackJsonLd()` (`SportsActivityLocation`) + test; `SEOHead` con OG del poster; verificar inclusión en sitemap | Sonnet | seo-auditor | `src/lib/seo.ts`, `src/lib/__tests__/seo.test.ts`, `src/pages/la-pista.astro` | 5 | Baja | Bajo |
+| 1 | `[x]` Schema `obstaculosSchema` + enums `OBSTACLE_TYPES`/`OBSTACLE_LEVELS` + colección en `content.config.ts` + tests de schema | Sonnet | content-manager | `src/lib/schemas.ts`, `src/content.config.ts`, `src/lib/__tests__/schemas.test.ts` | — | Baja | Bajo |
+| 2 | `[x]` Lógica derivada `src/lib/la-pista.ts` (`summarizeTrack`, `skillsByFrequency`, `programsUsingTrack`, labels/colores por tipo y nivel) con tests; `null` cuando no hay datos | Sonnet | astro-dev | `src/lib/la-pista.ts`, `src/lib/__tests__/la-pista.test.ts` | 1 | Media | Bajo |
+| 3 | `[~]` Primer obstáculo: ficha `drop-recibidor-madera.md` creada con foto fija y marcador del mapa, en `draft`. Falta la revisión del entrenador y los fotogramas del clip (Apéndice A) | Sonnet | content-marketer + photo-video-editor | `src/content/obstaculos/`, `src/assets/images/la-pista/cajon-grava-bajada/` | 1, insumos §9 | Baja | Medio — consentimiento de imagen |
+| 4 | `[x]` Sveltia: colección `obstaculos` en `config.yml` en sync con el schema | Sonnet | content-manager | `public/admin/config.yml` | 1 | Baja | Bajo |
+| 5 | `[x]` Página `/la-pista` con apertura, `ObstacleCard` (ficha + poster estático, aún sin flipbook), `FactGrid` de habilidades, `WeekRhythm` filtrado y CTA; navegación (`SECONDARY_NAV`, footer) y enlaces contextuales desde programas/quiénes somos | **Opus** | astro-dev | `src/pages/la-pista.astro`, `src/components/sections/ObstacleCard.astro`, `src/lib/navigation.ts`, `ProgramPathway.astro` | 2, 3 | Alta | Medio — primera página nueva con el sistema editorial desde cero |
+| 6 | `[x]` SEO: `generateTrackJsonLd()` (`SportsActivityLocation`) + test; `SEOHead` con OG del poster; verificar inclusión en sitemap | Sonnet | seo-auditor | `src/lib/seo.ts`, `src/lib/__tests__/seo.test.ts`, `src/pages/la-pista.astro` | 5 | Baja | Bajo |
 
 ### Fase 2 — Flipbook scroll-driven (1 día)
 
 | # | Tarea | Modelo | Agente | Archivos | Depende de | Complejidad | Riesgo |
 |---|-------|--------|--------|----------|------------|-------------|--------|
 | 7 | `[ ]` `ObstacleFlipbook.astro` + utilidades `.flipbook-*` en `global.css` (§4), token `--header-offset`, `SectionShell scrollDriven` en la sección de obstáculos; variante compacta sin escena alta | **Opus** | astro-dev | `src/components/sections/ObstacleFlipbook.astro`, `src/styles/global.css`, `ObstacleCard.astro` | 5 | Alta | Medio — longhands obligatorios; `overflow` de ancestros; Lightning CSS |
-| 8 | `[ ]` Test del componente con el contenedor de Astro: renderiza `count` fotogramas, solo el `poster` con `alt` no vacío y `eager`, `figcaption` presente, `--n`/`--i` correctos | Sonnet | astro-dev | `src/components/sections/__tests__/ObstacleFlipbook.astro.test.ts` | 7 | Baja | Bajo |
+| 8 | `[ ]` Test del flipbook con el contenedor de Astro (el de `TrackMap` ya existe): renderiza `count` fotogramas, solo el `poster` con `alt` no vacío y `eager`, `figcaption` presente, `--n`/`--i` correctos | Sonnet | astro-dev | `src/components/sections/__tests__/ObstacleFlipbook.astro.test.ts` | 7 | Baja | Bajo |
 | 9 | `[ ]` Medición: peso por obstáculo ≤ 500 KB lazy, LCP del poster, CLS 0 con sticky; comprobar en Chrome, Safari y Firefox (sin soporte → poster) y con `prefers-reduced-motion: reduce` | Sonnet | performance-engineer + qa-auditor | — | 7 | Media | Bajo |
 
 ### Fase 3 — Mapa de la pista (½–1 día)
 
 | # | Tarea | Modelo | Agente | Archivos | Depende de | Complejidad | Riesgo |
 |---|-------|--------|--------|----------|------------|-------------|--------|
-| 10 | `[ ]` `src/lib/track-map.ts`: parseo GPX → proyección → `path` normalizado a `viewBox` (o constante dibujada si no hay GPX) + test | Sonnet | astro-dev | `src/lib/track-map.ts`, `src/data/la-pista.gpx`, `src/lib/__tests__/track-map.test.ts` | insumo GPX §9 | Media | Bajo |
-| 11 | `[ ]` `TrackMap.astro`: SVG build-time con trazado, marcadores `<a>` numerados y lista equivalente; textura `topo` y `uid` de `editorial.ts`; integración en la página | **Opus** | astro-dev | `src/components/sections/TrackMap.astro`, `src/pages/la-pista.astro` | 10, 5 | Alta | Medio — SVG del sistema editorial, contraste de marcadores, móvil |
-| 12 | `[ ]` (Opcional) Marcador que se ilumina al scroll cuando su obstáculo está en pantalla — solo si sale en CSS puro (`timeline-scope` + named view timelines); si exige JS, se descarta | **Opus** | astro-dev | `TrackMap.astro`, `global.css` | 11, 7 | Alta | Medio |
+| 10 | `[x]` `src/lib/track-map.ts`: parseo GPX → proyección → `path` normalizado a `viewBox` (o constante dibujada si no hay GPX) + test | Sonnet | astro-dev | `src/lib/track-map.ts`, `src/data/la-pista.gpx`, `src/lib/__tests__/track-map.test.ts` | insumo GPX §9 | Media | Bajo |
+| 11 | `[x]` `TrackMap.astro`: SVG build-time con trazado, marcadores `<a>` numerados y lista equivalente; textura `topo` y `uid` de `editorial.ts`; integración en la página | **Opus** | astro-dev | `src/components/sections/TrackMap.astro`, `src/pages/la-pista.astro` | 10, 5 | Alta | Medio — SVG del sistema editorial, contraste de marcadores, móvil |
+| 12 | `[~]` **Descartado** (2026-09-09): los marcadores del mapa son ahora `<a href="/la-pista/[slug]">` — enlaces a páginas separadas, no anclas en la misma página. Iluminarlos al scroll exigiría detectar la URL del destino desde CSS, lo cual no es posible sin JS. La tarea queda muerta. | — | — | — | — | — | — |
+
+### Fase 3.5 — Mapa satelital interactivo (hecha)
+
+| # | Tarea | Modelo | Agente | Archivos | Depende de | Complejidad | Riesgo |
+|---|-------|--------|--------|----------|------------|-------------|--------|
+| 17 | `[x]` Island `TrackMapInteractive` (Leaflet + ESRI) como mejora progresiva sobre el SVG; `lat`/`lng` en el schema y el CMS; CSP de ESRI; tests de contenedor y de island | **Opus** | astro-dev | `src/components/interactive/TrackMapInteractive.tsx`, `TrackMap.astro`, `src/lib/schemas.ts`, `public/.htaccess`, `public/admin/config.yml` | 11 | Alta | Bajo |
 
 ### Fase 4 — Crecimiento (cuando haya más obstáculos)
 
@@ -305,9 +411,9 @@ Convenciones: `Sonnet` para trabajo bien especificado; `Opus` para decisiones de
 - [ ] **Por obstáculo**: un clip de 10–20 s con cámara fija (horizontal, un corredor) y 2–3 fotos. El clip de muestra sirve para el primer obstáculo aunque la cámara se mueva.
 - [ ] **Texto pedagógico** del entrenador (qué se aprende, cómo se progresa, qué se supervisa) — 2–4 párrafos por obstáculo. Puede ser audio/WhatsApp; `content-marketer` lo redacta.
 - [ ] **Quién construyó y cuándo** cada obstáculo (para `builtBy`/`builtOn`, el hito y los créditos a patrocinadores).
-- [ ] **Consentimientos de imagen** firmados de los menores que aparecen (`legal-compliance-officer` verifica).
-- [ ] **GPX de una vuelta a la pista** (Strava/Garmin) para el mapa; si no, una ortofoto/captura satelital para dibujar el trazado a mano.
-- [ ] **Dirección y coordenadas** de la pista para el JSON-LD.
+- [ ] **Consentimientos de imagen** firmados de los menores que aparecen (`legal-compliance-officer` verifica). *No bloquea la primera ficha: en su foto solo hay adultos con autorización.*
+- [x] **GPX de una vuelta a la pista** — entregado el 5-sep-2026 (`src/data/la-pista.gpx`), ya parseado por `src/lib/track-map.ts`. Ver §0.1.
+- [x] **Coordenadas** de la pista para el JSON-LD: `3.596386, -76.486128`, del centro de la caja del GPX. Falta solo confirmar la **dirección postal** que se publica (§0 registra dos distintas).
 - [ ] URL del clip completo en YouTube (no listado está bien).
 
 ---
@@ -353,7 +459,7 @@ graph TD
 | Peso total con 6+ obstáculos (≈ 3 MB lazy) | 9, 13 | `loading="lazy"` salvo poster; tope de 12 fotogramas; WebP 1024 px máx. |
 | Firefox estable sin scroll-driven animations | 7 | Resuelto por diseño: poster visible; enlace al clip completo siempre presente |
 | Cámara en mano → fotogramas que "bailan" | 3 | Aceptable para el primero; protocolo de grabación con cámara fija para los siguientes (§6) |
-| Trazado del mapa sin GPX | 10 | Constante dibujada a mano; reemplazable por GPX sin tocar el componente |
+| ~~Trazado del mapa sin GPX~~ | 10 | Resuelto: hay GPX del 5-sep-2026 y `track-map.ts` lo proyecta. El `path` se simplifica con Ramer-Douglas-Peucker (1,5 m) para que no pese más que la página |
 | HEVC no reproducible en Chrome/Firefox | 6 | Nunca enlazar el `.mov`; transcodificar vía YouTube/Cloudinary |
 
 ---

@@ -1,0 +1,35 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "plugin": [
+        "opencode-tavily"
+    ],
+    "mcp": {
+        "Astro docs": {
+            "type": "remote",
+            "url": "https://mcp.docs.astro.build/mcp"
+        },
+        "playwright": {
+            "type": "local",
+            "enabled": true,
+            "command": [
+                "npx",
+                "-y",
+                "@playwright/mcp@latest"
+            ],
+            "environment": {}
+        },
+        "sequential-thinking": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "@modelcontextprotocol/server-sequential-thinking"
+            ],
+            "environment": {}
+        },
+        "Context7": {
+            "type": "remote",
+            "url": "https://mcp.context7.com/mcp"
+        }
+    }
+}

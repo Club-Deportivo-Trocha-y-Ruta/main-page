@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { axe } from 'vitest-axe';
 import InscriptionForm from '../InscriptionForm';
+import { ENROLLMENT_DOCUMENTS } from '@lib/enrollment';
 
 // Mock de import.meta.env
 vi.stubGlobal('import', { meta: { env: { PUBLIC_WEB3FORMS_KEY: 'test-key' } } });
@@ -508,6 +509,108 @@ describe('InscriptionForm', () => {
       await enviarFormularioCompleto(user);
 
       expect(screen.queryByTestId('confetti-burst')).not.toBeInTheDocument();
+    });
+
+    it('acota el confeti al tercio superior de la tarjeta (nota a11y del gate 14)', async () => {
+      stubMatchMedia(false);
+      const user = userEvent.setup();
+      render(<InscriptionForm programs={programs} />);
+      await enviarFormularioCompleto(user);
+
+      const burst = await screen.findByTestId('confetti-burst');
+      const clipWrapper = burst.parentElement;
+      expect(clipWrapper).toHaveClass('h-1/3', 'overflow-hidden');
+    });
+  });
+
+  // ─── Checklist "qué llevar" en la pantalla de éxito (docs/08 tarea 17) ──
+
+  describe('Checklist "qué llevar" en pantalla de éxito', () => {
+    async function enviarFormularioCompleto(user: ReturnType<typeof userEvent.setup>) {
+      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+        new Response(JSON.stringify({ success: true }), { status: 200 }),
+      );
+
+      await navegarHastaPaso3(user);
+
+      await user.type(screen.getByLabelText(/Nombre completo del acudiente/), 'María López');
+      await user.type(screen.getByLabelText(/Celular/), '3001234567');
+      await user.type(screen.getByLabelText(/Email/), 'maria@test.com');
+      await user.type(screen.getByLabelText(/EPS/), 'Sura');
+      await user.selectOptions(screen.getByLabelText(/Parentesco/), 'madre');
+      await user.click(screen.getByRole('button', { name: /Siguiente/ }));
+
+      await waitFor(() => expect(screen.getByText('Confirma los datos')).toBeInTheDocument());
+      const checkboxes = screen.getAllByRole('checkbox');
+      await user.click(checkboxes[0]);
+      await user.click(checkboxes[1]);
+      await user.click(screen.getByRole('button', { name: /Enviar Solicitud/ }));
+
+      await waitFor(() => {
+        expect(screen.getByText(/Solicitud de preinscripcion enviada/)).toBeInTheDocument();
+      });
+    }
+
+    it('lista los mismos documentos que ENROLLMENT_DOCUMENTS, sin texto propio', async () => {
+      const user = userEvent.setup();
+      render(<InscriptionForm programs={programs} />);
+      await enviarFormularioCompleto(user);
+
+      for (const doc of ENROLLMENT_DOCUMENTS) {
+        expect(screen.getByText(doc.label)).toBeInTheDocument();
+      }
+    });
+
+    it('cada ítem entra con .reveal --stagger y pasa a .revealed tras montarse', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<InscriptionForm programs={programs} />);
+      await enviarFormularioCompleto(user);
+
+      const items = Array.from(container.querySelectorAll('li.reveal')) as HTMLLIElement[];
+      expect(items).toHaveLength(ENROLLMENT_DOCUMENTS.length);
+
+      items.forEach((item, index) => {
+        expect(item.style.getPropertyValue('--stagger')).toBe(`${index * 90}ms`);
+      });
+
+      // El disparo de `.revealed` es asíncrono (requestAnimationFrame propio
+      // del island, no el observer global de BaseLayout): eventualmente
+      // todos los ítems lo reciben.
+      await waitFor(() => {
+        items.forEach((item) => expect(item).toHaveClass('revealed'));
+      });
+    });
+
+    it('cada ítem trae un check SVG (path.checklist-check) para el trazo if-check-draw', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<InscriptionForm programs={programs} />);
+      await enviarFormularioCompleto(user);
+
+      const checks = container.querySelectorAll('li.reveal svg.checklist-check path');
+      expect(checks).toHaveLength(ENROLLMENT_DOCUMENTS.length);
+      checks.forEach((path) => {
+        expect(path).toHaveAttribute('d', 'M5 13l4 4L19 7');
+      });
+
+      // Decorativo: el badge que lo envuelve es aria-hidden, el texto del
+      // documento es lo único que anuncia el lector de pantalla.
+      const badges = container.querySelectorAll('li.reveal > span[aria-hidden="true"]');
+      expect(badges).toHaveLength(ENROLLMENT_DOCUMENTS.length);
+    });
+
+    it('no tiene violaciones de accesibilidad en la pantalla de éxito con el checklist', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<InscriptionForm programs={programs} />);
+      await enviarFormularioCompleto(user);
+
+      await waitFor(() => {
+        expect(container.querySelectorAll('li.reveal.revealed')).toHaveLength(
+          ENROLLMENT_DOCUMENTS.length,
+        );
+      });
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
     });
   });
 });

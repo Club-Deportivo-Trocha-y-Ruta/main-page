@@ -1,0 +1,62 @@
+---
+/**
+ * CTA prominente «Compartir por WhatsApp» al pie de las crónicas
+ * (`docs/08-plan-creatividad-ui.md`, Sprint 1 tarea 8).
+ *
+ * Distinto de `ShareButtons` (fila de iconos con las tres redes): WhatsApp es
+ * el canal por el que de hecho circulan las crónicas del club —el 50% de las
+ * sesiones de mayo-agosto 2026 entraron como «Direct», que es tráfico de
+ * WhatsApp sin `referer` porque no manda esa cabecera (`docs/05-convencion-
+ * utm.md`)— así que se le da su propio botón, más visible que un ícono entre
+ * otros tres.
+ *
+ * El enlace se arma en build con `shareUrl()` (`@lib/utm`): mismo
+ * `utm_source=whatsapp` / `utm_campaign=compartir-desde-web` que ya usa
+ * `ShareButtons`, para no abrir una tercera forma de medir el mismo canal.
+ *
+ * Entra con `.reveal` (el IntersectionObserver de `BaseLayout.astro`, ya
+ * existente en todo el sitio): no es un `sda-*` scroll-driven porque esos
+ * están atados a `scroll(root)` —el scroll del documento completo— y a los
+ * 480px que ya recorrió el header compacto o la barra de conversión antes de
+ * que este botón, al fondo de la crónica, entre siquiera en pantalla; la
+ * animación ya habría terminado sin que nadie la viera. `.reveal` dispara por
+ * la posición del propio elemento, que es lo que hace falta aquí. Sin JS o
+ * bajo `prefers-reduced-motion: reduce`, el botón queda visible desde el
+ * primer render (mismo comportamiento que el resto de usos de `.reveal`).
+ *
+ * Sin evento de analítica: `whatsapp_click` —el único evento del catálogo
+ * que toca WhatsApp— mide "quiero hablar con el club" en el FAB, la barra de
+ * conversión y los CTA de inscripción, una intención de contacto. Este botón
+ * es un share, no un contacto; reutilizar el mismo nombre mezclaría dos
+ * intenciones distintas bajo una sola métrica y ninguna de las dos quedaría
+ * clara después. No hay en `EVENT_NAMES` un evento de "compartió una
+ * crónica", así que no se instrumenta (regla del propio catálogo: lo que no
+ * está en la lista, no se manda).
+ */
+import { Icon } from 'astro-icon/components';
+import { shareUrl } from '@lib/utm';
+import { SHARE_WHATSAPP_LABEL } from '@lib/constants';
+
+interface Props {
+  /** Título de la crónica: encabeza el mensaje que arma el enlace `wa.me`. */
+  title: string;
+  /** URL canónica a compartir. Por defecto, la de la página actual. */
+  url?: string;
+}
+
+const { title, url = Astro.url.href } = Astro.props;
+
+const whatsappHref = `https://wa.me/?text=${encodeURIComponent(title)}%20${encodeURIComponent(shareUrl(url, 'whatsapp'))}`;
+---
+
+<div class="reveal">
+  <a
+    href={whatsappHref}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
+  >
+    <Icon name="ph:whatsapp-logo" class="size-5 shrink-0" aria-hidden="true" />
+    {SHARE_WHATSAPP_LABEL}
+  </a>
+</div>

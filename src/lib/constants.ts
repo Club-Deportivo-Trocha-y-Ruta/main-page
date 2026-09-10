@@ -5,7 +5,7 @@ export const SITE = {
   url: 'https://clubdeportivotrochayruta.org',
   founded: 2010,
   description:
-    'Club de ciclomontañismo para niños desde 4 años en Yumbo, Valle del Cauca, Colombia.',
+    'Escuela de ciclismo de montaña para niños desde los 4 años en Yumbo, al norte de Cali. Pista propia, seguro deportivo y primera clase de prueba gratis.',
 } as const;
 
 /*
@@ -75,6 +75,16 @@ export const SOCIAL = {
 export const CTA_TRIAL_LABEL = 'Clase de prueba gratis';
 export const CTA_TRIAL_LABEL_SHORT = 'Clase gratis';
 
+/**
+ * Etiqueta del botón «Compartir por WhatsApp» al pie de las crónicas
+ * (`WhatsappShareButton.astro`). WhatsApp es el canal por el que de hecho
+ * circulan las crónicas —ver `docs/05-convencion-utm.md`, el 50% de las
+ * sesiones de mayo-agosto 2026 entraron como «Direct», que es tráfico de
+ * WhatsApp sin `referer`— así que tiene su propio CTA, no solo el ícono
+ * pequeño de `ShareButtons`.
+ */
+export const SHARE_WHATSAPP_LABEL = 'Compartir por WhatsApp';
+
 export const NAV_ITEMS = [
   { label: 'Inicio', href: '/' },
   { label: 'Quiénes Somos', href: '/quienes-somos' },
@@ -85,6 +95,7 @@ export const NAV_ITEMS = [
 ] as const;
 
 export const SECONDARY_NAV = [
+  { label: 'La pista', href: '/la-pista' },
   { label: 'Galería', href: '/galeria' },
   { label: 'Trocha Verde', href: '/trocha-verde' },
   { label: 'Preguntas Frecuentes', href: '/preguntas-frecuentes' },

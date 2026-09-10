@@ -36,6 +36,70 @@ describe('SectionShell', () => {
   it('no pinta textura sin pattern', async () => {
     const doc = await render({ scrollDriven: true });
     expect(doc.querySelector('svg')).toBeNull();
+    expect(doc.querySelector('span[aria-hidden="true"]')).toBeNull();
+  });
+
+  it('con pattern yumbo ancla el horizonte al pie, sin SVG de por medio', async () => {
+    const doc = await render({ pattern: 'yumbo' });
+    expect(doc.querySelector('svg')).toBeNull();
+    const skyline = doc.querySelector('span[aria-hidden="true"]');
+    expect(skyline?.className).toContain('bottom-0');
+    expect(skyline?.className).toContain('-z-10');
+    expect(skyline?.className).toContain('pointer-events-none');
+  });
+
+  it('reserva una banda bajo el contenido en vez de pasarle por detrás', async () => {
+    // El horizonte no es una marca de agua: el contenedor del slot termina antes
+    // de que empiece la lámina. Sin la reserva, en /quienes-somos el cerro
+    // asomaba entre las tarjetas de fotos y en /la-pista tapaba el pie del mapa.
+    const doc = await render({ pattern: 'yumbo' });
+    const inner = doc.querySelector('section > div');
+    expect(inner?.className).toContain('pb-20');
+    expect(inner?.className).toContain('lg:pb-36');
+
+    const sinHorizonte = await render({ pattern: 'topo' });
+    expect(sinHorizonte.querySelector('section > div')?.className).not.toContain('pb-20');
+  });
+
+  it('centra la lámina con su propia proporción y la muestra en todo ancho', async () => {
+    // La caja tiene el aspect-ratio del asset y se centra con translate: así el
+    // degradado lateral funde los bordes del cerro y no los del viewport, y el
+    // centro coincide con el de la columna de contenido a cualquier ancho. En
+    // móvil también se ve —el 82 % de las visitas llegan por ahí—.
+    const doc = await render({ pattern: 'yumbo' });
+    const skyline = doc.querySelector('span[aria-hidden="true"]');
+    expect(skyline?.className).toContain('left-1/2');
+    expect(skyline?.className).toContain('-translate-x-1/2');
+    expect(skyline?.className).toContain('h-24');
+    expect(skyline?.className).not.toContain('hidden');
+    expect(skyline?.getAttribute('style')).toMatch(/aspect-ratio:1400 \/ 534/);
+  });
+
+  it('deja el CSS de la máscara en la hoja, no en el style inline', async () => {
+    // El `style` solo lleva la URL del asset. Todo lo demás vive en
+    // `.yumbo-mask` / `.yumbo-skyline` (global.css) porque necesita `@supports`
+    // —sin soporte de `mask-image` la lámina se esconde en vez de degradar a un
+    // rectángulo de color— y una máscara compuesta con el degradado.
+    const doc = await render({ pattern: 'yumbo' });
+    const skyline = doc.querySelector('span[aria-hidden="true"]');
+    expect(skyline?.className).toContain('yumbo-mask');
+    expect(skyline?.className).toContain('yumbo-skyline');
+
+    const style = skyline?.getAttribute('style') ?? '';
+    expect(style).toMatch(/--yumbo-mask:url\(/);
+    // `mask-size: 100% 100%` deformaba el cerro hasta 6.8x en pantallas anchas.
+    expect(style).not.toContain('mask-size');
+  });
+
+  it('tiñe el horizonte con el token skyline del tono, no con el de topo', async () => {
+    // La lámina es una máscara: el color sale de `tokens.skyline`, así que la
+    // misma pieza sirve sobre fondo claro, grafito o teal de marca. Es un token
+    // aparte de `pattern`: una silueta maciza necesita más opacidad que una
+    // trama de líneas, y subir la de `topo` lo volvía ruido en toda la web.
+    const claro = await render({ pattern: 'yumbo', tone: 'plain' });
+    const oscuro = await render({ pattern: 'yumbo', tone: 'dark' });
+    expect(claro.querySelector('span[aria-hidden="true"]')?.className).toContain('text-primary/25');
+    expect(oscuro.querySelector('span[aria-hidden="true"]')?.className).toContain('text-white/20');
   });
 
   it('deja la textura quieta cuando no se pide scrollDriven', async () => {

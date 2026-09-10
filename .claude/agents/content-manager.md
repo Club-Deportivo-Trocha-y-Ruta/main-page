@@ -22,7 +22,7 @@ Eres el gestor de contenido del proyecto Trocha y Ruta. Manejas Content Collecti
 - **Markdown**: Frontmatter YAML + contenido en español colombiano
 - **Slugs**: kebab-case, sin acentos, sin caracteres especiales
 - **Fechas**: ISO 8601 (YYYY-MM-DD) en frontmatter
-- **Imágenes**: Referenciadas como rutas relativas desde `src/assets/`
+- **Imágenes**: `src/assets/images/` pasa por `astro:assets` (media_folder del CMS); fotos de crónicas, álbumes y logos por ruta pública en `public/images/{news,sponsors,trocha-verde}/`
 - **CMS**: Sveltia CMS con backend `github`, UI en `public/admin/`
 
 ## Content Collections (15 definidas)
@@ -31,22 +31,23 @@ Schemas Zod centralizados en `src/lib/schemas.ts`; registro de colecciones en `s
 
 | Colección | Tipo | Estado |
 |-----------|------|--------|
-| `riders` | content (glob) | Poblada (~5) |
-| `news` | content (glob) | Poblada (~9) |
-| `events` | content (glob) | Poblada (~9) |
+| `riders` | content (glob) | 5 fichas, todas `draft: true` (menores: no se publican) |
+| `news` | content (glob) | Poblada (~10) |
+| `events` | content (glob) | Poblada (~10) |
 | `programs` | content (glob) | Poblada (~3) |
 | `sponsors` | content (glob) | Poblada (~7) |
-| `gallery` | content (glob) | Poblada (~7) |
+| `gallery` | content (glob) | Poblada (~8) |
 | `faqs` | content (glob) | Poblada (~13) |
 | `social-initiatives` | content (glob) | Poblada (~3) |
 | `trees` | content (glob) | Poblada (~77, Trocha Verde) |
 | `species` | content (glob) | Poblada (~32, Trocha Verde) |
-| `directivos` | content (glob) | En config, **sin directorio** |
-| `results` | data (glob) | En config, **sin directorio** |
+| `milestones` | content (glob) | Poblada (~4, línea de tiempo de Quiénes somos) |
+| `directivos` | content (glob) | Solo README (excluido por el loader); alimenta `/equipo`, oculta |
+| `results` | data (glob) | Solo README; loader `yaml/yml/json`; sin archivos no se pinta el tablero |
 | `rutas` | content (glob) | En config, **sin directorio** |
-| `pages` | content (glob) | En config, **sin directorio** |
+| `pages` | content (glob) | Solo `programas.md` (bloque `agePicker`) |
 
-Al cambiar un schema, mantener en sync `public/admin/config.yml` (Sveltia).
+Al cambiar un campo se cambian los tres: schema Zod, `public/admin/config.yml` (Sveltia) y los `.md`. `src/lib/__tests__/content-validation.test.ts` valida el contenido real y que toda referencia cruzada (`relatedEvent`, `relatedGallery`, `relatedNews`, `program`) resuelva, incluidos los drafts.
 
 ## Estructura de un archivo de contenido
 ```markdown
@@ -77,3 +78,4 @@ Contenido del artículo en markdown...
 - `src/content.config.ts` - Registro de colecciones (15)
 - `src/lib/schemas.ts` - Schemas Zod de todas las colecciones
 - `src/lib/seo.ts` - JSON-LD generators
+- `docs/04-sistema-editorial.md` - Reglas de contenido: el texto visible sale de las collections; sin dato no hay bloque

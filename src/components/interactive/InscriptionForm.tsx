@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { PUBLIC_WEB3FORMS_KEY } from 'astro:env/client';
 import { CONTACT } from '@lib/constants';
+import { ENROLLMENT_DOCUMENTS } from '@lib/enrollment';
 import { trackEvent, ageBucket } from '@lib/analytics';
 import SuccessConfetti from './SuccessConfetti';
 
@@ -220,6 +221,25 @@ export default function InscriptionForm({ programs }: Props) {
     trackEvent({ name: 'inscription_step_view', params: { step: currentStep + 1 } });
   }, [currentStep]);
 
+  // ─── Checklist "qué llevar" de la pantalla de éxito (docs/08 tarea 17) ──
+  // `.reveal`/`.revealed` son las clases globales del scroll-reveal
+  // (global.css), pero el observer que las activa vive en BaseLayout y solo
+  // consulta el DOM una vez, al cargar la página — nunca ve esta lista
+  // porque no existe todavía en ese momento (se monta recién al llegar al
+  // éxito). Así que este island dispara su propio "reveal": un solo
+  // `requestAnimationFrame` después del montaje basta para que el navegador
+  // pinte el estado inicial (`opacity:0`) antes de pasar a `.revealed`, que
+  // es lo que dispara la transición. Bajo `prefers-reduced-motion: reduce`
+  // esto es inofensivo: la propia regla `.reveal` en global.css fuerza
+  // `opacity:1` de una vez, sin importar si `.revealed` llegó a añadirse.
+  const [checklistRevealed, setChecklistRevealed] = useState(false);
+  useEffect(() => {
+    if (submitStatus !== 'success') return;
+    setChecklistRevealed(false);
+    const frame = requestAnimationFrame(() => setChecklistRevealed(true));
+    return () => cancelAnimationFrame(frame);
+  }, [submitStatus]);
+
   const goToStep = (step: number) => setCurrentStep(step);
 
   const handleNext = async () => {
@@ -326,12 +346,21 @@ export default function InscriptionForm({ programs }: Props) {
 
   if (submitStatus === 'success') {
     return (
-      <div className="relative mx-auto max-w-2xl rounded-2xl bg-white p-8 text-center shadow-lg">
+      <div className="relative mx-auto max-w-2xl rounded-2xl bg-surface-raised p-8 text-center shadow-lg">
         {/* Celebración de la conversión principal. Decorativa y recortada a la
             tarjeta: `pointer-events-none` + `aria-hidden`, así que no tapa ni
             bloquea el mensaje ni los CTA de abajo. Con
-            `prefers-reduced-motion: reduce` no se monta nada. */}
-        <SuccessConfetti />
+            `prefers-reduced-motion: reduce` no se monta nada.
+            Acotada al tercio superior (nota a11y del gate 14,
+            docs/06-plan-animaciones.md): debajo hay texto de lectura -el
+            checklist de documentos- y las 28 partículas cruzándolo entero
+            durante ~2s afectaban la accesibilidad cognitiva. El wrapper es
+            su propio contexto de posicionamiento absoluto, así que el
+            `inset-0` de `ConfettiBurst` (sin tocar ese componente
+            compartido con `ContactForm`) queda recortado a esta franja. */}
+        <div className="absolute inset-x-0 top-0 h-1/3 overflow-hidden rounded-t-2xl">
+          <SuccessConfetti />
+        </div>
         <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
           <svg className="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -351,16 +380,50 @@ export default function InscriptionForm({ programs }: Props) {
           </h3>
           <ol className="mt-4 space-y-3 text-sm text-text-secondary">
             <li className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">1</span>
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-surface-dark">1</span>
               Recibiras un email de confirmacion de tu solicitud.
             </li>
             <li className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">2</span>
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-surface-dark">2</span>
               El director deportivo se comunicara contigo en las proximas 24-48 horas.
             </li>
             <li className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">3</span>
-              Para confirmar la inscripcion necesitaras presentar documento de identidad, EPS vigente, certificado medico deportivo y autorizacion firmada por el acudiente.
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-surface-dark">3</span>
+              <div>
+                <p>Para confirmar la inscripcion necesitaras presentar estos documentos:</p>
+                {/* Checklist "qué llevar": misma fuente que la sección de
+                    seguro/documentos de /inscripciones (`ENROLLMENT_DOCUMENTS`
+                    en `@lib/enrollment`), no texto propio de esta pantalla. */}
+                <ul className="mt-3 space-y-2">
+                  {ENROLLMENT_DOCUMENTS.map((doc, index) => (
+                    <li
+                      key={doc.label}
+                      className={`reveal flex items-center gap-2 ${checklistRevealed ? 'revealed' : ''}`}
+                      style={{ '--stagger': `${index * 90}ms` } as CSSProperties}
+                    >
+                      <span
+                        className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-surface-dark"
+                        aria-hidden="true"
+                      >
+                        <svg
+                          className="checklist-check size-3"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </span>
+                      {doc.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </li>
           </ol>
         </div>
@@ -417,10 +480,10 @@ export default function InscriptionForm({ programs }: Props) {
                   <span
                     className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-xs sm:text-sm font-bold transition-colors ${
                       isCompleted
-                        ? 'bg-primary text-white if-step-pop'
+                        ? 'bg-primary text-surface-dark if-step-pop'
                         : isCurrent
-                          ? 'border-2 border-primary bg-white text-primary'
-                          : 'border-2 border-surface-muted bg-white text-gray-400'
+                          ? 'border-2 border-primary bg-surface-raised text-primary'
+                          : 'border-2 border-surface-muted bg-surface-raised text-text-secondary'
                     }`}
                     aria-current={isCurrent ? 'step' : undefined}
                   >
@@ -434,7 +497,7 @@ export default function InscriptionForm({ programs }: Props) {
                   </span>
                   <span
                     className={`mt-1 text-xs font-medium hidden sm:block ${
-                      isCurrent ? 'text-primary' : isCompleted ? 'text-text-primary' : 'text-gray-400'
+                      isCurrent ? 'text-primary' : isCompleted ? 'text-text-primary' : 'text-text-secondary'
                     }`}
                   >
                     {step.shortLabel}
@@ -462,7 +525,7 @@ export default function InscriptionForm({ programs }: Props) {
         ref={formRef}
         onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
         noValidate
-        className="rounded-2xl bg-white p-6 shadow-lg sm:p-8"
+        className="rounded-2xl bg-surface-raised p-6 shadow-lg sm:p-8"
       >
         {/* Honeypot */}
         <input type="text" name="botcheck" className="hidden" tabIndex={-1} autoComplete="off" />
@@ -485,7 +548,7 @@ export default function InscriptionForm({ programs }: Props) {
                     className={`flex cursor-pointer items-center gap-4 rounded-xl border-2 p-4 transition-colors ${
                       values.programId === program.id
                         ? 'border-primary bg-primary/5'
-                        : 'border-gray-200 hover:border-surface-muted'
+                        : 'border-hairline hover:border-surface-muted'
                     }`}
                   >
                     <input
@@ -502,7 +565,7 @@ export default function InscriptionForm({ programs }: Props) {
                 ))}
               </div>
               {errors.programId && (
-                <p className="mt-2 text-sm text-red-600" role="alert">{errors.programId.message}</p>
+                <p className="mt-2 text-sm text-danger" role="alert">{errors.programId.message}</p>
               )}
 
               <div className="mt-6">
@@ -512,7 +575,7 @@ export default function InscriptionForm({ programs }: Props) {
                 <select
                   id="riderAge"
                   {...register('riderAge')}
-                  className={`mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('riderAge') ? 'field-shake' : ''}`}
+                  className={`mt-1 block w-full rounded-lg border border-surface-muted bg-surface-raised px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('riderAge') ? 'field-shake' : ''}`}
                 >
                   <option value="">Seleccionar edad</option>
                   {Array.from({ length: 48 }, (_, i) => i + 3).map((age) => (
@@ -522,7 +585,7 @@ export default function InscriptionForm({ programs }: Props) {
                   ))}
                 </select>
                 {errors.riderAge && (
-                  <p className="mt-1 text-sm text-red-600" role="alert">{errors.riderAge.message}</p>
+                  <p className="mt-1 text-sm text-danger" role="alert">{errors.riderAge.message}</p>
                 )}
               </div>
             </fieldset>
@@ -542,7 +605,7 @@ export default function InscriptionForm({ programs }: Props) {
                 {/* Nombre */}
                 <div>
                   <label htmlFor="riderName" className="block text-sm font-medium text-text-primary">
-                    Nombre completo <span className="text-red-500">*</span>
+                    Nombre completo <span className="text-danger">*</span>
                   </label>
                   <div className="relative mt-1">
                     <input
@@ -555,14 +618,14 @@ export default function InscriptionForm({ programs }: Props) {
                     {touchedFields.riderName && !errors.riderName && <ValidCheckmark />}
                   </div>
                   {errors.riderName && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">{errors.riderName.message}</p>
+                    <p className="mt-1 text-sm text-danger" role="alert">{errors.riderName.message}</p>
                   )}
                 </div>
 
                 {/* Fecha nacimiento */}
                 <div>
                   <span className="block text-sm font-medium text-text-primary">
-                    Fecha de nacimiento <span className="text-red-500">*</span>
+                    Fecha de nacimiento <span className="text-danger">*</span>
                   </span>
                   <div
                     className={`mt-1 grid grid-cols-3 gap-3 ${
@@ -576,7 +639,7 @@ export default function InscriptionForm({ programs }: Props) {
                       <select
                         id="birthDay"
                         {...register('birthDay')}
-                        className="block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="block w-full rounded-lg border border-surface-muted bg-surface-raised px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                       >
                         <option value="">Dia</option>
                         {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
@@ -589,7 +652,7 @@ export default function InscriptionForm({ programs }: Props) {
                       <select
                         id="birthMonth"
                         {...register('birthMonth')}
-                        className="block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="block w-full rounded-lg border border-surface-muted bg-surface-raised px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                       >
                         <option value="">Mes</option>
                         {MONTHS.map((m, i) => (
@@ -602,7 +665,7 @@ export default function InscriptionForm({ programs }: Props) {
                       <select
                         id="birthYear"
                         {...register('birthYear')}
-                        className="block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
+                        className="block w-full rounded-lg border border-surface-muted bg-surface-raised px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary"
                       >
                         <option value="">Año</option>
                         {Array.from({ length: 51 }, (_, i) => new Date().getFullYear() - i).map((y) => (
@@ -612,33 +675,33 @@ export default function InscriptionForm({ programs }: Props) {
                     </div>
                   </div>
                   {(errors.birthDay || errors.birthMonth || errors.birthYear) && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">Completa la fecha de nacimiento</p>
+                    <p className="mt-1 text-sm text-danger" role="alert">Completa la fecha de nacimiento</p>
                   )}
                 </div>
 
                 {/* Genero */}
                 <div>
                   <label htmlFor="gender" className="block text-sm font-medium text-text-primary">
-                    Genero <span className="text-red-500">*</span>
+                    Genero <span className="text-danger">*</span>
                   </label>
                   <select
                     id="gender"
                     {...register('gender')}
-                    className={`mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('gender') ? 'field-shake' : ''}`}
+                    className={`mt-1 block w-full rounded-lg border border-surface-muted bg-surface-raised px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('gender') ? 'field-shake' : ''}`}
                   >
                     <option value="">Seleccionar</option>
                     <option value="masculino">Masculino</option>
                     <option value="femenino">Femenino</option>
                   </select>
                   {errors.gender && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">{errors.gender.message}</p>
+                    <p className="mt-1 text-sm text-danger" role="alert">{errors.gender.message}</p>
                   )}
                 </div>
 
                 {/* Talla camiseta */}
                 <div>
                   <span className="block text-sm font-medium text-text-primary">
-                    Talla de camiseta <span className="text-red-500">*</span>
+                    Talla de camiseta <span className="text-danger">*</span>
                   </span>
                   <div className={`mt-2 flex gap-4 ${shakingFields.has('shirtSize') ? 'field-shake' : ''}`}>
                     {SHIRT_SIZES.map((size) => (
@@ -647,7 +710,7 @@ export default function InscriptionForm({ programs }: Props) {
                         className={`flex cursor-pointer items-center justify-center rounded-lg border-2 px-4 py-3 text-sm font-medium transition-colors ${
                           values.shirtSize === size
                             ? 'border-primary bg-primary/5 text-primary'
-                            : 'border-gray-200 text-text-secondary hover:border-surface-muted'
+                            : 'border-hairline text-text-secondary hover:border-surface-muted'
                         }`}
                       >
                         <input
@@ -661,14 +724,14 @@ export default function InscriptionForm({ programs }: Props) {
                     ))}
                   </div>
                   {errors.shirtSize && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">{errors.shirtSize.message}</p>
+                    <p className="mt-1 text-sm text-danger" role="alert">{errors.shirtSize.message}</p>
                   )}
                 </div>
 
                 {/* Experiencia */}
                 <div>
                   <span className="block text-sm font-medium text-text-primary">
-                    Experiencia previa <span className="text-red-500">*</span>
+                    Experiencia previa <span className="text-danger">*</span>
                   </span>
                   <div className={`mt-2 space-y-2 ${shakingFields.has('experience') ? 'field-shake' : ''}`}>
                     {EXPERIENCE_LEVELS.map((level) => (
@@ -677,7 +740,7 @@ export default function InscriptionForm({ programs }: Props) {
                         className={`flex cursor-pointer items-center gap-3 rounded-lg border-2 px-4 py-3 transition-colors ${
                           values.experience === level.value
                             ? 'border-primary bg-primary/5'
-                            : 'border-gray-200 hover:border-surface-muted'
+                            : 'border-hairline hover:border-surface-muted'
                         }`}
                       >
                         <input
@@ -691,7 +754,7 @@ export default function InscriptionForm({ programs }: Props) {
                     ))}
                   </div>
                   {errors.experience && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">{errors.experience.message}</p>
+                    <p className="mt-1 text-sm text-danger" role="alert">{errors.experience.message}</p>
                   )}
                 </div>
               </div>
@@ -711,7 +774,7 @@ export default function InscriptionForm({ programs }: Props) {
               <div className="mt-6 space-y-5">
                 <div>
                   <label htmlFor="guardianName" className="block text-sm font-medium text-text-primary">
-                    Nombre completo del acudiente / contacto de emergencia <span className="text-red-500">*</span>
+                    Nombre completo del acudiente / contacto de emergencia <span className="text-danger">*</span>
                   </label>
                   <div className="relative mt-1">
                     <input
@@ -724,13 +787,13 @@ export default function InscriptionForm({ programs }: Props) {
                     {touchedFields.guardianName && !errors.guardianName && <ValidCheckmark />}
                   </div>
                   {errors.guardianName && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianName.message}</p>
+                    <p className="mt-1 text-sm text-danger" role="alert">{errors.guardianName.message}</p>
                   )}
                 </div>
 
                 <div>
                   <label htmlFor="guardianPhone" className="block text-sm font-medium text-text-primary">
-                    Celular <span className="text-red-500">*</span>
+                    Celular <span className="text-danger">*</span>
                   </label>
                   <div className="relative mt-1">
                     <input
@@ -744,13 +807,13 @@ export default function InscriptionForm({ programs }: Props) {
                     {touchedFields.guardianPhone && !errors.guardianPhone && <ValidCheckmark />}
                   </div>
                   {errors.guardianPhone && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianPhone.message}</p>
+                    <p className="mt-1 text-sm text-danger" role="alert">{errors.guardianPhone.message}</p>
                   )}
                 </div>
 
                 <div>
                   <label htmlFor="guardianEmail" className="block text-sm font-medium text-text-primary">
-                    Email <span className="text-red-500">*</span>
+                    Email <span className="text-danger">*</span>
                   </label>
                   <div className="relative mt-1">
                     <input
@@ -763,7 +826,7 @@ export default function InscriptionForm({ programs }: Props) {
                     {touchedFields.guardianEmail && !errors.guardianEmail && <ValidCheckmark />}
                   </div>
                   {errors.guardianEmail && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">{errors.guardianEmail.message}</p>
+                    <p className="mt-1 text-sm text-danger" role="alert">{errors.guardianEmail.message}</p>
                   )}
                 </div>
 
@@ -782,7 +845,7 @@ export default function InscriptionForm({ programs }: Props) {
 
                 <div>
                   <label htmlFor="riderEps" className="block text-sm font-medium text-text-primary">
-                    EPS del nino/a <span className="text-red-500">*</span>
+                    EPS del nino/a <span className="text-danger">*</span>
                   </label>
                   <div className="relative mt-1">
                     <input
@@ -794,18 +857,18 @@ export default function InscriptionForm({ programs }: Props) {
                     {touchedFields.riderEps && !errors.riderEps && <ValidCheckmark />}
                   </div>
                   {errors.riderEps && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">{errors.riderEps.message}</p>
+                    <p className="mt-1 text-sm text-danger" role="alert">{errors.riderEps.message}</p>
                   )}
                 </div>
 
                 <div>
                   <label htmlFor="relationship" className="block text-sm font-medium text-text-primary">
-                    Parentesco <span className="text-red-500">*</span>
+                    Parentesco <span className="text-danger">*</span>
                   </label>
                   <select
                     id="relationship"
                     {...register('relationship')}
-                    className={`mt-1 block w-full rounded-lg border border-surface-muted bg-white px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('relationship') ? 'field-shake' : ''}`}
+                    className={`mt-1 block w-full rounded-lg border border-surface-muted bg-surface-raised px-3 py-2.5 text-base text-text-primary shadow-sm focus:border-primary focus:ring-1 focus:ring-primary ${shakingFields.has('relationship') ? 'field-shake' : ''}`}
                   >
                     <option value="">Seleccionar</option>
                     {RELATIONSHIPS.map((r) => (
@@ -813,7 +876,7 @@ export default function InscriptionForm({ programs }: Props) {
                     ))}
                   </select>
                   {errors.relationship && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">{errors.relationship.message}</p>
+                    <p className="mt-1 text-sm text-danger" role="alert">{errors.relationship.message}</p>
                   )}
                 </div>
               </div>
@@ -878,11 +941,11 @@ export default function InscriptionForm({ programs }: Props) {
                     className="h-11 w-11 shrink-0 rounded border-surface-muted text-primary focus:ring-primary"
                   />
                   <span className="text-sm text-text-secondary">
-                    Acepto los terminos y condiciones del Club Deportivo Trocha y Ruta <span className="text-red-500">*</span>
+                    Acepto los terminos y condiciones del Club Deportivo Trocha y Ruta <span className="text-danger">*</span>
                   </span>
                 </label>
                 {errors.acceptTerms && (
-                  <p className="text-sm text-red-600" role="alert">{errors.acceptTerms.message}</p>
+                  <p className="text-sm text-danger" role="alert">{errors.acceptTerms.message}</p>
                 )}
 
                 <label className={`flex items-center gap-3 py-1 ${shakingFields.has('acceptDataPolicy') ? 'field-shake' : ''}`}>
@@ -892,16 +955,16 @@ export default function InscriptionForm({ programs }: Props) {
                     className="h-11 w-11 shrink-0 rounded border-surface-muted text-primary focus:ring-primary"
                   />
                   <span className="text-sm text-text-secondary">
-                    Autorizo el tratamiento de datos personales segun la Ley 1581 de 2012 <span className="text-red-500">*</span>
+                    Autorizo el tratamiento de datos personales segun la Ley 1581 de 2012 <span className="text-danger">*</span>
                   </span>
                 </label>
                 {errors.acceptDataPolicy && (
-                  <p className="text-sm text-red-600" role="alert">{errors.acceptDataPolicy.message}</p>
+                  <p className="text-sm text-danger" role="alert">{errors.acceptDataPolicy.message}</p>
                 )}
               </div>
 
               {submitStatus === 'error' && (
-                <div className="mt-4 rounded-lg bg-red-50 p-4 text-sm text-red-700" role="alert">
+                <div className="mt-4 rounded-lg bg-danger/10 p-4 text-sm text-danger" role="alert">
                   {errorMessage}
                 </div>
               )}
@@ -910,7 +973,7 @@ export default function InscriptionForm({ programs }: Props) {
         </div>
 
         {/* ─── Navigation Buttons ──────────────────────────────────────── */}
-        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-gray-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-hairline pt-6 sm:flex-row sm:items-center sm:justify-between">
           {currentStep > 0 ? (
             <button
               type="button"
@@ -930,7 +993,7 @@ export default function InscriptionForm({ programs }: Props) {
             <button
               type="button"
               onClick={handleNext}
-              className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-surface-dark transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               Siguiente
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -941,7 +1004,7 @@ export default function InscriptionForm({ programs }: Props) {
             <button
               type="submit"
               disabled={submitStatus === 'submitting'}
-              className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60 disabled:cursor-not-allowed"
+              className="inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-surface-dark transition-colors hover:bg-accent/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {submitStatus === 'submitting' ? (
                 <>
@@ -994,7 +1057,7 @@ function SummarySection({
   items: { label: string; value: string }[];
 }) {
   return (
-    <div className="rounded-xl border border-gray-200 p-4">
+    <div className="rounded-xl border border-hairline p-4">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-sm font-semibold text-text-primary">{title}</h3>
         <button

@@ -19,8 +19,10 @@ import ShareButtons from '@components/common/ShareButtons.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
 import SeasonTrack from '@components/sections/SeasonTrack.astro';
-import { generateEventsListJsonLd } from '@lib/seo';
+import YumboLandmark from '@components/editorial/YumboLandmark.astro';
+import { generateEventJsonLd, generateEventsListJsonLd } from '@lib/seo';
 import { formatDate } from '@lib/utils';
+import { isHomeRace } from '@lib/yumbo';
 import {
   buildSeason,
   cancelledAhead,
@@ -80,18 +82,58 @@ function chroniclesOf(event: Event) {
 
 const season = buildSeason(events);
 
-const jsonLd = generateEventsListJsonLd(
+const listJsonLd = generateEventsListJsonLd(
   [...upcoming.map(({ event }) => event), ...cancelled, ...past.map(({ event }) => event)].map(
     (event: Event) => ({
       title: event.data.title,
       date: event.data.date,
-      url: '/calendario',
+      url: `/calendario#evento-${event.id}`,
     })
   )
 );
 
+/**
+ * Un `SportsEvent` por cada fecha que todavía no se ha corrido.
+ *
+ * `generateEventJsonLd` existía desde el principio en `@lib/seo` —con sus
+ * tests— pero ninguna página lo llamaba: el calendario solo emitía el
+ * `ItemList`, que le dice a Google «aquí hay una lista» y nada más. Sin esto
+ * no hay forma de que una búsqueda muestre la fecha, la sede ni el enlace de
+ * inscripción de una válida.
+ *
+ * Las corridas se quedan fuera a propósito: un resultado enriquecido de evento
+ * solo sirve mientras la fecha esté por venir, y arrastrar toda la temporada
+ * pasada solo infla el HTML. Las canceladas sí entran mientras no pase su
+ * fecha, con `EventCancelled`: es justo lo que Google necesita para mostrar
+ * que se cayó en vez de seguir anunciándola.
+ *
+ * Cada evento apunta a su ancla (`#evento-<id>`) porque no hay página por
+ * evento: es el identificador más preciso que este sitio puede dar hoy.
+ */
+const scheduledJsonLd = [...upcoming.map(({ event }) => event), ...cancelled].map((event: Event) =>
+  generateEventJsonLd({
+    title: event.data.title,
+    date: event.data.date,
+    endDate: event.data.endDate,
+    location: event.data.location,
+    city: event.data.city,
+    department: event.data.department,
+    description: event.data.seo?.metaDescription,
+    image: event.data.image,
+    url: `/calendario#evento-${event.id}`,
+    status: resolveEventStatus(event.data),
+    registrationUrl: event.data.registrationUrl,
+    organizer: event.data.organizer,
+  })
+);
+
+const jsonLd = [listJsonLd, ...scheduledJsonLd];
+
 const nextCategory = next ? getEventCategory(next.event.data.category) : null;
 const nextLevel = next ? getEventLevel(next.event.data.level) : null;
+// Una fecha en Yumbo se anuncia como lo que es: la carrera en casa. La tarjeta
+// se firma con los hitos de la ciudad y la sección cierra sobre el cerro.
+const nextAtHome = next ? isHomeRace(next.event.data.city) : false;
 const nextMonth = next
   ? new Intl.DateTimeFormat('es-CO', { month: 'long', timeZone: 'UTC' }).format(next.event.data.date)
   : '';
@@ -127,7 +169,13 @@ const nextMonth = next
 
   <!-- La próxima fecha -->
   {next && (
-    <SectionShell tone="plain" width="wide" spacing="compact" labelledby="proximo-evento">
+    <SectionShell
+      tone="plain"
+      pattern={nextAtHome ? 'yumbo' : 'none'}
+      width="wide"
+      spacing="compact"
+      labelledby="proximo-evento"
+    >
       <p class="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-primary-deep">
         <span class="relative flex size-2">
           <span class="absolute inline-flex size-full rounded-full bg-accent opacity-75"></span>
@@ -138,9 +186,19 @@ const nextMonth = next
 
       <article
         id={`evento-${next.event.id}`}
-        class="reveal mt-5 scroll-mt-24 overflow-hidden rounded-2xl bg-surface-dark text-white shadow-lg"
+        class="reveal relative mt-5 scroll-mt-24 overflow-hidden rounded-2xl bg-surface-dark text-white shadow-lg"
       >
-        <div class="grid gap-6 p-6 md:grid-cols-[auto_1fr] md:gap-10 md:p-10">
+        {nextAtHome && (
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 hidden items-end gap-6 pr-8 pb-6 text-white/18 lg:flex"
+            aria-hidden="true"
+          >
+            <YumboLandmark landmark="monumento" variant="ink" width={360} class="h-40 w-auto" />
+            <YumboLandmark landmark="iglesia" variant="ink" width={360} class="h-32 w-auto" />
+          </div>
+        )}
+
+        <div class="relative grid gap-6 p-6 md:grid-cols-[auto_1fr] md:gap-10 md:p-10">
           <div class="flex flex-row items-center gap-4 md:flex-col md:items-start md:gap-1">
             <span class="font-display text-6xl font-bold leading-none text-accent md:text-7xl">
               {dayLabel(next.event.data.date, next.event.data.endDate)}
@@ -163,6 +221,12 @@ const nextMonth = next
               {nextLevel && (
                 <span class="inline-block rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-medium text-white">
                   {nextLevel}
+                </span>
+              )}
+              {nextAtHome && (
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-surface-dark">
+                  <Icon name="ph:house-line-bold" class="size-3.5" aria-hidden="true" />
+                  En casa
                 </span>
               )}
             </div>
@@ -348,7 +412,7 @@ const nextMonth = next
   )}
 
   <SectionShell tone="plain" width="default" spacing="compact" label="Compartir el calendario">
-    <div class="flex flex-col items-center gap-4 border-t border-black/10 pt-8 text-center">
+    <div class="flex flex-col items-center gap-4 border-t border-hairline pt-8 text-center">
       <p class="text-text-secondary">
         ¿Conoces a otra familia que quiera acompañarnos? Comparte el calendario.
       </p>

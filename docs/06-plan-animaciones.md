@@ -2,7 +2,7 @@
 
 - **Fuente**: propuesta acordada en sesión (2026-08-22) — micro-interacciones con física de resorte, celebración y personalidad, **sin runtimes de animación** (ni Rive ni Lottie ni GSAP).
 - **Estrategia**: incremental — cada fase es desplegable por sí sola vía `develop` → QA → `main`.
-- **Estado**: planificado, sin ejecutar. Para retomar: ejecutar la siguiente tarea con `[ ]` respetando `Depende de`; marcarla `[x]` al quedar implementada y verificada en el working tree (el merge a `develop` se hace al cerrar cada fase, cuando el usuario lo pida).
+- **Estado (2026-09-09)**: **ejecutado salvo dos tareas**. Fases 1 a 4 completas (tokens de motion, botón físico, stepper, confeti, view transitions, perfil de elevación, count-up, acordeón). Quedan la **13** (mascota SVG — exploración, sin decidir) y la **14** (auditoría Lighthouse/INP/CLS del conjunto). Su continuación es `docs/08-plan-creatividad-ui.md`; lo que quedó en el código está documentado en `docs/04-sistema-editorial.md` §2.5.
 - **Cómo retomar con Claude**: `Ejecuta la siguiente tarea pendiente de docs/06-plan-animaciones.md con el modelo asignado` (o `/loop` con ese mismo prompt para avanzar tarea por tarea de forma autónoma).
 
 ## Resumen de requisitos
@@ -61,7 +61,34 @@
 
 | # | Tarea | Modelo | Agente | Depende de |
 |---|-------|--------|--------|------------|
-| 14 | `[ ]` Auditoría: Lighthouse ≥ 95, CLS < 0.05, INP < 200ms; barrido con `prefers-reduced-motion: reduce` activo (nada debe quedar oculto o en movimiento); keyboard nav y focus | **Opus** (revisión) | qa-auditor + accessibility-tester | fase correspondiente |
+| 14 | `[~]` Auditoría: Lighthouse ≥ 95, CLS < 0.05, INP < 200ms; barrido con `prefers-reduced-motion: reduce` activo (nada debe quedar oculto o en movimiento); keyboard nav y focus | **Opus** (revisión) | qa-auditor + accessibility-tester | fase correspondiente |
+
+**Veredicto de la tarea 14 (cerrado el 2026-09-09).** La auditoría se ejecutó el
+2026-08-22 y su informe es todo lo que sigue en esta sección, pero la casilla se
+quedó sin marcar. Se cierra así:
+
+- **Ejecutado y resuelto**: el barrido de `prefers-reduced-motion` (la red de
+  seguridad global la puso `docs/08`, Sprint 0), el peso de las fuentes (657 KB →
+  160 KB con el subsetting), el confeti que caía sobre el texto y el `<noscript>`
+  de Trocha Verde que no reparaba `.reveal`.
+- **Nunca medido**: Lighthouse ≥ 95. No hay Lighthouse CI en el repo y no se
+  volvió a medir después del subsetting. El criterio sigue siendo el del
+  presupuesto del proyecto; comprobarlo es trabajo pendiente, no un resultado.
+- **Siete deudas de accesibilidad quedaron abiertas** y no son de este plan:
+  el éxito de `InscriptionForm` no se anuncia (`role="status"` + foco),
+  `MobileMenu` deja el cajón en el DOM sin `inert`, `ImageLightbox` no anuncia el
+  cambio de foto, el anillo de foco `outline-primary` da 2,42:1, el stepper no
+  tiene texto de paso completado en móvil, faltan aserciones de foco en los tests
+  y el acordeón de FAQ anima `height` con un CLS latente de 0,077. Están
+  registradas en la memoria de `accessibility-tester` y de `qa-auditor`; ese es
+  el backlog canónico, no este documento.
+
+**Cuidado con las referencias `archivo:línea` del informe que sigue**: la mayoría
+se corrió o desapareció con las refactorizaciones de `docs/08`. En particular, el
+count-up ya no vive en `TrochaVerde.astro` ni usa `--tv-count`: es la utilidad
+compartida `.count-up` de `global.css`. Lo único de este documento que no está en
+ningún otro lado es la decisión del morph por propiedad CSS en línea y las
+mediciones que la sostienen.
 
 ### Notas acumuladas para el gate 14 (de las auditorías por fase)
 
@@ -290,7 +317,12 @@ durante el scroll.
   el ruido de corrida a corrida (la portada osciló 55–80 en el build actual). La causa
   está fuera de estas 12 tareas: **657 KB de fuentes** (`InterVariable.woff2` 352 KB +
   `PlusJakartaSans-Variable.woff2` 305 KB, ambas sin subsetear y ambas con `<link
-  rel=preload>`) compitiendo con el preload del hero, más 370 KB de imágenes. Transfer
+  rel=preload>`) compitiendo con el preload del hero, más 370 KB de imágenes.
+  **Resuelto el 2026-08-26** por la tarea 2 de `docs/08-plan-creatividad-ui.md`: los
+  subsets `-latin` bajan las fuentes de 657 KB a 160 KB (−76 %). De paso se descubrió
+  que los 305 KB de `PlusJakartaSans-Variable.woff2` no eran una fuente sino la página
+  404 de GitHub, así que ese peso era íntegramente basura y los títulos nunca se
+  pintaron con Plus Jakarta Sans. Falta volver a medir Lighthouse. Transfer
   total de la portada: 1.16 MB contra un presupuesto de 500 KB; JS de la portada 77.5 KB
   contra 50 KB (56.9 KB son el runtime de React, preexistente). Decisión que hay que
   tomar en el gate: o se ataca el subsetting de fuentes en un backlog aparte, o se

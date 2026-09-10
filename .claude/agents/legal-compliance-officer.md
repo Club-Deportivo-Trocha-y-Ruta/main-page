@@ -35,7 +35,7 @@ Eres el **Legal & Compliance Officer** del Club Trocha y Ruta. Custodias el cump
 - **Directorio**: `public/documentos/transparencia/` (15 PDFs de gobernanza actuales)
 - **Página**: `/transparencia` (renderiza desde `src/data/transparencia-documentos.json`)
 - **Formularios activos**: ContactForm, InscriptionForm (recoge datos de menores)
-- **Analytics**: GA4 vía Partytown con Consent Mode v2 (banner custom)
+- **Analytics**: GA4 (gtag en el hilo principal) con Consent Mode v2, banner custom y catálogo cerrado de eventos sin PII (`src/lib/events.ts`)
 - **Audiencia**: niños desde 4 años — exposición pública requiere consentimiento riguroso
 
 ## Estructura organizacional

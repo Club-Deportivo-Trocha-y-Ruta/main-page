@@ -32,7 +32,7 @@ const cards = programs.map((program: Program) => ({
   level: getLevelStyle(program.data.targetLevel),
   step: stepById.get(program.id) ?? 0,
   photo: getRefreshImage(program.data.image),
-  sessions: countWeeklySessions(program.data.schedule),
+  sessions: countWeeklySessions(program.data),
 }));
 ---
 
@@ -55,7 +55,7 @@ const cards = programs.map((program: Program) => ({
   <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
     {cards.map(({ program, level, step, photo, sessions }, index) => (
       <article
-        class="reveal group relative flex flex-col overflow-hidden rounded-2xl bg-surface shadow-sm ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+        class="reveal group relative flex flex-col overflow-hidden rounded-2xl bg-surface shadow-sm ring-1 ring-hairline transition duration-300 hover:-translate-y-1 hover:shadow-lg"
         style={`--stagger:${index * 90}ms`}
       >
         <div class="relative aspect-[16/10] overflow-hidden bg-surface-muted">
@@ -110,7 +110,7 @@ const cards = programs.map((program: Program) => ({
             {program.data.summary ?? program.data.subtitle}
           </p>
 
-          <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-black/5 pt-3 text-xs text-text-secondary">
+          <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-hairline/50 pt-3 text-xs text-text-secondary">
             {sessions !== null && (
               <span class="inline-flex items-center gap-1.5">
                 <Icon name="ph:calendar-dots-bold" class="size-4 shrink-0 text-primary-deep" aria-hidden="true" />
@@ -140,7 +140,7 @@ const cards = programs.map((program: Program) => ({
   <p class="mt-10 text-center">
     <a
       href="/programas"
-      class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white"
+      class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-on-deep"
     >
       Compara los tres programas
       <Icon name="ph:arrow-right-bold" class="size-4" aria-hidden="true" />

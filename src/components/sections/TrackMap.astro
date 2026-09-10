@@ -1,0 +1,191 @@
+---
+/**
+ * Mapa de la Pista Carlos Castro: el trazado real y dónde cae cada obstáculo.
+ *
+ * El `path` no está dibujado a mano: se proyecta en build desde el GPX de una
+ * vuelta grabada (`src/data/la-pista.gpx` → `@lib/track-map`).
+ *
+ * Dos capas, en mejora progresiva:
+ *  1. El SVG del trazado, generado en build. Es lo que llega en el HTML, lo que
+ *     mide el LCP y lo único que se ve sin JavaScript.
+ *  2. `TrackMapInteractive`, un island con `client:visible` que lo reemplaza por
+ *     el satélite de ESRI cuando la sección entra en pantalla. No añade
+ *     dependencias: Leaflet ya está en el proyecto por `TrochaVerdeMap`.
+ *
+ * El SVG es decorativo (`aria-hidden`); el equivalente accesible es la lista
+ * numerada de abajo, que además es la que se lee en móvil (regla 5 de
+ * docs/04-sistema-editorial.md §3).
+ */
+import { parseGpx, buildTrackPath, simplifyTrack, latLonToPercent } from '@lib/track-map';
+import TrackMapInteractive from '@components/interactive/TrackMapInteractive';
+import type { TrackObstacleMarker } from '@components/interactive/TrackMapInteractive';
+import gpx from '../../data/la-pista.gpx?raw';
+
+export interface ObstacleMarker {
+  slug: string;
+  name: string;
+  level: string;
+  /** Coordenadas reales; si faltan, se usa `x`/`y`. */
+  lat?: number;
+  lng?: number;
+  /** Posición en % del recuadro del trazado, para un obstáculo sin GPS. */
+  x?: number;
+  y?: number;
+  /** URL ya resuelta por `astro:assets` (el island no puede procesarla). */
+  image?: string;
+  imageAlt?: string;
+}
+
+interface Props {
+  markers?: ObstacleMarker[];
+  class?: string;
+}
+
+const { markers = [], class: className } = Astro.props;
+
+const points = parseGpx(gpx);
+const geometry = buildTrackPath(points, { toleranceMeters: 6 });
+
+// El trazado que viaja al island: simplificado a 6 m, ya en pares [lat, lng].
+// El GPX crudo (106 KB, 929 puntos) nunca sale del build.
+const track: [number, number][] = simplifyTrack(points, 6).map((p) => [p.lat, p.lon]);
+
+/**
+ * Cada marcador necesita dos posiciones distintas: el % sobre el `viewBox` del
+ * SVG y las coordenadas reales para Leaflet. Con `lat`/`lng` en la ficha se
+ * derivan las dos; `x`/`y` es el respaldo para un obstáculo sin GPS.
+ */
+const placed = markers.map((marker, index) => {
+  const percent =
+    marker.lat !== undefined && marker.lng !== undefined && geometry
+      ? latLonToPercent({ lat: marker.lat, lon: marker.lng }, geometry.bounds)
+      : { xPct: marker.x ?? 50, yPct: marker.y ?? 50 };
+
+  return { ...marker, number: index + 1, ...toViewBoxPercent(percent) };
+});
+
+/**
+ * `map.x/y` es un porcentaje del recuadro del trazado; el `viewBox` añade el
+ * margen interior. Sin esta conversión los marcadores quedan corridos justo
+ * ese margen.
+ */
+function toViewBoxPercent({ xPct, yPct }: { xPct: number; yPct: number }) {
+  if (!geometry) return { left: '50%', top: '50%' };
+  const { width, height, padding } = geometry;
+  const x = padding + (xPct / 100) * (width - padding * 2);
+  const y = padding + (yPct / 100) * (height - padding * 2);
+  return { left: `${(x / width) * 100}%`, top: `${(y / height) * 100}%` };
+}
+
+/** Solo los que tienen coordenadas reales pueden ir sobre el satélite. */
+const geoObstacles: TrackObstacleMarker[] = placed
+  .filter((m) => m.lat !== undefined && m.lng !== undefined)
+  .map((m) => ({
+    slug: m.slug,
+    name: m.name,
+    level: m.level,
+    lat: m.lat!,
+    lng: m.lng!,
+    number: m.number,
+    image: m.image,
+    imageAlt: m.imageAlt,
+  }));
+
+const distanceKm = geometry ? (geometry.lengthMeters / 1000).toFixed(1).replace('.', ',') : null;
+---
+
+{
+  geometry && (
+    <figure class:list={['not-prose', className]}>
+      <div class="mx-auto w-full max-w-xl">
+        <TrackMapInteractive client:visible track={track} obstacles={geoObstacles}>
+          {/* Capa sin JavaScript: el trazado dibujado en build. */}
+          <div
+            class="relative mx-auto h-full w-auto"
+            style={`aspect-ratio:${geometry.width}/${geometry.height}`}
+          >
+            <svg
+              viewBox={geometry.viewBox}
+              class="block h-full w-full"
+              role="presentation"
+              aria-hidden="true"
+            >
+              {/* Fondo del recuadro: da borde al mapa sin competir con el trazo. */}
+              <rect
+                width={geometry.width}
+                height={geometry.height}
+                rx="24"
+                fill="currentColor"
+                class="text-primary/5"
+              />
+
+              {/* Dos trazos: la huella ancha da cuerpo al circuito, el fino lo dibuja. */}
+              <path
+                d={geometry.path}
+                fill="none"
+                stroke="currentColor"
+                stroke-width="14"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                class="text-primary/20"
+              />
+              <path
+                d={geometry.path}
+                fill="none"
+                stroke="currentColor"
+                stroke-width="5"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                class="text-primary-deep"
+              />
+            </svg>
+
+            {placed.map((marker) => (
+              <a
+                href={`/la-pista/${marker.slug}`}
+                class="bg-accent-deep shadow-raised absolute grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2 border-white text-xs font-bold text-on-deep transition-transform hover:scale-110 focus-visible:scale-110"
+                style={`left:${marker.left};top:${marker.top}`}
+                aria-label={`Obstáculo ${marker.number}: ${marker.name}`}
+              >
+                <span aria-hidden="true">{marker.number}</span>
+              </a>
+            ))}
+          </div>
+        </TrackMapInteractive>
+      </div>
+
+      <figcaption class="text-text-secondary mt-4 text-center text-sm">
+        Trazado de una vuelta completa a la pista
+        {distanceKm && <> — {distanceKm} km</>}, grabada con GPS.
+        {placed.length > 0 && (
+          <>
+            {' '}
+            Los números marcan
+            {placed.length === 1 ? ' el obstáculo documentado' : ' los obstáculos documentados'}.
+          </>
+        )}
+      </figcaption>
+
+      {placed.length > 0 && (
+        <ol class="mx-auto mt-6 max-w-md space-y-2">
+          {placed.map((marker) => (
+            <li>
+              <a
+                href={`/la-pista/${marker.slug}`}
+                class="rounded-control text-text-primary hover:bg-primary/5 flex items-center gap-3 px-3 py-2 text-sm font-semibold transition-colors"
+              >
+                <span
+                  class="bg-accent-deep grid size-6 shrink-0 place-items-center rounded-full text-xs font-bold text-on-deep"
+                  aria-hidden="true"
+                >
+                  {marker.number}
+                </span>
+                {marker.name}
+              </a>
+            </li>
+          ))}
+        </ol>
+      )}
+    </figure>
+  )
+}

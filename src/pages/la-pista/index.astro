@@ -1,0 +1,305 @@
+---
+/**
+ * `/la-pista` — la Pista de Ciclomontañismo Carlos Castro, obstáculo por obstáculo.
+ *
+ * La página no muestra los saltos: muestra **cómo se aprende a pasarlos**
+ * (docs/07-plan-la-pista.md §1). Es infraestructura permanente del club, no una
+ * crónica: por eso tiene URL propia y crece cada vez que se construye algo.
+ *
+ * Cifras: el trazado y la distancia salen del GPX de una vuelta grabada; el
+ * resto, de la colección `obstaculos`. Ninguna escrita a mano. El desnivel
+ * **no** se publica: el GPS lo da demasiado ruidoso (§0.1 del plan).
+ *
+ * En dev se muestran también las fichas en `draft`, para poder revisarlas antes
+ * de publicarlas; en el build de producción quedan fuera, como en el resto del
+ * sitio.
+ *
+ * Orden de secciones (Horizonte A, 2026-09-09):
+ *   1. Apertura — tinted + topo
+ *   2. Mapa — plain (sin yumbo)
+ *   3. Historia — muted + yumbo
+ *   4. Obstáculos — plain (solo si ≥ MIN_OBSTACLES_FOR_GRID)
+ *   5. Habilidades — tinted (solo si ≥ MIN_OBSTACLES_FOR_SKILLS)
+ *   6. CTA — plain
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import InscriptionCTA from '@components/common/InscriptionCTA.astro';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import StatFigure from '@components/editorial/StatFigure.astro';
+import FactGrid, { type Fact } from '@components/editorial/FactGrid.astro';
+import Timeline, { type TimelineItem } from '@components/editorial/Timeline.astro';
+import TrackMap, { type ObstacleMarker } from '@components/sections/TrackMap.astro';
+import ObstacleCard from '@components/sections/ObstacleCard.astro';
+import { SITE } from '@lib/constants';
+import { generateTrackJsonLd } from '@lib/seo';
+import {
+  activeObstacles,
+  summarizeTrack,
+  skillsByFrequency,
+  programsUsingTrack,
+  filterTrackMilestones,
+  MIN_OBSTACLES_FOR_GRID,
+  MIN_OBSTACLES_FOR_SKILLS,
+  type ObstacleInput,
+} from '@lib/la-pista';
+import { buildMilestoneItems } from '@lib/milestones';
+import { parseGpx, buildTrackPath } from '@lib/track-map';
+import { getImage } from 'astro:assets';
+import { getTrackImage } from '@lib/track-images';
+import gpx from '../../data/la-pista.gpx?raw';
+
+type Obstacle = CollectionEntry<'obstaculos'>;
+
+const TRACK_NAME = 'Pista de Ciclomontañismo Carlos Castro';
+
+const all = await getCollection('obstaculos');
+const published = import.meta.env.DEV ? all : all.filter((o: Obstacle) => !o.data.draft);
+// `activeObstacles` filtra y ordena sobre los campos del frontmatter; la entrada
+// completa viaja de pasajera para poder renderizar su markdown después.
+const ordered = activeObstacles(
+  published.map((entry: Obstacle) => ({
+    active: entry.data.active,
+    order: entry.data.order,
+    name: entry.data.name,
+    entry,
+  })),
+).map((o) => o.entry);
+
+const inputs: ObstacleInput[] = ordered.map((entry) => entry.data as ObstacleInput);
+
+const summary = summarizeTrack(inputs);
+const skills = skillsByFrequency(inputs);
+
+const programs = await getCollection('programs');
+const trackPrograms = programsUsingTrack(
+  inputs,
+  programs.map((p) => ({ id: p.id, title: p.data.title })),
+);
+
+// Trazado: 6 m de tolerancia para menos puntos dibujados (el SVG en el build).
+// La longitud no cambia: usa los puntos originales.
+const geometry = buildTrackPath(parseGpx(gpx), { toleranceMeters: 6 });
+const lapKm = geometry ? (geometry.lengthMeters / 1000).toFixed(1).replace('.', ',') : null;
+
+// Historia de la pista: solo los cuatro hitos del trazado.
+const allMilestones = await getCollection('milestones');
+const trackHistoryRaw = filterTrackMilestones(allMilestones).map((e) => e.data);
+const trackHistory: TimelineItem[] = buildMilestoneItems(trackHistoryRaw);
+
+// Marcadores del mapa: van los que se pueden ubicar, sea por coordenadas
+// reales (lo normal) o por la posición manual en % de una ficha sin GPS.
+// La foto se resuelve aquí con `getImage`: el island de Leaflet no puede
+// pasar por `astro:assets`.
+const markers: ObstacleMarker[] = await Promise.all(
+  ordered
+    .filter(
+      (entry) => (entry.data.lat !== undefined && entry.data.lng !== undefined) || entry.data.map,
+    )
+    .map(async (entry) => {
+      const source = getTrackImage(entry.data.image);
+      const thumb = source ? await getImage({ src: source, width: 420 }) : undefined;
+
+      return {
+        slug: entry.id,
+        name: entry.data.name,
+        level: entry.data.level,
+        lat: entry.data.lat,
+        lng: entry.data.lng,
+        x: entry.data.map?.x,
+        y: entry.data.map?.y,
+        image: thumb?.src,
+        imageAlt: entry.data.imageAlt,
+      };
+    }),
+);
+
+// Habilidades agregadas para el FactGrid. El bloque solo aparece con
+// MIN_OBSTACLES_FOR_SKILLS o más obstáculos; menos y cada fila diría
+// "1 obstáculo" sin aportar comparación.
+const skillFacts: Fact[] = skills.map((s) => ({
+  icon: 'ph:target-bold',
+  label: s.skill,
+  value: s.count === 1 ? '1 obstáculo' : `${s.count} obstáculos`,
+}));
+
+const heroImage = getTrackImage(ordered[0]?.data.image);
+
+const jsonLd = geometry
+  ? generateTrackJsonLd({
+      name: TRACK_NAME,
+      description: `Circuito de ciclomontañismo del Club Deportivo Trocha y Ruta en Yumbo, Valle del Cauca. Una vuelta completa mide ${lapKm} km.`,
+      url: new URL('/la-pista', SITE.url).href,
+      lat: geometry.center.lat,
+      lon: geometry.center.lon,
+      image: heroImage?.src,
+    })
+  : undefined;
+
+// ¿Cuántos stats visibles habrá? Determina si el grid wrapper es necesario.
+const statCount =
+  (lapKm ? 1 : 0) +
+  (summary ? 1 : 0) +
+  (summary && summary.totalSkills > 0 ? 1 : 0) +
+  (trackPrograms.length > 0 ? 1 : 0);
+---
+
+<BaseLayout
+  title="La Pista Carlos Castro"
+  description={`La ${TRACK_NAME} de Yumbo: historia, trazado y los obstáculos que el club entrena cada semana.`}
+  jsonLd={jsonLd}
+>
+  <!-- 1. Apertura: qué es esta pista y por qué merece una página -->
+  <SectionShell
+    tone="tinted"
+    pattern="topo"
+    width="wide"
+    spacing="compact"
+    labelledby="la-pista-titulo"
+  >
+    <Breadcrumb items={[{ label: 'La pista' }]} />
+
+    <SectionIntro
+      as="h1"
+      id="la-pista-titulo"
+      class="mt-6 max-w-3xl"
+      eyebrow="La pista"
+      eyebrowIcon="ph:mountains-bold"
+      title="La Pista Carlos Castro: donde el club entrena cada semana"
+      highlight="entrena cada semana"
+      lead="Nació en el teatrino del barrio Pizarro, cubierto de maleza, y hoy es donde el club entrena cada semana. El trazado fue subsede de los Juegos Nacionales 2019 y se ajustó para los Juegos Panamericanos Junior 2021."
+    />
+
+    {
+      statCount === 1 && lapKm ? (
+        /* Un solo stat: sin grid. */
+        <div class="border-primary/15 mt-10 border-t pt-8">
+          <StatFigure
+            value={lapKm}
+            unit="km"
+            label="Una vuelta al circuito"
+            note="Medido con GPS sobre una vuelta real"
+            icon="ph:path-bold"
+          />
+        </div>
+      ) : statCount > 1 ? (
+        /* Varios stats: grid de hasta 4 columnas. */
+        <div class="border-primary/15 mt-10 grid grid-cols-2 gap-6 border-t pt-8 sm:grid-cols-4">
+          {lapKm && (
+            <StatFigure
+              value={lapKm}
+              unit="km"
+              label="Una vuelta al circuito"
+              note="Medido con GPS sobre una vuelta real"
+              icon="ph:path-bold"
+            />
+          )}
+          {summary && (
+            <StatFigure
+              value={summary.totalObstacles}
+              label={
+                summary.totalObstacles === 1 ? 'Obstáculo documentado' : 'Obstáculos documentados'
+              }
+              icon="ph:flag-bold"
+            />
+          )}
+          {summary && summary.totalSkills > 0 && (
+            <StatFigure
+              value={summary.totalSkills}
+              label="Habilidades que se entrenan"
+              icon="ph:target-bold"
+            />
+          )}
+          {trackPrograms.length > 0 && (
+            <StatFigure
+              value={trackPrograms.length}
+              label={trackPrograms.length === 1 ? 'Programa la usa' : 'Programas la usan'}
+              icon="ph:users-three-bold"
+            />
+          )}
+        </div>
+      ) : null
+    }
+  </SectionShell>
+
+  <!-- 2. El mapa: dónde cae cada obstáculo sobre el trazado real -->
+  <SectionShell tone="plain" width="default" labelledby="la-pista-mapa-titulo">
+    <SectionIntro
+      id="la-pista-mapa-titulo"
+      align="center"
+      eyebrow="El trazado"
+      eyebrowIcon="ph:map-trifold-bold"
+      title="Una vuelta completa, punto por punto"
+      highlight="punto por punto"
+      lead="El dibujo es la traza de una vuelta grabada con GPS en la pista, no una ilustración."
+    />
+    <TrackMap markers={markers} class="mt-10" />
+  </SectionShell>
+
+  <!-- 3. Historia: los cuatro hitos que definen la pista -->
+  {
+    trackHistory.length > 0 && (
+      <SectionShell
+        tone="muted"
+        pattern="yumbo"
+        width="default"
+        labelledby="la-pista-historia-titulo"
+      >
+        <SectionIntro
+          id="la-pista-historia-titulo"
+          eyebrow="Historia de la pista"
+          eyebrowIcon="ph:clock-countdown-bold"
+          title="De un teatrino abandonado a sede de competencia nacional"
+          highlight="sede de competencia nacional"
+        />
+        <Timeline items={trackHistory} tone="muted" class="mt-10" />
+      </SectionShell>
+    )
+  }
+
+  <!-- 4. Los obstáculos: una tarjeta por ficha (solo si hay suficientes) -->
+  {
+    ordered.length >= MIN_OBSTACLES_FOR_GRID && (
+      <SectionShell tone="plain" width="wide" labelledby="la-pista-obstaculos-titulo">
+        <SectionIntro
+          id="la-pista-obstaculos-titulo"
+          eyebrow="Obstáculo por obstáculo"
+          eyebrowIcon="ph:flag-bold"
+          title="Qué se aprende en cada punto de la pista"
+          highlight="Qué se aprende"
+          lead="Cada ficha dice qué habilidad entrena el obstáculo, en qué nivel se trabaja y cómo se progresa hasta pasarlo."
+        />
+
+        <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {ordered.map((entry, index) => (
+            <ObstacleCard entry={entry} number={index + 1} />
+          ))}
+        </div>
+      </SectionShell>
+    )
+  }
+
+  <!-- 5. Qué se entrena aquí, en agregado (solo si hay obstáculos suficientes) -->
+  {
+    (summary?.totalObstacles ?? 0) >= MIN_OBSTACLES_FOR_SKILLS && skillFacts.length > 0 && (
+      <SectionShell tone="tinted" width="default" labelledby="la-pista-habilidades-titulo">
+        <SectionIntro
+          id="la-pista-habilidades-titulo"
+          align="center"
+          eyebrow="Qué se entrena"
+          eyebrowIcon="ph:target-bold"
+          title="Las habilidades que la pista trabaja"
+          highlight="habilidades"
+        />
+        <FactGrid items={skillFacts} columns={3} tone="tinted" class="mt-10" />
+      </SectionShell>
+    )
+  }
+
+  <!-- 6. El paso siguiente -->
+  <SectionShell tone="plain" width="default" label="Inscripciones">
+    <InscriptionCTA variant="banner" />
+  </SectionShell>
+</BaseLayout>

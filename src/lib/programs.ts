@@ -7,6 +7,9 @@
  * solo se traduce a algo dibujable. Nada de copys hardcodeados.
  */
 
+import type { z } from 'astro/zod';
+import type { programSessionSchema } from './schemas';
+
 export type ProgramLevel = 'iniciación' | 'formación' | 'competición' | 'recreativo';
 
 export interface LevelStyle {
@@ -48,7 +51,7 @@ export const LEVEL_STYLES: Record<ProgramLevel, LevelStyle> = {
   },
   'formación': {
     label: 'Formación',
-    focus: 'Técnica y fondo',
+    focus: 'Técnica',
     icon: 'ph:mountains-bold',
     color: 'var(--color-primary)',
     text: 'text-primary-deep',
@@ -59,7 +62,7 @@ export const LEVEL_STYLES: Record<ProgramLevel, LevelStyle> = {
   },
   'competición': {
     label: 'Competición',
-    focus: 'Rendimiento y podio',
+    focus: 'Rendimiento y fondo',
     icon: 'ph:trophy-bold',
     color: 'var(--color-primary-deep)',
     text: 'text-primary-deep',
@@ -245,14 +248,48 @@ export function parseScheduleDays(schedule: string | undefined): WeekDay[] | nul
   return WEEK.filter((day) => days.has(day));
 }
 
+// ─── Horario en datos (campo `sessions`) ──────────────────────────────────────
+
+/** Una sesión tal como la valida el schema: día, hora de inicio, fin y lugar. */
+export type ProgramSession = z.infer<typeof programSessionSchema>;
+
+/** Lo que hace falta para saber cuándo entrena un programa. */
+export interface ProgramSchedule {
+  /** Horario escrito por una persona en el CMS. Sigue siendo obligatorio. */
+  schedule?: string;
+  /** El mismo horario en datos, si alguien lo capturó. Manda sobre el texto. */
+  sessions?: ProgramSession[];
+}
+
+function toSchedule(program: string | ProgramSchedule | undefined): ProgramSchedule {
+  return typeof program === 'string' || program === undefined ? { schedule: program } : program;
+}
+
 /**
  * Cuántos días a la semana entrena un programa.
  *
  *   "Martes y viernes 4:30 - 6:00 PM"            → 2
  *   "Lunes a viernes 4:00 - 6:00 PM"             → 5
  *   "Mar/Jue 4-6 PM · Mié 4-6 PM · Sáb · Dom"    → 5
+ *
+ * Se cuenta el `sessions` del frontmatter si existe —es el dato, no una
+ * lectura— y solo si no existe se vuelve a parsear el texto. Se cuentan días
+ * distintos en ambos casos: dos sesiones del mismo sábado son un día de
+ * entrenamiento, no dos, y la cifra tiene que decir lo mismo antes y después
+ * de que el club capture sus horarios.
+ *
+ * Acepta el texto suelto además del programa entero porque durante la
+ * transición conviven las dos formas de tener el horario.
  */
-export function countWeeklySessions(schedule: string | undefined): number | null {
+export function countWeeklySessions(
+  program: string | ProgramSchedule | undefined
+): number | null {
+  const { schedule, sessions } = toSchedule(program);
+
+  if (sessions && sessions.length > 0) {
+    return new Set(sessions.map((session) => session.day)).size;
+  }
+
   return parseScheduleDays(schedule)?.length ?? null;
 }
 
@@ -381,6 +418,109 @@ export function buildPathway(programs: PathwayInput[]): Pathway {
   return { stages, ticks, domain };
 }
 
+// ─── Selector de edad ─────────────────────────────────────────────────────────
+
+/**
+ * Contrato del selector de edad de `/programas`. Son tres cadenas que aparecen
+ * en tres sitios a la vez —el HTML del selector, el CSS generado en build y las
+ * reglas estáticas de `global.css`— así que viven aquí y no escritas a mano en
+ * cada uno. `global.css` las repite literalmente (una hoja de estilos no puede
+ * importar constantes de TypeScript): si cambian, hay que cambiarlas allí.
+ */
+/** Clase del contenedor que envuelve al selector y a las secciones marcadas. */
+export const AGE_SCOPE_CLASS = 'program-age-scope';
+/** `name` del grupo de radios. */
+export const AGE_INPUT_NAME = 'edad-programa';
+/** `value` de la opción que quita el filtro. */
+export const AGE_ALL_VALUE = 'todas';
+
+/** Un botón del selector de edad de `/programas`. */
+export interface AgeOption {
+  /** Edad en años. Es el `value` del radio y la clave del CSS generado. */
+  age: number;
+  /** Etiqueta corta del chip: `7`, o `12+` en el tramo sin techo. */
+  label: string;
+  /** Nombre accesible del radio: «7 años», «12 años o más». */
+  ariaLabel: string;
+  /** El chip significa "esa edad en adelante". */
+  openEnded: boolean;
+}
+
+/** Las edades que cubre un programa, tal como las lee el selector. */
+export interface AgeCoverage {
+  /** Primera edad del tramo. */
+  min: number;
+  /** Última edad **seleccionable** del tramo. */
+  max: number;
+  /** Todas las edades del tramo, en orden. Alimenta `data-ages`. */
+  ages: number[];
+}
+
+export interface AgePicker {
+  /** Botones a pintar, de menor a mayor. Vacío si no hay programas. */
+  options: AgeOption[];
+  /** Cobertura por id de programa, para marcar cada sección y cada tramo. */
+  coverage: Map<string, AgeCoverage>;
+}
+
+/**
+ * Traduce los programas a los botones del selector de edad de `/programas` y a
+ * la cobertura de cada tramo.
+ *
+ * El rango no se escribe a mano: sale de los mismos `ageMin`/`ageMax` que dibujan
+ * la ruta de formación. Dos decisiones que conviene tener presentes:
+ *
+ * - **El tramo sin techo aporta un solo botón, el de su edad de entrada.** Un
+ *   programa declarado `12` – `99` se ofrece como «12+»: a partir de ahí todas
+ *   las edades llevan al mismo sitio, así que un botón por año solo alargaría la
+ *   fila sin decir nada nuevo. `buildPathway()` le dibuja 7 años de ancho a ese
+ *   tramo para que la regla se lea, pero eso es una licencia del dibujo, no una
+ *   edad que se pueda elegir.
+ * - **Una edad que ningún programa cubre no se ofrece.** Si el club deja un
+ *   hueco entre dos etapas, el botón no aparece en vez de aparecer y no resaltar
+ *   nada.
+ */
+export function buildAgePicker(programs: PathwayInput[]): AgePicker {
+  const { stages } = buildPathway(programs);
+  const coverage = new Map<string, AgeCoverage>();
+
+  if (stages.length === 0) return { options: [], coverage };
+
+  // Tope del selector: la última edad que todavía distingue una etapa.
+  const last = stages[stages.length - 1];
+  const pickerMax = last.openEnded ? last.from : last.to - 1;
+
+  const openEndedAges = new Set<number>();
+
+  for (const stage of stages) {
+    const max = Math.min(stage.to - 1, pickerMax);
+    if (max < stage.from) continue;
+
+    const ages: number[] = [];
+    for (let age = stage.from; age <= max; age++) ages.push(age);
+    coverage.set(stage.id, { min: stage.from, max, ages });
+
+    if (stage.openEnded) openEndedAges.add(max);
+  }
+
+  const ages = [...new Set([...coverage.values()].flatMap((entry) => entry.ages))].sort(
+    (a, b) => a - b
+  );
+
+  const options: AgeOption[] = ages.map((age) => {
+    const openEnded = openEndedAges.has(age);
+    const years = age === 1 ? '1 año' : `${age} años`;
+    return {
+      age,
+      label: openEnded ? `${age}+` : String(age),
+      ariaLabel: openEnded ? `${years} o más` : years,
+      openEnded,
+    };
+  });
+
+  return { options, coverage };
+}
+
 /**
  * Cifras de cabecera de la sección. Solo se devuelve lo que el contenido
  * respalda: si ningún horario es legible, `weeklySessions` queda en `null`.
@@ -393,7 +533,7 @@ export interface ProgramTotals {
 }
 
 export function summarizePrograms(
-  programs: { ageMin: number; ageMax: number; schedule?: string; maxStudents?: number }[]
+  programs: (ProgramSchedule & { ageMin: number; ageMax: number; maxStudents?: number })[]
 ): ProgramTotals {
   if (programs.length === 0) {
     return { programs: 0, ageRange: null, weeklySessions: null, seats: null };
@@ -403,7 +543,7 @@ export function summarizePrograms(
   const maxAge = Math.max(...programs.map((p) => p.ageMax));
 
   const sessions = programs
-    .map((p) => countWeeklySessions(p.schedule))
+    .map((p) => countWeeklySessions(p))
     .filter((value): value is number => value !== null);
 
   const seats = programs

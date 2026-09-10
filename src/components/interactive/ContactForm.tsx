@@ -189,7 +189,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           <button
             type="button"
             onClick={() => setStatus('idle')}
-            className="inline-flex items-center rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="inline-flex items-center rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-surface-dark transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             Enviar otro mensaje
           </button>
@@ -229,8 +229,8 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
             autoComplete="name"
             aria-describedby={errors.name ? 'contact-name-error' : undefined}
             aria-invalid={errors.name ? 'true' : undefined}
-            className={`w-full rounded-lg border bg-white pl-4 pr-10 py-2.5 text-base text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
-              errors.name ? 'border-red-400' : 'border-surface-muted'
+            className={`w-full rounded-lg border bg-surface-raised pl-4 pr-10 py-2.5 text-base text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+              errors.name ? 'border-danger' : 'border-surface-muted'
             } ${shakingFields.has('name') ? 'field-shake' : ''}`}
             placeholder="Tu nombre"
             {...register('name')}
@@ -238,7 +238,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           {touchedFields.name && !errors.name && <ValidCheckmark />}
         </div>
         {errors.name && (
-          <p id="contact-name-error" role="alert" className="mt-1.5 text-sm text-red-600">
+          <p id="contact-name-error" role="alert" className="mt-1.5 text-sm text-danger">
             {errors.name.message}
           </p>
         )}
@@ -259,8 +259,8 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
             autoComplete="email"
             aria-describedby={errors.email ? 'contact-email-error' : undefined}
             aria-invalid={errors.email ? 'true' : undefined}
-            className={`w-full rounded-lg border bg-white pl-4 pr-10 py-2.5 text-base text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
-              errors.email ? 'border-red-400' : 'border-surface-muted'
+            className={`w-full rounded-lg border bg-surface-raised pl-4 pr-10 py-2.5 text-base text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+              errors.email ? 'border-danger' : 'border-surface-muted'
             } ${shakingFields.has('email') ? 'field-shake' : ''}`}
             placeholder="tu@email.com"
             {...register('email')}
@@ -268,7 +268,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           {touchedFields.email && !errors.email && <ValidCheckmark />}
         </div>
         {errors.email && (
-          <p id="contact-email-error" role="alert" className="mt-1.5 text-sm text-red-600">
+          <p id="contact-email-error" role="alert" className="mt-1.5 text-sm text-danger">
             {errors.email.message}
           </p>
         )}
@@ -289,8 +289,8 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
             autoComplete="tel"
             aria-describedby={errors.phone ? 'contact-phone-error' : undefined}
             aria-invalid={errors.phone ? 'true' : undefined}
-            className={`w-full rounded-lg border bg-white pl-4 pr-10 py-2.5 text-base text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
-              errors.phone ? 'border-red-400' : 'border-surface-muted'
+            className={`w-full rounded-lg border bg-surface-raised pl-4 pr-10 py-2.5 text-base text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+              errors.phone ? 'border-danger' : 'border-surface-muted'
             } ${shakingFields.has('phone') ? 'field-shake' : ''}`}
             placeholder="300 123 4567"
             {...register('phone')}
@@ -298,7 +298,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           {touchedFields.phone && !errors.phone && <ValidCheckmark />}
         </div>
         {errors.phone && (
-          <p id="contact-phone-error" role="alert" className="mt-1.5 text-sm text-red-600">
+          <p id="contact-phone-error" role="alert" className="mt-1.5 text-sm text-danger">
             {errors.phone.message}
           </p>
         )}
@@ -316,8 +316,8 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           id="contact-subject"
           aria-describedby={errors.subject ? 'contact-subject-error' : undefined}
           aria-invalid={errors.subject ? 'true' : undefined}
-          className={`w-full rounded-lg border bg-white px-4 py-2.5 text-base text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
-            errors.subject ? 'border-red-400' : 'border-surface-muted'
+          className={`w-full rounded-lg border bg-surface-raised px-4 py-2.5 text-base text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${
+            errors.subject ? 'border-danger' : 'border-surface-muted'
           } ${shakingFields.has('subject') ? 'field-shake' : ''}`}
           {...register('subject')}
         >
@@ -328,7 +328,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           ))}
         </select>
         {errors.subject && (
-          <p id="contact-subject-error" role="alert" className="mt-1.5 text-sm text-red-600">
+          <p id="contact-subject-error" role="alert" className="mt-1.5 text-sm text-danger">
             {errors.subject.message}
           </p>
         )}
@@ -348,8 +348,8 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
             rows={5}
             aria-describedby={errors.message ? 'contact-message-error' : undefined}
             aria-invalid={errors.message ? 'true' : undefined}
-            className={`w-full rounded-lg border bg-white pl-4 pr-10 py-2.5 text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y ${
-              errors.message ? 'border-red-400' : 'border-surface-muted'
+            className={`w-full rounded-lg border bg-surface-raised pl-4 pr-10 py-2.5 text-text-primary placeholder:text-text-secondary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y ${
+              errors.message ? 'border-danger' : 'border-surface-muted'
             } ${shakingFields.has('message') ? 'field-shake' : ''}`}
             placeholder="Escribe tu mensaje aquí..."
             {...register('message')}
@@ -357,7 +357,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
           {touchedFields.message && !errors.message && <ValidCheckmark />}
         </div>
         {errors.message && (
-          <p id="contact-message-error" role="alert" className="mt-1.5 text-sm text-red-600">
+          <p id="contact-message-error" role="alert" className="mt-1.5 text-sm text-danger">
             {errors.message.message}
           </p>
         )}
@@ -365,7 +365,7 @@ export default function ContactForm({ defaultSubject = '' }: Props) {
 
       {/* Error global */}
       {status === 'error' && (
-        <div role="alert" className="rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+        <div role="alert" className="rounded-lg bg-danger/10 border border-danger p-4 text-sm text-danger">
           {errorMessage}
         </div>
       )}

@@ -23,6 +23,18 @@ interface Props {
   /** Color de la cifra. Por defecto, el teal accesible de marca. */
   accent?: string;
   class?: string;
+  /**
+   * Anima la cifra con un conteo ascendente al entrar en pantalla, con la
+   * utilidad compartida `.count-up` de `global.css` (docs/08-plan-creatividad-ui.md,
+   * Sprint 1 tarea 6; extraída de `TrochaVerde.astro`). Solo aplica a valores
+   * enteros — si `value` es un string o un número no entero, se ignora y la
+   * cifra se pinta estática, para no repetir la regla "solo enteros" en cada
+   * consumidor. Con `unit` presente, el sufijo se pinta aparte y nunca anima
+   * (el conteo solo cubre el número). Requiere un ancestro `.reveal`: sin él,
+   * el conteo nunca arranca bajo JS (queda en el estado de reposo, la cifra
+   * final — ver el comentario de `.count-up` en `global.css`).
+   */
+  countUp?: boolean;
 }
 
 const {
@@ -36,10 +48,27 @@ const {
   size = 'default',
   accent,
   class: className,
+  countUp = false,
 } = Astro.props;
 
 const tokens = getTone(tone);
 const valueColor = tokens.inverted ? 'text-white' : 'text-primary-deep';
+const isCountUp = countUp && typeof value === 'number' && Number.isInteger(value);
+const countDigits = isCountUp ? String(Math.abs(value)).length : undefined;
+
+// Fallback sin JS (mismo criterio que TrochaVerde.astro): sin el
+// IntersectionObserver de BaseLayout.astro, `.revealed` no llega nunca y
+// --count-value se quedaría en 0 para siempre; y sin esto, el ancestro
+// `.reveal` que el conteo necesita para animar se queda invisible también.
+// Va como string + `set:html` (no como <style is:inline> literal) porque
+// Prettier no sabe formatear un `<style>` anidado dentro de un `{condición
+// && (...)}`: rompe el parser embebido de prettier-plugin-astro (confirmado
+// con un repro mínimo). `set:html` además evita depender de `is:inline`: al
+// no ser un nodo <style> real para el compilador de Astro, nunca se
+// extrae al bundle que carga con o sin JS.
+const countUpNoscript =
+  '<style>.count-up__digits{--count-value:var(--count-target) !important}' +
+  '.reveal{opacity:1 !important;transform:none !important}</style>';
 ---
 
 <div
@@ -48,26 +77,36 @@ const valueColor = tokens.inverted ? 'text-white' : 'text-primary-deep';
     className,
   ]}
 >
-  {icon && (
-    <Icon
-      name={icon}
-      class:list={['mb-2 size-6', tokens.inverted ? 'text-accent-light' : 'text-primary-deep']}
-      aria-hidden="true"
-    />
-  )}
+  {
+    icon && (
+      <Icon
+        name={icon}
+        class:list={['mb-2 size-6', tokens.inverted ? 'text-accent-light' : 'text-primary-deep']}
+        aria-hidden="true"
+      />
+    )
+  }
   <p
     class:list={[
-      'font-display font-extrabold leading-none',
+      'font-display leading-none font-extrabold',
       size === 'sm' ? 'text-xl sm:text-2xl' : 'text-3xl sm:text-4xl',
     ]}
   >
     <span class:list={[!accent && valueColor]} style={accent ? `color:${accent}` : undefined}>
-      {value}
+      {
+        isCountUp ? (
+          <span class="count-up" style={`--count-target:${value};--count-digits:${countDigits}`}>
+            <span class="count-up__digits" aria-hidden="true" />
+            <span class="sr-only">{value}</span>
+          </span>
+        ) : (
+          value
+        )
+      }
     </span>
-    {unit && (
-      <span class:list={['ml-1 text-base font-bold', tokens.muted]}>{unit}</span>
-    )}
+    {unit && <span class:list={['ml-1 text-base font-bold', tokens.muted]}>{unit}</span>}
   </p>
-  <p class:list={['mt-2 text-sm font-medium leading-snug', tokens.muted]}>{label}</p>
+  <p class:list={['mt-2 text-sm leading-snug font-medium', tokens.muted]}>{label}</p>
   {note && <p class:list={['mt-1 text-xs leading-snug', tokens.muted]}>{note}</p>}
 </div>
+{isCountUp && <noscript set:html={countUpNoscript} />}

@@ -20,8 +20,8 @@ export class GA4Provider implements AnalyticsProvider {
   }
 
   init(): void {
-    // gtag bootstrap se ejecuta en <Analytics.astro> dentro del worker de Partytown.
-    // Este provider solo despacha eventos contra el gtag ya cargado.
+    // gtag.js se carga en <Analytics.astro>, en el hilo principal con `async`
+    // (no en Partytown). Este provider solo despacha eventos contra el gtag ya cargado.
   }
 
   trackPageview(path: string, title?: string): void {

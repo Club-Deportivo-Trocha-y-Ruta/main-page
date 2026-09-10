@@ -50,7 +50,7 @@ const { Content } = await render(program);
 const { title } = program.data;
 const photo = getRefreshImage(program.data.image);
 const level = getLevelStyle(program.data.targetLevel);
-const sessions = countWeeklySessions(program.data.schedule);
+const sessions = countWeeklySessions(program.data);
 
 type Program = CollectionEntry<'programs'>;
 
@@ -91,8 +91,8 @@ const jsonLd = generateCourseJsonLd({
 ---
 
 <BaseLayout
-  title={`${title} | Programas`}
-  description={program.data.summary ?? program.data.subtitle}
+  title={program.data.seo?.metaTitle ?? `${title} | Programas`}
+  description={program.data.seo?.metaDescription ?? program.data.summary ?? program.data.subtitle}
   jsonLd={jsonLd}
 >
   <!-- La promesa, no la ficha técnica -->
@@ -248,7 +248,7 @@ const jsonLd = generateCourseJsonLd({
     </div>
 
     {program.data.methodology && (
-      <div class="mt-8 rounded-r-xl border-l-4 bg-black/[0.03] p-5" style={`border-color:${level.color}`}>
+      <div class="mt-8 rounded-r-xl border-l-4 bg-text-primary/[0.03] p-5" style={`border-color:${level.color}`}>
         <p class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">Cómo se entrena</p>
         <p class="mt-1.5 text-sm leading-relaxed text-text-primary">{program.data.methodology}</p>
       </div>
@@ -275,7 +275,7 @@ const jsonLd = generateCourseJsonLd({
     )}
 
     {(program.data.requirements.length > 0 || program.data.equipmentNeeded.length > 0) && (
-      <div class="mt-8 grid gap-8 border-t border-black/10 pt-8 sm:grid-cols-2">
+      <div class="mt-8 grid gap-8 border-t border-hairline pt-8 sm:grid-cols-2">
         {program.data.requirements.length > 0 && (
           <div>
             <p class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">
@@ -319,11 +319,11 @@ const jsonLd = generateCourseJsonLd({
     )}
 
     <!-- Cuerpo markdown: la historia completa del programa -->
-    <div class="prose prose-lg mt-10 max-w-3xl border-t border-black/10 pt-8">
+    <div class="prose prose-lg mt-10 max-w-3xl border-t border-hairline pt-8">
       <Content />
     </div>
 
-    <div class="mt-8 border-t border-black/10 pt-6">
+    <div class="mt-8 border-t border-hairline pt-6">
       <ShareButtons title={program.data.title} description={program.data.summary ?? program.data.subtitle} />
     </div>
   </SectionShell>
@@ -336,6 +336,6 @@ const jsonLd = generateCourseJsonLd({
       description="Completa la preinscripción y el director deportivo te contacta para agendar la clase de prueba gratuita."
     />
 
-    <ProgramAdjacentNav previous={previous} next={next} class="mt-8 border-t border-black/10 pt-8" />
+    <ProgramAdjacentNav previous={previous} next={next} class="mt-8 border-t border-hairline pt-8" />
   </SectionShell>
 </BaseLayout>

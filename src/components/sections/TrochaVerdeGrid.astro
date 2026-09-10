@@ -41,7 +41,7 @@ const { trees } = Astro.props;
       <select
         id="filter-category"
         data-filter="category"
-        class="rounded-lg border border-surface-muted bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
+        class="rounded-lg border border-surface-muted bg-surface-raised px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
       >
         <option value="">Todas</option>
         <option value="frutal">Frutal</option>
@@ -59,7 +59,7 @@ const { trees } = Astro.props;
       <select
         id="filter-status"
         data-filter="status"
-        class="rounded-lg border border-surface-muted bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
+        class="rounded-lg border border-surface-muted bg-surface-raised px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
       >
         <option value="">Todos</option>
         <option value="sembrado">Sembrado</option>
@@ -96,7 +96,7 @@ const { trees } = Astro.props;
 
       return (
         <article
-          class="overflow-hidden rounded-xl border border-emerald-100 bg-white transition-shadow hover:shadow-md"
+          class="overflow-hidden rounded-xl border border-emerald-100 bg-surface-raised transition-shadow hover:shadow-md"
           data-category={tree.category}
           data-status={tree.status}
           data-species={tree.species.toLowerCase()}

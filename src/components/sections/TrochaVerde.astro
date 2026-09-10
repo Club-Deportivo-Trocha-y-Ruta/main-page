@@ -88,12 +88,18 @@ const latestNewsSlug = latestInitiative?.data.relatedNews?.[0];
           </div>
           <div>
             <p class="font-display text-text-primary text-xl font-bold">
-              <!-- Count-up CSS puro (docs/06-plan-animaciones.md Fase 4 Tarea 11):
-                     ver comentario del <style> al final del archivo. --tv-count es
-                     decorativo/aria-hidden; el sr-only es la cifra que leen lectores
-                     de pantalla, siempre la final, nunca el conteo intermedio. -->
-              <span class="tv-count" style={`--count-target:${totalTrees}`}>
-                <span class="tv-count__digits" aria-hidden="true"></span>
+              <!-- Count-up CSS puro: utilidad compartida `.count-up` de
+                     global.css (docs/08-plan-creatividad-ui.md, Sprint 1 tarea 6;
+                     extraída del count-up original de esta misma sección,
+                     docs/06-plan-animaciones.md Fase 4 Tarea 11). El dígito
+                     animado es aria-hidden; el sr-only es la cifra que leen
+                     lectores de pantalla, siempre la final, nunca el conteo
+                     intermedio. -->
+              <span
+                class="count-up"
+                style={`--count-target:${totalTrees};--count-digits:${String(totalTrees).length}`}
+              >
+                <span class="count-up__digits" aria-hidden="true"></span>
                 <span class="sr-only">{totalTrees}</span>
               </span>
             </p>
@@ -114,16 +120,16 @@ const latestNewsSlug = latestInitiative?.data.relatedNews?.[0];
       </div>
 
       <!-- Fallback sin JS: si el observer de `.reveal` (BaseLayout.astro) no
-             corre, `.revealed` no llega nunca y --tv-count se quedaría en 0 para
-             siempre (ver el <style> del final). `<noscript>` solo se parsea sin
-             JS, así que este bloque nunca existe con JS activo — `is:inline` es
-             obligatorio: sin él Astro saca el <style> del <noscript> y lo mete
-             en el bundle que carga siempre, con o sin JS, y el fallback dejaría
-             de servir para nada. -->
+             corre, `.revealed` no llega nunca y --count-value se quedaría en 0
+             para siempre (ver la utilidad `.count-up` en global.css).
+             `<noscript>` solo se parsea sin JS, así que este bloque nunca
+             existe con JS activo — `is:inline` es obligatorio: sin él Astro
+             saca el <style> del <noscript> y lo mete en el bundle que carga
+             siempre, con o sin JS, y el fallback dejaría de servir para nada. -->
       <noscript>
         <style is:inline>
-          .tv-count__digits {
-            --tv-count: var(--count-target) !important;
+          .count-up__digits {
+            --count-value: var(--count-target) !important;
           }
           /* El mismo observer pinta `.reveal`: sin JS la rejilla entera se
                quedaría en opacity 0 y la cifra no se vería aunque su contador
@@ -179,60 +185,7 @@ const latestNewsSlug = latestInitiative?.data.relatedNews?.[0];
   </div>
 </SectionShell>
 
-<style>
-  /* Count-up CSS puro del total de árboles (docs/06-plan-animaciones.md, Fase
-     4 Tarea 11). Cero JS nuevo: el disparador es el cambio de clase
-     `.reveal` → `.revealed` que ya añade el IntersectionObserver de
-     BaseLayout.astro — el mismo mecanismo que ya usan SeasonOverview,
-     ProgramsGrid, RaceLineup, etc.
-
-     Estado de reposo = cifra final SIEMPRE, en las tres capas de mejora
-     progresiva:
-       1. Sin `@property` (o sin soporte de `@supports at-rule()`, la forma
-          correcta de detectarlo — `@supports (prop: value)` no sirve para
-          probar un at-rule): el bloque de abajo nunca se activa y
-          `--tv-count` quedaría en `var(--count-target)`.
-       2. Con `@property` pero `prefers-reduced-motion: reduce`: la regla que
-          arranca en 0 vive dentro de `@media (prefers-reduced-motion:
-          no-preference)`, así que tampoco se activa.
-       3. Con soporte y sin esa preferencia, pero sin JS: `.revealed` nunca
-          llega (BaseLayout.astro es quien lo añade) y `--tv-count` se
-          quedaría en 0 para siempre — lo corrige el `<noscript>` del markup
-          de arriba, con `!important` porque compite con la misma
-          especificidad y no depende del orden de bundling.
-
-     El número real y accesible vive en un <span class="sr-only"> aparte del
-     dígito animado (aria-hidden): los lectores de pantalla leen la cifra
-     final del contenido (`totalTrees`, @lib/trocha-verde), nunca el conteo
-     intermedio. */
-  .tv-count__digits {
-    --tv-count: var(--count-target);
-    counter-reset: tv-count var(--tv-count);
-  }
-  .tv-count__digits::before {
-    content: counter(tv-count);
-  }
-
-  @supports at-rule(@property) {
-    @property --tv-count {
-      syntax: '<integer>';
-      inherits: false;
-      initial-value: 0;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-      .tv-count__digits {
-        --tv-count: 0;
-        /* Duración fija fuera de --duration-micro/--duration-celebration a
-           propósito: el plan pide ~1–1.5s para este conteo, más largo que
-           ambos tokens (200ms/500ms) — mismo criterio que el shake de campo
-           inválido (300ms fijo, ver el bloque `field-` en global.css). */
-        transition: --tv-count 1.2s ease-out;
-      }
-
-      .reveal.revealed .tv-count__digits {
-        --tv-count: var(--count-target);
-      }
-    }
-  }
-</style>
+<!-- El count-up de arriba (--count-target/--count-value, clases .count-up /
+     .count-up__digits) ya no vive en un <style> local: es la utilidad
+     compartida de global.css (docs/08-plan-creatividad-ui.md, Sprint 1
+     tarea 6), que también consume `StatFigure.astro` vía su prop `countUp`. -->

@@ -33,6 +33,17 @@ Two harness shapes, both worth reusing:
    Use a non-greedy regex; a greedy `RESULT {.*}` swallows trailing markup and fails to
    parse.
 
+**Capturing the *bottom* of a real page (footer, last section):** two traps.
+`file://` renders the page unstyled — Astro links CSS as `/_astro/*.css`, which resolves
+to the filesystem root — so serve `dist/` first (`python3 -m http.server` from inside
+`dist/`). And a giant `--window-size=1280,14000` does *not* give you a faithful full-page
+shot: `<main>` is `flex-1` inside a `min-h-screen` body, so it stretches to fill the tall
+viewport and the footer ends up floating far below the section that should precede it.
+Working shape: a throwaway `dist/__probe.html` (same origin) with
+`<iframe src="/…" width=1280 height=900>` plus an `onload` script that calls
+`f.contentWindow.scrollTo(0, doc.documentElement.scrollHeight)` (repeat once in a
+`setTimeout`); screenshot the outer page at 1280×900. Delete the probe afterwards.
+
 Other flags that mattered: `--force-prefers-reduced-motion` (proves the reduced-motion
 fallback renders the final state), `--force-device-scale-factor=1` (so pixel coordinates
 match CSS px), `--hide-scrollbars`, `--virtual-time-budget=3000`, `--disable-gpu`. The

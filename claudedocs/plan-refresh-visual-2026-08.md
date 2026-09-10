@@ -179,7 +179,7 @@
 
 ### T3.2 — Reactivar /equipo
 - **Agente**: `astro-dev` + `content-manager` · **Depende de**: T3.1
-- **Archivos**: renombrar `src/pages/equipo/*.astro.bak` → `.astro`, descomentar nav en `constants.ts:33`, reconciliar `src/content/riders/*.md` con identidades reales autorizadas (retratos lineup 600×800 disponibles)
+- **Archivos**: los antiguos `src/pages/equipo/*.astro.bak` se eliminaron del árbol (ago 2026; recuperables con `git show 6626fa2:'src/pages/equipo/[...slug].astro.bak'`) — rehacer los perfiles sobre el sistema editorial (`docs/04` §27), descomentar nav en `constants.ts:33`, reconciliar `src/content/riders/*.md` con identidades reales autorizadas (retratos lineup 600×800 disponibles)
 - **Aceptación**: /equipo con solo menores autorizados; JSON-LD Person; nav completa
 
 ### T3.3 — Reactivar /galeria

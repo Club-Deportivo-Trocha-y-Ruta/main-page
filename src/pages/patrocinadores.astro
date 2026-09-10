@@ -187,7 +187,7 @@ const mailtoPatrocinio = `mailto:${CONTACT.email}?subject=${encodeURIComponent('
         <ul class="mt-12 grid gap-5 sm:grid-cols-3" role="list">
           {evidenceCards.map((card, index) => (
             <li
-              class="reveal bg-surface flex flex-col rounded-2xl p-6 shadow-sm ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-md"
+              class="reveal bg-surface flex flex-col rounded-2xl p-6 shadow-sm ring-1 ring-hairline transition duration-300 hover:-translate-y-1 hover:shadow-md"
               style={`--stagger:${index * 80}ms`}
             >
               <StatFigure value={card.value} label={card.label} note={card.note} icon={card.icon} />
@@ -235,16 +235,24 @@ const mailtoPatrocinio = `mailto:${CONTACT.email}?subject=${encodeURIComponent('
                   aria-hidden="true"
                 />
                 {group.level.labelPlural}
-                <span class="h-px flex-1 bg-black/10" aria-hidden="true" />
+                <span class="h-px flex-1 bg-text-primary/10" aria-hidden="true" />
               </h3>
 
+              {/*
+                Las placas de los logos se quedan blancas en el tema oscuro
+                (`dark:bg-white`): los logos de los patrocinadores están
+                diseñados sobre blanco —Smurfit Westrock es texto azul marino
+                sobre transparente— y sobre `surface`/`surface-muted`
+                remapeados desaparecían. Es la excepción documentada en
+                docs/04 §29.
+              */}
               {group.level.id === 'principal' ? (
                 <ul class="grid gap-6" role="list">
                   {group.sponsors.map((sponsor) => {
                     const tenure = sponsorSince(sponsor.data.startDate);
                     return (
                       <li class="border-primary-deep/20 from-primary-deep/5 via-surface to-surface flex flex-col gap-6 rounded-2xl border bg-gradient-to-br p-6 shadow-sm sm:flex-row sm:items-center sm:p-8">
-                        <div class="bg-surface relative h-28 w-full shrink-0 overflow-hidden rounded-xl sm:h-32 sm:w-56">
+                        <div class="bg-surface relative h-28 w-full shrink-0 overflow-hidden rounded-xl sm:h-32 sm:w-56 dark:bg-white">
                           <img
                             src={sponsor.data.logo}
                             alt={`Logo de ${sponsor.data.name}`}
@@ -299,8 +307,8 @@ const mailtoPatrocinio = `mailto:${CONTACT.email}?subject=${encodeURIComponent('
                   {group.sponsors.map((sponsor) => {
                     const tenure = sponsorSince(sponsor.data.startDate);
                     return (
-                      <li class="bg-surface flex flex-col rounded-2xl p-5 shadow-sm ring-1 ring-black/5">
-                        <div class="bg-surface-muted relative h-20 w-full overflow-hidden rounded-lg">
+                      <li class="bg-surface flex flex-col rounded-2xl p-5 shadow-sm ring-1 ring-hairline">
+                        <div class="bg-surface-muted relative h-20 w-full overflow-hidden rounded-lg dark:bg-white">
                           <img
                             src={sponsor.data.logo}
                             alt={`Logo de ${sponsor.data.name}`}

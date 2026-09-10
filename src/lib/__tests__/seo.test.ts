@@ -92,6 +92,14 @@ describe('generateEventJsonLd', () => {
     expect(result.eventStatus).toBe('https://schema.org/EventScheduled');
   });
 
+  // Regresión: `startDate` salía como `2026-05-15T00:00:00.000Z`, que en
+  // Colombia (UTC-5) es el 14 a las 7 p. m. Google mostraba la válida un día
+  // antes de la fecha real.
+  it('ancla la fecha suelta a la medianoche de Colombia, no a la de UTC', () => {
+    const result = generateEventJsonLd(baseEvent);
+    expect(result.startDate).toBe('2026-05-15T00:00:00-05:00');
+  });
+
   it('incluye endDate cuando se provee', () => {
     const result = generateEventJsonLd({
       ...baseEvent,

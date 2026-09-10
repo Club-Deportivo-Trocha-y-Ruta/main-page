@@ -171,16 +171,25 @@ Dosis máxima por crónica: 1 stat-strip, 3 stat-callout, 2 pull-quote, 1 standi
 sección de corredor, porque su valor está en la repetición (el lector aprende a buscarlo).
 
 ```html
-<!-- Parte de la válida (bloque 2) — una vez, tras el cold open -->
-<div class="stat-strip">
-  <div class="stat-strip__item"><span class="stat-strip__value">11</span><span class="stat-strip__label">corredores en pista</span></div>
+<!-- Parte de la válida (bloque 2) — una vez, tras el cold open.
+     `reveal` en el contenedor: entra con fade + escalonado por ítem al
+     hacer scroll (docs/08-plan-creatividad-ui.md, tarea 15) — sin él, el
+     bloque se ve exactamente igual pero siempre visible, sin animación.
+     La cifra que es un entero puro (nunca las que llevan unidad como
+     "3,4 km") puede animarse con `.count-up`: `--count-target` es el
+     número final y `--count-digits` sus dígitos (`String(valor).length`,
+     a mano); el `<span class="sr-only">` siempre lleva la cifra final,
+     nunca la anima un lector de pantalla. -->
+<div class="stat-strip reveal">
+  <div class="stat-strip__item"><span class="stat-strip__value"><span class="count-up" style="--count-target:11;--count-digits:2"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">11</span></span></span><span class="stat-strip__label">corredores en pista</span></div>
   <div class="stat-strip__item stat-strip__item--accent"><span class="stat-strip__value">2</span><span class="stat-strip__label">platas del club</span></div>
   <div class="stat-strip__item"><span class="stat-strip__value">241</span><span class="stat-strip__label">puntos sumados</span></div>
   <div class="stat-strip__item"><span class="stat-strip__value">3,4 km</span><span class="stat-strip__label">por vuelta</span></div>
 </div>
 
-<!-- Cifra destacada — máx. 2-3, entre secciones -->
-<div class="stat-callout">
+<!-- Cifra destacada — máx. 2-3, entre secciones. `reveal` opcional, mismo
+     criterio que arriba (bloque único: sin escalonado por ítem). -->
+<div class="stat-callout reveal">
   <span class="stat-callout__value">21 s</span>
   <span class="stat-callout__text">lo que costó la vuelta de más que Jostin le dio a la palmera</span>
 </div>
@@ -256,6 +265,140 @@ Ya existentes y vigentes: `<figure>` / `figure--portrait` (fotos con caption), `
 (rejilla de podios), `.figure-carousel` (scroll de fotos de acción), y el frontmatter `lineup:`
 que renderiza la parrilla del club como cartas 3D (`RaceLineup`) antes del cuerpo.
 
+### Piezas por crónica (formato v5, septiembre de 2026)
+
+Desde v5 una crónica puede traer una o dos piezas **propias**, dictadas por la forma del
+evento, en lugar del juego común de v4. La regla para inventar una: nace del dato que solo
+ese evento tiene (un horario por mangas, un recaudo), se escribe una vez en `global.css`
+bajo `.prose`, y cumple las tres condiciones de siempre — CSS puro con `reveal` opt-in,
+estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`opacity`
+(más `stroke-dashoffset`, la excepción documentada). Seis existen hoy:
+
+| Pieza | Para qué | Estreno |
+|---|---|---|
+| `.visit-card` | La "ficha" de una carrera fuera de casa como tiquete con talón de fecha. Reemplaza al stat-strip cuando el dato singular es el contexto y no una cifra. | Alcalá 2026 |
+| `.day-clock` | El programa del día como lista vertical con separación **proporcional al tiempo real** entre salidas y riel que se traza con el scroll. Una vez, antes de la primera manga. | Alcalá 2026 |
+| `.clock-stamp` | La hora grande bajo cada `##` de manga, con barra del día que avanza hasta esa hora. | Alcalá 2026 |
+| `.ledger` | Recibo de un evento pro-fondos: lo que entró (total remarcado) y en qué se va. Se "imprime" línea a línea y remata con un sello. Nunca calcula: el total se escribe a mano y debe cuadrar. | Chequeo 2026 |
+| `.check-sheet` | Planilla de chequeo: una casilla por grupo de categoría que se marca al entrar en pantalla, con campos "Se probó" / "Se vio". Reemplaza a la tabla-diagnóstico. | Chequeo 2026 |
+| `.thanks-wall` | Muro de placas: los agradecimientos de una jornada en casa como pared de dorsales, con el nombre donde iría el número. Sirve para entes (`--org`) y para personas naturales. Nunca se inventa una placa: cada nombre sale de una fuente o del visto bueno del club. | Chequeo 2026 |
+| `.clip` | Un clip vertical de ≤ 15 s o una nota de voz de ≤ 20 s, alojados en el sitio (`public/videos/news/…`), dentro de una `<figure>`. Sin `reveal`: `preload="none"` + póster WebP. Máx. 3 clips y 1 audio por crónica. Es la base del formato v6 (foto y clip primero, ≤ 700 palabras). | Alcalá 2026 |
+
+```html
+<!-- Ficha de la visita — el talón es decorativo (la fecha va también en la
+     lista). Máx. 7 ítems; `--wide` ocupa las dos columnas. -->
+<div class="visit-card reveal">
+  <div class="visit-card__stub" aria-hidden="true">
+    <span class="visit-card__stub-day">Dom</span>
+    <span class="visit-card__stub-num">13</span>
+    <span class="visit-card__stub-month">Sep 2026</span>
+  </div>
+  <dl class="visit-card__list">
+    <div class="visit-card__item visit-card__item--wide"><dt>Competencia</dt><dd>Copa Let's Go Interdepartamental XCO</dd></div>
+    <div class="visit-card__item"><dt>Sede</dt><dd>Alcalá, Valle del Cauca</dd></div>
+  </dl>
+</div>
+
+<!-- Reloj del día — --gap = minutos desde la parada anterior (la primera va
+     en 0). Modificadores: --club (el club corrió), --quiet (sin corredores
+     del club), --award (premiación). Hasta 8 paradas. La leyenda va aparte. -->
+<ol class="day-clock reveal">
+  <li class="day-clock__stop day-clock__stop--quiet" style="--gap:0">
+    <span class="day-clock__time">8:00</span>
+    <span class="day-clock__label">Manga 1 · Máster</span>
+    <span class="day-clock__note">sin corredores del club</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--club" style="--gap:80">
+    <span class="day-clock__time">9:20</span>
+    <span class="day-clock__label">Manga 2 · Kanguritos</span>
+    <span class="day-clock__note">Pista especial · Liam y Celeste</span>
+  </li>
+  <li class="day-clock__stop day-clock__stop--award" style="--gap:80">
+    <span class="day-clock__time">10:40</span>
+    <span class="day-clock__label">Primera premiación</span>
+  </li>
+</ol>
+<p class="day-clock__legend">
+  <span><span class="day-clock__key"></span> el club estuvo en pista</span>
+  <span><span class="day-clock__key day-clock__key--award"></span> premiación</span>
+  <span><span class="day-clock__key day-clock__key--quiet"></span> manga sin corredores del club</span>
+</p>
+
+<!-- Sello de hora — bajo el ## de cada manga. --t = minutos desde las 8:00
+     (--clock-span, 300 por defecto, es lo que dura el día). -->
+<div class="clock-stamp reveal" style="--t:110">
+  <span class="clock-stamp__time">9:50 <small>a. m.</small></span>
+  <span class="clock-stamp__label">Manga 4 · vuelta de 3,3 km</span>
+  <span class="clock-stamp__day" aria-hidden="true"><span class="clock-stamp__dot"></span></span>
+</div>
+
+<!-- Recibo — máx. 4 líneas de cuenta y 4 destinos. El número entero de
+     inscritos puede llevar el count-up compartido; la cifra en pesos no
+     (el contador no pone el punto de miles). -->
+<div class="ledger reveal">
+  <p class="ledger__head"><span class="ledger__title">Chequeo Pro-Fondos</span><span class="ledger__date">Pista Carlos Castro · 5 de septiembre de 2026</span></p>
+  <dl class="ledger__lines">
+    <div class="ledger__line"><dt>Inscripciones</dt><dd>32 × $20.000</dd></div>
+    <div class="ledger__line ledger__line--total"><dt>Total para la pista</dt><dd>$640.000</dd></div>
+  </dl>
+  <p class="ledger__section">En qué se va</p>
+  <ul class="ledger__uses">
+    <li>Jornada de guadaña y limpieza del circuito</li>
+  </ul>
+  <span class="ledger__stamp" aria-hidden="true">Para la pista</span>
+</div>
+
+<!-- Planilla de chequeo — una fila por grupo, máx. 6. El SVG es decorativo;
+     todo el dato va en el texto. -->
+<ol class="check-sheet reveal">
+  <li class="check-sheet__row">
+    <svg class="check-sheet__box" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" /><path class="check-sheet__tick" d="M7 12.5l3.5 3.5L17 8.5" /></svg>
+    <div class="check-sheet__body">
+      <span class="check-sheet__name">Teteros sin pedales</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se probó</span>La salida en grupo.</span>
+      <span class="check-sheet__field"><span class="check-sheet__tag">Se vio</span>Todos terminaron la vuelta.</span>
+    </div>
+  </li>
+</ol>
+
+<!-- Muro de placas — máx. 8 (hasta ahí llega el escalonado). `--org` para un
+     ente; sin modificador, persona natural o grupo de personas. Los agujeros
+     de las bridas y la inclinación son decorativos: todo el dato va en el
+     texto. El nombre admite enlace al sitio o al perfil del ente (externo:
+     `target="_blank" rel="noopener noreferrer"`, y sin UTM — la convención de
+     docs/05 es para el tráfico que ENTRA al sitio, no para el que sale).
+     Regla dura: aquí no entra nadie sin fuente. Los nombres propios de
+     voluntarios exigen el visto bueno del club, y de menores no se publica
+     ninguno (ver "Reglas éticas"). -->
+<ul class="thanks-wall reveal">
+  <li class="thanks-wall__plate thanks-wall__plate--org">
+    <span class="thanks-wall__role">Números y tableros</span>
+    <span class="thanks-wall__name"><a href="https://www.instagram.com/supercopa_bmx/" target="_blank" rel="noopener noreferrer">Super Copa BMX</a></span>
+    <span class="thanks-wall__note">Prestó los números que llevaron los corredores.</span>
+  </li>
+  <li class="thanks-wall__plate">
+    <span class="thanks-wall__role">Cronómetro y planilla</span>
+    <span class="thanks-wall__name">La mesa de jueces</span>
+    <span class="thanks-wall__note">De ahí sale cada tiempo de esta crónica.</span>
+  </li>
+</ul>
+
+<!-- Clip — video vertical alojado en el sitio. `preload="none"` y póster
+     obligatorios (nada se descarga hasta pulsar play). `.clip--wide` para
+     16:9. El <figcaption> lleva el dato (quién, manga, hora real). Un
+     <audio> con la misma figura sirve para una nota de voz; la transcripción
+     va debajo en texto, nunca solo en el audio. -->
+<figure class="clip">
+  <video controls playsinline preload="none" width="720" height="1280"
+    poster="/images/news/copa-lets-go-alcala-2026/clip-salida-manga-2-poster.webp">
+    <source src="/videos/news/copa-lets-go-alcala-2026/clip-salida-manga-2.mp4" type="video/mp4" />
+    Tu navegador no reproduce este video.
+    <a href="/videos/news/copa-lets-go-alcala-2026/clip-salida-manga-2.mp4">Descárgalo</a>.
+  </video>
+  <figcaption>Salida de la manga 2, 9:20 a. m.: Kanguritos y Pre Infantil Mixto A en la pista especial.</figcaption>
+</figure>
+```
+
 ## Regla de dos artículos (eventos de dos días)
 
 Cuando la válida tiene gymkanas el sábado y XCO el domingo (patrón Palmira), se publican
@@ -270,7 +413,7 @@ Cuando la válida tiene gymkanas el sábado y XCO el domingo (patrón Palmira), 
 - **"Copa Valle Paraíso de Todos GW Shimano 2026"** — nombre completo de la temporada (primera mención); luego "Copa Valle".
 - **"primera válida", "segunda válida", "tercera válida"…** — siempre en minúscula y con ordinal escrito. NO usar "V.I", "1ª válida" ni "Round 1" en prosa.
 - En **tablas** con columnas estrechas sí: `1ª | 2ª | 3ª | 4ª` o `I | II | III`.
-- Calendario 2026 (7 válidas): Sevilla → Ginebra → La Cumbre (Pavas) → Cali (La Voragine, Pance Bikepark) → Palmira (Bosque Municipal) → Roldanillo (Sendero Eco-parque, 26 sep) → Yumbo (Pista Carlos Castro, 18 oct — **casa del club**).
+- Calendario 2026 (7 válidas, orden vigente tras la reprogramación por el terremoto del 10 de agosto): Sevilla → Ginebra → La Cumbre (Pavas) → Cali (La Voragine, Pance Bikepark) → Palmira (Bosque Municipal) → Yumbo (Pista Carlos Castro, 18 oct — **casa del club**, séptima válida) → Roldanillo (Sendero Eco-parque, 7 y 8 nov — sexta válida reprogramada; **cierra la temporada**). Roldanillo conserva su número (VI) aunque se corra al final: así la llama el comunicado de la Comisión y así quedó en las crónicas ya publicadas.
 - Nombres de sectores **siempre con artículo**: "La Voragine" (no "Voragine"), "Los Pinos" (no "Pinos").
 
 ### Sistema de puntuación (verificado contra PDFs oficiales Copa Valle 2026)
@@ -441,7 +584,7 @@ Eventos:   Cobertura pre (convocatoria), durante (fotos), post (crónica XCO com
 ```
 src/content/news/2026-08-copa-valle-palmira-xco.md      # Crónica modelo v3 (historias por corredor, "quién se movió")
 src/content/news/2026-08-copa-valle-palmira-gymkanas.md # Crónica modelo día 1 (títulos con gancho, pedagogía gymkana)
-src/content/news/2026-09-copa-valle-roldanillo-xco.md   # Plantilla v4 con notas de producción (borrador activo)
+src/content/news/2026-11-copa-valle-roldanillo-xco.md   # Plantilla v4 con notas de producción (borrador activo)
 src/content/news/2026-05-copa-valle-xco-cali.md         # Crónica modelo (bloque tecnología, lineup frontmatter)
 src/content/news/2026-04-copa-valle-xco-pavas.md        # Crónica modelo (tablas, tendencias, doblete)
 src/lib/constants.ts                                    # SITE, CONTACT, SOCIAL

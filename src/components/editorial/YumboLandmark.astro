@@ -1,0 +1,120 @@
+---
+/**
+ * Una lámina de Yumbo: el cerro, el monumento o el santuario.
+ *
+ * Dos registros, según para qué se use (ver `@lib/yumbo`):
+ *
+ * - `color` — la acuarela completa. La lámina **es** contenido: lleva `alt`
+ *   real y la resuelve `<Image>` de `astro:assets`.
+ * - `ink` / `solid` — la lámina como máscara sobre `currentColor`. Es
+ *   decoración: va `aria-hidden`, sin texto alternativo, y el tono lo pone la
+ *   sección que la contiene (basta con darle una clase de color al padre o al
+ *   propio componente). Así la misma pieza funciona sobre fondo claro, sobre
+ *   grafito y sobre el teal de marca sin generar un asset por tono.
+ *
+ * La máscara se pinta en WebP con alfa —`getImage` no puede pasar por
+ * `<Image>` porque el destino es una propiedad CSS—. El CSS está en
+ * `.yumbo-mask` (global.css), no inline: ahí puede envolverse en `@supports`,
+ * y sin soporte de `mask-image` la lámina se esconde en vez de degradar a un
+ * rectángulo sólido de color.
+ *
+ * Los assets se importan uno por uno y no con `import.meta.glob`: Vite copia a
+ * `dist/` el archivo original de todo lo que se importe, así que el catálogo no
+ * declara variantes que nadie use. Cada import de aquí abajo tiene que estar en
+ * `variants` del catálogo y en `SOURCES` del script.
+ */
+import { Image, getImage } from 'astro:assets';
+import {
+  getYumboLandmark,
+  landmarkFile,
+  type YumboLandmarkId,
+  type YumboLandmarkVariant,
+} from '@lib/yumbo';
+
+import cerroColor from '@assets/images/yumbo/cerro-yumbo.webp';
+import cerroSolid from '@assets/images/yumbo/cerro-yumbo-solid.webp';
+import monumentoColor from '@assets/images/yumbo/monumento-trabajo.webp';
+import monumentoInk from '@assets/images/yumbo/monumento-trabajo-ink.webp';
+import iglesiaColor from '@assets/images/yumbo/iglesia-yumbo.webp';
+import iglesiaInk from '@assets/images/yumbo/iglesia-yumbo-ink.webp';
+
+const ASSETS: Record<YumboLandmarkId, Partial<Record<YumboLandmarkVariant, ImageMetadata>>> = {
+  cerro: { color: cerroColor, solid: cerroSolid },
+  monumento: { color: monumentoColor, ink: monumentoInk },
+  iglesia: { color: iglesiaColor, ink: iglesiaInk },
+};
+
+interface Props {
+  landmark: YumboLandmarkId;
+  variant?: YumboLandmarkVariant;
+  /**
+   * Ancho al que se pide el asset. No es el ancho de pantalla: las variantes
+   * enmascaradas no traen dimensión propia, así que el consumidor tiene que
+   * darles tamaño con clases (`h-24 w-auto`, `w-full`…).
+   */
+  width?: number;
+  /** Solo aplica a `color`. Por defecto, el `alt` del catálogo. */
+  alt?: string;
+  loading?: 'lazy' | 'eager';
+  class?: string;
+}
+
+const {
+  landmark,
+  variant = 'color',
+  width = 640,
+  alt,
+  loading = 'lazy',
+  class: className,
+} = Astro.props;
+
+const info = getYumboLandmark(landmark);
+
+const source = ASSETS[landmark][variant];
+
+if (!source) {
+  throw new Error(
+    `No existe la variante «${variant}» de ${info.title}. Genera ${landmarkFile(landmark, variant)} ` +
+      'con scripts/prepare-yumbo-assets.mjs y decláralo en el catálogo y en este componente.',
+  );
+}
+
+const mask =
+  variant === 'color' ? undefined : await getImage({ src: source, width, format: 'webp' });
+
+// La proporción se fija desde el asset: la máscara es un `<span>` vacío y sin
+// ella no ocuparía alto (CLS).
+const ratio = `${source.width} / ${source.height}`;
+
+/**
+ * `fit="contain"` explícito: sin esto, el `layout` global del sitio
+ * («constrained», en `astro.config.mjs`) hace que Astro emita
+ * `data-astro-image-fit="cover"` por defecto, y su CSS
+ * (`@layer astro.images`, declarada después que `@layer utilities` de
+ * Tailwind en el bundle) le gana a la clase `object-contain` de más abajo
+ * sin importar el orden ni la especificidad — misma causa que el desborde
+ * corregido en `YumboRoots.astro` (docs/04 §29). La lámina es contenido
+ * —lleva `alt` real—, así que no puede recortarse, aunque hoy, con el ancho
+ * sin límite fijo de `YumboRoots`, el recuadro ya calce con su proporción y
+ * el recorte no llegue a notarse.
+ */
+---
+
+{
+  variant === 'color' ? (
+    <Image
+      src={source}
+      alt={alt ?? info.alt}
+      width={width}
+      loading={loading}
+      fit="contain"
+      class:list={['max-w-full object-contain', className]}
+    />
+  ) : (
+    <span
+      class:list={['yumbo-mask block', className]}
+      aria-hidden="true"
+      style={`aspect-ratio:${ratio};--yumbo-mask:url(${mask?.src})`}
+    />
+  )
+}

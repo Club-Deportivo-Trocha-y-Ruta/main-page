@@ -1,0 +1,98 @@
+---
+/**
+ * Tarjeta de un obstáculo en el índice de `/la-pista`.
+ *
+ * Solo lo que hace falta para decidir si entrar: la foto, el número que lleva
+ * en el mapa, el nivel, el nombre y una frase. La capa pedagógica y la ficha
+ * técnica viven en `/la-pista/[slug]` — si cada obstáculo desplegara su ficha
+ * completa aquí, el índice crecería ~700 px por obstáculo (docs/07 §0.4).
+ */
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+import { obstacleLevelLabel, obstacleLevelColors } from '@lib/la-pista';
+import { getTrackImage } from '@lib/track-images';
+
+interface Props {
+  entry: CollectionEntry<'obstaculos'>;
+  /** Número del marcador en el mapa. */
+  number: number;
+  class?: string;
+}
+
+const { entry, number, class: className } = Astro.props;
+const { data } = entry;
+
+const image = getTrackImage(data.image);
+const levelStyle = obstacleLevelColors[data.level] ?? {
+  bg: 'bg-primary/10',
+  text: 'text-primary-deep',
+};
+---
+
+<article
+  id={`obstaculo-${entry.id}`}
+  class:list={['scroll-mt-24', className]}
+  aria-labelledby={`obstaculo-${entry.id}-titulo`}
+>
+  <a
+    href={`/la-pista/${entry.id}`}
+    class="group rounded-card shadow-card hover:shadow-raised focus-visible:shadow-raised block h-full overflow-hidden bg-surface-raised transition-shadow"
+  >
+    {
+      image ? (
+        <Image
+          src={image}
+          alt={data.imageAlt ?? data.name}
+          layout="none"
+          loading="lazy"
+          decoding="async"
+          widths={[320, 480, 640]}
+          sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+          class="aspect-[4/3] w-full object-cover"
+        />
+      ) : (
+        <div class="bg-primary/5 grid aspect-[4/3] w-full place-items-center" aria-hidden="true">
+          <Icon name="ph:mountains-bold" class="text-primary/40 size-10" />
+        </div>
+      )
+    }
+
+    <div class="p-5">
+      <div class="flex flex-wrap items-center gap-2">
+        <span
+          class="bg-accent-deep grid size-7 place-items-center rounded-full text-xs font-bold text-on-deep"
+          aria-hidden="true"
+        >
+          {number}
+        </span>
+        <span
+          class:list={[
+            'rounded-pill px-2.5 py-0.5 text-[11px] font-semibold tracking-wider uppercase',
+            levelStyle.bg,
+            levelStyle.text,
+          ]}
+        >
+          {obstacleLevelLabel(data.level)}
+        </span>
+      </div>
+
+      <h3
+        id={`obstaculo-${entry.id}-titulo`}
+        class="text-text-primary group-hover:text-primary-deep mt-3 text-xl font-bold"
+      >
+        {data.name}
+      </h3>
+      <p class="text-text-secondary mt-2 text-sm leading-snug">{data.summary}</p>
+
+      <p class="text-primary-deep mt-4 inline-flex items-center gap-1.5 text-sm font-semibold">
+        Ver la ficha
+        <Icon
+          name="ph:arrow-right-bold"
+          class="size-4 transition-transform group-hover:translate-x-1"
+          aria-hidden="true"
+        />
+      </p>
+    </div>
+  </a>
+</article>

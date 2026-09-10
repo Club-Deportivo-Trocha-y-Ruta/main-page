@@ -13,8 +13,16 @@
 /** Fondo sobre el que se apoya la sección. */
 export type SectionTone = 'plain' | 'muted' | 'tinted' | 'dark' | 'brand';
 
-/** Textura decorativa de fondo. `topo` = curvas de nivel (mapa de montaña). */
-export type SectionPattern = 'none' | 'topo';
+/**
+ * Textura decorativa de fondo.
+ *
+ * - `topo` — curvas de nivel, dibujadas en SVG (mapa de montaña).
+ * - `yumbo` — la silueta del cerro de Yumbo al pie de la sección, con las
+ *   letras del letrero en negativo. Es una lámina raster enmascarada sobre el
+ *   color del tono, no un SVG: ver `@lib/yumbo`. Ancla al borde inferior, así
+ *   que ignora la deriva de `scrollDriven`.
+ */
+export type SectionPattern = 'none' | 'topo' | 'yumbo';
 
 /** Ancho del contenido. El marco siempre ocupa el ancho completo. */
 export type SectionWidth = 'narrow' | 'default' | 'wide';
@@ -37,6 +45,14 @@ export interface ToneTokens {
   card: string;
   /** Color del patrón decorativo (ya incluye su opacidad). */
   pattern: string;
+  /**
+   * Color del horizonte de Yumbo (`pattern="yumbo"`). Va aparte de `pattern`
+   * porque la lámina es una silueta maciza, no una trama de líneas finas: a la
+   * opacidad de `topo` no se ve, y a la suya `topo` se vuelve ruido. Nunca lleva
+   * texto encima —el marco le reserva su banda—, así que no hay contraste que
+   * cuidar.
+   */
+  skyline: string;
   /** true cuando el fondo es oscuro: las ilustraciones deben invertirse. */
   inverted: boolean;
 }
@@ -45,6 +61,15 @@ export interface ToneTokens {
  * Los tonos de marca (`brand`) llevan texto grafito, no blanco: el teal #20b7c9
  * solo alcanza 2.4:1 contra blanco y no cumple WCAG AA. Misma razón por la que
  * en fondos claros el eyebrow usa los tonos `-deep`.
+ *
+ * `hairline` y `card` usan los tokens `border-hairline` / `bg-surface-raised`
+ * en vez de literales (`border-black/10`, `bg-surface`) en los tonos sobre
+ * fondo claro/tinte: son los dos tokens que el tema oscuro remapea (ver
+ * `src/styles/global.css`), así que una tarjeta o un separador dentro de
+ * estos tonos se leen bien en ambos temas sin que este archivo sepa nada de
+ * temas. `tinted` conserva su propio `border-primary/15` (un hairline de
+ * color, no neutro) y `dark`/`brand` no reciben `hairline` de token porque
+ * sus fondos son fijos y no cambian con el tema.
  */
 export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
   plain: {
@@ -52,9 +77,10 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     heading: 'text-text-primary',
     muted: 'text-text-secondary',
     eyebrow: 'text-primary-deep',
-    hairline: 'border-black/10',
-    card: 'bg-surface',
+    hairline: 'border-hairline',
+    card: 'bg-surface-raised',
     pattern: 'text-primary/14',
+    skyline: 'text-primary/25',
     inverted: false,
   },
   muted: {
@@ -62,9 +88,10 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     heading: 'text-text-primary',
     muted: 'text-text-secondary',
     eyebrow: 'text-primary-deep',
-    hairline: 'border-black/10',
-    card: 'bg-surface',
+    hairline: 'border-hairline',
+    card: 'bg-surface-raised',
     pattern: 'text-primary/16',
+    skyline: 'text-primary/25',
     inverted: false,
   },
   tinted: {
@@ -73,8 +100,9 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     muted: 'text-text-secondary',
     eyebrow: 'text-primary-deep',
     hairline: 'border-primary/15',
-    card: 'bg-surface',
+    card: 'bg-surface-raised',
     pattern: 'text-primary/14',
+    skyline: 'text-primary/25',
     inverted: false,
   },
   dark: {
@@ -85,6 +113,7 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     hairline: 'border-white/15',
     card: 'bg-white/5',
     pattern: 'text-white/15',
+    skyline: 'text-white/20',
     inverted: true,
   },
   brand: {
@@ -93,8 +122,9 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     muted: 'text-surface-dark/80',
     eyebrow: 'text-surface-dark',
     hairline: 'border-surface-dark/20',
-    card: 'bg-surface',
+    card: 'bg-surface-raised',
     pattern: 'text-surface-dark/15',
+    skyline: 'text-surface-dark/20',
     inverted: false,
   },
 };
@@ -223,7 +253,7 @@ export function elevationProfile({
  */
 export function elevationPointAt(
   t: number,
-  { height = 260 }: Pick<ElevationOptions, 'height'> = {}
+  { height = 260 }: Pick<ElevationOptions, 'height'> = {},
 ): { xPct: number; yPct: number } {
   const clamped = Math.min(Math.max(t, 0), 1);
   return {

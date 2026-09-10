@@ -5,7 +5,7 @@
 
 backend:
   name: github
-  repo: owner/trocha-y-ruta
+  repo: Club-Deportivo-Trocha-y-Ruta/main-page
   branch: main
   commit_messages:
     create: 'content: crea {{collection}} "{{slug}}"'
@@ -26,7 +26,9 @@ locale: "es"
 
 # Tamaño máximo de archivos (5MB)
 media_library:
-  max_file_size: 5242880
+  name: default
+  config:
+    max_file_size: 5242880
 
 # Logo en el panel de admin
 logo_url: "/images/logo.png"
@@ -124,6 +126,7 @@ collections:
     summary: "{{date | date('YYYY-MM-DD')}} — {{title}} [{{status}}]"
     fields:
       - { label: "Título", name: "title", widget: "string", required: true }
+      - { label: "Nombre corto", name: "shortName", widget: "string", required: false, hint: "Solo si el año pasa dos veces por la misma ciudad: distingue las dos paradas en el riel de la temporada. Ej: \"Válida VII\", \"Chequeo\"." }
       - { label: "Fecha inicio", name: "date", widget: "datetime", required: true, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
       - { label: "Fecha fin", name: "endDate", widget: "datetime", required: false, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
       - { label: "Ubicación", name: "location", widget: "string", required: true }
@@ -352,6 +355,28 @@ collections:
           - { label: "Competición", value: "competición" }
           - { label: "Recreativo", value: "recreativo" }
       - { label: "Horario", name: "schedule", widget: "string", required: true }
+      - label: "Sesiones (día y hora)"
+        name: "sessions"
+        widget: "list"
+        required: false
+        collapsed: true
+        summary: "{{fields.day}} · {{fields.start}} a {{fields.end}}"
+        hint: "Opcional, pero es lo que permite anunciar «Próxima sesión» en la página de inicio. Una entrada por día de entrenamiento; si una sesión se repite martes y viernes, van dos entradas. Las aclaraciones (salida, gymkanas, edades) siguen viviendo en el campo Horario."
+        fields:
+          - label: "Día"
+            name: "day"
+            widget: "select"
+            options:
+              - { label: "Lunes", value: "mon" }
+              - { label: "Martes", value: "tue" }
+              - { label: "Miércoles", value: "wed" }
+              - { label: "Jueves", value: "thu" }
+              - { label: "Viernes", value: "fri" }
+              - { label: "Sábado", value: "sat" }
+              - { label: "Domingo", value: "sun" }
+          - { label: "Hora de inicio", name: "start", widget: "string", required: true, pattern: ["^([01][0-9]|2[0-3]):[0-5][0-9]$", "Escribe la hora en formato de 24 horas, HH:MM (ej: 16:30)"], hint: "Formato de 24 horas: 07:00, 16:30" }
+          - { label: "Hora de fin", name: "end", widget: "string", required: true, pattern: ["^([01][0-9]|2[0-3]):[0-5][0-9]$", "Escribe la hora en formato de 24 horas, HH:MM (ej: 18:00)"], hint: "Tiene que ser posterior a la hora de inicio" }
+          - { label: "Lugar", name: "place", widget: "string", required: false, hint: "Dónde se encuentra el grupo ese día. Déjalo vacío si la sesión no tiene un punto fijo (por ejemplo, una salida por fuera)." }
       - { label: "Duración por sesión", name: "duration", widget: "string", required: false }
       - { label: "Ubicación", name: "location", widget: "string", required: false }
       - { label: "Cupo máximo", name: "maxStudents", widget: "number", required: false }
@@ -687,6 +712,18 @@ collections:
       - { label: "Mostrar en navegación", name: "showInNav", widget: "boolean", default: false }
       - { label: "Orden", name: "order", widget: "number", default: 0 }
       - { label: "Borrador", name: "draft", widget: "boolean", default: false }
+      # Solo lo usa la página "programas": los textos del selector de edad que
+      # aparece encima de la ruta de formación. Las edades de los botones NO se
+      # escriben aquí, salen de "Edad mínima"/"Edad máxima" de cada programa.
+      - label: "Selector de edad (solo página «programas»)"
+        name: "agePicker"
+        widget: "object"
+        collapsed: true
+        required: false
+        fields:
+          - { label: "Pregunta", name: "legend", widget: "string", hint: "Ej.: ¿Qué edad tiene tu hijo?" }
+          - { label: "Aclaración", name: "hint", widget: "text", required: false }
+          - { label: "Texto de «sin filtro»", name: "allLabel", widget: "string", default: "Todas las edades" }
       - label: "SEO"
         name: "seo"
         widget: "object"
@@ -699,39 +736,12 @@ collections:
       - { label: "Contenido", name: "body", widget: "markdown" }
 
   # ----------------------------------------------------------
-  # CONFIGURACIÓN DEL SITIO (singleton)
+  # CONFIGURACIÓN DEL SITIO
   # ----------------------------------------------------------
-  - name: "settings"
-    label: "Configuración"
-    files:
-      - name: "site"
-        label: "Datos del Sitio"
-        file: "src/content/settings/site.yaml"
-        fields:
-          - { label: "Nombre del club", name: "clubName", widget: "string" }
-          - { label: "Lema", name: "tagline", widget: "string" }
-          - { label: "Descripción", name: "description", widget: "text" }
-          - { label: "Email", name: "email", widget: "string" }
-          - { label: "Teléfono", name: "phone", widget: "string" }
-          - { label: "Dirección", name: "address", widget: "string" }
-          - { label: "Ciudad", name: "city", widget: "string" }
-          - { label: "Departamento", name: "department", widget: "string" }
-          - label: "Redes sociales"
-            name: "social"
-            widget: "object"
-            fields:
-              - { label: "Facebook", name: "facebook", widget: "string", required: false }
-              - { label: "Instagram", name: "instagram", widget: "string", required: false }
-              - { label: "YouTube", name: "youtube", widget: "string", required: false }
-              - { label: "TikTok", name: "tiktok", widget: "string", required: false }
-          - label: "Horarios"
-            name: "schedule"
-            widget: "list"
-            fields:
-              - { label: "Día(s)", name: "days", widget: "string" }
-              - { label: "Horario", name: "hours", widget: "string" }
-          - { label: "Año de fundación", name: "foundedYear", widget: "number" }
-          - { label: "NIT", name: "nit", widget: "string", required: false }
+  # No hay colección `settings`: los datos del sitio (nombre, contacto, redes,
+  # navegación, etiquetas de CTA) viven en `src/lib/constants.ts` y ninguna
+  # página lee un YAML. La colección que existía aquí apuntaba a
+  # `src/content/settings/site.yaml`, un archivo que nunca se creó.
 
   # ----------------------------------------------------------
   # TROCHA VERDE — ÁRBOLES
@@ -781,6 +791,74 @@ collections:
       - { label: "Usos", name: "uses", widget: "list", required: false }
       - { label: "Borrador", name: "draft", widget: "boolean", default: false }
       - { label: "Contenido", name: "body", widget: "markdown", required: false }
+
+  # ----------------------------------------------------------
+  # LA PISTA — OBSTÁCULOS DE LA PISTA CARLOS CASTRO
+  # ----------------------------------------------------------
+  - name: "obstaculos"
+    label: "La pista — obstáculos"
+    label_singular: "Obstáculo"
+    folder: "src/content/obstaculos"
+    create: true
+    slug: "{{fields.name}}"
+    media_folder: "/src/assets/images/la-pista"
+    sortable_fields: ["order", "name"]
+    fields:
+      - { label: "Nombre", name: "name", widget: "string", hint: "Ej: Cajón de grava de la bajada" }
+      - { label: "Tipo", name: "type", widget: "select", options: ["cajon-grava", "rock-garden", "drop", "escalon", "tabla", "doble", "peralte", "bajada-tecnica", "raiz"] }
+      - { label: "Nivel", name: "level", widget: "select", options: ["basico", "intermedio", "avanzado"], default: "intermedio" }
+      - { label: "Resumen", name: "summary", widget: "string", pattern: ['^.{1,180}$', "Máximo 180 caracteres"], hint: "Una frase: qué es y qué enseña. Sale en la tarjeta y en el mapa." }
+      - { label: "Habilidades que entrena", name: "skills", widget: "list", hint: "Ej: Posición de ataque, Peso atrás en bajada, Lectura de línea" }
+      - { label: "Programas que lo trabajan", name: "programs", widget: "relation", collection: "programs", search_fields: ["title"], value_field: "{{slug}}", display_fields: ["title"], multiple: true, required: false }
+      - { label: "Fecha de construcción", name: "builtOn", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false }
+      - { label: "Quién lo construyó", name: "builtBy", widget: "string", required: false, hint: "Ej: Club Deportivo Trocha y Ruta" }
+      - { label: "Foto del obstáculo", name: "image", widget: "image", required: false, hint: "Solo con el consentimiento de imagen firmado de quienes aparecen." }
+      - { label: "Alt de la foto", name: "imageAlt", widget: "string", required: false, hint: "Obligatorio si subes foto: qué se ve." }
+      - {
+          label: "Fotogramas del salto",
+          name: "sequence",
+          widget: "object",
+          required: false,
+          collapsed: true,
+          hint: "Solo con el consentimiento de imagen firmado de los menores que aparecen.",
+          fields: [
+            { label: "Carpeta", name: "folder", widget: "string", hint: "Carpeta dentro de src/assets/images/la-pista/" },
+            { label: "Número de fotogramas", name: "count", widget: "number", value_type: "int", min: 4, max: 16 },
+            { label: "Fotograma de portada", name: "poster", widget: "number", value_type: "int", min: 1, default: 1, hint: "El que se ve sin animación. No puede pasarse del total." },
+            { label: "Descripción del salto", name: "alt", widget: "string", hint: "Qué hace el corredor: lo lee quien no ve las imágenes." },
+          ],
+        }
+      - {
+          label: "Clip completo (YouTube)",
+          name: "video",
+          widget: "object",
+          required: false,
+          collapsed: true,
+          fields:
+            [
+              { label: "URL", name: "url", widget: "string", pattern: ['^https?://', "Debe ser una URL completa"] },
+              { label: "Título", name: "title", widget: "string" },
+            ],
+        }
+      - { label: "Latitud", name: "lat", widget: "number", required: false, value_type: "float", hint: "Coordenada GPS del obstáculo, ej: 3.596855. Ubica el marcador en el mapa." }
+      - { label: "Longitud", name: "lng", widget: "number", required: false, value_type: "float", hint: "Ej: -76.486564. Va siempre junto con la latitud." }
+      - {
+          label: "Marcador en el mapa (manual)",
+          name: "map",
+          widget: "object",
+          required: false,
+          collapsed: true,
+          hint: "Solo si el obstáculo no tiene coordenadas GPS: posición en % (0-100) sobre el recuadro del trazado.",
+          fields:
+            [
+              { label: "X (%)", name: "x", widget: "number", min: 0, max: 100 },
+              { label: "Y (%)", name: "y", widget: "number", min: 0, max: 100 },
+            ],
+        }
+      - { label: "Orden", name: "order", widget: "number", default: 0, hint: "En qué punto del recorrido aparece." }
+      - { label: "Activo", name: "active", widget: "boolean", default: true, hint: "Desmárcalo si el obstáculo se retiró o se rehizo." }
+      - { label: "Borrador", name: "draft", widget: "boolean", default: false }
+      - { label: "Capa pedagógica", name: "body", widget: "markdown", hint: "2-4 párrafos del entrenador: qué se aprende, cómo se progresa, qué supervisa." }
 
   # ----------------------------------------------------------
   # HISTORIA DEL CLUB — HITOS DE LA LÍNEA DE TIEMPO

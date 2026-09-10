@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 
 interface GalleryImage {
   src: string;
@@ -12,11 +13,17 @@ interface Props {
 
 export default function ImageLightbox({ images }: Props) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const touchStartX = useRef(0);
 
   const isOpen = activeIndex !== null;
+
+  // SSR-safe mount detection for portal
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const open = useCallback((index: number, buttonEl: HTMLButtonElement) => {
     triggerRef.current = buttonEl;
@@ -51,14 +58,16 @@ export default function ImageLightbox({ images }: Props) {
   // Body scroll lock
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   // Focus trap
   useEffect(() => {
     if (!isOpen || !dialogRef.current) return;
     const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-      'button, [tabindex]:not([tabindex="-1"])'
+      'button, [tabindex]:not([tabindex="-1"])',
     );
     if (focusable.length > 0) focusable[0].focus();
 
@@ -82,26 +91,29 @@ export default function ImageLightbox({ images }: Props) {
     touchStartX.current = e.touches[0].clientX;
   }, []);
 
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    const delta = e.changedTouches[0].clientX - touchStartX.current;
-    if (Math.abs(delta) > 50) {
-      if (delta > 0) prev();
-      else next();
-    }
-  }, [prev, next]);
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const delta = e.changedTouches[0].clientX - touchStartX.current;
+      if (Math.abs(delta) > 50) {
+        if (delta > 0) prev();
+        else next();
+      }
+    },
+    [prev, next],
+  );
 
   const currentImage = activeIndex !== null ? images[activeIndex] : null;
 
   return (
     <>
       {/* Grid de thumbnails */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
         {images.map((img, index) => (
           <button
             key={index}
             type="button"
             onClick={(e) => open(index, e.currentTarget)}
-            className="group relative aspect-square bg-surface-muted rounded-lg overflow-hidden cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="group bg-surface-muted focus-visible:outline-primary relative aspect-square cursor-pointer overflow-hidden rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2"
             aria-label={`Ver imagen: ${img.alt}`}
           >
             <img
@@ -109,10 +121,10 @@ export default function ImageLightbox({ images }: Props) {
               alt={img.alt}
               loading="lazy"
               decoding="async"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
             {img.caption && (
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 opacity-0 transition-opacity group-hover:opacity-100">
                 <p className="text-sm text-white">{img.caption}</p>
               </div>
             )}
@@ -122,75 +134,122 @@ export default function ImageLightbox({ images }: Props) {
 
       {/* Modal lightbox: entrada tipo pop (fade del overlay + fade/scale del
           visor) vía @starting-style — el nodo se monta de nuevo cada vez que
-          `isOpen` pasa a true, así que no hace falta `transition-discrete`. */}
-      {isOpen && currentImage && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center transition-opacity duration-[var(--duration-micro)] ease-spring starting:opacity-0 motion-reduce:transition-none"
-          onClick={(e) => { if (e.target === e.currentTarget) close(); }}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
+          `isOpen` pasa a true, así que no hace falta `transition-discrete`.
+          Va por portal a `document.body` (mismo criterio que MobileMenu y
+          SiteSearch): si se queda dentro del `<section relative isolate>` de
+          SectionShell, ese `isolate` —y, aunque se quite, el
+          `view-transition-name` permanente que `<main>` lleva por
+          `transition:name="page-main"` (BaseLayout.astro), que por spec
+          también forma contexto de apilamiento— encierran su z-50 en un
+          contexto propio y el Header (`sticky z-40`, fuera de ambos) se sigue
+          pintando encima, sin importar el z-index interno. */}
+      {mounted &&
+        isOpen &&
+        currentImage &&
+        createPortal(
           <div
-            ref={dialogRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Visor de imágenes"
-            className="relative flex flex-col items-center max-w-full max-h-full px-4 py-8 md:px-16 transition-[opacity,scale] duration-[var(--duration-micro)] ease-spring starting:scale-95 starting:opacity-0 motion-reduce:transition-none"
+            className="ease-spring fixed inset-0 z-50 flex items-center justify-center bg-black/90 transition-opacity duration-[var(--duration-micro)] motion-reduce:transition-none starting:opacity-0"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) close();
+            }}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
-            {/* Close button */}
-            <button
-              onClick={close}
-              aria-label="Cerrar visor"
-              className="absolute top-2 right-2 md:top-4 md:right-4 z-10 rounded-full bg-white/10 p-3 text-white hover:bg-white/20 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            <div
+              ref={dialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Visor de imágenes"
+              className="ease-spring relative flex max-h-full max-w-full flex-col items-center px-4 py-8 transition-[opacity,scale] duration-[var(--duration-micro)] motion-reduce:transition-none md:px-16 starting:scale-95 starting:opacity-0"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
+              {/* Close button */}
+              <button
+                onClick={close}
+                aria-label="Cerrar visor"
+                className="absolute top-2 right-2 z-10 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:top-4 md:right-4"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
 
-            {/* Previous button */}
-            <button
-              onClick={prev}
-              aria-label="Imagen anterior"
-              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 rounded-full bg-white/10 p-3 text-white hover:bg-white/20 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-            </button>
+              {/* Previous button */}
+              <button
+                onClick={prev}
+                aria-label="Imagen anterior"
+                className="absolute top-1/2 left-2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:left-4"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
 
-            {/* Full image */}
-            <img
-              src={currentImage.src}
-              alt={currentImage.alt}
-              decoding="async"
-              className="max-w-[90vw] max-h-[75vh] md:max-w-[80vw] md:max-h-[80vh] object-contain rounded-lg"
-            />
+              {/* Full image */}
+              <img
+                src={currentImage.src}
+                alt={currentImage.alt}
+                decoding="async"
+                className="max-h-[75vh] max-w-[90vw] rounded-lg object-contain md:max-h-[80vh] md:max-w-[80vw]"
+              />
 
-            {/* Next button */}
-            <button
-              onClick={next}
-              aria-label="Imagen siguiente"
-              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 rounded-full bg-white/10 p-3 text-white hover:bg-white/20 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </button>
+              {/* Next button */}
+              <button
+                onClick={next}
+                aria-label="Imagen siguiente"
+                className="absolute top-1/2 right-2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:right-4"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
 
-            {/* Caption + Counter */}
-            <div className="mt-4 text-center">
-              {currentImage.caption && (
-                <p className="text-white text-sm mb-2">{currentImage.caption}</p>
-              )}
-              <p className="text-white/60 text-sm">
-                {activeIndex + 1} / {images.length}
-              </p>
+              {/* Caption + Counter */}
+              <div className="mt-4 text-center">
+                {currentImage.caption && (
+                  <p className="mb-2 text-sm text-white">{currentImage.caption}</p>
+                )}
+                <p className="text-sm text-white/60">
+                  {activeIndex + 1} / {images.length}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

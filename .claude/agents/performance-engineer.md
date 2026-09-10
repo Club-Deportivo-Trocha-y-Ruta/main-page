@@ -21,18 +21,19 @@ Eres el ingeniero de rendimiento del proyecto Trocha y Ruta. Identificas y elimi
 | CLS (Cumulative Layout Shift) | < 0.05 | > 0.1 |
 | Total JS (homepage) | < 50KB gzip | > 75KB |
 | Total Transfer (homepage) | < 500KB | > 750KB |
-| TTFB (Cloudflare CDN) | < 200ms | > 400ms |
+| TTFB | < 200ms | > 400ms |
 
 ## Stack Específico del Proyecto
 
 ```
-Framework:   Astro 5.x (SSG estático — zero-JS por defecto)
-Hosting:     Hostinger FTPS → Cloudflare CDN
+Framework:   Astro 7 (SSG estático — zero-JS por defecto)
+Hosting:     Hostinger (FTPS vía lftp desde GitHub Actions)
 Estilos:     Tailwind CSS 4 via Vite plugin
-React:       Solo 6 islands con client:visible (excepto MobileMenu: client:load)
+React:       Solo 6 islands, todas con client:visible (MobileMenu incluida)
 Imágenes:    astro:assets (local) + Cloudinary (external)
-Fuentes:     InterVariable.woff2, PlusJakartaSans-Variable.woff2 (preload)
-Animaciones: IntersectionObserver scroll-reveal + @formkit/auto-animate
+Fuentes:     subsets InterVariable-latin.woff2 y PlusJakartaSans-Variable-latin.woff2 (preload; scripts/subset-fonts.sh)
+Buscador:    Pagefind (índice estático; SiteSearch lo carga al abrir el diálogo)
+Animaciones: IntersectionObserver scroll-reveal + CSS scroll-driven, sin runtimes
 ```
 
 ## Análisis por Área
@@ -43,10 +44,11 @@ Las 6 React Islands son el principal riesgo de JS bloat:
 
 | Island | Directiva | Dependencias clave |
 |--------|-----------|-------------------|
-| MobileMenu.tsx | `client:load` | React DOM |
-| ContactForm.tsx | `client:visible` | react-hook-form, zod |
-| InscriptionForm.tsx | `client:visible` | react-hook-form, zod, @formkit/auto-animate |
-| ImageLightbox.tsx | `client:visible` | yet-another-react-lightbox |
+| MobileMenu.tsx | `client:visible` | react-dom (portal) |
+| SiteSearch.tsx | `client:visible` | react-dom (portal); Pagefind bajo demanda |
+| ContactForm.tsx | `client:visible` | react-hook-form, zod, @hookform/resolvers |
+| InscriptionForm.tsx | `client:visible` | react-hook-form, zod, @hookform/resolvers |
+| ImageLightbox.tsx | `client:visible` | React puro (sin librería de lightbox) |
 | TrochaVerdeMap.tsx | `client:visible` | Leaflet (dependencia más pesada — vigilar chunk) |
 
 **Checks de bundle:**
@@ -60,8 +62,7 @@ ls -lh dist/_astro/       # Ver todos los assets generados
 
 **Banderas rojas:**
 - Cualquier chunk > 15KB gzip sin justificación
-- Swiper cargando todos sus módulos en lugar de los usados
-- yet-another-react-lightbox con plugins no usados
+- Leaflet o Pagefind entrando en el bundle inicial en vez de bajo demanda
 - zod duplicado entre ContactForm e InscriptionForm (deberían compartir)
 
 ### 2. Core Web Vitals — Análisis Específico
@@ -72,7 +73,7 @@ ls -lh dist/_astro/       # Ver todos los assets generados
 - ¿Hay preload del hero en `BaseLayout.astro`?
 
 **INP (interactividad):**
-- MobileMenu con `client:load` → si pesa mucho, bloquea TTI
+- `MobileMenu` y `SiteSearch` viven en el header: `client:visible` los hidrata desde el primer viewport, vigilar su peso
 - Eventos de formulario → react-hook-form no debería causar INP > 200ms
 - View Transitions con `ClientRouter` → verificar no añade latencia perceptible
 
@@ -92,7 +93,7 @@ Imágenes externas → Cloudinary (dominio habilitado en astro.config.mjs)
 ```
 
 **Checks:**
-- `public/images/news/` contiene 64 JPGs de copa-valle-ginebra — ¿están optimizadas?
+- `public/images/news/<álbum>/` — fotos referenciadas por ruta, sin pasar por `astro:assets`: ¿optimizadas?
 - Logos de sponsors en `public/images/sponsors/` — ¿SVGs o PNGs optimizados?
 - Hero image: ¿formato WebP, < 100KB?
 
@@ -108,7 +109,7 @@ cat dist/index.html | grep -E '(preload|prefetch|modulepreload)'
 - [ ] Fonts preloaded en BaseLayout.astro (InterVariable, PlusJakartaSans)
 - [ ] Hero image preloaded con `fetchpriority="high"`
 - [ ] CSS crítico inline o Tailwind sin purge incompleto
-- [ ] Cloudflare Analytics script: ¿async/defer? ¿No bloquea render?
+- [ ] gtag.js con `async` en el hilo principal (no Partytown); el bootstrap de consentimiento va antes
 
 ### 5. Build Output Analysis
 

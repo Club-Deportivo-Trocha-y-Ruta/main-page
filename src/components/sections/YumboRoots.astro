@@ -1,0 +1,79 @@
+---
+/**
+ * «De dónde somos» — las tres láminas de Yumbo, a color, como contenido.
+ *
+ * Es la única sección del sitio donde las ilustraciones se muestran completas y
+ * a color (ver `@lib/yumbo`): aquí la lámina no decora un texto, es el texto. En
+ * el resto del sitio el mismo material aparece enmascarado y tenue, como
+ * horizonte de fondo (`SectionShell pattern="yumbo"`).
+ *
+ * Cada pie dice solo lo que tiene fuente pública, anotada en el catálogo: la
+ * fecha y el tamaño del letrero del cerro, dónde está el monumento, quién y
+ * cuándo levantó el santuario. Lo que no se sabe —el nombre propio del cerro—
+ * no se afirma. Y no se dice que estos elementos estén en el uniforme del club:
+ * salieron de un prototipo que no se adoptó.
+ */
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import YumboLandmark from '@components/editorial/YumboLandmark.astro';
+import { YUMBO_LANDMARKS } from '@lib/yumbo';
+---
+
+<SectionShell tone="muted" width="wide" labelledby="yumbo-titulo">
+  <SectionIntro
+    id="yumbo-titulo"
+    eyebrow="De dónde somos"
+    eyebrowIcon="ph:map-pin-bold"
+    title="El club es de Yumbo, y se le nota"
+    highlight="de Yumbo"
+    lead="Tres cosas que en esta ciudad se reconocen de lejos. Aquí es donde el club entrena, desde 2010."
+    align="center"
+    class="mx-auto max-w-3xl"
+  />
+
+  <ul class="mt-14 grid gap-10 sm:grid-cols-3 sm:gap-8">
+    {
+      YUMBO_LANDMARKS.map((landmark, index) => (
+        <li class="reveal text-center" style={`--stagger:${index * 90}ms`}>
+          {/*
+            Las tres se apoyan en la misma línea de suelo (`items-end`), pero no
+            se les iguala el alto: el cerro es una lámina apaisada (2.6:1) y, con
+            la misma altura que las dos siluetas verticales, queda angosto y sin
+            peso al lado de ellas. Ocupa el ancho de su columna y menos alto,
+            para que las tres pesen parecido.
+
+            Hotfix 2026-09-10: las verticales (`monumento`, `iglesia`) se
+            desbordaban hacia arriba, tapando el titular de la sección de
+            encima. La causa: `<Image>` con el `layout` global del sitio
+            («constrained», en `astro.config.mjs`) trae su propio CSS
+            (`@layer astro.images` en `node_modules/astro/dist/assets/utils/
+            generateImageStylesCSS.js`) que fuerza `height:auto` en TODO
+            `[data-astro-image]`. Esa capa se declara después que
+            `@layer utilities` de Tailwind en el CSS compilado, así que gana
+            sobre `h-full` (misma especificidad, pero capa posterior manda)
+            sin importar el orden de las clases. Con `height:auto` forzado,
+            el `w-auto` de la lámina vertical dejaba de tener ancho límite
+            real y la imagen crecía a su proporción completa (809/520 ≈
+            1.56) sobre el ancho de la columna: 384px de ancho a 1280px de
+            viewport se volvían ~597px de alto contra los 192px de la caja.
+            `max-h-full` esquiva el choque: Astro no toca `max-height`, así
+            que el límite se respeta y `height:auto` (que de todos modos ya
+            fuerza Astro) sigue siendo el valor correcto para una imagen que
+            debe conservar su proporción. La lámina apaisada (`h-auto
+            w-full`) nunca se vio afectada porque ya usaba `height:auto`
+            desde antes: coincidía con lo que Astro fuerza.
+          */}
+          <div class="flex h-40 items-end justify-center sm:h-48">
+            <YumboLandmark
+              landmark={landmark.id}
+              width={520}
+              class={landmark.shape === 'wide' ? 'h-auto w-full' : 'max-h-full w-auto'}
+            />
+          </div>
+          <h3 class="font-display text-text-primary mt-6 text-lg font-bold">{landmark.title}</h3>
+          <p class="text-text-secondary mt-2 text-sm leading-relaxed">{landmark.caption}</p>
+        </li>
+      ))
+    }
+  </ul>
+</SectionShell>

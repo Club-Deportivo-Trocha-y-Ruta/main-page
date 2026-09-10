@@ -190,4 +190,42 @@ describe('MobileMenu', () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+
+  // ─── Toggle de tema (decisión B: drawer bajo `sm`) ────────
+
+  it('el drawer incluye un toggle de tema con nombre accesible "Modo oscuro"', async () => {
+    const user = userEvent.setup();
+    render(<MobileMenu {...defaultProps} />);
+    await user.click(screen.getByLabelText('Abrir menú de navegación'));
+
+    const toggle = screen.getByRole('button', { name: 'Modo oscuro' });
+    // JSX con el atributo a secas (`data-theme-toggle`) compila a `{true}`, y
+    // React lo serializa como `"true"` en el DOM (no es un booleano nativo del
+    // HTML): el selector del script de `BaseLayout` es un atributo `[data-
+    // theme-toggle]`, que casa igual sin importar el valor.
+    expect(toggle).toHaveAttribute('data-theme-toggle', 'true');
+    expect(toggle).toHaveAttribute('aria-pressed');
+  });
+
+  it('el toggle del drawer solo se ve bajo `sm`', async () => {
+    const user = userEvent.setup();
+    render(<MobileMenu {...defaultProps} />);
+    await user.click(screen.getByLabelText('Abrir menú de navegación'));
+
+    const toggle = screen.getByRole('button', { name: 'Modo oscuro' });
+    expect(toggle).toHaveClass('sm:hidden');
+  });
+
+  it('el toggle de tema va después del CTA en el orden del DOM', async () => {
+    const user = userEvent.setup();
+    render(<MobileMenu {...defaultProps} />);
+    await user.click(screen.getByLabelText('Abrir menú de navegación'));
+
+    const cta = screen.getByText(CTA_TRIAL_LABEL).closest('a')!;
+    const toggle = screen.getByRole('button', { name: 'Modo oscuro' });
+
+    // DOCUMENT_POSITION_FOLLOWING (4): el toggle aparece después del CTA.
+    const position = cta.compareDocumentPosition(toggle);
+    expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });

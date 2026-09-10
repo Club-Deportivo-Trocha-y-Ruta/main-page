@@ -1,5 +1,6 @@
 ---
 title: "II Válida Copa Valle 2026 - Ginebra"
+shortName: "Válida II"
 date: 2026-02-28
 location: "Corregimiento La Floresta"
 city: "Ginebra"
@@ -7,8 +8,6 @@ department: "Valle del Cauca"
 category: "xco"
 level: "departamental"
 organizer: "Comisión Vallecaucana de Ciclomontañismo"
-image: "/images/placeholder-event.jpg"
-imageAlt: "Segunda válida Copa Valle XCO en Ginebra"
 status: "past"
 featured: false
 draft: false

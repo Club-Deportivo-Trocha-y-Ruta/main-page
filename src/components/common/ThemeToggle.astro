@@ -1,0 +1,59 @@
+---
+/**
+ * Interruptor de tema claro/oscuro.
+ *
+ * No lleva script propio: el clic se captura por delegación en `document`
+ * desde `BaseLayout.astro` (mismo truco que `Analytics.astro` con sus
+ * `data-analytics-*`), así el botón funciona igual aquí que dentro del
+ * portal donde `MobileMenu` monta su drawer, sin montar un `<script>` nuevo.
+ * Esto importa porque este componente vive en la cabecera y se renderiza en
+ * las 144 páginas del sitio: un script por instancia se pagaría 144 veces.
+ *
+ * `aria-label="Modo oscuro"` es un nombre fijo, no uno que cambie según el
+ * estado (decisión C del spec de UX). Es un interruptor de una sola
+ * propiedad binaria —justo lo que `aria-pressed` modela—: un nombre
+ * dinámico ("Activar modo claro"/"Activar modo oscuro") produciría anuncios
+ * contradictorios en el lector de pantalla y, sobre todo, mentiría en el
+ * HTML servido antes de que corra cualquier script.
+ *
+ * Los dos iconos muestran el destino del clic, no el estado actual
+ * (decisión D): en tema claro se ve la luna —toca para oscurecer—, en
+ * oscuro el sol —toca para aclarar—. El intercambio es puro CSS vía
+ * `@custom-variant dark`, sin JavaScript ni condicional en el frontmatter.
+ *
+ * El HTML sale del servidor con `aria-pressed="false"` sin importar el
+ * tema real del dispositivo: el script inline de `BaseLayout.astro` lo
+ * corrige antes del primer paint (y otra vez en `astro:page-load`, para
+ * toggles que —como el del drawer de `MobileMenu`— montan más tarde). El
+ * botón nunca queda visible con el valor "equivocado".
+ */
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const classes = [
+  'inline-flex size-10 items-center justify-center rounded-full border border-primary-deep/35 text-primary-deep',
+  'hover:bg-primary/10',
+  // Solo `transform` (regla del sitio: transform/opacity; decisión E del spec).
+  'transition-transform duration-[var(--duration-micro)] ease-pop active:scale-95 motion-reduce:transition-none',
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  aria-pressed="false"
+  aria-label="Modo oscuro"
+  class={classes}
+>
+  <Icon name="ph:moon-bold" class="size-[18px] dark:hidden" aria-hidden="true" />
+  <Icon name="ph:sun-bold" class="hidden size-[18px] dark:block" aria-hidden="true" />
+</button>

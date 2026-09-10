@@ -49,8 +49,8 @@ const whatsappDuda = `${CONTACT.whatsapp}?text=${encodeURIComponent(
 ---
 
 <BaseLayout
-  title="Preguntas frecuentes"
-  description="Las dudas que más nos hacen las familias del Club Deportivo Trocha y Ruta: edad de entrada, inscripción, equipo, horarios, seguridad y competencias."
+  title="Escuela de ciclismo para niños: edades, horarios y costos"
+  description="Respuestas para familias sobre la escuela de ciclismo Trocha y Ruta en Yumbo: edad mínima, costos, horarios, bicicleta, seguridad y competencias."
   jsonLd={jsonLd}
 >
   <!-- La promesa, con el índice de temas -->
@@ -83,7 +83,7 @@ const whatsappDuda = `${CONTACT.whatsapp}?text=${encodeURIComponent(
             <li>
               <a
                 href={`#${topic.anchor}`}
-                class="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-surface/70 px-3.5 py-2 text-sm font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                class="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-surface/70 px-3.5 py-2 text-sm font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-on-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 <span class="font-display text-xs opacity-60">
                   {String(index + 1).padStart(2, '0')}
@@ -164,14 +164,14 @@ const whatsappDuda = `${CONTACT.whatsapp}?text=${encodeURIComponent(
           target="_blank"
           rel="noopener noreferrer"
           data-analytics-event="whatsapp_click"
-          class="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-surface-dark transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          class="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-surface-dark transition-colors duration-200 hover:bg-primary-deep hover:text-on-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <Icon name="ph:whatsapp-logo-bold" class="size-4 shrink-0" aria-hidden="true" />
           Preguntar por WhatsApp
         </a>
         <a
           href="/contacto"
-          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 text-sm font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          class="inline-flex items-center gap-2 rounded-lg border-2 border-primary-deep px-5 py-2.5 text-sm font-semibold text-primary-deep transition-colors duration-200 hover:bg-primary-deep hover:text-on-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           Usar el formulario
           <Icon name="ph:arrow-right-bold" class="size-4 shrink-0" aria-hidden="true" />

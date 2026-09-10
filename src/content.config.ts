@@ -16,6 +16,7 @@ import {
   treesSchema,
   speciesSchema,
   milestonesSchema,
+  obstaculosSchema,
 } from './lib/schemas';
 
 const riders = defineCollection({
@@ -90,6 +91,13 @@ const species = defineCollection({
   schema: speciesSchema,
 });
 
+// El README documenta el formato de una ficha para quien la cargue a mano;
+// el patrón lo excluye para que el loader no intente validarlo como obstáculo.
+const obstaculos = defineCollection({
+  loader: glob({ pattern: ['**/*.md', '!README.md'], base: 'src/content/obstaculos' }),
+  schema: obstaculosSchema,
+});
+
 const milestones = defineCollection({
   loader: glob({ pattern: '**/*.md', base: 'src/content/milestones' }),
   schema: milestonesSchema,
@@ -111,4 +119,5 @@ export const collections = {
   trees,
   species,
   milestones,
+  obstaculos,
 };
