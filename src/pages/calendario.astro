@@ -19,8 +19,10 @@ import ShareButtons from '@components/common/ShareButtons.astro';
 import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
 import SeasonTrack from '@components/sections/SeasonTrack.astro';
+import YumboLandmark from '@components/editorial/YumboLandmark.astro';
 import { generateEventJsonLd, generateEventsListJsonLd } from '@lib/seo';
 import { formatDate } from '@lib/utils';
+import { isHomeRace } from '@lib/yumbo';
 import {
   buildSeason,
   cancelledAhead,
@@ -129,6 +131,9 @@ const jsonLd = [listJsonLd, ...scheduledJsonLd];
 
 const nextCategory = next ? getEventCategory(next.event.data.category) : null;
 const nextLevel = next ? getEventLevel(next.event.data.level) : null;
+// Una fecha en Yumbo se anuncia como lo que es: la carrera en casa. La tarjeta
+// se firma con los hitos de la ciudad y la sección cierra sobre el cerro.
+const nextAtHome = next ? isHomeRace(next.event.data.city) : false;
 const nextMonth = next
   ? new Intl.DateTimeFormat('es-CO', { month: 'long', timeZone: 'UTC' }).format(next.event.data.date)
   : '';
@@ -164,7 +169,13 @@ const nextMonth = next
 
   <!-- La próxima fecha -->
   {next && (
-    <SectionShell tone="plain" width="wide" spacing="compact" labelledby="proximo-evento">
+    <SectionShell
+      tone="plain"
+      pattern={nextAtHome ? 'yumbo' : 'none'}
+      width="wide"
+      spacing="compact"
+      labelledby="proximo-evento"
+    >
       <p class="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-primary-deep">
         <span class="relative flex size-2">
           <span class="absolute inline-flex size-full rounded-full bg-accent opacity-75"></span>
@@ -175,9 +186,19 @@ const nextMonth = next
 
       <article
         id={`evento-${next.event.id}`}
-        class="reveal mt-5 scroll-mt-24 overflow-hidden rounded-2xl bg-surface-dark text-white shadow-lg"
+        class="reveal relative mt-5 scroll-mt-24 overflow-hidden rounded-2xl bg-surface-dark text-white shadow-lg"
       >
-        <div class="grid gap-6 p-6 md:grid-cols-[auto_1fr] md:gap-10 md:p-10">
+        {nextAtHome && (
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 hidden items-end gap-6 pr-8 pb-6 text-white/18 lg:flex"
+            aria-hidden="true"
+          >
+            <YumboLandmark landmark="monumento" variant="ink" width={360} class="h-40 w-auto" />
+            <YumboLandmark landmark="iglesia" variant="ink" width={360} class="h-32 w-auto" />
+          </div>
+        )}
+
+        <div class="relative grid gap-6 p-6 md:grid-cols-[auto_1fr] md:gap-10 md:p-10">
           <div class="flex flex-row items-center gap-4 md:flex-col md:items-start md:gap-1">
             <span class="font-display text-6xl font-bold leading-none text-accent md:text-7xl">
               {dayLabel(next.event.data.date, next.event.data.endDate)}
@@ -200,6 +221,12 @@ const nextMonth = next
               {nextLevel && (
                 <span class="inline-block rounded-full bg-white/15 px-2.5 py-0.5 text-xs font-medium text-white">
                   {nextLevel}
+                </span>
+              )}
+              {nextAtHome && (
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-surface-dark">
+                  <Icon name="ph:house-line-bold" class="size-3.5" aria-hidden="true" />
+                  En casa
                 </span>
               )}
             </div>

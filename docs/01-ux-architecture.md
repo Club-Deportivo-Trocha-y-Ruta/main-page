@@ -13,74 +13,29 @@
 
 ## 1. Arquitectura de Informacion
 
-### 1.1 Sitemap Jerarquico
+### 1.1 Sitemap
 
-```
-/ (Homepage)
-├── /quienes-somos
-│   (Historia, mision, vision, valores, equipo directivo, logros)
-│
-├── /programas
-│   ├── /programas/escuela-infantil        (4-8 anos)
-│   ├── /programas/desarrollo-juvenil      (9-14 anos)
-│   └── /programas/competicion             (15+ anos)
-│
-├── /equipo
-│   ├── /equipo?cat=infantil               (Filtro por categoria)
-│   ├── /equipo?cat=juvenil
-│   ├── /equipo?cat=elite
-│   ├── /equipo?cat=staff
-│   └── /equipo/[slug]                     (Perfil individual)
-│
-├── /noticias
-│   ├── /noticias?cat=competencias
-│   ├── /noticias?cat=club
-│   ├── /noticias?cat=entrenamiento
-│   ├── /noticias?cat=comunidad
-│   └── /noticias/[slug]                   (Articulo individual)
-│
-├── /calendario                            (Eventos y competencias)
-│
-├── /galeria
-│   └── /galeria/[slug]                    (Album individual)
-│
-├── /inscripciones                         (Formulario multi-paso)
-│
-├── /patrocinadores                        (Sponsors por nivel)
-│
-├── /transparencia
-│   └── /transparencia/dian                (Documentos DIAN)
-│
-├── /contacto                              (Formulario + mapa + datos)
-│
-└── /404                                   (Pagina de error)
-```
+> **La lista de rutas de este documento quedó obsoleta.** El sitemap real es el
+> contenido de `src/pages/`, y la estructura de cada página está en
+> `docs/04-sistema-editorial.md` (referencia por página y tabla de migración).
+> Diferencias que conviene conocer antes de leer lo que sigue: los programas son
+> tres (`escuela-de-iniciacion` 4-5 años, `formacion-juvenil` 6-11,
+> `alto-rendimiento` 12+), no los cuatro rangos que se propusieron en marzo;
+> `/equipo` existe pero está oculta y no tiene perfiles individuales; no hay
+> filtros por query param en ninguna sección; y nacieron después Trocha Verde
+> (`/trocha-verde`, con ~110 páginas de árboles y especies), `/la-pista`,
+> `/preguntas-frecuentes`, `/politica-editorial`,
+> `/politica-de-tratamiento-de-datos` y `/enlaces`.
 
-### 1.2 Priorizacion de Navegacion
+### 1.2 Navegación
 
-**Navegacion Principal (Header - visible siempre)**
+> La navegación no se define aquí. Los ítems del header salen de `NAV_ITEMS` y
+> `SECONDARY_NAV` en `src/lib/constants.ts`, y el pie de `FOOTER_GROUPS` en
+> `src/lib/navigation.ts`. Duplicar la lista en prosa solo garantiza que vuelva
+> a desincronizarse. Lo que sí sigue vigente como criterio: la nav principal se
+> queda en cinco ítems, el CTA de inscripción es un botón y no un ítem más, y
+> en móvil hay una barra de conversión fija.
 
-| Orden | Item           | Justificacion                                        |
-|-------|----------------|------------------------------------------------------|
-| 1     | Inicio         | Ancla de orientacion                                 |
-| 2     | Quienes Somos  | Confianza para padres (primer contacto)              |
-| 3     | Programas      | Core value: que ofrece el club                       |
-| 4     | Equipo         | Orgullo deportivo, roster de corredores              |
-| 5     | Noticias       | Actividad y vitalidad del club                       |
-| 6     | Calendario     | Proximas competencias                                |
-| 7     | Inscripciones  | CTA principal (boton destacado en header)            |
-
-**Navegacion Secundaria (Footer + menu mobile expandido)**
-
-| Item            | Justificacion                                     |
-|-----------------|---------------------------------------------------|
-| Galeria         | Contenido visual de soporte                       |
-| Patrocinadores  | Relevante para sponsors, no para padres           |
-| Transparencia   | Legal/institucional, bajo trafico                 |
-| Contacto        | Siempre accesible en footer                       |
-| Redes Sociales  | Links externos en footer                          |
-
-**CTA Flotante Mobile**: Boton "Inscribete" fijo en la parte inferior de la pantalla en dispositivos moviles (solo visible cuando no esta en la pagina de inscripciones).
 
 ### 1.3 Estrategia de Breadcrumbs
 
@@ -88,11 +43,11 @@
 Patron:  Inicio > Seccion > Subseccion > Pagina actual
 
 Ejemplos:
-- Inicio > Programas > Escuela Infantil
-- Inicio > Equipo > Juan David Perez
-- Inicio > Noticias > Copa Valle 2026: Tres medallas para Trocha
-- Inicio > Galeria > Entrenamiento Marzo 2026
-- Inicio > Transparencia > Documentos DIAN
+- Inicio > Programas > Escuela de Iniciacion
+- Inicio > Noticias > Chequeo Pro-Fondos: la primera carrera en casa
+- Inicio > Galeria > Chequeo Pro-Fondos 2026
+- Inicio > La pista > Drop con recibidor de madera
+- Inicio > Trocha Verde > Mango Tommy
 ```
 
 **Reglas de breadcrumbs:**
@@ -366,242 +321,22 @@ Este es el flujo critico del sitio. Un padre/madre llega (probablemente desde re
 **Notas del flujo:**
 - La pagina de patrocinadores muestra beneficios claros por nivel
 - El CTA "Quiero ser sponsor" lleva a /contacto con el asunto pre-llenado
-- Incluir boton de descarga de brochure/media kit PDF del club
-- Mostrar estadisticas del club (corredores, anos, competencias) como argumento de venta
+- El media kit en PDF sigue sin existir; el argumento de venta son las cifras derivadas del contenido, con su procedencia visible
 
 ---
 
 ## 4. Wireframes Descriptivos (ASCII Art)
 
-### 4.1 Homepage
+> **Los wireframes de portada y de `/equipo` se borraron (2026-09-09).** El de
+> portada describía una banda de cuatro cifras sin fuente (200+ niños, 50+
+> competencias, 100+ medallas) que se eliminó del sitio por no tener de dónde
+> comprobarse, y secciones que ya no existen. El de `/equipo` describía una
+> rejilla pública de perfiles de corredores: son menores de edad y sus fichas no
+> se publican. La estructura real de cada página está en
+> `docs/04-sistema-editorial.md`; la portada, en su §19, y `/equipo` —construida
+> y oculta— en su §27. Se conserva solo el de inscripciones, que sigue
+> describiendo la pantalla real.
 
-```
-+================================================================+
-|  [Logo]   Inicio  Quienes Somos  Programas  Equipo  ...  [CTA]|
-|                                                    [INSCRIBETE]|
-+================================================================+
-
-+================================================================+
-|                                                                |
-|                        H E R O                                 |
-|                   (imagen full-width                           |
-|                  ninos en bicicleta,                           |
-|                 fondo montanas Valle)                          |
-|                                                                |
-|          "Formando campeones en la vida                        |
-|               y en la pista"                                   |
-|                                                                |
-|       [ INSCRIBETE ]    [ CONOCE MAS ]                         |
-|                                                                |
-|   Club Deportivo Trocha y Ruta - Yumbo, Valle del Cauca        |
-+================================================================+
-
-+================================================================+
-|                   NUESTROS NUMEROS                              |
-|                                                                |
-|    +--------+   +--------+   +--------+   +--------+          |
-|    | 15+    |   | 200+   |   | 50+    |   | 100+   |          |
-|    | Anos   |   | Niños  |   | Compe- |   | Meda-  |          |
-|    | activo |   | forma- |   | tencias|   | llas   |          |
-|    |        |   | dos    |   |        |   |        |          |
-|    +--------+   +--------+   +--------+   +--------+          |
-+================================================================+
-
-+================================================================+
-|                    PROGRAMAS                                    |
-|                                                                |
-|  +------------------+ +------------------+ +----------------+  |
-|  |  [icono bici]    | |  [icono bici]    | | [icono bici]   |  |
-|  |                  | |                  | |                |  |
-|  | ESCUELA INFANTIL | | DESARROLLO       | | COMPETICION    |  |
-|  | 4-8 anos         | | JUVENIL          | | 15+ anos       |  |
-|  |                  | | 9-14 anos        | |                |  |
-|  | Primeros pedales | | Tecnica y        | | Alto rendim.   |  |
-|  | y amor por el    | | resistencia en   | | y competencias |  |
-|  | deporte          | | montana          | | regionales     |  |
-|  |                  | |                  | |                |  |
-|  | [Ver programa >] | | [Ver programa >] | | [Ver programa]||  |
-|  +------------------+ +------------------+ +----------------+  |
-+================================================================+
-
-+================================================================+
-|                 PROXIMOS EVENTOS                                |
-|                                                                |
-|  +-----------------------------------------------------------+|
-|  | ABR  |  Copa Valle XCO - Roldanillo           | Proxima  ||
-|  | 12   |  Roldanillo, Valle del Cauca            |  [>]     ||
-|  +-----------------------------------------------------------+|
-|  | ABR  |  Entreno Especial Montana               | Proxima  ||
-|  | 19   |  Cerro La Cumbre, Yumbo                 |  [>]     ||
-|  +-----------------------------------------------------------+|
-|  | MAY  |  Nacional XCO Sub-15                    | Proxima  ||
-|  | 03   |  Manizales, Caldas                      |  [>]     ||
-|  +-----------------------------------------------------------+|
-|  |                                                            ||
-|  |              [ VER CALENDARIO COMPLETO ]                   ||
-|  +-----------------------------------------------------------+|
-+================================================================+
-
-+================================================================+
-|                EQUIPO DESTACADO                                 |
-|                                                                |
-|  +----------+  +----------+  +----------+  +----------+       |
-|  |  [foto]  |  |  [foto]  |  |  [foto]  |  |  [foto]  |       |
-|  |          |  |          |  |          |  |          |       |
-|  | Juan D.  |  | Maria L. |  | Carlos   |  | Sofia    |       |
-|  | Perez    |  | Gomez    |  | Restrepo |  | Diaz     |       |
-|  | Juvenil  |  | Infantil |  | Elite    |  | Juvenil  |       |
-|  | XCO      |  | XCO      |  | Downhill |  | XCO      |       |
-|  +----------+  +----------+  +----------+  +----------+       |
-|                                                                |
-|               [ VER EQUIPO COMPLETO ]                          |
-+================================================================+
-
-+================================================================+
-|                    GALERIA                                      |
-|                                                                |
-|  +--------------------------+  +------------+                  |
-|  |                          |  |            |                  |
-|  |        [foto grande]     |  | [foto med] |                  |
-|  |                          |  |            |                  |
-|  |                          |  +------------+                  |
-|  |                          |  +------------+                  |
-|  +--------------------------+  |            |                  |
-|  +------------+ +------------+ | [foto med] |                  |
-|  | [foto peq] | | [foto peq] | |            |                  |
-|  +------------+ +------------+ +------------+                  |
-|                                                                |
-|                  [ VER GALERIA ]                                |
-+================================================================+
-
-
-+================================================================+
-|                 NUESTROS PATROCINADORES                         |
-|                                                                |
-|    [logo1]   [logo2]   [logo3]   [logo4]   [logo5]            |
-|                  (carrusel infinito)                            |
-|                                                                |
-|              [ QUIERO SER PATROCINADOR ]                       |
-+================================================================+
-
-+================================================================+
-|                                                                |
-|        INSCRIBE A TU HIJO HOY                                  |
-|                                                                |
-|   Formamos ninos con valores a traves del ciclomontanismo.     |
-|   Desde los 4 anos, con entrenadores certificados.             |
-|                                                                |
-|              [ INSCRIBETE AHORA ]                              |
-|                                                                |
-+================================================================+
-
-+================================================================+
-| FOOTER                                                         |
-|                                                                |
-| TROCHA Y RUTA    | NAVEGACION      | CONTACTO    | REDES     |
-| Logo              | Quienes Somos   | Dir: Yumbo  | [Fb]     |
-| "Deporte,         | Programas       | Tel: 3XX    | [Ig]     |
-|  formacion y      | Equipo          | Email: ..   | [Yt]     |
-|  contacto con     | Calendario      |             | [Str]    |
-|  la naturaleza"   | Inscripciones   |             |          |
-|                   | Contacto        |             |          |
-|                   | Transparencia   |             |          |
-|                                                                |
-| (c) 2026 Club Deportivo Trocha y Ruta | Politica privacidad   |
-+================================================================+
-```
-
-### 4.2 Equipo / Roster
-
-**Vista Grid (Index)**
-
-```
-+================================================================+
-|  [Logo]   Inicio  Quienes Somos  Programas  Equipo  ... [CTA] |
-+================================================================+
-
-  Inicio > Equipo
-
-  +===============================================+
-  |              NUESTRO EQUIPO                   |
-  |   "Los guerreros de la trocha"                |
-  +===============================================+
-
-  FILTROS:
-  [ Todos ]  [ Infantil ]  [ Juvenil ]  [ Elite ]  [ Staff ]
-
-  +----------+  +----------+  +----------+  +----------+
-  |  [foto]  |  |  [foto]  |  |  [foto]  |  |  [foto]  |
-  |  aspect  |  |  aspect  |  |  aspect  |  |  aspect  |
-  |  3:4     |  |  3:4     |  |  3:4     |  |  3:4     |
-  |          |  |          |  |          |  |          |
-  | Juan D.  |  | Maria L. |  | Carlos R.|  | Sofia D. |
-  | Perez    |  | Gomez    |  | Restrepo |  | Diaz     |
-  | -----    |  | -----    |  | -----    |  | -----    |
-  | Juvenil  |  | Infantil |  | Elite    |  | Juvenil  |
-  | XCO      |  | XCO      |  | Downhill |  | XCO      |
-  +----------+  +----------+  +----------+  +----------+
-
-  +----------+  +----------+  +----------+  +----------+
-  |  [foto]  |  |  [foto]  |  |  [foto]  |  |  [foto]  |
-  |          |  |          |  |          |  |          |
-  | Andres   |  | Valeria  |  | Santiago |  | Coach    |
-  | Munoz    |  | Torres   |  | Ramirez  |  | Pedro M. |
-  | -----    |  | -----    |  | -----    |  | -----    |
-  | Juvenil  |  | Infantil |  | Elite    |  | Staff    |
-  | XCO      |  | XCO      |  | Enduro   |  | Director |
-  +----------+  +----------+  +----------+  +----------+
-```
-
-**Vista Perfil Individual**
-
-```
-+================================================================+
-|  [Logo]   Inicio  Quienes Somos  Programas  Equipo  ... [CTA] |
-+================================================================+
-
-  Inicio > Equipo > Juan David Perez
-
-  +==========================+=================================+
-  |                          |                                 |
-  |                          |  JUAN DAVID PEREZ               |
-  |      [foto grande]       |                                 |
-  |      perfil              |  Categoria: Juvenil             |
-  |      aspect 3:4          |  Especialidad: XCO              |
-  |      aprox 400px         |  Edad: 13 anos                  |
-  |                          |  Desde: 2021                    |
-  |                          |                                 |
-  |                          |  [Instagram]  [Strava]          |
-  |                          |                                 |
-  +==========================+=================================+
-
-  +===============================================+
-  |  BIOGRAFIA                                    |
-  |                                               |
-  |  Juan David inicio en Trocha y Ruta a los     |
-  |  10 anos en la escuela infantil. Hoy es       |
-  |  uno de los corredores mas destacados en      |
-  |  categoria juvenil del Valle del Cauca...     |
-  +===============================================+
-
-  +===============================================+
-  |  LOGROS                                       |
-  |                                               |
-  |  [medalla] 1er puesto Copa Valle XCO 2025     |
-  |  [medalla] 3er puesto Nacional Sub-15 2025    |
-  |  [medalla] 2do puesto Departamental 2024      |
-  +===============================================+
-
-  +===============================================+
-  |  GALERIA                                      |
-  |                                               |
-  |  +--------+ +--------+ +--------+ +--------+ |
-  |  | [foto] | | [foto] | | [foto] | | [foto] | |
-  |  +--------+ +--------+ +--------+ +--------+ |
-  +===============================================+
-
-  [ < Anterior corredor ]        [ Siguiente corredor > ]
-```
 
 ### 4.3 Inscripciones (Formulario Multi-paso)
 
@@ -777,7 +512,7 @@ Los padres necesitan sentirse seguros antes de inscribir a su hijo. Elementos de
 - **Staff visible**: fotos y credenciales de entrenadores en /quienes-somos
 - **Transparencia**: seccion con documentos legales, reconocimientos deportivos, certificaciones DIAN
 - **Contacto accesible**: WhatsApp siempre visible, telefono clickeable, formulario simple
-- **Estadisticas verificables**: anos de trayectoria, numero de ninos formados
+- **Estadisticas verificables**: solo cifras con fuente comprobable (anos cumplidos, programas activos, arboles sembrados). Nunca un numero de ninos formados: no existe registro que lo respalde
 - **Redes sociales activas**: embed o links a Instagram/Facebook con contenido reciente
 
 ### 5.3 Profesionalismo Deportivo
@@ -785,10 +520,10 @@ Los padres necesitan sentirse seguros antes de inscribir a su hijo. Elementos de
 Inspirado en webs de equipos UCI WorldTour, adaptado a escala comunitaria:
 
 - **Tipografia bold** (Plus Jakarta Sans para titulos, Inter para cuerpo)
-- **Cards de corredores** con foto profesional, nombre prominente, categoria y logros
+- **Cards** con foto, titular prominente y dato de apoyo (eventos, albumes, arboles; no corredores: son menores)
 - **Calendario deportivo** con vista cronologica, estados claros (proximo/pasado)
 - **Resultados** con posiciones, tiempos y medallas
-- **Paleta de colores** definida y consistente (azul primario, rosa acento, cyan secundario)
+- **Paleta de colores** definida y consistente (teal primario, lima acento, grafito de superficie)
 - **Imagenes en alta calidad** optimizadas (WebP/AVIF con fallback)
 
 ### 5.4 Accesibilidad WCAG 2.1 AA
@@ -811,30 +546,38 @@ Requisitos minimos de accesibilidad:
 | 3.3.2 Etiquetas | Labels asociados a todos los inputs |
 | 4.1.2 Nombre, rol, valor | ARIA labels donde sea necesario |
 
-**Verificacion de contraste con la paleta del club:**
-- Azul primario (#046bd2) sobre blanco: ratio 4.56:1 (pasa AA)
-- Rosa acento (#ef4297) sobre blanco: ratio 3.51:1 (pasa AA solo texto grande; usar sobre fondo oscuro para texto normal)
-- Texto principal (#1e293b) sobre blanco: ratio 12.63:1 (pasa AAA)
-- Texto secundario (#64748b) sobre blanco: ratio 4.73:1 (pasa AA)
+**Contraste:** los ratios que traía este documento se calcularon sobre una paleta
+azul/rosa que el club nunca adoptó. La paleta real es teal `#20b7c9` y lima
+`#8be000`, y ninguno de los dos cumple contraste como texto sobre fondo claro:
+para texto van `primary-deep` y `accent-deep`, y sobre fondos de color va el
+grafito. La regla vigente esta en `CLAUDE.md` y los tokens en
+`src/styles/global.css`.
 
 ### 5.5 Patrones de Interaccion Recomendados
 
 | Patron | Donde | Implementacion |
 |--------|-------|----------------|
-| **Skeleton loading** | Imagenes, cards | Placeholder gris animado mientras carga |
 | **Scroll suave** | Anclas internas, "volver arriba" | `scroll-behavior: smooth` + boton flotante |
-| **Pull-to-refresh visual** | Mobile general | Indicador de recarga nativo |
 | **Swipe** | Galeria | Carrusel con soporte touch/swipe |
 | **Share nativo** | Noticias, eventos, perfiles | Web Share API con fallback a copiar URL |
 | **Formularios progresivos** | Inscripciones | Multi-paso con validacion por campo |
 | **Toast notifications** | Formularios enviados | Notificacion temporal de exito/error |
 | **Hover elevacion** | Cards | `transform: translateY(-4px)` + sombra en hover |
 | **View Transitions** | Navegacion entre paginas | Astro View Transitions API |
-| **Intersection Observer** | Stats counter, secciones | Animacion al entrar en viewport |
+| **Count-up al entrar en pantalla** | Stats counter, secciones | CSS puro (`@property` + `animation-timeline`), sin JS |
 
 ---
 
 ## 6. Recomendaciones de Mejora vs PROMPT Original
+
+> **Histórico, no backlog.** Esta sección es de marzo de 2026. La mayoría ya se hizo
+> (WhatsApp como canal, FAQ, tags en noticias, staff separado del roster, experiencia
+> previa e integración con Google Calendar en el formulario). Otras se resolvieron
+> distinto a como se proponen aquí (el palmarés se resolvió como `SeasonStandings`
+> en `/noticias`, no como página propia — y una página de corredores individuales
+> choca con la política de menores). Media kit en PDF, widget de Strava, modo oscuro
+> e internacionalización siguen sin implementarse. Se conserva por trazabilidad, no
+> como lista de tareas pendientes.
 
 Despues de analizar el PROMPT-PROYECTO.md y compararlo con las mejores practicas de equipos profesionales y las necesidades de las personas definidas, se identifican las siguientes oportunidades:
 
@@ -904,13 +647,21 @@ Despues de analizar el PROMPT-PROYECTO.md y compararlo con las mejores practicas
 
 ## Resumen Ejecutivo
 
-Este documento define la base UX para el sitio web del Club Deportivo Trocha y Ruta. Los puntos clave son:
+Este documento nacio en marzo de 2026 como base UX de la reconstruccion del sitio.
+Lo que sigue vigente y por lo que se conserva:
 
-1. **12 paginas principales** organizadas en una jerarquia clara con navegacion dividida en primaria (7 items) y secundaria (footer).
-2. **4 personas** que cubren el espectro completo de usuarios: padres, corredores, patrocinadores y visitantes casuales.
-3. **3 flujos criticos** disenados paso a paso: inscripcion, calendario y patrocinio.
-4. **Wireframes detallados** para homepage, equipo y formulario de inscripcion.
-5. **Principios mobile-first** para la audiencia colombiana con acceso predominante desde celulares Android.
-6. **12 recomendaciones de mejora** priorizadas por impacto, destacando WhatsApp como canal, FAQ, y media kit para patrocinadores.
+1. **4 personas** que cubren el espectro de usuarios: padres, corredores,
+   patrocinadores y visitantes casuales. Es la parte que mas se cita desde los
+   agentes del proyecto y los planes de marketing.
+2. **3 flujos criticos** paso a paso: inscripcion, calendario y patrocinio. Los
+   tres siguen describiendo el recorrido real.
+3. **Principios mobile-first** y la tabla de criterios WCAG 2.1 AA.
+4. El **wireframe de inscripciones**, unico que aun describe la pantalla que
+   existe.
 
-Este documento sirve como guia para los agentes de diseno visual y desarrollo frontend del equipo.
+Lo que se retiro por haber quedado desmentido: el sitemap y la navegacion (los
+define el codigo), los wireframes de portada y de `/equipo`, los ratios de
+contraste de una paleta que no se adopto, y las cifras del club sin fuente.
+
+La estructura de cada pagina se documenta en `docs/04-sistema-editorial.md`; el
+modelo de contenido, en `docs/03-modelo-de-contenido.md`.

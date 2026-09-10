@@ -95,6 +95,7 @@ export const NAV_ITEMS = [
 ] as const;
 
 export const SECONDARY_NAV = [
+  { label: 'La pista', href: '/la-pista' },
   { label: 'Galería', href: '/galeria' },
   { label: 'Trocha Verde', href: '/trocha-verde' },
   { label: 'Preguntas Frecuentes', href: '/preguntas-frecuentes' },

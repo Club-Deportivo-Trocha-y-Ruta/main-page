@@ -1,0 +1,58 @@
+---
+/**
+ * «De dónde somos» — las tres láminas de Yumbo, a color, como contenido.
+ *
+ * Es la única sección del sitio donde las ilustraciones se muestran completas y
+ * a color (ver `@lib/yumbo`): aquí la lámina no decora un texto, es el texto. En
+ * el resto del sitio el mismo material aparece enmascarado y tenue, como
+ * horizonte de fondo (`SectionShell pattern="yumbo"`).
+ *
+ * Cada pie dice solo lo que tiene fuente pública, anotada en el catálogo: la
+ * fecha y el tamaño del letrero del cerro, dónde está el monumento, quién y
+ * cuándo levantó el santuario. Lo que no se sabe —el nombre propio del cerro—
+ * no se afirma. Y no se dice que estos elementos estén en el uniforme del club:
+ * salieron de un prototipo que no se adoptó.
+ */
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import YumboLandmark from '@components/editorial/YumboLandmark.astro';
+import { YUMBO_LANDMARKS } from '@lib/yumbo';
+---
+
+<SectionShell tone="muted" width="wide" labelledby="yumbo-titulo">
+  <SectionIntro
+    id="yumbo-titulo"
+    eyebrow="De dónde somos"
+    eyebrowIcon="ph:map-pin-bold"
+    title="El club es de Yumbo, y se le nota"
+    highlight="de Yumbo"
+    lead="Tres cosas que en esta ciudad se reconocen de lejos. Aquí es donde el club entrena, desde 2010."
+    align="center"
+    class="mx-auto max-w-3xl"
+  />
+
+  <ul class="mt-14 grid gap-10 sm:grid-cols-3 sm:gap-8">
+    {
+      YUMBO_LANDMARKS.map((landmark, index) => (
+        <li class="reveal text-center" style={`--stagger:${index * 90}ms`}>
+          {/*
+            Las tres se apoyan en la misma línea de suelo (`items-end`), pero no
+            se les iguala el alto: el cerro es una lámina apaisada (2.6:1) y, con
+            la misma altura que las dos siluetas verticales, queda angosto y sin
+            peso al lado de ellas. Ocupa el ancho de su columna y menos alto,
+            para que las tres pesen parecido.
+          */}
+          <div class="flex h-40 items-end justify-center sm:h-48">
+            <YumboLandmark
+              landmark={landmark.id}
+              width={520}
+              class={landmark.shape === 'wide' ? 'h-auto w-full' : 'h-full w-auto'}
+            />
+          </div>
+          <h3 class="font-display text-text-primary mt-6 text-lg font-bold">{landmark.title}</h3>
+          <p class="text-text-secondary mt-2 text-sm leading-relaxed">{landmark.caption}</p>
+        </li>
+      ))
+    }
+  </ul>
+</SectionShell>

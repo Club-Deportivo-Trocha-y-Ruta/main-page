@@ -11,6 +11,7 @@ import {
   sponsorsSchema,
   gallerySchema,
   faqsSchema,
+  obstaculosSchema,
 } from '../schemas';
 
 /**
@@ -39,10 +40,16 @@ const collectionSchemas: Record<
   sponsors: sponsorsSchema,
   gallery: gallerySchema,
   faqs: faqsSchema,
+  obstaculos: obstaculosSchema,
 };
 
+// El README de una colección documenta el formato para quien carga contenido a
+// mano; los loaders lo excluyen (`!README.md`) y aquí también, o se validaría
+// como si fuera una ficha.
 function getContentFiles(collection: string): string[] {
-  return fg.sync(`${CONTENT_DIR}/${collection}/**/*.md`);
+  return fg
+    .sync(`${CONTENT_DIR}/${collection}/**/*.md`)
+    .filter((filePath) => basename(filePath).toLowerCase() !== 'readme.md');
 }
 
 function parseFile(filePath: string) {
@@ -65,12 +72,10 @@ for (const [collection, schema] of Object.entries(collectionSchemas)) {
       const result = schema.safeParse(data);
 
       if (!result.success) {
-        const issues = result.error!.issues
-          .map((i) => `  ${i.path.join('.')}: ${i.message}`)
+        const issues = result
+          .error!.issues.map((i) => `  ${i.path.join('.')}: ${i.message}`)
           .join('\n');
-        expect.fail(
-          `Frontmatter inválido en ${filePath}:\n${issues}`
-        );
+        expect.fail(`Frontmatter inválido en ${filePath}:\n${issues}`);
       }
     });
   });
@@ -139,14 +144,14 @@ describe('Convenciones de contenido', () => {
     const sinDistinguir = [...porAnioYCiudad.entries()]
       .filter(([, paradas]) => paradas.length > 1)
       .flatMap(([clave, paradas]) =>
-        paradas.filter((p) => !p.shortName).map((p) => `${clave} → ${p.file}`)
+        paradas.filter((p) => !p.shortName).map((p) => `${clave} → ${p.file}`),
       );
 
     expect(
       sinDistinguir,
       `Estas fechas comparten ciudad y año con otra, así que el riel de la ` +
         `temporada las pinta con el mismo rótulo. Agrega "shortName" ` +
-        `(ej: "Válida VII", "Chequeo") a cada una:\n  ${sinDistinguir.join('\n  ')}`
+        `(ej: "Válida VII", "Chequeo") a cada una:\n  ${sinDistinguir.join('\n  ')}`,
     ).toEqual([]);
   });
 });
@@ -171,7 +176,7 @@ describe('Convenciones de contenido', () => {
 describe('Referencias cruzadas', () => {
   function idsOf(collection: string): Set<string> {
     return new Set(
-      fg.sync(`${CONTENT_DIR}/${collection}/**/*.md`).map((file) => basename(file, '.md'))
+      fg.sync(`${CONTENT_DIR}/${collection}/**/*.md`).map((file) => basename(file, '.md')),
     );
   }
 

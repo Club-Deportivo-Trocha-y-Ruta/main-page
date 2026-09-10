@@ -3015,3 +3015,66 @@
     transition-timing-function: var(--ease-spring);
   }
 }
+
+/* ============================================================
+   Láminas de Yumbo (docs/04-sistema-editorial.md §2.7)
+   ============================================================
+
+   Las ilustraciones del cerro, el monumento y el santuario se pintan como
+   máscara sobre `currentColor`: el color lo pone el tono de la sección y una
+   sola lámina sirve sobre fondo claro, sobre grafito y sobre el teal de marca.
+   El componente solo aporta la URL del asset en `--yumbo-mask`; todo lo demás
+   vive aquí porque necesita dos cosas que un `style` inline no puede tener:
+   una consulta `@supports` y una máscara compuesta.
+
+   Sin soporte de `mask-image` la lámina se esconde. Es la diferencia entre no
+   ver nada —correcto: es decoración— y ver un rectángulo sólido de color, que
+   es lo que se vería si `background-color` se aplicara solo. */
+.yumbo-mask {
+  background-color: currentColor;
+  -webkit-mask-image: var(--yumbo-mask);
+  mask-image: var(--yumbo-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* El horizonte al pie de una sección.
+   La caja que lo lleva (SectionShell) tiene la proporción exacta de la lámina
+   (`aspect-ratio` del asset) y se centra sola, así que `auto 100%` la llena sin
+   deformarla —estirarla al ancho del viewport la dejaba hasta 6.8x más ancha y
+   el letrero YUMBO ilegible—. El segundo degradado se mide sobre esa misma caja,
+   no sobre la sección: la lámina es un rectángulo con la cima recortada y sin
+   este fundido sus dos costados se leían como los bordes de un bloque. El pie
+   no se funde porque coincide con el borde de la sección. */
+.yumbo-skyline {
+  -webkit-mask-image: var(--yumbo-mask),
+    linear-gradient(to right, transparent, #000 24%, #000 76%, transparent);
+  mask-image: var(--yumbo-mask),
+    linear-gradient(to right, transparent, #000 24%, #000 76%, transparent);
+  -webkit-mask-size:
+    auto 100%,
+    100% 100%;
+  mask-size:
+    auto 100%,
+    100% 100%;
+  -webkit-mask-position:
+    bottom center,
+    0 0;
+  mask-position:
+    bottom center,
+    0 0;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+@supports not (
+  (mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))
+) {
+  .yumbo-mask {
+    display: none;
+  }
+}

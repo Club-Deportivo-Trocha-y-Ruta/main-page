@@ -4,8 +4,9 @@
  *
  * Sigue el sistema editorial (docs/04-sistema-editorial.md). El orden responde
  * lo que una familia pregunta en este orden: quiénes son (cifras), de dónde
- * vienen (el recorrido), qué los mueve (misión y valores), por qué confiarles
- * un hijo (respaldo) y cómo se ve por dentro (comunidad).
+ * vienen (el recorrido), de dónde son (Yumbo), qué los mueve (misión y
+ * valores), por qué confiarles un hijo (respaldo) y cómo se ve por dentro
+ * (comunidad).
  *
  * Todas las cifras salen de `constants.ts` y de las collections; los textos de
  * la comunidad, de `gallery`.
@@ -20,6 +21,7 @@ import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
 import StatFigure from '@components/editorial/StatFigure.astro';
 import Timeline, { type TimelineItem } from '@components/editorial/Timeline.astro';
+import YumboRoots from '@components/sections/YumboRoots.astro';
 import { SITE, getYearsActive } from '@lib/constants';
 import { buildMilestoneItems } from '@lib/milestones';
 import { summarizePrograms } from '@lib/programs';
@@ -39,7 +41,7 @@ const treeStats = await getTreeStats();
 const programTotals = summarizePrograms(
   (await getCollection('programs'))
     .filter((p: CollectionEntry<'programs'>) => !p.data.draft && p.data.active)
-    .map((p: CollectionEntry<'programs'>) => p.data)
+    .map((p: CollectionEntry<'programs'>) => p.data),
 );
 
 // Cifras de cabecera. Todas salen del contenido y se pueden comprobar: aquí
@@ -55,7 +57,9 @@ const figures = [
   {
     value: programTotals.programs,
     label: 'Programas de formación',
-    note: programTotals.ageRange ? `Desde los ${programTotals.ageRange.replace('+', '')} años` : undefined,
+    note: programTotals.ageRange
+      ? `Desde los ${programTotals.ageRange.replace('+', '')} años`
+      : undefined,
     icon: 'ph:path-bold',
   },
   {
@@ -76,15 +80,13 @@ const figures = [
 // edita el club desde el CMS y las cifras que cambian solas ({{trees}},
 // {{founded}}) se resuelven aquí contra la fuente de verdad.
 const milestones: TimelineItem[] = buildMilestoneItems(
-  (await getCollection('milestones')).map(
-    (entry: CollectionEntry<'milestones'>) => entry.data
-  ),
+  (await getCollection('milestones')).map((entry: CollectionEntry<'milestones'>) => entry.data),
   {
     founded: SITE.founded,
     club: SITE.name,
     years: yearsActive,
     trees: treeStats.totalTrees,
-  }
+  },
 );
 
 // Los valores estaban en una sola frase separada por comas: partidos en piezas
@@ -143,7 +145,6 @@ const albums = (await getCollection('gallery'))
   .filter((g: Gallery) => !g.data.draft)
   .sort((a: Gallery, b: Gallery) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
-
 ---
 
 <BaseLayout
@@ -152,7 +153,13 @@ const albums = (await getCollection('gallery'))
   jsonLd={sportsClubJsonLd}
 >
   <!-- Quiénes somos, en cifras -->
-  <SectionShell tone="tinted" pattern="topo" width="wide" spacing="compact" labelledby="club-titulo">
+  <SectionShell
+    tone="tinted"
+    pattern="topo"
+    width="wide"
+    spacing="compact"
+    labelledby="club-titulo"
+  >
     <Breadcrumb items={[{ label: 'Quiénes Somos' }]} />
 
     <div class="mt-6 grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
@@ -179,30 +186,28 @@ const albums = (await getCollection('gallery'))
       />
     </div>
 
-    {/*
+    {
+      /*
       `StatFigure` pinta un `<div><p>`, no un par `<dt>/<dd>`: envolverlo en
       un `<dl>` daba una lista de definición sin términos, marcado inválido.
-    */}
-    <div class="mt-12 grid grid-cols-2 gap-6 border-t border-primary/15 pt-8 lg:grid-cols-4">
-      {figures.map((figure) => (
-        <StatFigure
-          value={figure.value}
-          label={figure.label}
-          note={figure.note}
-          icon={figure.icon}
-        />
-      ))}
+    */
+    }
+    <div class="border-primary/15 mt-12 grid grid-cols-2 gap-6 border-t pt-8 lg:grid-cols-4">
+      {
+        figures.map((figure) => (
+          <StatFigure
+            value={figure.value}
+            label={figure.label}
+            note={figure.note}
+            icon={figure.icon}
+          />
+        ))
+      }
     </div>
   </SectionShell>
 
   <!-- El recorrido -->
-  <SectionShell
-    tone="plain"
-    pattern="topo"
-    scrollDriven
-    width="wide"
-    labelledby="recorrido-titulo"
-  >
+  <SectionShell tone="plain" pattern="topo" scrollDriven width="wide" labelledby="recorrido-titulo">
     <SectionIntro
       id="recorrido-titulo"
       eyebrow="El recorrido"
@@ -216,6 +221,10 @@ const albums = (await getCollection('gallery'))
 
     <Timeline items={milestones} class="mt-14" />
   </SectionShell>
+
+  <!-- De dónde somos: Yumbo. Va después del recorrido porque completa la misma
+       pregunta —de dónde viene el club— con el sitio, no con las fechas. -->
+  <YumboRoots />
 
   <!-- Lo que nos mueve -->
   <SectionShell tone="dark" pattern="topo" width="wide" labelledby="proposito-titulo">
@@ -231,36 +240,42 @@ const albums = (await getCollection('gallery'))
         />
 
         <div class="mt-8 space-y-6">
-          <div class="border-l-2 border-accent pl-5">
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-accent-light">Misión</p>
+          <div class="border-accent border-l-2 pl-5">
+            <p class="text-accent-light text-xs font-bold tracking-[0.18em] uppercase">Misión</p>
             <p class="mt-2 text-lg leading-relaxed text-white/85">
-              Formar niños y jóvenes integrales a través del ciclomontañismo, promoviendo
-              valores, disciplina y amor por la naturaleza.
+              Formar niños y jóvenes integrales a través del ciclomontañismo, promoviendo valores,
+              disciplina y amor por la naturaleza.
             </p>
           </div>
           <div class="border-l-2 border-white/25 pl-5">
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/60">Visión</p>
+            <p class="text-xs font-bold tracking-[0.18em] text-white/60 uppercase">Visión</p>
             <p class="mt-2 leading-relaxed text-white/75">
-              Ser el club referente en formación deportiva infantil y juvenil en el Valle del
-              Cauca, reconocido por su excelencia deportiva y humana.
+              Ser el club referente en formación deportiva infantil y juvenil en el Valle del Cauca,
+              reconocido por su excelencia deportiva y humana.
             </p>
           </div>
         </div>
       </div>
 
       <div>
-        <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/60">
+        <p class="text-xs font-bold tracking-[0.18em] text-white/60 uppercase">
           Los valores que entrenamos
         </p>
         <ul class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2">
-          {values.map((value) => (
-            <li class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
-              <Icon name={value.icon} class="size-6 shrink-0 text-accent-light" aria-hidden="true" />
-              <span class="font-display text-sm font-bold leading-tight text-white">
-                {value.label}
-              </span>
-            </li>
-          ))}
+          {
+            values.map((value) => (
+              <li class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
+                <Icon
+                  name={value.icon}
+                  class="text-accent-light size-6 shrink-0"
+                  aria-hidden="true"
+                />
+                <span class="font-display text-sm leading-tight font-bold text-white">
+                  {value.label}
+                </span>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </div>
@@ -280,34 +295,37 @@ const albums = (await getCollection('gallery'))
     />
 
     <ul class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {credentials.map((item, index) => (
-        <li
-          class="reveal group relative flex flex-col rounded-2xl bg-surface p-6 shadow-sm ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-md"
-          style={`--stagger:${Math.min(index, 3) * 80}ms`}
-        >
-          <span class="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary-deep">
-            <Icon name={item.icon} class="size-6" aria-hidden="true" />
-          </span>
-          <h3 class="mt-4 font-display text-base font-bold text-text-primary">
-            <a href={item.href} class="after:absolute after:inset-0 hover:text-primary-deep">
-              {item.title}
-            </a>
-          </h3>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-text-secondary">{item.body}</p>
-          <span
-            class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary-deep transition-all duration-200 group-hover:gap-2"
-            aria-hidden="true"
+      {
+        credentials.map((item, index) => (
+          <li
+            class="reveal group bg-surface relative flex flex-col rounded-2xl p-6 shadow-sm ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-md"
+            style={`--stagger:${Math.min(index, 3) * 80}ms`}
           >
-            {item.cta}
-            <Icon name="ph:arrow-right-bold" class="size-4" />
-          </span>
-        </li>
-      ))}
+            <span class="bg-primary/10 text-primary-deep flex size-11 items-center justify-center rounded-xl">
+              <Icon name={item.icon} class="size-6" aria-hidden="true" />
+            </span>
+            <h3 class="font-display text-text-primary mt-4 text-base font-bold">
+              <a href={item.href} class="hover:text-primary-deep after:absolute after:inset-0">
+                {item.title}
+              </a>
+            </h3>
+            <p class="text-text-secondary mt-2 flex-1 text-sm leading-relaxed">{item.body}</p>
+            <span
+              class="text-primary-deep mt-4 inline-flex items-center gap-1 text-sm font-semibold transition-all duration-200 group-hover:gap-2"
+              aria-hidden="true"
+            >
+              {item.cta}
+              <Icon name="ph:arrow-right-bold" class="size-4" />
+            </span>
+          </li>
+        ))
+      }
     </ul>
   </SectionShell>
 
-  <!-- La comunidad -->
-  <SectionShell tone="plain" width="wide" labelledby="comunidad-titulo">
+  <!-- La comunidad. Cierra con el horizonte de Yumbo al pie: la página empezó
+       contando de dónde viene el club y termina sobre el mismo cerro. -->
+  <SectionShell tone="plain" pattern="yumbo" width="wide" labelledby="comunidad-titulo">
     <SectionIntro
       id="comunidad-titulo"
       eyebrow="La comunidad"
@@ -319,37 +337,38 @@ const albums = (await getCollection('gallery'))
       class="mx-auto max-w-3xl"
     />
 
-    {albums.length > 0 && (
-      <ul class="mt-12 grid gap-5 sm:grid-cols-3">
-        {albums.map((album: Gallery, index: number) => (
-          <li
-            class="reveal group relative overflow-hidden rounded-2xl bg-surface-muted shadow-sm"
-            style={`--stagger:${index * 80}ms`}
-          >
-            <a href={`/galeria/${album.id}`} class="block">
-              <img
-                src={album.data.cover}
-                alt={album.data.coverAlt ?? `Portada del álbum ${album.data.title}`}
-                width="800"
-                height="600"
-                loading="lazy"
-                decoding="async"
-                class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent p-4">
-                <span class="block font-display text-sm font-bold leading-snug text-white">
-                  {album.data.title}
+    {
+      albums.length > 0 && (
+        <ul class="mt-12 grid gap-5 sm:grid-cols-3">
+          {albums.map((album: Gallery, index: number) => (
+            <li
+              class="reveal group bg-surface-muted relative overflow-hidden rounded-2xl shadow-sm"
+              style={`--stagger:${index * 80}ms`}
+            >
+              <a href={`/galeria/${album.id}`} class="block">
+                <img
+                  src={album.data.cover}
+                  alt={album.data.coverAlt ?? `Portada del álbum ${album.data.title}`}
+                  width="800"
+                  height="600"
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent p-4">
+                  <span class="font-display block text-sm leading-snug font-bold text-white">
+                    {album.data.title}
+                  </span>
+                  <span class="mt-0.5 block text-xs text-white/80">
+                    {album.data.images.length} fotos
+                  </span>
                 </span>
-                <span class="mt-0.5 block text-xs text-white/80">
-                  {album.data.images.length} fotos
-                </span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )}
-
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
   </SectionShell>
 
   <SectionShell tone="plain" width="default" spacing="compact" label="Inscripciones">

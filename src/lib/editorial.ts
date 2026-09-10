@@ -13,8 +13,16 @@
 /** Fondo sobre el que se apoya la sección. */
 export type SectionTone = 'plain' | 'muted' | 'tinted' | 'dark' | 'brand';
 
-/** Textura decorativa de fondo. `topo` = curvas de nivel (mapa de montaña). */
-export type SectionPattern = 'none' | 'topo';
+/**
+ * Textura decorativa de fondo.
+ *
+ * - `topo` — curvas de nivel, dibujadas en SVG (mapa de montaña).
+ * - `yumbo` — la silueta del cerro de Yumbo al pie de la sección, con las
+ *   letras del letrero en negativo. Es una lámina raster enmascarada sobre el
+ *   color del tono, no un SVG: ver `@lib/yumbo`. Ancla al borde inferior, así
+ *   que ignora la deriva de `scrollDriven`.
+ */
+export type SectionPattern = 'none' | 'topo' | 'yumbo';
 
 /** Ancho del contenido. El marco siempre ocupa el ancho completo. */
 export type SectionWidth = 'narrow' | 'default' | 'wide';
@@ -37,6 +45,14 @@ export interface ToneTokens {
   card: string;
   /** Color del patrón decorativo (ya incluye su opacidad). */
   pattern: string;
+  /**
+   * Color del horizonte de Yumbo (`pattern="yumbo"`). Va aparte de `pattern`
+   * porque la lámina es una silueta maciza, no una trama de líneas finas: a la
+   * opacidad de `topo` no se ve, y a la suya `topo` se vuelve ruido. Nunca lleva
+   * texto encima —el marco le reserva su banda—, así que no hay contraste que
+   * cuidar.
+   */
+  skyline: string;
   /** true cuando el fondo es oscuro: las ilustraciones deben invertirse. */
   inverted: boolean;
 }
@@ -55,6 +71,7 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     hairline: 'border-black/10',
     card: 'bg-surface',
     pattern: 'text-primary/14',
+    skyline: 'text-primary/25',
     inverted: false,
   },
   muted: {
@@ -65,6 +82,7 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     hairline: 'border-black/10',
     card: 'bg-surface',
     pattern: 'text-primary/16',
+    skyline: 'text-primary/25',
     inverted: false,
   },
   tinted: {
@@ -75,6 +93,7 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     hairline: 'border-primary/15',
     card: 'bg-surface',
     pattern: 'text-primary/14',
+    skyline: 'text-primary/25',
     inverted: false,
   },
   dark: {
@@ -85,6 +104,7 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     hairline: 'border-white/15',
     card: 'bg-white/5',
     pattern: 'text-white/15',
+    skyline: 'text-white/20',
     inverted: true,
   },
   brand: {
@@ -95,6 +115,7 @@ export const SECTION_TONES: Record<SectionTone, ToneTokens> = {
     hairline: 'border-surface-dark/20',
     card: 'bg-surface',
     pattern: 'text-surface-dark/15',
+    skyline: 'text-surface-dark/20',
     inverted: false,
   },
 };

@@ -14,6 +14,9 @@ import {
   faqsSchema,
   pagesSchema,
   milestonesSchema,
+  obstaculosSchema,
+  OBSTACLE_TYPES,
+  OBSTACLE_LEVELS,
 } from '../schemas';
 
 // ============================================================
@@ -30,9 +33,7 @@ describe('seoSchema', () => {
   });
 
   it('valida metaDescription <= 160 chars', () => {
-    expect(() =>
-      seoSchema.parse({ metaDescription: 'a'.repeat(161) })
-    ).toThrow();
+    expect(() => seoSchema.parse({ metaDescription: 'a'.repeat(161) })).toThrow();
   });
 
   it('acepta metaDescription de 160 chars exactos', () => {
@@ -51,9 +52,7 @@ describe('socialMediaSchema', () => {
   });
 
   it('rechaza URLs inválidas', () => {
-    expect(() =>
-      socialMediaSchema.parse({ instagram: 'not-a-url' })
-    ).toThrow();
+    expect(() => socialMediaSchema.parse({ instagram: 'not-a-url' })).toThrow();
   });
 
   it('acepta undefined (optional)', () => {
@@ -89,9 +88,7 @@ describe('ridersSchema', () => {
   });
 
   it('rechaza categoría inválida', () => {
-    expect(() =>
-      ridersSchema.parse({ ...validRider, category: 'profesional' })
-    ).toThrow();
+    expect(() => ridersSchema.parse({ ...validRider, category: 'profesional' })).toThrow();
   });
 
   it('rechaza sin campos requeridos', () => {
@@ -131,15 +128,11 @@ describe('eventsSchema', () => {
   });
 
   it('rechaza categoría de evento inválida', () => {
-    expect(() =>
-      eventsSchema.parse({ ...validEvent, category: 'bmx' })
-    ).toThrow();
+    expect(() => eventsSchema.parse({ ...validEvent, category: 'bmx' })).toThrow();
   });
 
   it('rechaza registrationUrl no válida como URL', () => {
-    expect(() =>
-      eventsSchema.parse({ ...validEvent, registrationUrl: 'not-url' })
-    ).toThrow();
+    expect(() => eventsSchema.parse({ ...validEvent, registrationUrl: 'not-url' })).toThrow();
   });
 
   it('acepta todos los status válidos', () => {
@@ -170,9 +163,7 @@ describe('newsSchema', () => {
   });
 
   it('rechaza excerpt > 200 chars', () => {
-    expect(() =>
-      newsSchema.parse({ ...validNews, excerpt: 'a'.repeat(201) })
-    ).toThrow();
+    expect(() => newsSchema.parse({ ...validNews, excerpt: 'a'.repeat(201) })).toThrow();
   });
 
   it('acepta excerpt de 200 chars exactos', () => {
@@ -210,9 +201,7 @@ describe('programsSchema', () => {
   });
 
   it('rechaza targetLevel inválido', () => {
-    expect(() =>
-      programsSchema.parse({ ...validProgram, targetLevel: 'avanzado' })
-    ).toThrow();
+    expect(() => programsSchema.parse({ ...validProgram, targetLevel: 'avanzado' })).toThrow();
   });
 
   it('acepta un programa sin sesiones capturadas', () => {
@@ -238,7 +227,7 @@ describe('programsSchema', () => {
       programsSchema.parse({
         ...validProgram,
         sessions: [{ day: 'lunes', start: '16:30', end: '18:00' }],
-      })
+      }),
     ).toThrow();
   });
 
@@ -248,7 +237,7 @@ describe('programsSchema', () => {
         programsSchema.parse({
           ...validProgram,
           sessions: [{ day: 'tue', start, end: '18:00' }],
-        })
+        }),
       ).toThrow();
     }
   });
@@ -258,14 +247,14 @@ describe('programsSchema', () => {
       programsSchema.parse({
         ...validProgram,
         sessions: [{ day: 'tue', start: '18:00', end: '16:30' }],
-      })
+      }),
     ).toThrow();
 
     expect(() =>
       programsSchema.parse({
         ...validProgram,
         sessions: [{ day: 'tue', start: '18:00', end: '18:00' }],
-      })
+      }),
     ).toThrow();
   });
 });
@@ -353,7 +342,7 @@ describe('directivosSchema', () => {
         role: 'presidente',
         roleLabel: 'Presidente',
         email: 'not-email',
-      })
+      }),
     ).toThrow();
   });
 });
@@ -378,7 +367,7 @@ describe('sponsorsSchema', () => {
         name: 'Test',
         logo: '/logo.png',
         level: 'premium',
-      })
+      }),
     ).toThrow();
   });
 });
@@ -407,7 +396,7 @@ describe('gallerySchema', () => {
         cover: '/cover.jpg',
         images: [{ src: '/1.jpg', alt: 'Test' }],
         videos: [{ url: 'not-a-url', title: 'Video' }],
-      })
+      }),
     ).toThrow();
   });
 });
@@ -436,15 +425,11 @@ describe('rutasSchema', () => {
   });
 
   it('rechaza dificultad inválida', () => {
-    expect(() =>
-      rutasSchema.parse({ ...validRuta, difficulty: 'extrema' })
-    ).toThrow();
+    expect(() => rutasSchema.parse({ ...validRuta, difficulty: 'extrema' })).toThrow();
   });
 
   it('rechaza suitableFor con categoría inválida', () => {
-    expect(() =>
-      rutasSchema.parse({ ...validRuta, suitableFor: ['profesional'] })
-    ).toThrow();
+    expect(() => rutasSchema.parse({ ...validRuta, suitableFor: ['profesional'] })).toThrow();
   });
 });
 
@@ -476,9 +461,7 @@ describe('pagesSchema', () => {
   });
 
   it('rechaza layout inválido', () => {
-    expect(() =>
-      pagesSchema.parse({ title: 'Test', layout: 'sidebar' })
-    ).toThrow();
+    expect(() => pagesSchema.parse({ title: 'Test', layout: 'sidebar' })).toThrow();
   });
 
   // Selector de edad de /programas: el copy es opcional porque solo lo usa esa
@@ -515,10 +498,10 @@ describe('pagesSchema', () => {
 
   it('rechaza un selector de edad sin pregunta o sin texto de «todas»', () => {
     expect(() =>
-      pagesSchema.parse({ title: 'Programas', agePicker: { allLabel: 'Todas' } })
+      pagesSchema.parse({ title: 'Programas', agePicker: { allLabel: 'Todas' } }),
     ).toThrow();
     expect(() =>
-      pagesSchema.parse({ title: 'Programas', agePicker: { legend: '¿Qué edad tiene?' } })
+      pagesSchema.parse({ title: 'Programas', agePicker: { legend: '¿Qué edad tiene?' } }),
     ).toThrow();
   });
 });
@@ -551,9 +534,7 @@ describe('milestonesSchema', () => {
   });
 
   it('rechaza imagen sin alt', () => {
-    expect(() =>
-      milestonesSchema.parse({ ...valid, image: 'historia-pista.webp' })
-    ).toThrow();
+    expect(() => milestonesSchema.parse({ ...valid, image: 'historia-pista.webp' })).toThrow();
   });
 
   it('rechaza imagen con alt en blanco', () => {
@@ -562,11 +543,120 @@ describe('milestonesSchema', () => {
         ...valid,
         image: 'historia-pista.webp',
         imageAlt: '   ',
-      })
+      }),
     ).toThrow();
   });
 
   it('rechaza hito sin título', () => {
     expect(() => milestonesSchema.parse({ label: '2010', body: 'x' })).toThrow();
+  });
+});
+
+// ============================================================
+// obstaculosSchema — fichas de la pista
+// ============================================================
+
+describe('obstaculosSchema', () => {
+  const valid = {
+    name: 'Cajón de grava de la bajada',
+    type: 'cajon-grava',
+    level: 'intermedio',
+    summary: 'Un escalón relleno de grava al final de una bajada.',
+    skills: ['Posición de ataque', 'Peso atrás en bajada'],
+  };
+
+  it('acepta una ficha mínima y aplica los defaults', () => {
+    const result = obstaculosSchema.parse(valid);
+    expect(result.programs).toEqual([]);
+    expect(result.order).toBe(0);
+    expect(result.active).toBe(true);
+    expect(result.draft).toBe(false);
+    expect(result.sequence).toBeUndefined();
+  });
+
+  it('exige al menos una habilidad', () => {
+    expect(() => obstaculosSchema.parse({ ...valid, skills: [] })).toThrow();
+  });
+
+  it('rechaza un tipo o un nivel fuera del catálogo', () => {
+    expect(() => obstaculosSchema.parse({ ...valid, type: 'wall-ride' })).toThrow();
+    expect(() => obstaculosSchema.parse({ ...valid, level: 'imposible' })).toThrow();
+  });
+
+  it('acepta todos los tipos y niveles declarados', () => {
+    for (const type of OBSTACLE_TYPES) {
+      expect(obstaculosSchema.parse({ ...valid, type }).type).toBe(type);
+    }
+    for (const level of OBSTACLE_LEVELS) {
+      expect(obstaculosSchema.parse({ ...valid, level }).level).toBe(level);
+    }
+  });
+
+  it('corta el resumen a 180 caracteres', () => {
+    expect(() => obstaculosSchema.parse({ ...valid, summary: 'a'.repeat(181) })).toThrow();
+    expect(obstaculosSchema.parse({ ...valid, summary: 'a'.repeat(180) }).summary).toHaveLength(
+      180,
+    );
+  });
+
+  it('acepta una foto con su alt y rechaza la foto sin alt', () => {
+    const conFoto = obstaculosSchema.parse({
+      ...valid,
+      image: 'la-pista/drop-del-teatrino.jpg',
+      imageAlt: 'Corredor sale por el borde de la placa del teatrino',
+    });
+    expect(conFoto.image).toBe('la-pista/drop-del-teatrino.jpg');
+    expect(() => obstaculosSchema.parse({ ...valid, image: 'x.jpg' })).toThrow();
+    expect(() => obstaculosSchema.parse({ ...valid, image: 'x.jpg', imageAlt: '  ' })).toThrow();
+  });
+
+  it('acepta la secuencia de fotogramas y deja el poster en 1', () => {
+    const result = obstaculosSchema.parse({
+      ...valid,
+      sequence: { folder: 'cajon-grava-bajada', count: 10, alt: 'Corredora pasa el cajón' },
+    });
+    expect(result.sequence?.poster).toBe(1);
+  });
+
+  it('rechaza un poster que se pase del número de fotogramas', () => {
+    expect(() =>
+      obstaculosSchema.parse({
+        ...valid,
+        sequence: { folder: 'x', count: 8, poster: 9, alt: 'x' },
+      }),
+    ).toThrow();
+  });
+
+  it('mantiene la secuencia entre 4 y 16 fotogramas, enteros', () => {
+    const seq = { folder: 'x', alt: 'x' };
+    expect(() => obstaculosSchema.parse({ ...valid, sequence: { ...seq, count: 3 } })).toThrow();
+    expect(() => obstaculosSchema.parse({ ...valid, sequence: { ...seq, count: 17 } })).toThrow();
+    expect(() => obstaculosSchema.parse({ ...valid, sequence: { ...seq, count: 8.5 } })).toThrow();
+  });
+
+  it('exige URL válida en el clip', () => {
+    expect(() =>
+      obstaculosSchema.parse({ ...valid, video: { url: 'youtu.be/abc', title: 'Clip' } }),
+    ).toThrow();
+    expect(
+      obstaculosSchema.parse({
+        ...valid,
+        video: { url: 'https://youtu.be/abc', title: 'Clip' },
+      }).video?.url,
+    ).toBe('https://youtu.be/abc');
+  });
+
+  it('mantiene el marcador del mapa dentro del 0-100', () => {
+    expect(() => obstaculosSchema.parse({ ...valid, map: { x: 62, y: 101 } })).toThrow();
+    expect(() => obstaculosSchema.parse({ ...valid, map: { x: -1, y: 34 } })).toThrow();
+    expect(obstaculosSchema.parse({ ...valid, map: { x: 62, y: 34 } }).map).toEqual({
+      x: 62,
+      y: 34,
+    });
+  });
+
+  it('convierte builtOn a fecha', () => {
+    const result = obstaculosSchema.parse({ ...valid, builtOn: '2026-08-15' });
+    expect(result.builtOn).toBeInstanceOf(Date);
   });
 });

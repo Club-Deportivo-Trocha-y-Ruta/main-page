@@ -9,6 +9,8 @@
  *
  * Ver docs/04-sistema-editorial.md.
  */
+import { getImage } from 'astro:assets';
+import cerroYumbo from '@assets/images/yumbo/cerro-yumbo-solid.webp';
 import {
   getTone,
   getWidth,
@@ -74,6 +76,25 @@ const {
 
 const tokens = getTone(tone);
 const patternId = uniqueSvgId('topo');
+
+// La silueta del cerro va como máscara sobre el color del tono. El CSS vive en
+// `.yumbo-skyline` (global.css): necesita `@supports` y una máscara compuesta,
+// que un `style` inline no puede declarar. Aquí solo viaja la URL del asset.
+const skyline =
+  pattern === 'yumbo'
+    ? await getImage({ src: cerroYumbo, width: 1200, format: 'webp' })
+    : undefined;
+
+// Alto de la lámina por corte. Con su proporción (2.62:1) da 250 px de ancho en
+// móvil y 545 px en escritorio: se lee el cerro y el letrero sin convertirse en
+// un mural. Cambiar un valor obliga a cambiar la reserva de abajo.
+const SKYLINE_HEIGHT = 'h-24 sm:h-36 md:h-44 lg:h-52';
+
+// Lo que el contenido deja libre por debajo para que la lámina no le pase por
+// detrás. Se suma al padding del `spacing` de la sección; está calibrado para
+// que incluso con `spacing="compact"` (py-12 md:py-16) la cima quede libre:
+//   móvil 48+80 ≥ 96 · sm 48+112 ≥ 144 · md 64+128 ≥ 176 · lg 64+144 ≥ 208.
+const SKYLINE_RESERVE = 'pb-20 sm:pb-28 md:pb-32 lg:pb-36';
 ---
 
 <section
@@ -89,38 +110,68 @@ const patternId = uniqueSvgId('topo');
     className,
   ]}
 >
-  {pattern === 'topo' && (
-    <svg
-      class:list={[
-        'pointer-events-none absolute -z-10 w-full',
-        tokens.pattern,
-        // Con deriva la textura se pinta más alta que la sección para que el
-        // desplazamiento nunca descubra una franja sin patrón.
-        scrollDriven
-          ? 'sda-parallax-slow inset-x-0 -top-8 h-[calc(100%+4rem)]'
-          : 'inset-0 h-full',
-      ]}
-      aria-hidden="true"
-      focusable="false"
-      style="mask-image: linear-gradient(to bottom, black, transparent 78%);"
-    >
-      <defs>
-        <pattern
-          id={patternId}
-          width={TOPO_TILE}
-          height={TOPO_TILE}
-          patternUnits="userSpaceOnUse"
-        >
-          {TOPO_PATHS.map((d) => (
-            <path d={d} fill="none" stroke="currentColor" stroke-width="1.25" />
-          ))}
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill={`url(#${patternId})`} />
-    </svg>
-  )}
+  {
+    pattern === 'topo' && (
+      <svg
+        class:list={[
+          'pointer-events-none absolute -z-10 w-full',
+          tokens.pattern,
+          // Con deriva la textura se pinta más alta que la sección para que el
+          // desplazamiento nunca descubra una franja sin patrón.
+          scrollDriven
+            ? 'sda-parallax-slow inset-x-0 -top-8 h-[calc(100%+4rem)]'
+            : 'inset-0 h-full',
+        ]}
+        aria-hidden="true"
+        focusable="false"
+        style="mask-image: linear-gradient(to bottom, black, transparent 78%);"
+      >
+        <defs>
+          <pattern
+            id={patternId}
+            width={TOPO_TILE}
+            height={TOPO_TILE}
+            patternUnits="userSpaceOnUse"
+          >
+            {TOPO_PATHS.map((d) => (
+              <path d={d} fill="none" stroke="currentColor" stroke-width="1.25" />
+            ))}
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+      </svg>
+    )
+  }
 
-  <div class:list={['mx-auto px-4 sm:px-6 lg:px-8', getWidth(width), innerClass]}>
+  {
+    skyline && (
+      <span
+        class:list={[
+          // La caja tiene la proporción exacta de la lámina (aspect-ratio) y se
+          // centra sola: así el degradado lateral de `.yumbo-skyline` funde los
+          // bordes del cerro —la lámina es un rectángulo con la cima recortada—
+          // y no los del viewport, y el centro coincide con el de la columna de
+          // contenido en cualquier ancho de pantalla.
+          'yumbo-mask yumbo-skyline pointer-events-none absolute bottom-0 left-1/2 -z-10 -translate-x-1/2',
+          SKYLINE_HEIGHT,
+          tokens.skyline,
+        ]}
+        aria-hidden="true"
+        style={`aspect-ratio:${cerroYumbo.width} / ${cerroYumbo.height};--yumbo-mask:url(${skyline.src})`}
+      />
+    )
+  }
+
+  <div
+    class:list={[
+      'mx-auto px-4 sm:px-6 lg:px-8',
+      getWidth(width),
+      // El horizonte tiene su propia banda: el contenido termina antes de que
+      // empiece la lámina, en vez de taparla.
+      skyline && SKYLINE_RESERVE,
+      innerClass,
+    ]}
+  >
     <slot />
   </div>
 </section>

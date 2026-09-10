@@ -50,7 +50,7 @@ export const ridersSchema = z.object({
         event: z.string(),
         position: z.number().optional(),
         description: z.string(),
-      })
+      }),
     )
     .default([]),
   socialMedia: socialMediaSchema,
@@ -127,7 +127,7 @@ export const newsSchema = z.object({
         category: z.string(),
         slug: z.string(),
         image: z.string(),
-      })
+      }),
     )
     .optional(),
   seo: seoSchema,
@@ -147,24 +147,9 @@ export const eventsSchema = z.object({
   city: z.string().optional(),
   department: z.string().default('Valle del Cauca'),
   mapUrl: z.url().optional(),
-  category: z.enum([
-    'xco',
-    'xcm',
-    'ruta',
-    'enduro',
-    'recreativo',
-    'social',
-    'entrenamiento',
-  ]),
+  category: z.enum(['xco', 'xcm', 'ruta', 'enduro', 'recreativo', 'social', 'entrenamiento']),
   level: z
-    .enum([
-      'municipal',
-      'departamental',
-      'regional',
-      'nacional',
-      'internacional',
-      'interno',
-    ])
+    .enum(['municipal', 'departamental', 'regional', 'nacional', 'internacional', 'interno'])
     .default('departamental'),
   organizer: z.string().optional(),
   image: z.string().optional(),
@@ -192,7 +177,7 @@ export const resultsSchema = z.object({
       riderName: z.string(),
       time: z.string().optional(),
       points: z.number().optional(),
-    })
+    }),
   ),
   clubHighlights: z.string().optional(),
   totalParticipants: z.number().optional(),
@@ -289,7 +274,7 @@ export const gallerySchema = z.object({
       alt: z.string(),
       caption: z.string().optional(),
       photographer: z.string().optional(),
-    })
+    }),
   ),
   videos: z
     .array(
@@ -297,7 +282,7 @@ export const gallerySchema = z.object({
         url: z.url(),
         title: z.string(),
         thumbnail: z.string().optional(),
-      })
+      }),
     )
     .default([]),
   relatedEvent: z.string().optional(),
@@ -325,9 +310,7 @@ export const rutasSchema = z.object({
   gpxFile: z.string().optional(),
   stravaRoute: z.url().optional(),
   mapUrl: z.url().optional(),
-  suitableFor: z.array(
-    z.enum(['pre-infantil', 'infantil', 'juvenil', 'elite', 'recreativo'])
-  ),
+  suitableFor: z.array(z.enum(['pre-infantil', 'infantil', 'juvenil', 'elite', 'recreativo'])),
   usedInPrograms: z.array(z.string()).default([]),
   active: z.boolean().default(true),
   order: z.number().default(0),
@@ -339,7 +322,14 @@ export const faqsSchema = z.object({
   question: z.string(),
   answer: z.string(),
   category: z
-    .enum(['general', 'inscripciones', 'entrenamiento', 'competencias', 'equipamiento', 'seguridad'])
+    .enum([
+      'general',
+      'inscripciones',
+      'entrenamiento',
+      'competencias',
+      'equipamiento',
+      'seguridad',
+    ])
     .default('general'),
   order: z.number().default(0),
   draft: z.boolean().default(false),
@@ -393,14 +383,16 @@ export const socialInitiativesSchema = z.object({
   image: z.string(),
   imageAlt: z.string().optional(),
   gallery: z.array(z.string()).default([]),
-  impact: z.object({
-    beneficiaries: z.number().optional(),
-    treesPlanted: z.number().optional(),
-    volunteersInvolved: z.number().optional(),
-    areaRestored: z.string().optional(),
-    trainedPeople: z.number().optional(),
-    description: z.string().optional(),
-  }).optional(),
+  impact: z
+    .object({
+      beneficiaries: z.number().optional(),
+      treesPlanted: z.number().optional(),
+      volunteersInvolved: z.number().optional(),
+      areaRestored: z.string().optional(),
+      trainedPeople: z.number().optional(),
+      description: z.string().optional(),
+    })
+    .optional(),
   allies: z.array(z.string()).default([]),
   relatedGallery: z.string().optional(),
   relatedNews: z.array(z.string()).default([]),
@@ -435,9 +427,7 @@ export const treesSchema = z.object({
     .enum(['llanta-bicicleta', 'llanta-moto', 'piedras', 'otro'])
     .default('llanta-bicicleta'),
   protectorColor: z.string().optional(),
-  category: z
-    .enum(['frutal', 'ornamental', 'nativo', 'maderable'])
-    .default('nativo'),
+  category: z.enum(['frutal', 'ornamental', 'nativo', 'maderable']).default('nativo'),
   image: z.string(),
   imageAlt: z.string(),
   status: z.enum(['sembrado', 'creciendo', 'floreciendo']).default('sembrado'),
@@ -481,4 +471,105 @@ export const milestonesSchema = z
   .refine((data) => !data.image || Boolean(data.imageAlt?.trim()), {
     message: 'imageAlt es obligatorio cuando el hito tiene image',
     path: ['imageAlt'],
+  });
+
+// ============================================================
+// LA PISTA — OBSTÁCULOS DE LA PISTA CARLOS CASTRO
+// ============================================================
+
+/**
+ * Tipos de obstáculo del trazado. La lista sale del vocabulario que usa el
+ * club (docs/07-plan-la-pista.md §3.1); si aparece uno nuevo se agrega aquí,
+ * en `obstacleTypeLabels` de `src/lib/la-pista.ts` y en el `select` del CMS.
+ */
+export const OBSTACLE_TYPES = [
+  'cajon-grava',
+  'rock-garden',
+  'drop',
+  'escalon',
+  'tabla',
+  'doble',
+  'peralte',
+  'bajada-tecnica',
+  'raiz',
+] as const;
+
+export const OBSTACLE_LEVELS = ['basico', 'intermedio', 'avanzado'] as const;
+
+/**
+ * Una ficha de obstáculo: qué es, qué habilidad entrena y desde qué programa
+ * se trabaja. El cuerpo markdown es la capa pedagógica.
+ *
+ * `sequence` (los fotogramas del flipbook) es **opcional** a propósito, a
+ * diferencia de la propuesta original del plan: la lista de obstáculos es un
+ * dato que el club puede cargar hoy, mientras que los clips y los
+ * consentimientos de imagen de los menores siguen pendientes. Sin `sequence`
+ * la ficha se publica sin ilustración, igual que Trocha Verde omite el bloque
+ * cuando no hay dato, en vez de bloquear toda la colección.
+ */
+export const obstaculosSchema = z
+  .object({
+    name: z.string(),
+    type: z.enum(OBSTACLE_TYPES),
+    level: z.enum(OBSTACLE_LEVELS),
+    summary: z.string().max(180),
+    skills: z.array(z.string()).min(1),
+    /** Slugs de la colección `programs`; `programsUsingTrack()` los valida en build. */
+    programs: z.array(z.string()).default([]),
+    builtOn: z.coerce.date().optional(),
+    builtBy: z.string().optional(),
+    /**
+     * Foto de la ficha: lo que se ve antes de que exista el flipbook (y lo que
+     * ve quien llega con `prefers-reduced-motion`). `sequence` no sirve para
+     * esto: exige entre 4 y 16 fotogramas de un clip.
+     */
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    sequence: z
+      .object({
+        /** Carpeta bajo `src/assets/images/la-pista/`. */
+        folder: z.string(),
+        /** Fotogramas numerados `01..NN`. */
+        count: z.number().int().min(4).max(16),
+        /** Fotograma visible sin animaciones scroll-driven (1-indexado). */
+        poster: z.number().int().min(1).default(1),
+        alt: z.string(),
+      })
+      .refine((seq) => seq.poster <= seq.count, {
+        message: 'poster no puede pasarse del número de fotogramas (count)',
+        path: ['poster'],
+      })
+      .optional(),
+    /** Clip completo alojado en YouTube; nunca se embebe, solo se enlaza. */
+    video: z.object({ url: z.url(), title: z.string() }).optional(),
+    /**
+     * Dónde está el obstáculo, en coordenadas reales. Es el dato primario: el
+     * club lo lee del GPS o del EXIF de una foto, y de aquí salen tanto el
+     * marcador del mapa interactivo como su posición sobre el SVG del trazado
+     * (`latLonToPercent` en `track-map.ts`).
+     */
+    lat: z.number().min(-90).max(90).optional(),
+    lng: z.number().min(-180).max(180).optional(),
+    /**
+     * Posición del marcador en % del recuadro del trazado. Solo hace falta
+     * para un obstáculo sin coordenadas GPS: con `lat`/`lng` se calcula sola.
+     */
+    map: z
+      .object({
+        x: z.number().min(0).max(100),
+        y: z.number().min(0).max(100),
+      })
+      .optional(),
+    order: z.number().default(0),
+    active: z.boolean().default(true),
+    draft: z.boolean().default(false),
+    seo: seoSchema,
+  })
+  .refine((data) => !data.image || Boolean(data.imageAlt?.trim()), {
+    message: 'imageAlt es obligatorio cuando la ficha tiene image',
+    path: ['imageAlt'],
+  })
+  .refine((data) => (data.lat === undefined) === (data.lng === undefined), {
+    message: 'lat y lng van juntos: una coordenada sola no ubica nada',
+    path: ['lng'],
   });

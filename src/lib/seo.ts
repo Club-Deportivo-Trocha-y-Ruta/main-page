@@ -138,7 +138,7 @@ export function toColombiaIso(date: Date): string {
  */
 function articleAuthorNode(author: string): JsonLd {
   const isClub = [SITE.name, SITE.shortName, 'Club Trocha y Ruta'].some(
-    (name) => name.toLowerCase() === author.trim().toLowerCase()
+    (name) => name.toLowerCase() === author.trim().toLowerCase(),
   );
 
   const club: JsonLd = {
@@ -291,7 +291,7 @@ export function generateWebSiteJsonLd(): JsonLd {
  * https://schema.org/SportsTeam
  */
 export function generateSportsTeamJsonLd(
-  members: Array<{ name: string; url: string; photo?: string; category?: string }>
+  members: Array<{ name: string; url: string; photo?: string; category?: string }>,
 ): JsonLd {
   return {
     '@context': 'https://schema.org',
@@ -383,7 +383,7 @@ export function generateEventJsonLd(event: EventInput): JsonLd {
  * https://schema.org/ItemList
  */
 export function generateEventsListJsonLd(
-  events: Array<{ title: string; date: Date; url: string }>
+  events: Array<{ title: string; date: Date; url: string }>,
 ): JsonLd {
   return {
     '@context': 'https://schema.org',
@@ -428,8 +428,7 @@ export function generatePersonJsonLd(person: PersonInput): JsonLd {
     ...(person.achievements && person.achievements.length > 0
       ? {
           award: person.achievements.map(
-            (a) =>
-              `${a.position ? `${a.position}° puesto - ` : ''}${a.event} (${a.year})`
+            (a) => `${a.position ? `${a.position}° puesto - ` : ''}${a.event} (${a.year})`,
           ),
         }
       : {}),
@@ -546,9 +545,7 @@ export function generateGalleryJsonLd(gallery: GalleryInput): JsonLd {
  * BreadcrumbList
  * https://schema.org/BreadcrumbList
  */
-export function generateBreadcrumbJsonLd(
-  items: Array<{ name: string; url: string }>
-): JsonLd {
+export function generateBreadcrumbJsonLd(items: Array<{ name: string; url: string }>): JsonLd {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -565,9 +562,7 @@ export function generateBreadcrumbJsonLd(
  * FAQPage — Páginas con preguntas frecuentes
  * https://schema.org/FAQPage
  */
-export function generateFAQPageJsonLd(
-  faqs: { question: string; answer: string }[]
-): JsonLd {
+export function generateFAQPageJsonLd(faqs: { question: string; answer: string }[]): JsonLd {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -653,9 +648,7 @@ export function generateSocialInitiativeJsonLd(initiative: {
     description: initiative.description,
     image: initiative.image,
     url: initiative.url,
-    location: initiative.location
-      ? { '@type': 'Place', name: initiative.location }
-      : undefined,
+    location: initiative.location ? { '@type': 'Place', name: initiative.location } : undefined,
   };
 
   if (isAmbiental) {
@@ -678,6 +671,50 @@ export function generateSocialInitiativeJsonLd(initiative: {
       '@type': 'SportsOrganization',
       name: 'Club Deportivo Trocha y Ruta',
       url: 'https://clubdeportivotrochayruta.org',
+    },
+  };
+}
+
+/**
+ * La pista como lugar donde se practica un deporte (`SportsActivityLocation`).
+ *
+ * Las coordenadas salen del GPX de una vuelta grabada (`src/data/la-pista.gpx`,
+ * centro de la caja del trazado), no de una estimación: ver
+ * `docs/07-plan-la-pista.md` §0.1. La dirección postal es la del club mientras
+ * el club confirma cuál publica para la pista.
+ */
+export function generateTrackJsonLd(track: {
+  name: string;
+  description: string;
+  url: string;
+  lat: number;
+  lon: number;
+  image?: string;
+}): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SportsActivityLocation',
+    name: track.name,
+    description: track.description,
+    url: track.url,
+    image: track.image,
+    sport: 'Mountain biking',
+    isAccessibleForFree: true,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Yumbo',
+      addressRegion: 'Valle del Cauca',
+      addressCountry: 'CO',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: track.lat,
+      longitude: track.lon,
+    },
+    parentOrganization: {
+      '@type': 'SportsOrganization',
+      name: SITE.name,
+      url: SITE.url,
     },
   };
 }

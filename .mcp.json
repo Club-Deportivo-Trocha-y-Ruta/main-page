@@ -1,20 +1,29 @@
 {
-    "mcpServers": {
-        "sequential-thinking": {
-            "type": "stdio",
-            "command": "npx",
-            "args": [
-                "-y",
-                "@modelcontextprotocol/server-sequential-thinking"
-            ],
-            "env": {}
-        },
-        "context7": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "@upstash/context7-mcp"
-            ]
-        }
+  "mcpServers": {
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "env": {}
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "analytics-mcp": {
+      "type": "stdio",
+      "command": "/Users/juadiga/.local/bin/analytics-mcp",
+      "args": [],
+      "env": {
+        "GOOGLE_PROJECT_ID": "gen-lang-client-0714209186",
+        "GOOGLE_APPLICATION_CREDENTIALS": "/Users/juadiga/.config/gcloud/trocha-analytics-mcp.json"
+      }
     }
+  }
 }

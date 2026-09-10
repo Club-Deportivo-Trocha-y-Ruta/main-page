@@ -28,6 +28,7 @@ npx vitest run --project astro src/lib/__tests__/utils.test.ts
 npx vitest run --project react src/components/interactive/__tests__/ContactForm.react.test.tsx
 
 ./scripts/subset-fonts.sh   # regenera public/fonts/*-latin.woff2 desde fonts-src/ (pyftsubset + brotli)
+node scripts/prepare-yumbo-assets.mjs   # regenera src/assets/images/yumbo/*.webp desde illustrations-src/yumbo/ (sharp)
 ```
 
 Node ≥ 22.12 (`engines`; CI usa 22.12). Variables de entorno (`.env.example`): `PUBLIC_WEB3FORMS_KEY`, `PUBLIC_GA4_MEASUREMENT_ID`, `PUBLIC_CLOUDINARY_CLOUD_NAME`, tipadas en `env.schema` de `astro.config.mjs`, todas opcionales, se importan desde `astro:env/client`. Sin `PUBLIC_GA4_MEASUREMENT_ID` no se renderizan ni `Analytics.astro` ni `ConsentBanner.astro`.
@@ -39,21 +40,21 @@ Node ≥ 22.12 (`engines`; CI usa 22.12). Variables de entorno (`.env.example`):
 - **React 19** solo en `src/components/interactive/`. **Vitest 4** con dos proyectos. **Pagefind** indexa `dist/` al final del build.
 - **Sveltia CMS** en `public/admin/` (se carga desde unpkg, sin npm). Backend `github` sobre `Club-Deportivo-Trocha-y-Ruta/main-page`, rama `main`, con `editorial_workflow`. No hay colección `settings`: los datos del sitio viven en `src/lib/constants.ts`.
 - Aliases TS: `@components/*`, `@layouts/*`, `@lib/*`, `@assets/*`, `@types/*`.
-- `netlify.toml`, `wrangler.toml` y `workers/donations/` son restos de experimentos; el hosting real es Hostinger. `docs/02-technical-architecture.md` es de marzo de 2026 y lleva una nota con lo que cambió después (Astro 7, Hostinger, GA4): mandan `package.json` y `.github/workflows/`.
+- `netlify.toml`, `wrangler.toml` y `workers/donations/` son restos de experimentos; el hosting real es Hostinger por FTPS con lftp. `docs/02-technical-architecture.md` explica el porqué de cada decisión; `package.json` y `.github/workflows/` mandan sobre el qué.
 
 ### Tokens de diseño — reglas
 
 - Teal `--color-primary #20b7c9` y lima `--color-accent #8be000` **no cumplen contraste como texto** sobre fondo claro: para texto usar `primary-deep` / `accent-deep`. Sobre fondos de color va texto grafito (`text-surface-dark`).
 - Todo token nuevo lleva **nombre propio** (`--radius-chip/control/card/pill/plate`, `--shadow-card/raised/overlay/pressable`, `--ease-spring/pop`, `--duration-micro/celebration`). Definir `--radius-lg`, `--shadow-md` o `--ease-out` pisa la escala por defecto de Tailwind 4 y cambia todos los `rounded-*`/`shadow-*` del sitio.
-- Animaciones: solo `transform`/`opacity` (excepciones documentadas en docs/08), bajo `@supports` + `prefers-reduced-motion`, con estado final visible sin soporte. Con `animation-timeline: view()/scroll()` usar **longhands**: Lightning CSS rompe el shorthand `animation`.
+- Animaciones: solo `transform`/`opacity` (las siete excepciones, con su razón, en la tabla de docs/04 §2.5), bajo `@supports` + `prefers-reduced-motion`, con estado final visible sin soporte. Con `animation-timeline: view()/scroll()` usar **longhands**: Lightning CSS rompe el shorthand `animation`.
 - Fuentes: `public/fonts/*-latin.woff2` son subsets generados desde `fonts-src/` (no se despliega). El `unicode-range` de `global.css` debe coincidir con `$UNICODES` del script; `src/test/fonts.test.ts` lo verifica y comprueba que los archivos sean WOFF2 reales (hubo un `.woff2` que era una página 404 de GitHub).
 
 ## Arquitectura
 
 ### Contenido: schemas → colecciones → CMS
 
-- 15 colecciones registradas en `src/content.config.ts` con glob loaders. **Todos los schemas Zod viven en `src/lib/schemas.ts`** (importan de `astro/zod`) y se testean en `src/lib/__tests__/schemas.test.ts`.
-- Pobladas: `news`, `events`, `gallery`, `programs`, `sponsors`, `faqs`, `social-initiatives`, `milestones`, `trees` (77), `species` (32), `riders` (5 fichas, **todas `draft: true`**) y `pages` (solo `programas.md`: copy que la página no puede deducir, como el bloque `agePicker`).
+- 16 colecciones registradas en `src/content.config.ts` con glob loaders. **Todos los schemas Zod viven en `src/lib/schemas.ts`** (importan de `astro/zod`) y se testean en `src/lib/__tests__/schemas.test.ts`.
+- Pobladas: `news`, `events`, `gallery`, `programs`, `sponsors`, `faqs`, `social-initiatives`, `milestones`, `trees` (77), `species` (32), `riders` (5 fichas, **todas `draft: true`**), `obstaculos` (1 ficha, en `draft`) y `pages` (solo `programas.md`: copy que la página no puede deducir, como el bloque `agePicker`).
 - Vacías: `results` (loader solo `yaml|yml|json`; su README documenta el formato y queda fuera), `directivos` (README excluido por el patrón) y `rutas` (**sin directorio**: crearlo antes de usarla).
 - Al cambiar un campo se cambian los tres: **schema Zod + `public/admin/config.yml` + los `.md`**.
 - Relaciones por slug en frontmatter: noticia→`relatedEvent`/`relatedGallery`/`galleryFolder`; evento→`relatedGallery`/`relatedNews[]`; álbum→`relatedEvent`; rider→`program`; iniciativa social→`relatedGallery`/`relatedNews[]`; árbol→`species` (por **nombre común**, no por id). `src/lib/__tests__/content-validation.test.ts` valida el frontmatter real y que toda referencia (`relatedEvent`, `relatedGallery`, `relatedNews`, `program`) resuelva, **incluidos los drafts**; `trees.species` queda fuera. En las páginas nunca se arma una URL desde un campo sin comprobar que resuelve (patrón de `chronicle.ts` / `gallery.ts`).
@@ -71,7 +72,7 @@ Toda sección se arma con el mismo vocabulario, no con clases sueltas: `SectionS
 
 ### React islands
 
-Seis islands montadas, **todas con `client:visible`** (no hay `client:load` en el sitio): `MobileMenu` y `SiteSearch` (en `Header.astro`), `ContactForm`, `InscriptionForm` (4 pasos), `ImageLightbox`, `TrochaVerdeMap` (Leaflet). `SuccessConfetti` (importado por los formularios) trae `ConfettiBurst` con `import()` dinámico; ninguno es island. `SiteSearch` descarga Pagefind solo al abrir el diálogo. Los formularios envían a Web3Forms con `PUBLIC_WEB3FORMS_KEY` de `astro:env/client`.
+Siete islands montadas, **todas con `client:visible`** (no hay `client:load` en el sitio): `MobileMenu` y `SiteSearch` (en `Header.astro`), `ContactForm`, `InscriptionForm` (4 pasos), `ImageLightbox`, `TrochaVerdeMap` (Leaflet) y `TrackMapInteractive` (Leaflet + teselas de ESRI, monta sobre el SVG de `TrackMap.astro`). `SuccessConfetti` (importado por los formularios) trae `ConfettiBurst` con `import()` dinámico; ninguno es island. `SiteSearch` descarga Pagefind solo al abrir el diálogo. Los formularios envían a Web3Forms con `PUBLIC_WEB3FORMS_KEY` de `astro:env/client`.
 
 ### Layout y navegación
 
@@ -125,8 +126,10 @@ Flujo: rama de feature → `develop` (QA) → `main` (producción). Los dos work
 
 ## Referencias
 
-- `docs/04-sistema-editorial.md` — guía del sistema editorial, referencia de cada página y estado de la migración. **Obligatorio antes de rediseñar.**
-- `docs/03-content-strategy.md` — modelo de contenido, taxonomía, CMS. `docs/01-ux-architecture.md` — personas, flujos, wireframes (en parte histórico).
-- `docs/05-convencion-utm.md`, `docs/06-plan-animaciones.md`, `docs/07-plan-la-pista.md` (bloqueado por insumos del club), `docs/08-plan-creatividad-ui.md` — planes retomables con tareas `[ ]`/`[x]`.
+- `docs/04-sistema-editorial.md` — guía del sistema editorial, referencia de cada página (incluida `/la-pista`, §28) y estado de la migración. **Obligatorio antes de rediseñar.**
+- `docs/02-technical-architecture.md` — arquitectura técnica y ADRs, reescrito 2026-09-09. `docs/03-content-strategy.md` — modelo de contenido, taxonomía, SEO estructural, reescrito 2026-09-09.
+- `docs/01-ux-architecture.md` — personas y flujos vigentes; sitemap, navegación y wireframes de portada/equipo se retiraron por obsoletos (2026-09-09).
+- `docs/05-convencion-utm.md` (con sus divergencias conocidas en el código), `docs/07-plan-la-pista.md` (Fases 1 y 3 hechas; falta el flipbook y la revisión del entrenador) — planes vivos con tareas `[ ]`/`[x]`.
+- `docs/06-plan-animaciones.md` y `docs/08-plan-creatividad-ui.md` — planes cerrados, conservados como registro; lo vigente pasó a `docs/04` §2.5-2.6. `docs/09-deuda-de-tooling.md` — bugs de Prettier y de scoping de Astro, rescatados de `docs/08` antes de archivarlo.
 - `claudedocs/` — diagnósticos y planes de sesión (refresh visual, tráfico orgánico, curaduría fotográfica).
 - `.claude/agents/` — 22 agentes organizados como compañía digital (C-suite → directores → especialistas → ingenieros → auditores); `.claude/teams/` — 5 teams; `.claude/agent-memory/` — memoria por agente, versionada.

@@ -12,7 +12,7 @@ Producción: <https://clubdeportivotrochayruta.org>
 |------|-----------|
 | Framework | [Astro](https://astro.build) 7 (SSG, `output: 'static'`) |
 | Estilos | [Tailwind CSS](https://tailwindcss.com) 4 vía Vite plugin (tokens en `@theme {}`, sin `tailwind.config`) |
-| Islands | [React](https://react.dev) 19 (6 componentes interactivos, todos `client:visible`) |
+| Islands | [React](https://react.dev) 19 (7 componentes interactivos, todos `client:visible`) |
 | Contenido | Content Collections con schemas [Zod](https://zod.dev) (`src/lib/schemas.ts`) |
 | CMS | [Sveltia CMS](https://github.com/sveltia/sveltia-cms) en `/admin/` |
 | Buscador | [Pagefind](https://pagefind.app) (índice estático generado en el build) |

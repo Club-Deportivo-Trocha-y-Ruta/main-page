@@ -26,7 +26,9 @@ locale: "es"
 
 # Tamaño máximo de archivos (5MB)
 media_library:
-  max_file_size: 5242880
+  name: default
+  config:
+    max_file_size: 5242880
 
 # Logo en el panel de admin
 logo_url: "/images/logo.png"
@@ -789,6 +791,74 @@ collections:
       - { label: "Usos", name: "uses", widget: "list", required: false }
       - { label: "Borrador", name: "draft", widget: "boolean", default: false }
       - { label: "Contenido", name: "body", widget: "markdown", required: false }
+
+  # ----------------------------------------------------------
+  # LA PISTA — OBSTÁCULOS DE LA PISTA CARLOS CASTRO
+  # ----------------------------------------------------------
+  - name: "obstaculos"
+    label: "La pista — obstáculos"
+    label_singular: "Obstáculo"
+    folder: "src/content/obstaculos"
+    create: true
+    slug: "{{fields.name}}"
+    media_folder: "/src/assets/images/la-pista"
+    sortable_fields: ["order", "name"]
+    fields:
+      - { label: "Nombre", name: "name", widget: "string", hint: "Ej: Cajón de grava de la bajada" }
+      - { label: "Tipo", name: "type", widget: "select", options: ["cajon-grava", "rock-garden", "drop", "escalon", "tabla", "doble", "peralte", "bajada-tecnica", "raiz"] }
+      - { label: "Nivel", name: "level", widget: "select", options: ["basico", "intermedio", "avanzado"], default: "intermedio" }
+      - { label: "Resumen", name: "summary", widget: "string", pattern: ['^.{1,180}$', "Máximo 180 caracteres"], hint: "Una frase: qué es y qué enseña. Sale en la tarjeta y en el mapa." }
+      - { label: "Habilidades que entrena", name: "skills", widget: "list", hint: "Ej: Posición de ataque, Peso atrás en bajada, Lectura de línea" }
+      - { label: "Programas que lo trabajan", name: "programs", widget: "relation", collection: "programs", search_fields: ["title"], value_field: "{{slug}}", display_fields: ["title"], multiple: true, required: false }
+      - { label: "Fecha de construcción", name: "builtOn", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false }
+      - { label: "Quién lo construyó", name: "builtBy", widget: "string", required: false, hint: "Ej: Club Deportivo Trocha y Ruta" }
+      - { label: "Foto del obstáculo", name: "image", widget: "image", required: false, hint: "Solo con el consentimiento de imagen firmado de quienes aparecen." }
+      - { label: "Alt de la foto", name: "imageAlt", widget: "string", required: false, hint: "Obligatorio si subes foto: qué se ve." }
+      - {
+          label: "Fotogramas del salto",
+          name: "sequence",
+          widget: "object",
+          required: false,
+          collapsed: true,
+          hint: "Solo con el consentimiento de imagen firmado de los menores que aparecen.",
+          fields: [
+            { label: "Carpeta", name: "folder", widget: "string", hint: "Carpeta dentro de src/assets/images/la-pista/" },
+            { label: "Número de fotogramas", name: "count", widget: "number", value_type: "int", min: 4, max: 16 },
+            { label: "Fotograma de portada", name: "poster", widget: "number", value_type: "int", min: 1, default: 1, hint: "El que se ve sin animación. No puede pasarse del total." },
+            { label: "Descripción del salto", name: "alt", widget: "string", hint: "Qué hace el corredor: lo lee quien no ve las imágenes." },
+          ],
+        }
+      - {
+          label: "Clip completo (YouTube)",
+          name: "video",
+          widget: "object",
+          required: false,
+          collapsed: true,
+          fields:
+            [
+              { label: "URL", name: "url", widget: "string", pattern: ['^https?://', "Debe ser una URL completa"] },
+              { label: "Título", name: "title", widget: "string" },
+            ],
+        }
+      - { label: "Latitud", name: "lat", widget: "number", required: false, value_type: "float", hint: "Coordenada GPS del obstáculo, ej: 3.596855. Ubica el marcador en el mapa." }
+      - { label: "Longitud", name: "lng", widget: "number", required: false, value_type: "float", hint: "Ej: -76.486564. Va siempre junto con la latitud." }
+      - {
+          label: "Marcador en el mapa (manual)",
+          name: "map",
+          widget: "object",
+          required: false,
+          collapsed: true,
+          hint: "Solo si el obstáculo no tiene coordenadas GPS: posición en % (0-100) sobre el recuadro del trazado.",
+          fields:
+            [
+              { label: "X (%)", name: "x", widget: "number", min: 0, max: 100 },
+              { label: "Y (%)", name: "y", widget: "number", min: 0, max: 100 },
+            ],
+        }
+      - { label: "Orden", name: "order", widget: "number", default: 0, hint: "En qué punto del recorrido aparece." }
+      - { label: "Activo", name: "active", widget: "boolean", default: true, hint: "Desmárcalo si el obstáculo se retiró o se rehizo." }
+      - { label: "Borrador", name: "draft", widget: "boolean", default: false }
+      - { label: "Capa pedagógica", name: "body", widget: "markdown", hint: "2-4 párrafos del entrenador: qué se aprende, cómo se progresa, qué supervisa." }
 
   # ----------------------------------------------------------
   # HISTORIA DEL CLUB — HITOS DE LA LÍNEA DE TIEMPO

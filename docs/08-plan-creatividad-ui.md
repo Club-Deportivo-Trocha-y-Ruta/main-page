@@ -2,13 +2,24 @@
 
 - **Fuente**: `claudedocs/brainstorm-creatividad-ui-2026-08-26.md` (decisiones §6).
 - **Continúa** a `docs/06-plan-animaciones.md`: mismas reglas (cero runtimes, cero islands nuevas, `transform`/`opacity` salvo excepciones documentadas, `@supports` + `prefers-reduced-motion`, longhands para `animation-timeline`, tokens con nombre propio, texto visible desde collections).
-- **Estado**: en ejecución en rama `feat/creatividad-ui` (2026-08-26). Marcar `[x]` al verificar en el working tree.
+- **Estado**: **cerrado y archivado (2026-09-09)**. Las 18 tareas se mergearon a `main`
+  con la rama `feat/creatividad-ui`; no queda ninguna pendiente. Se conserva porque
+  una decena de comentarios de `src/styles/global.css` lo citan por número de tarea,
+  pero **ya no es un plan**: no se ejecuta nada de aquí.
+- **Qué manda hoy en su lugar**: `docs/04-sistema-editorial.md` §2.5 (reglas de
+  animación y excepciones) y §2.6 (`ClubSeal`, con las trampas de Lightning CSS);
+  `docs/09-deuda-de-tooling.md` (los bugs de Prettier y del scoping de Astro);
+  `docs/02-arquitectura-tecnica.md` (la historia del subsetting de fuentes).
+- **Las mediciones de cierre del final caducaron.** El sitio ya no construye 145
+  páginas sino ~149, y el CSS creció. Sirven como orden de magnitud, no como
+  referencia.
 - **Cómo retomar con Claude**: `Ejecuta la siguiente tarea pendiente de docs/08-plan-creatividad-ui.md con el modelo asignado`.
 
 ## Excepciones explícitas a «solo transform/opacity»
 
-- `stroke-dashoffset` (checkmark del stepper, plan 06).
-- `background-size` en `.editorial-mark` (tarea 4): no dispara layout.
+> **La lista canónica se mudó a `docs/04-sistema-editorial.md` §2.5** (2026-09-09),
+> porque creció más allá de este plan y `CLAUDE.md` apunta a ella. Lo que había
+> aquí —`stroke-dashoffset` y `background-size`— es un subconjunto.
 
 ## Sprint 0 — Base
 
@@ -103,7 +114,7 @@ after:inset-0`) que sí tienen `NewsCard`/`TreeCard`/`AlbumCard`: `RiderCard` ya
 
 | #   | Tarea                                                                                                                                                                                                                        | Modelo   | Agente    | Archivos                                                                                                | Depende de | Complejidad |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | --------- | ------------------------------------------------------------------------------------------------------- | ---------- | ----------- |
-| 5   | `[x]` Selector de edad en `/programas`: `<fieldset>` de radios 4–15 + `:has()` que resalta el tramo del `ProgramPathway` y la sección del programa; CTA contextual; sin soporte todo visible; copy en frontmatter/collection | **Opus** | astro-dev | `src/pages/programas/index.astro`, `ProgramPathway.astro`, `global.css`, schemas/CMS si hace falta copy | 1          | Alta        |
+| 5   | `[~]` **Parcial** (sin el CTA contextual). Selector de edad en `/programas`: `<fieldset>` de radios 4–15 + `:has()` que resalta el tramo del `ProgramPathway` y la sección del programa; CTA contextual; sin soporte todo visible; copy en frontmatter/collection | **Opus** | astro-dev | `src/pages/programas/index.astro`, `ProgramPathway.astro`, `global.css`, schemas/CMS si hace falta copy | 1          | Alta        |
 | 6   | `[x]` Count-up en `StatsCounter`: extraer patrón `@property --tv-count` de `TrochaVerde.astro` a utilidad reutilizable y prop en `StatFigure`                                                                                | Sonnet   | astro-dev | `global.css`, `StatFigure.astro`, `StatsCounter.astro`, `TrochaVerde.astro`                             | 1          | Media       |
 | 7   | `[x]` Header compacto con scroll (`animation-timeline: scroll(root)`, `animation-range: 0 200px`): logo `scale`, CTA gana `--shadow-pressable`; sin animar `height`                                                          | Sonnet   | astro-dev | `Header.astro`, `global.css`                                                                            | 1          | Media       |
 | 8   | `[x]` «Compartir por WhatsApp» al pie de las crónicas con UTM (`docs/05`), entra con `sda-conversion-bar-in`; cero JS                                                                                                        | Sonnet   | astro-dev | `PostLayout.astro` / detalle de noticia, `src/lib/utm` si existe                                        | 1          | Baja        |
@@ -384,10 +395,10 @@ build:only` verdes; verificado en `dist/` que ninguna de las dos hojas
 
 | #   | Tarea                                                                                                                                                                                     | Modelo   | Agente          | Archivos                                                                                    | Depende de | Complejidad |
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | --------------- | ------------------------------------------------------------------------------------------- | ---------- | ----------- |
-| 13  | `[x]` Hilo de ruta en portada (prototipo): trazo vertical scroll-driven con hitos por sección, solo `lg+`, `aria-hidden`; queda **detrás de una clase opt-in** para decidir con captura   | **Opus** | astro-dev       | `src/pages/index.astro`, `global.css`                                                       | 1          | Alta        |
+| 13  | `[~]` **Descartada.** Hilo de ruta en portada (prototipo): trazo vertical scroll-driven con hitos por sección, solo `lg+`, `aria-hidden`; queda **detrás de una clase opt-in** para decidir con captura   | **Opus** | astro-dev       | `src/pages/index.astro`, `global.css`                                                       | 1          | Alta        |
 | 14  | `[x]` Barra de progreso de lectura en crónicas (`scaleX` + `scroll(root)`)                                                                                                                | Sonnet   | astro-dev       | `PostLayout.astro`, `global.css`                                                            | 1          | Baja        |
 | 15  | `[x]` Stat-strip de crónica con `.reveal --stagger` + count-up (tarea 6)                                                                                                                  | Sonnet   | astro-dev       | CSS de `stat-strip`, `global.css`                                                           | 6          | Baja        |
-| 16  | `[x]` `sessions: [{day,start,end}]` en schema de programs + Sveltia + `.md`; «próxima sesión» derivada en build en `InscriptionCTA` banner; se pinta solo si hay dato; tests en `src/lib` | **Opus** | content-manager | `schemas.ts`, `config.yml`, `src/content/programs/*.md`, `src/lib/`, `InscriptionCTA.astro` | 1          | Alta        |
+| 16  | `[~]` **Mitad revertida** (el schema y las fichas viven; la «próxima sesión» se retiró). `sessions: [{day,start,end}]` en schema de programs + Sveltia + `.md`; «próxima sesión» derivada en build en `InscriptionCTA` banner; se pinta solo si hay dato; tests en `src/lib` | **Opus** | content-manager | `schemas.ts`, `config.yml`, `src/content/programs/*.md`, `src/lib/`, `InscriptionCTA.astro` | 1          | Alta        |
 | 17  | `[x]` Checklist «qué llevar» con stagger y check dibujado en `/inscripciones` y éxito; acotar confeti al tercio superior                                                                  | Sonnet   | astro-dev       | `inscripciones.astro`, `InscriptionForm.tsx`, `global.css`                                  | 1          | Media       |
 | 18  | `[x]` `AnnouncementBar` con `@starting-style` y cierre con `interpolate-size`                                                                                                             | Sonnet   | astro-dev       | `AnnouncementBar.astro`, `global.css`                                                       | 1          | Baja        |
 

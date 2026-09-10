@@ -9,6 +9,7 @@
 import { Icon } from 'astro-icon/components';
 import Badge from '@components/common/Badge.astro';
 import AddToCalendar from '@components/common/AddToCalendar.astro';
+import { isHomeRace } from '@lib/yumbo';
 import {
   dayLabel,
   monthShort,
@@ -55,12 +56,17 @@ const levelLabel = getEventLevel(level);
 // El estado solo se rotula cuando aporta algo: que una fecha pasada diga
 // "Corrido" es ruido, porque ya va bajo el título de la sección.
 const showStatus = status === 'ongoing' || status === 'cancelled';
+
+// Correr en Yumbo cambia el plan de la familia —no hay que viajar— y cambia el
+// papel del club, que deja de ser visitante. Se marca en la fecha, venga o ya
+// corrida.
+const atHome = isHomeRace(city);
 ---
 
 <div
   class:list={[
     'group flex h-full items-start gap-3 rounded-xl border-l-4 p-3 sm:gap-4 sm:p-4',
-    'transition-[background-color,transform] duration-[var(--duration-micro)] ease-spring',
+    'ease-spring transition-[background-color,transform] duration-[var(--duration-micro)]',
     'hover:bg-surface-muted hover:-translate-y-1 hover:shadow-lg',
     'motion-reduce:transition-none motion-reduce:hover:translate-y-0',
     muted ? 'border-surface-muted' : 'border-primary',
@@ -73,10 +79,10 @@ const showStatus = status === 'ongoing' || status === 'cancelled';
       muted ? 'bg-black/5' : 'bg-primary/10',
     ]}
   >
-    <span class="block text-xs font-bold uppercase tracking-wide text-primary-deep">
+    <span class="text-primary-deep block text-xs font-bold tracking-wide uppercase">
       {monthShort(date)}
     </span>
-    <span class="block font-display text-xl font-bold text-primary-deep sm:text-2xl">
+    <span class="font-display text-primary-deep block text-xl font-bold sm:text-2xl">
       {dayLabel(date, endDate)}
     </span>
   </div>
@@ -84,23 +90,25 @@ const showStatus = status === 'ongoing' || status === 'cancelled';
   <div class="flex min-w-0 flex-col gap-1">
     <h3
       class:list={[
-        'font-display font-semibold leading-snug text-text-primary',
+        'font-display text-text-primary leading-snug font-semibold',
         status === 'cancelled' && 'line-through',
       ]}
     >
-      {href ? (
-        <a href={href} class="text-text-primary transition-colors hover:text-primary-deep">
-          {title}
-        </a>
-      ) : (
-        title
-      )}
+      {
+        href ? (
+          <a href={href} class="text-text-primary hover:text-primary-deep transition-colors">
+            {title}
+          </a>
+        ) : (
+          title
+        )
+      }
     </h3>
 
-    <p class="flex items-start gap-1.5 text-sm text-text-secondary">
+    <p class="text-text-secondary flex items-start gap-1.5 text-sm">
       <Icon
         name="ph:map-pin-bold"
-        class="mt-0.5 size-4 shrink-0 transition-transform duration-[var(--duration-micro)] ease-spring group-hover:rotate-[8deg] motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
+        class="ease-spring mt-0.5 size-4 shrink-0 transition-transform duration-[var(--duration-micro)] group-hover:rotate-[8deg] motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
         aria-hidden="true"
       />
       <span>
@@ -117,32 +125,55 @@ const showStatus = status === 'ongoing' || status === 'cancelled';
         </span>
       </Badge>
       {levelLabel && <Badge variant="neutral">{levelLabel}</Badge>}
+      {
+        atHome && (
+          <Badge variant="cyan">
+            <span class="inline-flex items-center gap-1">
+              <Icon name="ph:house-line-bold" class="size-3" aria-hidden="true" />
+              En casa
+            </span>
+          </Badge>
+        )
+      }
       <!-- El lima marca lo bueno de la página; una fecha caída va en gris. -->
-      {showStatus && (
-        <Badge variant={status === 'ongoing' ? 'cyan' : 'neutral'} class={status === 'cancelled' ? 'font-bold uppercase tracking-wide' : undefined}>
-          {getEventStatusLabel(status)}
-        </Badge>
-      )}
+      {
+        showStatus && (
+          <Badge
+            variant={status === 'ongoing' ? 'cyan' : 'neutral'}
+            class={status === 'cancelled' ? 'font-bold tracking-wide uppercase' : undefined}
+          >
+            {getEventStatusLabel(status)}
+          </Badge>
+        )
+      }
     </div>
 
-    {status === 'upcoming' && (
-      <AddToCalendar title={title} date={date} endDate={endDate} location={location} />
-    )}
+    {
+      status === 'upcoming' && (
+        <AddToCalendar title={title} date={date} endDate={endDate} location={location} />
+      )
+    }
 
-    {chronicles.length > 0 && (
-      <ul class="mt-1.5 space-y-0.5">
-        {chronicles.map((c) => (
-          <li>
-            <a
-              href={c.href}
-              class="inline-flex items-start gap-1 text-sm text-primary-deep hover:underline"
-            >
-              <Icon name="ph:newspaper-clipping-bold" class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              <span>{c.title}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )}
+    {
+      chronicles.length > 0 && (
+        <ul class="mt-1.5 space-y-0.5">
+          {chronicles.map((c) => (
+            <li>
+              <a
+                href={c.href}
+                class="text-primary-deep inline-flex items-start gap-1 text-sm hover:underline"
+              >
+                <Icon
+                  name="ph:newspaper-clipping-bold"
+                  class="mt-0.5 size-4 shrink-0"
+                  aria-hidden="true"
+                />
+                <span>{c.title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
   </div>
 </div>

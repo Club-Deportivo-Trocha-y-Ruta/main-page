@@ -24,13 +24,13 @@ regla de fondo es una sola:
 
 Toda sección se arma con las mismas cuatro piezas, en este orden:
 
-| Pieza | Componente | Qué aporta |
-|-------|-----------|------------|
-| **Marco** | `SectionShell` | Fondo, aire vertical, ancho, textura |
-| **Entrada narrativa** | `SectionIntro` | Antetítulo, titular con promesa, bajada |
-| **Dato ilustrado** | `StatFigure`, `FactGrid`, ilustración propia | La prueba de lo que afirma el titular |
-| **Paso siguiente** | `Button`, `InscriptionCTA`, enlace | Qué hace quien se convenció |
-| **Firma** (opcional) | `ClubSeal` | El escudo estampado donde la pieza termina. Ver 2.6 |
+| Pieza                 | Componente                                   | Qué aporta                                          |
+| --------------------- | -------------------------------------------- | --------------------------------------------------- |
+| **Marco**             | `SectionShell`                               | Fondo, aire vertical, ancho, textura                |
+| **Entrada narrativa** | `SectionIntro`                               | Antetítulo, titular con promesa, bajada             |
+| **Dato ilustrado**    | `StatFigure`, `FactGrid`, ilustración propia | La prueba de lo que afirma el titular               |
+| **Paso siguiente**    | `Button`, `InscriptionCTA`, enlace           | Qué hace quien se convenció                         |
+| **Firma** (opcional)  | `ClubSeal`                                   | El escudo estampado donde la pieza termina. Ver 2.6 |
 
 ```astro
 <SectionShell tone="muted" pattern="topo" width="wide" labelledby="programas-heading">
@@ -51,14 +51,14 @@ Toda sección se arma con las mismas cuatro piezas, en este orden:
 
 ### 2.1 El marco — `SectionShell`
 
-| Prop | Valores | Notas |
-|------|---------|-------|
-| `tone` | `plain`, `muted`, `tinted`, `dark`, `brand` | Alterna `plain`/`muted` entre secciones seguidas |
-| `pattern` | `none`, `topo` | Curvas de nivel. Úsalo en secciones de apertura, no en todas |
-| `width` | `narrow`, `default`, `wide` | El marco siempre es de ancho completo |
-| `spacing` | `none`, `compact`, `default`, `spacious` | |
-| `labelledby` / `label` | id del titular / nombre | Una de las dos, siempre |
-| `scrollDriven` | booleano | Habilita animaciones ligadas al scroll dentro de la sección. Ver 2.5 |
+| Prop                   | Valores                                     | Notas                                                                                                |
+| ---------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `tone`                 | `plain`, `muted`, `tinted`, `dark`, `brand` | Alterna `plain`/`muted` entre secciones seguidas                                                     |
+| `pattern`              | `none`, `topo`, `yumbo`                     | `topo` = curvas de nivel, en secciones de apertura. `yumbo` = el horizonte del cerro al pie. Ver 2.7 |
+| `width`                | `narrow`, `default`, `wide`                 | El marco siempre es de ancho completo                                                                |
+| `spacing`              | `none`, `compact`, `default`, `spacious`    |                                                                                                      |
+| `labelledby` / `label` | id del titular / nombre                     | Una de las dos, siempre                                                                              |
+| `scrollDriven`         | booleano                                    | Habilita animaciones ligadas al scroll dentro de la sección. Ver 2.5                                 |
 
 Los tokens de cada tono viven en `src/lib/editorial.ts`. **No se escriben clases de fondo
 a mano en las secciones**: si hace falta un fondo nuevo, se agrega un tono.
@@ -120,11 +120,11 @@ una línea de JS. Las utilidades viven en `src/styles/global.css`, bajo
 si el navegador no lo soporta o el usuario pidió menos movimiento, el contenido queda en su
 estado final visible. Solo se animan `transform` y `opacity`.
 
-| Clase | Para qué |
-|-------|----------|
-| `.timeline-progress` | Trazo del sendero de `Timeline` que se dibuja al bajar |
-| `.sda-parallax-slow` / `.sda-parallax-fast` | Deriva vertical de capas decorativas |
-| `.sda-trail` + `.sda-trail-sweep` | Perfil de elevación que se traza al entrar en pantalla |
+| Clase                                       | Para qué                                               |
+| ------------------------------------------- | ------------------------------------------------------ |
+| `.timeline-progress`                        | Trazo del sendero de `Timeline` que se dibuja al bajar |
+| `.sda-parallax-slow` / `.sda-parallax-fast` | Deriva vertical de capas decorativas                   |
+| `.sda-trail` + `.sda-trail-sweep`           | Perfil de elevación que se traza al entrar en pantalla |
 
 El perfil se traza con un `<rect>` dentro de un `<clipPath>` que crece de `scaleX(0)` a
 `scaleX(1)`: el recorte descubre el trazo de izquierda a derecha. `.sda-trail` va en el
@@ -150,7 +150,31 @@ Tres trampas que ya costaron una sesión de depuración cada una:
    a 1160×176 el trazo pierde su último 12% con `stroke-dashoffset: 0` y asoma un trozo suelto
    con `1`. El barrido por recorte no depende de longitudes, solo de la caja.
 
+Y una cuarta, prima de la trampa 2: **Lightning CSS fusiona `transform` y `rotate` en
+una sola declaración** cuando se escriben en la misma regla, y el resultado no es el que
+se pidió. Van en reglas separadas. El mismo minificador colapsa `scale` dentro de
+`transform` (ver 2.6).
+
 Nada de esto reemplaza a `.reveal` (IntersectionObserver, en `BaseLayout`): conviven.
+
+#### Las excepciones a «solo `transform` y `opacity`»
+
+La regla general es que solo se animan esas dos propiedades, porque son las únicas que el
+compositor resuelve sin recalcular layout. La lista de excepciones vivía en
+`docs/08-plan-creatividad-ui.md`; se mudó aquí cuando ese plan se cerró. Son siete, cada
+una con su razón:
+
+| Propiedad                                       | Dónde                                                    | Por qué se acepta                                                                 |
+| ----------------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `stroke-dashoffset`                             | Checkmark del stepper, `.checklist-check`, `.check-sheet` | Dibuja un trazo corto en un SVG pequeño; no dispara layout                        |
+| `background-size`                               | `.editorial-mark` (el subrayado que se dibuja)            | Pinta, no reordena                                                                |
+| `background-color`                              | `EventCard`                                               | Cambio de color en hover, sin layout                                              |
+| `rotate` como propiedad aparte                  | `.club-seal`, `.race-plate`, polaroid, `.thanks-wall`     | Es compositable igual que `transform`; va en regla propia por Lightning CSS       |
+| `height` + `padding-block` + `visibility`       | Cierre de `AnnouncementBar`, acordeón de FAQ              | `interpolate-size: allow-keywords` + `allow-discrete`; es el único modo de animar hacia `auto`. Tiene coste de layout: se acepta solo en un colapso puntual que el usuario dispara |
+| `--count-value` (custom property registrada)    | `.count-up`                                               | `@property` con `syntax: '<integer>'`; anima un número, no una caja               |
+| `clip-path` (vía `<rect>` con `transform`)      | `.sda-trail-sweep`                                        | La animación real es un `scaleX` sobre el rectángulo del recorte                  |
+
+Cualquier excepción nueva se agrega a esta tabla con su razón, o no se hace.
 
 ---
 
@@ -161,12 +185,12 @@ sello: la marca que se estampa donde una pieza terminó de contar lo suyo. **No 
 información** — por eso va `aria-hidden` con `alt=""`, y por eso no es obligatorio: una
 sección sin firma no está incompleta.
 
-| Prop | Valores | Notas |
-|------|---------|-------|
-| `size` | `sm` (40px), `md` (56px), `lg` (80px) | Lado del escudo; el disco añade su propio padding |
-| `rotate` | grados, por defecto `-6` | Se acota a ±15: más que eso deja de leerse como firma |
-| `tone` | `SectionTone` | Decide el aro del disco. El disco siempre es claro: el escudo es un degradado teal→lima con fondo transparente y sobre el teal de marca o sobre grafito se pierde |
-| `class` | | Pasa al sello (márgenes del consumidor) |
+| Prop     | Valores                               | Notas                                                                                                                                                             |
+| -------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `size`   | `sm` (40px), `md` (56px), `lg` (80px) | Lado del escudo; el disco añade su propio padding                                                                                                                 |
+| `rotate` | grados, por defecto `-6`              | Se acota a ±15: más que eso deja de leerse como firma                                                                                                             |
+| `tone`   | `SectionTone`                         | Decide el aro del disco. El disco siempre es claro: el escudo es un degradado teal→lima con fondo transparente y sobre el teal de marca o sobre grafito se pierde |
+| `class`  |                                       | Pasa al sello (márgenes del consumidor)                                                                                                                           |
 
 **Dónde se usa hoy**: cierre del detalle de crónica (`/noticias/[slug]`, después de
 compartir), cabeza del banner de `InscriptionCTA` (`variant="banner"`) y cierre del 404.
@@ -193,6 +217,78 @@ Dos detalles del CSS (`.club-seal` en `global.css`) que no son cosméticos:
    `{ transform: none }` y el estampado desaparece sin un solo warning. Es el pariente de
    la trampa del shorthand `animation` de 2.5 — misma causa, misma cura: separar. `rotate`
    sobrevive porque vive en una regla propia, sin `transform` al lado.
+
+### 2.7 El territorio — las láminas de Yumbo
+
+Tres ilustraciones de los hitos de Yumbo —el cerro con el letrero, el monumento de la
+glorieta de Cencar y el santuario del parque Belalcázar— entraron al sitio como piezas del
+sistema, no como adorno suelto. El catálogo, con el pie y la fuente de cada una, vive en
+`src/lib/yumbo.ts`; los archivos los genera `scripts/prepare-yumbo-assets.mjs` desde los
+originales versionados en `illustrations-src/yumbo/`.
+
+**De dónde salieron, y qué no se puede decir de ellas.** Nacieron en un ensayo de diseño de
+uniforme que **el club no adoptó**: el uniforme real no lleva estos elementos. Ningún texto
+del sitio puede afirmar lo contrario, y el pie de la sección no lo menciona. Las láminas se
+quedaron porque los hitos se sostienen solos.
+
+**Cada pie tiene fuente.** Se publica lo comprobable —el letrero del cerro son letras de 10
+metros instaladas en julio de 2026 por los 162 años del municipio; el monumento está en la
+glorieta de Cencar sobre la autopista Cali–Yumbo; el santuario lo terminó fray Alfonso de la
+Concepción Peña en 1939 y está dedicado al Señor del Buen Consuelo, patrono de Yumbo— y se
+calla lo que no: el nombre propio del cerro no aparece en las notas de prensa del letrero,
+así que el sitio no lo inventa. Las URLs están en el campo `source` del catálogo.
+
+Dos registros, y no se mezclan:
+
+| Registro                                                                   | Cómo se usa                                                        | Dónde                                                            |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| **Contenido** — `YumboLandmark variant="color"`                            | La acuarela completa, con `alt` real                               | Solo el tríptico de `/quienes-somos` (`YumboRoots.astro`)        |
+| **Fondo** — `SectionShell pattern="yumbo"` y `YumboLandmark variant="ink"` | Máscara sobre `currentColor`, `aria-hidden`, sin texto alternativo | Una vez por página, al pie de la sección que cierra el contenido |
+
+Por qué máscara y no una imagen teñida: el color sale de `tokens.pattern` del tono, así que
+la misma lámina funciona sobre fondo claro, sobre grafito y sobre el teal de marca sin
+generar un archivo por tono. El CSS vive en `.yumbo-mask` / `.yumbo-skyline` de `global.css`
+y del componente solo viaja la URL, en `--yumbo-mask`: un `style` inline no puede llevar
+`@supports` ni una máscara compuesta.
+
+Cuatro reglas de uso:
+
+1. **Una sola vez por página.** El horizonte es una firma, no una textura: si aparece en
+   dos secciones deja de significar «aquí es nuestra casa».
+2. **La lámina tiene su banda; nunca pasa por detrás del contenido.** El marco reserva
+   bajo el slot el alto del horizonte (`SKYLINE_RESERVE` en `SectionShell`, calibrado para
+   que alcance incluso con `spacing="compact"`): el contenido termina, viene aire, y luego
+   el cerro. La primera versión lo pintaba como marca de agua a `-z-10` y el resultado era
+   un cerro asomando entre las tarjetas de fotos de _Quiénes somos_ y tapando el pie del
+   mapa en _La pista_. La caja del horizonte tiene el `aspect-ratio` exacto del asset
+   (2.62:1) y se centra con `left-1/2 -translate-x-1/2`, así que `mask-size: auto 100%` la
+   llena sin deformarla y el degradado lateral (`transparent → #000 24% → 76% → transparent`)
+   se mide sobre la lámina y no sobre la sección: la lámina es un rectángulo con la cima
+   recortada y sin ese fundido sus costados se leían como los bordes de un bloque. Se ancla
+   al centro, que es el de la columna de contenido a cualquier ancho —`bottom right` la
+   dejaba en el gutter en pantallas de más de 1280 px—, y se ve también en móvil (250 px
+   de ancho): la mayoría de las visitas llegan por ahí. Su color es `tokens.skyline`, no
+   `tokens.pattern`: una silueta maciza pide más opacidad que las curvas de nivel.
+3. **Sin soporte de `mask-image`, la lámina se esconde.** Es lo que hace el `@supports not`
+   de `global.css`. Si solo se aplicara `background-color`, quedaría un rectángulo sólido de
+   color en mitad de la página.
+4. **El catálogo declara solo las variantes que el sitio muestra.** Vite copia a `dist/` el
+   archivo original de toda imagen importada, así que una variante de más son cientos de KB
+   muertos en el deploy. `src/test/yumbo-assets.test.ts` fija que lo declarado y lo que hay
+   en disco sean exactamente lo mismo.
+
+**El tríptico no iguala alturas.** Las tres láminas tienen proporciones muy distintas —el
+cerro es 2.62:1, el monumento y el santuario son verticales—, así que darles la misma altura
+dejaba al cerro convertido en una franja angosta sin peso al lado de las otras dos. El
+catálogo declara la `shape` de cada una (`wide` / `tall`) y `YumboRoots` la usa para igualar
+el **área** que ocupan, no el alto: todas siguen apoyadas en la misma línea de suelo.
+
+**En casa.** `isHomeRace()` (mismo módulo) marca las fechas que se corren en Yumbo: la
+tarjeta de la próxima fecha se firma con el monumento y la iglesia en tinta, la sección
+cierra sobre el cerro y cada `EventCard` de la ciudad lleva la etiqueta _En casa_. Para la
+familia significa que no hay que viajar; para el club, que deja de ser visitante.
+
+---
 
 ## 3. Reglas que no se negocian
 
@@ -225,26 +321,27 @@ Dos detalles del CSS (`.club-seal` en `global.css`) que no son cosméticos:
 
 ### Estado de la migración
 
-| Sección / página | Estado |
-|------------------|--------|
-| Programas (portada + `/programas`) | ✅ Migrada — referencia del sistema |
-| Quiénes somos (portada + `/quienes-somos`) | ✅ Migrada |
-| Noticias (portada + `/noticias`) | ✅ Migrada |
-| Calendario (portada + `/calendario`) | ✅ Migrada |
-| Transparencia (`/transparencia`) | ✅ Migrada |
-| Patrocinadores (portada + `/patrocinadores`) | ✅ Migrada |
-| Inscripciones (`/inscripciones`) | ✅ Migrada |
-| Detalle de programa (`/programas/[slug]`) | ✅ Migrada |
-| Galería (`/galeria` + álbum) | ✅ Migrada |
-| Detalle de noticia (`/noticias/[slug]`) | ✅ Migrada |
-| Trocha Verde (portada + índice + especie + árbol) | ✅ Migrada |
-| 404 (`/404`) | ✅ Migrada |
-| Contacto (`/contacto`) | ✅ Migrada |
-| Enlaces (`/enlaces`) | ✅ Migrada — marco propio, ver §18 |
-| Portada (`/`) | ✅ Migrada |
-| Preguntas frecuentes (`/preguntas-frecuentes`) | ✅ Migrada |
-| Política editorial (`/politica-editorial`) | ✅ Migrada |
-| Equipo (`/equipo`) | ✅ Construida — **oculta al público**, ver §27 |
+| Sección / página                                  | Estado                                         |
+| ------------------------------------------------- | ---------------------------------------------- |
+| Programas (portada + `/programas`)                | ✅ Migrada — referencia del sistema            |
+| Quiénes somos (portada + `/quienes-somos`)        | ✅ Migrada                                     |
+| Noticias (portada + `/noticias`)                  | ✅ Migrada                                     |
+| Calendario (portada + `/calendario`)              | ✅ Migrada                                     |
+| Transparencia (`/transparencia`)                  | ✅ Migrada                                     |
+| Patrocinadores (portada + `/patrocinadores`)      | ✅ Migrada                                     |
+| Inscripciones (`/inscripciones`)                  | ✅ Migrada                                     |
+| Detalle de programa (`/programas/[slug]`)         | ✅ Migrada                                     |
+| Galería (`/galeria` + álbum)                      | ✅ Migrada                                     |
+| Detalle de noticia (`/noticias/[slug]`)           | ✅ Migrada                                     |
+| Trocha Verde (portada + índice + especie + árbol) | ✅ Migrada                                     |
+| 404 (`/404`)                                      | ✅ Migrada                                     |
+| Contacto (`/contacto`)                            | ✅ Migrada                                     |
+| Enlaces (`/enlaces`)                              | ✅ Migrada — marco propio, ver §18             |
+| Portada (`/`)                                     | ✅ Migrada                                     |
+| Preguntas frecuentes (`/preguntas-frecuentes`)    | ✅ Migrada                                     |
+| Política editorial (`/politica-editorial`)        | ✅ Migrada                                     |
+| Equipo (`/equipo`)                                | ✅ Construida — **oculta al público**, ver §27 |
+| La pista (`/la-pista` + obstáculo)                | ✅ Nativa del sistema, ver §28                 |
 
 ---
 
@@ -254,7 +351,7 @@ Lo que hace de referencia, para copiar el patrón:
 
 - **`ProgramPathway.astro`** — perfil de elevación + regla de edades. Los tramos salen de
   `ageMin`/`ageMax`: si el CMS cambia una edad, el dibujo cambia solo. Responde la primera
-  pregunta de toda familia (*¿cuál le corresponde a mi hijo?*) sin hacerla leer tres
+  pregunta de toda familia (_¿cuál le corresponde a mi hijo?_) sin hacerla leer tres
   fichas.
 - **`countWeeklySessions()`** — lee el `schedule` en texto libre del CMS y cuenta días
   distintos, expandiendo rangos (`Lunes a viernes` → 5). Devuelve `null` si no reconoce
@@ -300,11 +397,16 @@ Tres movimientos que conviene repetir en las páginas que faltan:
 - **Contenido que ya existía y no se veía.** La metodología de cada programa y el detalle de
   la póliza estaban en el frontmatter y en el cuerpo de los `.md` sin que ninguna página los
   mostrara. Antes de escribir texto nuevo, revisa qué hay sin usar en las collections.
-- **Afirmar y dejar verificar.** La sección *Respaldo* no solo dice que hay póliza,
+- **Afirmar y dejar verificar.** La sección _Respaldo_ no solo dice que hay póliza,
   entrenadores certificados o cuentas públicas: cada tarjeta enlaza a la página donde la
   familia puede comprobarlo. Una afirmación sin destino es una afirmación más débil.
 - **Fotos vivas, no escogidas a mano.** La banda de comunidad sale de los últimos álbumes de
   `gallery`: la página se actualiza sola cuando el club publica.
+- **De dónde viene el club y de dónde es.** Después del recorrido histórico va _De dónde
+  somos_ (`YumboRoots.astro`), el tríptico de láminas de Yumbo a color (ver 2.7), y la
+  página cierra con el mismo cerro en el fondo de _La comunidad_. Cada pie se apoya en una
+  fuente pública anotada en el catálogo; lo que no tiene fuente —el nombre del cerro— no se
+  afirma, y en ningún lado se dice que estos elementos estén en el uniforme del club.
 
 ---
 
@@ -458,9 +560,9 @@ Tres movimientos que conviene repetir en las páginas que faltan:
   para la promesa redactada. Por eso `highlight` se omite a propósito: el
   nombre de un programa es un sustantivo propio, no una frase con un
   fragmento que "cargue la promesa" — forzar un highlight sobre `Alto
-  Rendimiento` o `Escuela de Iniciación` habría sido decorar la marca, no
+Rendimiento` o `Escuela de Iniciación` habría sido decorar la marca, no
   resaltar una idea. El antetítulo sí hace ese trabajo: `Etapa {step} ·
-  {level.label}` sale de `buildPathway()` + `LEVEL_STYLES`, nunca se escribe
+{level.label}` sale de `buildPathway()` + `LEVEL_STYLES`, nunca se escribe
   a mano.
 - **La ruta se destaca a sí misma.** `ProgramPathway` ganó un prop opcional
   `activeId` — aditivo y retrocompatible: sin él, ninguna etapa se distingue y
@@ -471,7 +573,7 @@ Tres movimientos que conviene repetir en las páginas que faltan:
   existía por otra (siempre una rama exclusiva por ternario), para no
   depender del orden en que Tailwind genera las utilidades. La página de
   detalle es la primera en pasarlo: `<ProgramPathway programs={pathwayInput}
-  activeId={program.id} legend />`.
+activeId={program.id} legend />`.
 - **Un programa nunca es un callejón sin salida.** `getAdjacentPrograms()`
   (`@lib/programs`) ordena por `ageMin` — el mismo criterio que
   `buildPathway()` — y devuelve el vecino anterior y siguiente, o `null` en el
@@ -607,9 +709,9 @@ Tres movimientos que conviene repetir en las páginas que faltan:
   a la letra menuda del `StatFigure` ("Sembrado el…")— pero el titular es la
   frase viva ("Lleva 5 meses creciendo…"), no el registro.
 - **El protector se explica dos veces con dos propósitos distintos:
-  `protectorDescription()` dice *qué* es (con el color exacto cuando el
+  `protectorDescription()` dice _qué_ es (con el color exacto cuando el
   contenido lo trae, "Llanta rosada"; genérico si no) y `protectorStory()`
-  dice *por qué* importa** — el hilo central de la iniciativa: 76 de los 77
+  dice _por qué_ importa** — el hilo central de la iniciativa: 76 de los 77
   protectores de hoy son una llanta que el club deja de usar en los
   entrenamientos, no algo comprado. La ficha del árbol combina ambas frases
   en un mismo párrafo en vez de dejar la explicación solo en una cifra
@@ -651,7 +753,7 @@ Tres movimientos que conviene repetir en las páginas que faltan:
 
 - **La jerarquía sale de dos señales reales, no de una elegida a dedo.**
   `selectFeaturedAlbum()` respeta primero la curación manual del club (`featured:
-  true`, hoy solo en la V válida de Palmira) y, si ningún álbum la trae —o si hay
+true`, hoy solo en la V válida de Palmira) y, si ningún álbum la trae —o si hay
   más de uno—, cae en el álbum con más fotos. Con los datos reales las dos
   señales no coinciden: Ginebra tiene 45 fotos, el doble que cualquier otro
   álbum, pero no está marcado destacado. Gana la curación manual, y por eso es
@@ -715,11 +817,11 @@ no necesita que le digan "te perdiste", necesita el siguiente punto de control.
 
 **Estructura.**
 
-| Sección | `tone` | Qué muestra |
-|---------|--------|-------------|
-| Señal de ruta | `tinted` + `topo` | `h1` y la ilustración del perfil |
-| Puntos de control | `plain` | Las cuatro entradas reales del sitio |
-| Enlace roto | `muted` | A quién avisarle si la página debería existir |
+| Sección           | `tone`            | Qué muestra                                   |
+| ----------------- | ----------------- | --------------------------------------------- |
+| Señal de ruta     | `tinted` + `topo` | `h1` y la ilustración del perfil              |
+| Puntos de control | `plain`           | Las cuatro entradas reales del sitio          |
+| Enlace roto       | `muted`           | A quién avisarle si la página debería existir |
 
 **La ilustración.** Reutiliza `elevationProfile()` y `elevationPointAt()` de
 `@lib/editorial` —las mismas piezas que dibujan la ruta de programas—: el
@@ -755,13 +857,13 @@ entrenamiento— no aparecían por ningún lado. Ese bloque se eliminó.
 
 **Estructura.**
 
-| Sección | `tone` | Qué muestra |
-|---------|--------|-------------|
-| Elige canal | `tinted` + `topo` | `h1` y las cuatro vías de contacto |
-| Formulario | `plain` | `ContactForm` + los datos directos |
-| La semana del club | `muted` | El ritmo real de entrenamiento |
-| Dónde | `plain` | Mapa y el lugar de cada programa |
-| Antes de escribir | `tinted` | Las FAQ que aplican, con su JSON-LD |
+| Sección            | `tone`            | Qué muestra                         |
+| ------------------ | ----------------- | ----------------------------------- |
+| Elige canal        | `tinted` + `topo` | `h1` y las cuatro vías de contacto  |
+| Formulario         | `plain`           | `ContactForm` + los datos directos  |
+| La semana del club | `muted`           | El ritmo real de entrenamiento      |
+| Dónde              | `plain`           | Mapa y el lugar de cada programa    |
+| Antes de escribir  | `tinted`          | Las FAQ que aplican, con su JSON-LD |
 
 **Los canales.** `CONTACT_CHANNELS` (`@lib/contact`) es vocabulario editorial,
 como `DOCUMENT_CATEGORIES` o `ENROLLMENT_STEPS`: cada canal dice para qué sirve
@@ -779,7 +881,7 @@ sesiones con día, franja y aclaración. Se pinta dos veces:
   cuántos programas coinciden (el martes es el día más cargado: tres a la vez).
 - **Las filas por día** son el contenido accesible, y el que funciona a 320px.
 
-La `note` de cada tramo ("salida", "gymkanas en pista") se muestra: dice *qué*
+La `note` de cada tramo ("salida", "gymkanas en pista") se muestra: dice _qué_
 se hace ese día, no solo a qué hora.
 
 **La regla, aquí.** Un horario que el parser no entienda **no se descarta**:
@@ -949,13 +1051,13 @@ plantilla no usaba ninguno de los dos.
 
 **Estructura.**
 
-| Bloque | Qué muestra |
-|--------|-------------|
-| Cabecera | Categoría con su etiqueta legible, titular, bajada, fecha, autor, minutos de lectura |
-| Ficha de la carrera | `ChronicleContext`: qué fecha cubre, dónde, modalidad, nivel |
-| Cuerpo | La crónica, con `RaceLineup` cuando hay `lineup` |
-| Fotos | `NewsGallery` + enlace al álbum, solo si el álbum existe |
-| Seguir leyendo | `ChronicleAdjacentNav`: anterior, siguiente y en qué número va |
+| Bloque              | Qué muestra                                                                          |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| Cabecera            | Categoría con su etiqueta legible, titular, bajada, fecha, autor, minutos de lectura |
+| Ficha de la carrera | `ChronicleContext`: qué fecha cubre, dónde, modalidad, nivel                         |
+| Cuerpo              | La crónica, con `RaceLineup` cuando hay `lineup`                                     |
+| Fotos               | `NewsGallery` + enlace al álbum, solo si el álbum existe                             |
+| Seguir leyendo      | `ChronicleAdjacentNav`: anterior, siguiente y en qué número va                       |
 
 **Las relaciones que ya estaban y no se veían.** `resolveChronicleContext()`
 (`@lib/chronicle`) resuelve la cadena crónica → carrera → álbum → crónicas
@@ -1019,12 +1121,12 @@ estimación de CO₂ de Trocha Verde.
 
 Lo que se muestra en su lugar sale del contenido y se puede comprobar:
 
-| Dónde | Antes | Ahora |
-|-------|-------|-------|
+| Dónde                    | Antes                                  | Ahora                                                       |
+| ------------------------ | -------------------------------------- | ----------------------------------------------------------- |
 | Portada (`AboutPreview`) | 80+ formados · 100+ medallas · árboles | Sin fila de cifras: la banda de credibilidad ya está arriba |
-| `/quienes-somos` | 80+ formados · 100+ medallas | Programas y **cupos** (suma de `maxStudents`) |
-| `/patrocinadores` | 80+ · 50+ · 100+ | Programas, cupos y marcas vinculadas |
-| `/enlaces` | 80+ corredores | Programas publicados |
+| `/quienes-somos`         | 80+ formados · 100+ medallas           | Programas y **cupos** (suma de `maxStudents`)               |
+| `/patrocinadores`        | 80+ · 50+ · 100+                       | Programas, cupos y marcas vinculadas                        |
+| `/enlaces`               | 80+ corredores                         | Programas publicados                                        |
 
 **Cupos** es el sustituto honesto de "niños formados": no es una afirmación
 histórica sin respaldo, es la capacidad que el propio club publica en cada
@@ -1060,14 +1162,14 @@ array, cada una con un título y un acordeón. Pero quien llega no busca
 editorial que `DOCUMENT_CATEGORIES` o `CONTACT_CHANNELS`—: qué pregunta de
 fondo responde cada tema, en qué orden se lee y dónde está el detalle completo.
 
-| # | Tema | Responde | Lleva a |
-|---|------|----------|---------|
-| 01 | Antes de empezar | ¿Es para mi hijo? | `/quienes-somos` |
-| 02 | Cómo entra | ¿Qué hay que hacer? | `/inscripciones` |
-| 03 | Qué necesita | ¿Con qué llega el primer día? | `/programas` |
-| 04 | Cómo es la semana | ¿Qué días y a qué hora? | `/contacto#semana-titulo` |
-| 05 | Cómo se les cuida | ¿Quién los acompaña? | `/inscripciones` |
-| 06 | Y después, competir | ¿Cuándo empieza a correr? | `/calendario` |
+| #   | Tema                | Responde                      | Lleva a                   |
+| --- | ------------------- | ----------------------------- | ------------------------- |
+| 01  | Antes de empezar    | ¿Es para mi hijo?             | `/quienes-somos`          |
+| 02  | Cómo entra          | ¿Qué hay que hacer?           | `/inscripciones`          |
+| 03  | Qué necesita        | ¿Con qué llega el primer día? | `/programas`              |
+| 04  | Cómo es la semana   | ¿Qué días y a qué hora?       | `/contacto#semana-titulo` |
+| 05  | Cómo se les cuida   | ¿Quién los acompaña?          | `/inscripciones`          |
+| 06  | Y después, competir | ¿Cuándo empieza a correr?     | `/calendario`             |
 
 **Deja de ser un callejón.** Cada tema cierra apuntando a la página donde el
 asunto se desarrolla de verdad: la FAQ se convierte en un repartidor hacia el
@@ -1219,7 +1321,7 @@ igual que confirmó la edad mínima del §21.
 **Qué muestra.** `SeasonStandings.astro`, al cierre de `/noticias`, es la
 general del club contada como barras: una fila por corredor con su nombre, su
 categoría, su puesto y cómo se movió respecto de la válida anterior. Responde
-la pregunta que ninguna crónica suelta responde —*¿y cómo va el año?*— y que el
+la pregunta que ninguna crónica suelta responde —_¿y cómo va el año?_— y que el
 club ya venía contando **a mano** dentro de una crónica, con las clases
 `.standings-board` de `global.css` y los puntos escritos literal en el
 markdown. La sección habla ese mismo idioma visual, pero derivado de datos: los
@@ -1230,13 +1332,13 @@ estilos son propios del componente porque aquellas clases están acotadas a
 sobre la colección `results` —una válida, una categoría, un archivo— y sobre
 `events`:
 
-| Marca de la pista | Qué es | De dónde sale |
-|-------------------|--------|---------------|
-| Barra teal profundo | Puntos acumulados en la temporada | Suma de `points` por corredor |
-| Tramo teal claro | Lo que sumó en la última válida | `points` de la válida de fecha más reciente |
-| Línea punteada | Puntos del 3.º de su categoría | Total del tercer puesto de la general |
-| Zona rayada | Puntos todavía en juego | Válidas que faltan × mejor puntaje observado |
-| Fila en lima | Corredor en zona de podio | Puesto ≤ 3 de su categoría |
+| Marca de la pista   | Qué es                            | De dónde sale                                |
+| ------------------- | --------------------------------- | -------------------------------------------- |
+| Barra teal profundo | Puntos acumulados en la temporada | Suma de `points` por corredor                |
+| Tramo teal claro    | Lo que sumó en la última válida   | `points` de la válida de fecha más reciente  |
+| Línea punteada      | Puntos del 3.º de su categoría    | Total del tercer puesto de la general        |
+| Zona rayada         | Puntos todavía en juego           | Válidas que faltan × mejor puntaje observado |
+| Fila en lima        | Corredor en zona de podio         | Puesto ≤ 3 de su categoría                   |
 
 Las válidas que faltan salen de `buildSeason()` —la misma derivación de
 `/calendario`, `/enlaces` y la portada, así que ninguna se contradice— y las
@@ -1256,8 +1358,8 @@ desaparece la zona rayada.
 
 **Dos decisiones que conviene tener escritas.** El titular no afirma una copa
 que no conste: el nombre de la serie se deriva del tramo común a los nombres de
-todas las válidas (*I Válida Copa Valle 2026 – Ginebra* + *VI Válida Copa Valle
-2026 – Roldanillo* → **Copa Valle**) y, con una sola válida cargada, la sección
+todas las válidas (_I Válida Copa Valle 2026 – Ginebra_ + _VI Válida Copa Valle
+2026 – Roldanillo_ → **Copa Valle**) y, con una sola válida cargada, la sección
 habla de "la temporada". Y el empate se rompe por puestos de llegada: dos
 corredores con los mismos puntos no valen lo mismo si uno los hizo con dos
 segundos y el otro con un primero y un quinto.
@@ -1287,11 +1389,11 @@ no se publican; quedan en el historial de git). La página ya existe y se constr
 firmadas las autorizaciones de uso de imagen**, así que no se publica. El
 ocultamiento va en cuatro frentes a la vez, no en uno:
 
-| Frente | Cómo |
-|--------|------|
-| Navegación | El ítem sigue comentado en `NAV_ITEMS` (`src/lib/constants.ts`) |
-| Buscadores | `noindex, nofollow` vía el prop `noindex` de `BaseLayout` → `SEOHead` |
-| Sitemap | El filtro de `astro.config.mjs` excluye `/equipo`, como ya excluía `/enlaces` |
+| Frente             | Cómo                                                                                                                                                |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Navegación         | El ítem sigue comentado en `NAV_ITEMS` (`src/lib/constants.ts`)                                                                                     |
+| Buscadores         | `noindex, nofollow` vía el prop `noindex` de `BaseLayout` → `SEOHead`                                                                               |
+| Sitemap            | El filtro de `astro.config.mjs` excluye `/equipo`, como ya excluía `/enlaces`                                                                       |
 | Buscador del sitio | Una página `noindex` cambia `data-pagefind-body` por `data-pagefind-ignore="all"` en `BaseLayout` — si no, Pagefind la devolvería desde la cabecera |
 
 Ese último punto es el que se olvida: sin él la página oculta reaparece en el
@@ -1324,3 +1426,64 @@ colecciones sí tiene: `draft` (por defecto `false`, así que ninguna ficha
 existente cambia de comportamiento) para guardar una ficha sin publicarla
 mientras no haya autorización de imagen. Se replicó en el `config.yml` de
 Sveltia, como exige `CLAUDE.md`.
+
+---
+
+## 28. Referencia de La Pista
+
+`/la-pista` y `/la-pista/[slug]` (`src/pages/la-pista/`) son la primera sección
+que nació ya dentro del sistema editorial, sin migración previa. El plan
+completo, con sus fases y su bitácora de decisiones, está en
+`docs/07-plan-la-pista.md`; aquí queda solo lo que hace de referencia para el
+resto del sitio.
+
+| Sección del índice | `tone`            | Qué muestra                                                     |
+| ------------------ | ----------------- | --------------------------------------------------------------- |
+| Apertura           | `tinted` + `topo` | `h1`, el lead y hasta cuatro `StatFigure`                       |
+| Mapa               | `plain`           | `TrackMap` — trazado SVG del GPX con marcadores por obstáculo   |
+| Historia           | `muted` + `yumbo` | `Timeline` filtrado a los cuatro hitos del trazado              |
+| Obstáculos         | `plain`           | Rejilla de `ObstacleCard` — solo con 2 o más fichas publicadas  |
+| Habilidades        | `tinted`          | `FactGrid` de habilidades por frecuencia — solo con 4 o más     |
+| Paso siguiente     | `plain`           | `InscriptionCTA`                                                |
+
+**Un índice y una ficha por obstáculo, no una página larga.** Cada ficha
+desplegada en el índice suma 695 px en escritorio y cerca del doble en móvil,
+que es el 82 % del tráfico. Con doce obstáculos el índice llegaría a diez
+pantallas. La tarjeta suma 170 px y el detalle vive en su propia URL, que además
+es contenido indexable. Un modal quedaba descartado por tres razones: un
+contenedor con scroll propio congela `animation-timeline: view()` (trampa 1 de
+2.5), el HTML de todos los obstáculos viajaría igual en la misma página, y un
+overlay accesible exige focus trap, o sea JavaScript nuevo. Con `ClientRouter`
+montado, ir al detalle ya se siente como abrir una capa.
+
+**Los umbrales tienen nombre.** `MIN_OBSTACLES_FOR_GRID = 2` y
+`MIN_OBSTACLES_FOR_SKILLS = 4` se exportan de `src/lib/la-pista.ts` con test. Es
+la misma regla de todo el sitio —sin datos el bloque no se pinta— pero escrita
+como constante en vez de como número suelto dentro del `.astro`: un bloque de
+habilidades con una sola ficha diría «1 obstáculo» en cada fila y no compararía
+nada.
+
+**Los borradores se ven en `dev`, no en el build.** `import.meta.env.DEV` decide
+qué fichas entran, en el índice y en `getStaticPaths()`. Así se revisa una ficha
+completa en el navegador antes de quitarle el `draft`. Es el patrón a copiar en
+cualquier colección que espere una revisión externa.
+
+**El mapa es mejora progresiva, no un island a secas.** `TrackMap.astro` pinta
+en el build el SVG del trazado —proyectado del GPX por `src/lib/track-map.ts`— y
+lo pasa como `children` al island `TrackMapInteractive`, que monta Leaflet con
+teselas satelitales de ESRI cuando la sección entra en pantalla. El SVG es lo
+que mide el LCP y lo único que queda sin JavaScript. Las dos capas comparten
+`aspect-[3/4]`, así que el relevo no mueve un píxel. Los marcadores son enlaces
+HTML encima del SVG, no `<circle>`: tienen foco de teclado, `aria-label` y su
+texto no se deforma con la escala.
+
+**Las cifras que no se publican.** El GPX da 3.717 m de vuelta y un desnivel que
+oscila entre 2 y 76 m según cómo se filtre el ruido del GPS. La distancia se
+publica; el desnivel no. Y la vuelta grabada no es el circuito homologado de la
+válida: son dos números distintos y el texto dice cuál es cuál.
+
+**Trampa del content layer.** Agregar un campo a un schema de
+`src/lib/schemas.ts` no invalida `.astro/data-store.json` —un cambio en
+`src/content.config.ts` sí—, así que el servidor de desarrollo sigue sirviendo
+el frontmatter parseado con el schema viejo y el campo nuevo llega `undefined`
+con el archivo correcto. Hay que borrar ese archivo y reiniciar.

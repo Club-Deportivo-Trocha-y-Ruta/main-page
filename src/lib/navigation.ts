@@ -62,6 +62,7 @@ export const FOOTER_GROUPS: FooterGroup[] = [
     links: [
       { label: 'Quiénes somos', href: '/quienes-somos' },
       { label: 'Programas', href: '/programas' },
+      { label: 'La pista', href: '/la-pista' },
       { label: 'Galería', href: '/galeria' },
       { label: 'Trocha Verde', href: '/trocha-verde' },
     ],
