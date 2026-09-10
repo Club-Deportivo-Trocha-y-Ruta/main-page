@@ -38,7 +38,8 @@ const { class: className } = Astro.props;
 const classes = [
   'inline-flex size-10 items-center justify-center rounded-full border border-primary-deep/35 text-primary-deep',
   'hover:bg-primary/10',
-  'transition-[color,background-color,transform] duration-[var(--duration-micro)] ease-pop active:scale-95 motion-reduce:transition-none',
+  // Solo `transform` (regla del sitio: transform/opacity; decisión E del spec).
+  'transition-transform duration-[var(--duration-micro)] ease-pop active:scale-95 motion-reduce:transition-none',
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
   className,
 ]

@@ -518,7 +518,7 @@ export default function SiteSearch({
                   aria-describedby={hintId}
                   aria-controls={flatHits.length > 0 ? resultsId : undefined}
                   aria-activedescendant={flatHits.length > 0 ? optionId(activeIndex) : undefined}
-                  className="text-text-primary placeholder:text-text-secondary/70 min-w-0 flex-1 bg-transparent text-base outline-none"
+                  className="text-text-primary placeholder:text-text-secondary min-w-0 flex-1 bg-transparent text-base outline-none"
                 />
 
                 <kbd className="bg-surface-muted/30 text-text-secondary border-hairline hidden shrink-0 rounded-md border px-1.5 py-0.5 text-[11px] font-medium sm:inline-block">

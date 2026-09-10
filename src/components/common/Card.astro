@@ -7,7 +7,7 @@ interface Props {
 const { href, class: className } = Astro.props;
 
 const classes = [
-  'block rounded-xl bg-surface-raised shadow-sm transition-all duration-200',
+  'block rounded-xl bg-surface-raised shadow-sm ring-1 ring-hairline transition-all duration-200',
   href
     ? 'cursor-pointer hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm'
     : 'hover:shadow-md',

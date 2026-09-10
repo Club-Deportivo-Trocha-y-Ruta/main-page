@@ -170,6 +170,11 @@ const heroPoster = isHome ? await getHeroPoster() : null;
           apply();
         });
 
+        // El primer `apply()` corre en <head>, cuando el <button> de la
+        // cabecera todavía no existe: `aria-pressed` se sincroniza en cuanto
+        // hay DOM, sin esperar a `load` (que es cuando Astro dispara
+        // `astro:page-load` y puede llegar tarde en 4G con imágenes a medias).
+        document.addEventListener('DOMContentLoaded', apply);
         // Ver nota de arriba: obligatorio con ClientRouter.
         document.addEventListener('astro:after-swap', apply);
         // Sincroniza `aria-pressed` de toggles montados después del primer
