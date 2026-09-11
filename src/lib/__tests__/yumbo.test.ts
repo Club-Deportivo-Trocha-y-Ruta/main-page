@@ -8,9 +8,9 @@ import {
 } from '../yumbo';
 
 describe('catálogo de láminas de Yumbo', () => {
-  it('tiene los tres hitos, sin ids repetidos', () => {
+  it('tiene los cuatro hitos, sin ids repetidos', () => {
     const ids = YUMBO_LANDMARKS.map((l) => l.id);
-    expect(ids).toEqual(['cerro', 'monumento', 'iglesia']);
+    expect(ids).toEqual(['cerro', 'monumento', 'iglesia', 'tres-cruces']);
     expect(new Set(ids).size).toBe(ids.length);
   });
 
@@ -46,11 +46,16 @@ describe('catálogo de láminas de Yumbo', () => {
     }
   });
 
-  it('declara la forma de cada lámina: el tríptico no iguala alturas', () => {
-    // Igualar el alto de las tres dejaba al cerro (2.6:1) como una franja
-    // diminuta al lado de las dos siluetas verticales.
+  it('declara la forma de cada lámina: el grid no iguala alturas', () => {
+    // Igualar el alto de las cuatro dejaba a las apaisadas (cerro, tres
+    // cruces) como una franja diminuta al lado de las siluetas verticales.
     const shapes = Object.fromEntries(YUMBO_LANDMARKS.map((l) => [l.id, l.shape]));
-    expect(shapes).toEqual({ cerro: 'wide', monumento: 'tall', iglesia: 'tall' });
+    expect(shapes).toEqual({
+      cerro: 'wide',
+      monumento: 'tall',
+      iglesia: 'tall',
+      'tres-cruces': 'wide',
+    });
   });
 
   it('falla ruidosamente con un hito que no existe', () => {

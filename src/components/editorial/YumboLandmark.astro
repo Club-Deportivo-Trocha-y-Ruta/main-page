@@ -37,11 +37,13 @@ import monumentoColor from '@assets/images/yumbo/monumento-trabajo.webp';
 import monumentoInk from '@assets/images/yumbo/monumento-trabajo-ink.webp';
 import iglesiaColor from '@assets/images/yumbo/iglesia-yumbo.webp';
 import iglesiaInk from '@assets/images/yumbo/iglesia-yumbo-ink.webp';
+import tresCrucesColor from '@assets/images/yumbo/tres-cruces-yumbo.webp';
 
 const ASSETS: Record<YumboLandmarkId, Partial<Record<YumboLandmarkVariant, ImageMetadata>>> = {
   cerro: { color: cerroColor, solid: cerroSolid },
   monumento: { color: monumentoColor, ink: monumentoInk },
   iglesia: { color: iglesiaColor, ink: iglesiaInk },
+  'tres-cruces': { color: tresCrucesColor },
 };
 
 interface Props {

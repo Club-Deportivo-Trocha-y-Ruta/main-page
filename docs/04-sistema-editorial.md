@@ -220,23 +220,27 @@ Dos detalles del CSS (`.club-seal` en `global.css`) que no son cosméticos:
 
 ### 2.7 El territorio — las láminas de Yumbo
 
-Tres ilustraciones de los hitos de Yumbo —el cerro con el letrero, el monumento de la
-glorieta de Cencar y el santuario del parque Belalcázar— entraron al sitio como piezas del
-sistema, no como adorno suelto. El catálogo, con el pie y la fuente de cada una, vive en
-`src/lib/yumbo.ts`; los archivos los genera `scripts/prepare-yumbo-assets.mjs` desde los
-originales versionados en `illustrations-src/yumbo/`.
+Cuatro ilustraciones de los hitos de Yumbo —el cerro con el letrero, el monumento de la
+glorieta de Cencar, el santuario del parque Belalcázar y el cerro de las Tres Cruces—
+entraron al sitio como piezas del sistema, no como adorno suelto. El catálogo, con el pie y
+la fuente de cada una, vive en `src/lib/yumbo.ts`; los archivos los genera
+`scripts/prepare-yumbo-assets.mjs` desde los originales versionados en
+`illustrations-src/yumbo/`.
 
-**De dónde salieron, y qué no se puede decir de ellas.** Nacieron en un ensayo de diseño de
-uniforme que **el club no adoptó**: el uniforme real no lleva estos elementos. Ningún texto
-del sitio puede afirmar lo contrario, y el pie de la sección no lo menciona. Las láminas se
-quedaron porque los hitos se sostienen solos.
+**De dónde salieron, y qué no se puede decir de ellas.** Las tres primeras nacieron en un
+ensayo de diseño de uniforme que **el club no adoptó**: el uniforme real no lleva estos
+elementos. Ningún texto del sitio puede afirmar lo contrario, y el pie de la sección no lo
+menciona. Las láminas se quedaron porque los hitos se sostienen solos. El cerro de las Tres
+Cruces no viene de ese ensayo — es una lámina aparte, sin esa aclaración que darle.
 
 **Cada pie tiene fuente.** Se publica lo comprobable —el letrero del cerro son letras de 10
 metros instaladas en julio de 2026 por los 162 años del municipio; el monumento está en la
 glorieta de Cencar sobre la autopista Cali–Yumbo; el santuario lo terminó fray Alfonso de la
-Concepción Peña en 1939 y está dedicado al Señor del Buen Consuelo, patrono de Yumbo— y se
-calla lo que no: el nombre propio del cerro no aparece en las notas de prensa del letrero,
-así que el sitio no lo inventa. Las URLs están en el campo `source` del catálogo.
+Concepción Peña en 1939 y está dedicado al Señor del Buen Consuelo, patrono de Yumbo; las
+cruces del cerro sur eran de guadua hasta 1952, cuando la primera se hizo en cemento, con
+las otras dos en 1954 y el alumbrado desde 2013— y se calla lo que no: el nombre propio del
+cerro con el letrero no aparece en las notas de prensa del letrero, así que el sitio no lo
+inventa. Las URLs están en el campo `source` del catálogo.
 
 Dos registros, y no se mezclan:
 
@@ -403,10 +407,11 @@ Tres movimientos que conviene repetir en las páginas que faltan:
 - **Fotos vivas, no escogidas a mano.** La banda de comunidad sale de los últimos álbumes de
   `gallery`: la página se actualiza sola cuando el club publica.
 - **De dónde viene el club y de dónde es.** Después del recorrido histórico va _De dónde
-  somos_ (`YumboRoots.astro`), el tríptico de láminas de Yumbo a color (ver 2.7), y la
+  somos_ (`YumboRoots.astro`), las cuatro láminas de Yumbo a color (ver 2.7), y la
   página cierra con el mismo cerro en el fondo de _La comunidad_. Cada pie se apoya en una
-  fuente pública anotada en el catálogo; lo que no tiene fuente —el nombre del cerro— no se
-  afirma, y en ningún lado se dice que estos elementos estén en el uniforme del club.
+  fuente pública anotada en el catálogo; lo que no tiene fuente —el nombre del cerro con el
+  letrero— no se afirma, y en ningún lado se dice que estos elementos estén en el uniforme
+  del club.
 
 ---
 
