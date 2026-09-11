@@ -53,6 +53,15 @@ const SOURCES = [
     name: 'iglesia-yumbo',
     variants: ['color', 'ink'],
   },
+  // Solo `color`: a diferencia de las otras tres, esta lámina no decora
+  // ningún fondo (ni el horizonte `pattern="yumbo"`, fijo al cerro con el
+  // letrero, ni el par `variant="ink"` de /calendario) — aparece una sola
+  // vez, a color, en el tríptico-ahora-cuarteto de /quienes-somos.
+  {
+    file: 'tres-cruces-yumbo.png',
+    name: 'tres-cruces-yumbo',
+    variants: ['color'],
+  },
 ];
 
 /**

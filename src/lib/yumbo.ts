@@ -1,13 +1,15 @@
 /**
  * Los hitos ilustrados de Yumbo.
  *
- * Tres ilustraciones de los hitos que la ciudad reconoce de sí misma: el cerro
- * con el letrero, el monumento de la glorieta de Cencar y el santuario del
- * parque Belalcázar. Están en el sitio porque el club es de Yumbo, y su arraigo
- * se muestra en vez de explicarse.
+ * Cuatro ilustraciones de los hitos que la ciudad reconoce de sí misma: el
+ * cerro con el letrero, el monumento de la glorieta de Cencar, el santuario
+ * del parque Belalcázar y el cerro de las Tres Cruces. Están en el sitio
+ * porque el club es de Yumbo, y su arraigo se muestra en vez de explicarse.
  *
- * (Salieron de un ensayo de diseño de uniforme que el club **no** adoptó. El
- * uniforme no lleva estos elementos y el sitio no puede decir que sí.)
+ * (Las tres primeras salieron de un ensayo de diseño de uniforme que el club
+ * **no** adoptó: el uniforme no lleva estos elementos y el sitio no puede
+ * decir que sí. El cerro de las Tres Cruces es distinto: es una lámina nueva,
+ * encargada para el sitio, sin relación con ese ensayo.)
  *
  * Cada hito existe en hasta tres versiones, generadas por
  * `scripts/prepare-yumbo-assets.mjs`. Se genera solo la que el sitio usa —cada
@@ -27,7 +29,7 @@
  * en ninguna de las notas de prensa del letrero, así que no se afirma.
  */
 
-export type YumboLandmarkId = 'cerro' | 'monumento' | 'iglesia';
+export type YumboLandmarkId = 'cerro' | 'monumento' | 'iglesia' | 'tres-cruces';
 
 export type YumboLandmarkVariant = 'color' | 'ink' | 'solid';
 
@@ -89,6 +91,17 @@ export const YUMBO_LANDMARKS: readonly YumboLandmark[] = [
       'https://todosesupo.com/2018/09/15/apuntes-para-una-historia-de-yumbo-2003-ano-de-la-ultima-remodelacion-del-parque-belalcazar/',
     shape: 'tall',
     variants: ['color', 'ink'],
+  },
+  {
+    id: 'tres-cruces',
+    file: 'tres-cruces-yumbo',
+    title: 'El cerro de las Tres Cruces',
+    caption:
+      'El cerro tutelar de los yumbeños, al sur de la ciudad: las cruces llegaron desde el cerro El Floral y eran de guadua hasta 1952, cuando la primera se construyó en cemento. Las otras dos son de 1954, y desde 2013 se iluminan cada noche.',
+    alt: 'Ilustración del cerro de las Tres Cruces de Yumbo: una colina cubierta de vegetación con tres cruces de piedra sobre pedestales en la cima, la del centro más alta',
+    source: 'https://todosesupo.com/2019/04/06/un-poco-de-historia-las-tres-cruces-de-yumbo/',
+    shape: 'wide',
+    variants: ['color'],
   },
 ] as const;
 

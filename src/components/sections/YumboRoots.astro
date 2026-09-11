@@ -1,17 +1,20 @@
 ---
 /**
- * «De dónde somos» — las tres láminas de Yumbo, a color, como contenido.
+ * «De dónde somos» — las cuatro láminas de Yumbo, a color, como contenido.
  *
  * Es la única sección del sitio donde las ilustraciones se muestran completas y
  * a color (ver `@lib/yumbo`): aquí la lámina no decora un texto, es el texto. En
  * el resto del sitio el mismo material aparece enmascarado y tenue, como
- * horizonte de fondo (`SectionShell pattern="yumbo"`).
+ * horizonte de fondo (`SectionShell pattern="yumbo"`) o, en /calendario, como
+ * par decorativo de una fecha en casa.
  *
  * Cada pie dice solo lo que tiene fuente pública, anotada en el catálogo: la
  * fecha y el tamaño del letrero del cerro, dónde está el monumento, quién y
- * cuándo levantó el santuario. Lo que no se sabe —el nombre propio del cerro—
- * no se afirma. Y no se dice que estos elementos estén en el uniforme del club:
- * salieron de un prototipo que no se adoptó.
+ * cuándo levantó el santuario, cuándo se construyeron las tres cruces del cerro
+ * sur. Lo que no se sabe —el nombre propio del cerro con el letrero— no se
+ * afirma. Y de las tres primeras no se dice que estén en el uniforme del club:
+ * salieron de un prototipo que no se adoptó. La lámina de las Tres Cruces no
+ * viene de ahí — es una pieza nueva, sin esa historia.
  */
 import SectionShell from '@components/editorial/SectionShell.astro';
 import SectionIntro from '@components/editorial/SectionIntro.astro';
@@ -26,21 +29,25 @@ import { YUMBO_LANDMARKS } from '@lib/yumbo';
     eyebrowIcon="ph:map-pin-bold"
     title="El club es de Yumbo, y se le nota"
     highlight="de Yumbo"
-    lead="Tres cosas que en esta ciudad se reconocen de lejos. Aquí es donde el club entrena, desde 2010."
+    lead="Cuatro cosas que en esta ciudad se reconocen de lejos. Aquí es donde el club entrena, desde 2010."
     align="center"
     class="mx-auto max-w-3xl"
   />
 
-  <ul class="mt-14 grid gap-10 sm:grid-cols-3 sm:gap-8">
+  <ul class="mt-14 grid gap-10 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
     {
       YUMBO_LANDMARKS.map((landmark, index) => (
         <li class="reveal text-center" style={`--stagger:${index * 90}ms`}>
           {/*
-            Las tres se apoyan en la misma línea de suelo (`items-end`), pero no
-            se les iguala el alto: el cerro es una lámina apaisada (2.6:1) y, con
-            la misma altura que las dos siluetas verticales, queda angosto y sin
-            peso al lado de ellas. Ocupa el ancho de su columna y menos alto,
-            para que las tres pesen parecido.
+            Todas se apoyan en la misma línea de suelo (`items-end`), pero no
+            se les iguala el alto: las láminas apaisadas (cerro, tres cruces)
+            son más anchas que altas y, con la misma altura que las siluetas
+            verticales (monumento, iglesia), quedan angostas y sin peso al
+            lado de ellas. Cada una ocupa el ancho de su columna y menos alto,
+            para que las cuatro pesen parecido. Apiladas en móvil, 2×2 desde
+            `sm` y en línea desde `lg`: con las cuatro en una sola fila ya
+            desde `sm` (640px) cada columna queda muy angosta para una
+            lámina vertical.
 
             Hotfix 2026-09-10: las verticales (`monumento`, `iglesia`) se
             desbordaban hacia arriba, tapando el titular de la sección de
