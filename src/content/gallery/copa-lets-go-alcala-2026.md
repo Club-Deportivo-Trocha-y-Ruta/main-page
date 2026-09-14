@@ -1,24 +1,75 @@
 ---
-# ESQUELETO DE PRODUCCIÓN — Copa Let's Go Interdepartamental XCO 2026, Alcalá.
-# Se publica (draft: false) cuando las fotos del domingo estén subidas y
-# seleccionadas. Existe desde ya porque la crónica
-# `2026-09-copa-lets-go-alcala-xco.md` la referencia en `relatedGallery`:
-# sin este archivo, esa referencia apunta a una página que no existe.
 title: "Copa Let's Go Interdepartamental XCO 2026 — Alcalá"
-# Fecha del XCO (el club asistió solo el domingo). El evento completo va del
-# 10 al 13 de septiembre; el álbum cubre únicamente el día de carrera.
+# Fecha del XCO. El evento va del 10 al 13 de septiembre; el álbum cubre el
+# relevo XCR del sábado 12 y el XCO del domingo 13.
 date: 2026-09-13
-# Portada: reemplazar por la mejor foto del domingo. Mientras el álbum esté
-# en draft esta ruta puede no existir todavía.
 cover: "/images/news/copa-lets-go-alcala-2026/equipo-grupal.webp"
-coverAlt: "Equipo del Club Trocha y Ruta en la Copa Let's Go Interdepartamental XCO de Alcalá"
-description: "El domingo de XCO de la Copa Let's Go Interdepartamental en Alcalá, Valle del Cauca: la primera salida del club fuera de la Copa Valle en 2026."
-# Vacío a propósito: se llena al subir las fotos. El detalle del álbum no se
-# pinta con la parrilla vacía y el índice no lo lista mientras siga en draft.
-images: []
+coverAlt: "Los cuatro corredores premiados del Club Trocha y Ruta, con sus medallas, bajo la carpa del club con la bandera de Trocha y Ruta de fondo, en la Copa Let's Go Interdepartamental XCO de Alcalá"
+description: "La cuarta válida de la Copa Let's Go Interdepartamental XCO en Alcalá, Valle del Cauca: cinco corredores del club y cuatro al podio."
+images:
+  - src: "/images/news/copa-lets-go-alcala-2026/circuito-panoramica-sabado.webp"
+    alt: "Vista aérea de todo el circuito de la Copa Let's Go en Alcalá, con el trazado completo, las carpas del paddock y el parqueadero"
+    caption: "El circuito completo desde el aire: el trazado, el paddock y el parqueadero."
+  - src: "/images/news/copa-lets-go-alcala-2026/circuito-curva-s-corredor.webp"
+    alt: "Un corredor del Club Trocha y Ruta toma una curva en S del sendero de tierra entre la ladera de pasto del circuito de la Copa Let's Go en Alcalá"
+    caption: "Una curva en S del circuito, entre la ladera de pasto."
+  - src: "/images/news/copa-lets-go-alcala-2026/circuito-descenso-curva.webp"
+    alt: "Un corredor del Club Trocha y Ruta baja una curva peraltada de tierra bajo el cielo azul en el circuito de Alcalá"
+    caption: "Manga 1, 8:42 a. m.: descenso en curva con el arco de meta al fondo."
+  - src: "/images/news/copa-lets-go-alcala-2026/juan-diego-garcia-manga-1.webp"
+    alt: "Juan Diego García del Club Trocha y Ruta, dorsal 121, pedalea por un sendero entre árboles en la manga 1"
+    caption: "Juan Diego García, Máster A, en uno de los pocos tramos con sombra."
+  - src: "/images/news/copa-lets-go-alcala-2026/juan-diego-garcia-salto.webp"
+    alt: "Juan Diego García del Club Trocha y Ruta pasa el salto de madera del circuito junto a la pancarta de un patrocinador"
+    caption: "Juan Diego García en el salto de madera de la manga 1."
+  - src: "/images/news/copa-lets-go-alcala-2026/juan-diego-garcia-hidratacion.webp"
+    alt: "Juan Diego García del Club Trocha y Ruta bebe de la caramañola junto a dos acompañantes en la zona de salida"
+    caption: "Hidratación en carrera: con el calor de Alcalá, refrescarse fue clave."
+  - src: "/images/news/copa-lets-go-alcala-2026/circuito-sendero-ladera.webp"
+    alt: "Un corredor del Club Trocha y Ruta sube un sendero entre pastizales, visto desde lo alto de la ladera"
+    caption: "El sendero entre el pastizal, sin sombra, en la manga 1."
+  - src: "/images/news/copa-lets-go-alcala-2026/juan-diego-garcia-de-espaldas.webp"
+    alt: "Juan Diego García del Club Trocha y Ruta se aleja de espaldas por un sendero recto hacia una bandera roja"
+    caption: "Juan Diego García, siete vueltas de 3,3 km."
+  - src: "/images/news/copa-lets-go-alcala-2026/mariana-isabel-sombrillas.webp"
+    alt: "Mariana Coronado e Isabel Quiñones del Club Trocha y Ruta, con sus bicicletas, bajo dos sombrillas antes de la manga 4"
+    caption: "Mariana e Isabel, a la sombra de las sombrillas, antes de la manga 4."
+  - src: "/images/news/copa-lets-go-alcala-2026/mariana-coronado-manga-4.webp"
+    alt: "Mariana Coronado del Club Trocha y Ruta, dorsal 605, baja una pendiente de tierra en la manga 4"
+    caption: "Mariana Coronado, Pre Juvenil Femenino A: segunda, a 17 segundos de la ganadora."
+  - src: "/images/news/copa-lets-go-alcala-2026/isabel-quinones-manga-4.webp"
+    alt: "Isabel Quiñones del Club Trocha y Ruta, dorsal 604, toma una curva de tierra entre guaduales en la manga 4"
+    caption: "Isabel Quiñones, Pre Juvenil Femenino A, cuarta."
+  - src: "/images/news/copa-lets-go-alcala-2026/jostin-villamizar-manga-4.webp"
+    alt: "Jostin Villamizar del Club Trocha y Ruta, dorsal 7026, sube un sendero angosto entre monte en la manga 4"
+    caption: "Jostin Villamizar, Infantil Masculino B, quinto."
+  - src: "/images/news/copa-lets-go-alcala-2026/samuel-ortiz-manga-4.webp"
+    alt: "Samuel Ortiz del Club Trocha y Ruta, dorsal 3038, sube una loma de tierra junto al público en la manga 4"
+    caption: "Samuel Ortiz, Pre Juvenil Masculino A, quinto entre 19."
+  - src: "/images/news/copa-lets-go-alcala-2026/samuel-ortiz-salto.webp"
+    alt: "Samuel Ortiz del Club Trocha y Ruta pasa el salto de madera del circuito en la manga 4"
+    caption: "Samuel Ortiz en el salto de madera."
+  - src: "/images/news/copa-lets-go-alcala-2026/podio-prejuvenil-femenino-a.webp"
+    alt: "Podio de Pre Juvenil Femenino A: Mariana Coronado en el cajón 2 e Isabel Quiñones en el 4, ambas del Club Trocha y Ruta"
+    caption: "Podio de Pre Juvenil Femenino A: Mariana, segunda, e Isabel, cuarta."
+  - src: "/images/news/copa-lets-go-alcala-2026/podio-infantil-masculino-b.webp"
+    alt: "Jostin Villamizar del Club Trocha y Ruta, con medalla, en el cajón 5 del podio de Infantil Masculino B"
+    caption: "Jostin Villamizar en el cajón 5 de Infantil Masculino B."
+  - src: "/images/news/copa-lets-go-alcala-2026/podio-prejuvenil-masculino-a.webp"
+    alt: "Samuel Ortiz del Club Trocha y Ruta recibe la medalla en el cajón 5 del podio de Pre Juvenil Masculino A"
+    caption: "Samuel Ortiz recibe la medalla de Pre Juvenil Masculino A."
+  - src: "/images/news/copa-lets-go-alcala-2026/podio-prejuvenil-masculino-a-completo.webp"
+    alt: "Podio completo de Pre Juvenil Masculino A de la Copa Let's Go en Alcalá, con Samuel Ortiz del Club Trocha y Ruta a la derecha"
+    caption: "El podio de Pre Juvenil Masculino A: Samuel Ortiz, quinto, a la derecha."
+  - src: "/images/news/copa-lets-go-alcala-2026/equipo-grupal.webp"
+    alt: "Los cuatro corredores premiados del Club Trocha y Ruta, con sus medallas, junto a tres acompañantes bajo la carpa del club con la bandera de Trocha y Ruta de fondo"
+    caption: "Los cuatro premiados con sus medallas, bajo la carpa del club."
+  - src: "/images/news/copa-lets-go-alcala-2026/juan-diego-garcia-retrato.webp"
+    alt: "Retrato de Juan Diego García con el uniforme del Club Trocha y Ruta y casco, sobre la bicicleta"
+    caption: "Juan Diego García, Máster A, séptimo de 11."
 relatedEvent: "2026-09-copa-lets-go-alcala"
 category: "competencia"
-tags: ["copa-lets-go", "copa-lets-go-2026", "interdepartamental", "xco", "alcala"]
+tags: ["copa-lets-go", "copa-lets-go-2026", "interdepartamental", "xco", "xcr", "alcala"]
 featured: false
-draft: true
+draft: false
 ---

@@ -9,16 +9,16 @@ category: "xco"
 level: "regional"
 image: "/images/news/copa-lets-go-alcala-2026/cronograma-oficial.webp"
 imageAlt: "Cronograma oficial de la Copa Let's Go Interdepartamental XCO en Alcalá: entrenamientos del 10 al 12 de septiembre, congreso técnico el 11, carrera de relevos XCR el 12 y premiación el 13"
-status: "upcoming"
+status: "past"
 featured: true
 draft: false
 seo:
   metaTitle: "Copa Let's Go Interdepartamental XCO — Alcalá, 10 al 13 de septiembre"
-  metaDescription: "Válida de la Copa Let's Go Interdepartamental XCO en Alcalá, Valle del Cauca. El Club Trocha y Ruta competirá el domingo en las pruebas de XCO."
+  metaDescription: "Cuarta válida de la Copa Let's Go Interdepartamental XCO en Alcalá, Valle del Cauca. El Club Trocha y Ruta corrió el XCR del sábado y el XCO del domingo."
   ogImage: "/images/news/copa-lets-go-alcala-2026/horarios-competencia.webp"
 ---
 
-Válida de la **Copa Let's Go Interdepartamental XCO** en **Alcalá, Valle del Cauca**, del **10 al 13 de septiembre**. El Club Trocha y Ruta asistirá **solo el domingo**, a correr las pruebas de Cross Country Olímpico.
+Cuarta válida de la **Copa Let's Go Interdepartamental XCO** en **Alcalá, Valle del Cauca**, del **10 al 13 de septiembre**. El Club Trocha y Ruta corrió el **sábado** el relevo XCR, con Isabel Quiñones en un equipo de Risaralda, y el **domingo** el Cross Country Olímpico, con cinco corredores.
 
 ## Cronograma oficial
 
