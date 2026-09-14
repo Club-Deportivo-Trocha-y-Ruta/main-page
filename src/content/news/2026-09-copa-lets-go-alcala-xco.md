@@ -45,7 +45,7 @@ galleryImages:
 seo:
   metaTitle: "Copa Let's Go en Alcalá: Mariana Coronado, segunda en XCO"
   metaDescription: "Cuarta válida de la Copa Let's Go XCO en Alcalá: Mariana Coronado, segunda en Pre Juvenil Femenino A, y cuatro corredores del Club Trocha y Ruta premiados."
-  ogImage: "/images/news/copa-lets-go-alcala-2026/afiche-cronograma-equipos-xcr.webp"
+  ogImage: "/images/news/copa-lets-go-alcala-2026/equipo-grupal-og.webp"
 ---
 
 En Alcalá la pista casi no tenía árboles y hacía mucho calor. El trabajo empezó en el calentamiento, bajando la temperatura con geles de hielo, y siguió en carrera, donde saber refrescarse fue clave. Así, Mariana Coronado fue segunda y cuatro del club subieron al podio de la cuarta válida de la Copa Let's Go.
