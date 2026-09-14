@@ -54,13 +54,13 @@ En Alcalá la pista casi no tenía árboles y hacía mucho calor. El trabajo emp
 
 Cinco corredores en dos mangas, frente a equipos como Inquebrantables, Ciclo Anzea, Rueda Libre o Ciclismo Quindío. Se premiaba hasta el quinto puesto.
 
-| Deportista            | Categoría               |    Pos.     | Vueltas | Tiempo  | Dif.  |
-| --------------------- | ----------------------- | :---------: | :-----: | ------- | ----- |
-| Juan Diego García     | Máster A                |   7 de 11   |    7    | 1:06:16 | +5:58 |
-| **Mariana Coronado**  | Pre Juvenil Femenino A  |  **2 de 4** |    2    | 22:55   | +0:17 |
-| **Isabel Quiñones**   | Pre Juvenil Femenino A  |  **4 de 4** |    2    | 26:40   | +4:02 |
-| **Jostin Villamizar** | Infantil Masculino B    |  **5 de 8** |    2    | 27:53   | +7:37 |
-| **Samuel Ortiz**      | Pre Juvenil Masculino A | **5 de 19** |    3    | 28:44   | +1:20 |
+| Deportista            | Categoría               | Vueltas | Tiempo  | Dif.  |
+| --------------------- | ----------------------- | :-----: | ------- | ----- |
+| Juan Diego García     | Máster A                |    7    | 1:06:16 | +5:58 |
+| **Mariana Coronado**  | Pre Juvenil Femenino A  |    2    | 22:55   | +0:17 |
+| **Isabel Quiñones**   | Pre Juvenil Femenino A  |    2    | 26:40   | +4:02 |
+| **Jostin Villamizar** | Infantil Masculino B    |    2    | 27:53   | +7:37 |
+| **Samuel Ortiz**      | Pre Juvenil Masculino A |    3    | 28:44   | +1:20 |
 
 Juan Diego corrió la manga 1, a las 8:00 a. m., y los otros cuatro la manga 4, que salió con casi una hora de retraso, cerca de las 10:40. En negrita, los premiados.
 
@@ -241,7 +241,7 @@ Se premiaba hasta el quinto puesto. Mariana e Isabel subieron juntas en Pre Juve
   <figure>
     <img
       src="/images/news/copa-lets-go-alcala-2026/podio-infantil-masculino-b.webp"
-      alt="Jostin Villamizar del Club Trocha y Ruta, con medalla, en el cajón 5 del podio de Infantil Masculino B de la Copa Let's Go Interdepartamental XCO en Alcalá"
+      alt="Podio completo de Infantil Masculino B de la Copa Let's Go Interdepartamental XCO en Alcalá, con Jostin Villamizar del Club Trocha y Ruta en el cajón 5"
       width="1050"
       height="1400"
       loading="lazy"
@@ -252,13 +252,13 @@ Se premiaba hasta el quinto puesto. Mariana e Isabel subieron juntas en Pre Juve
   <figure>
     <img
       src="/images/news/copa-lets-go-alcala-2026/podio-prejuvenil-masculino-a.webp"
-      alt="Samuel Ortiz del Club Trocha y Ruta recibe la medalla en el cajón 5 del podio de Pre Juvenil Masculino A de la Copa Let's Go Interdepartamental XCO en Alcalá"
+      alt="Podio completo de Pre Juvenil Masculino A de la Copa Let's Go Interdepartamental XCO en Alcalá, con Samuel Ortiz del Club Trocha y Ruta en el cajón 5"
       width="1050"
       height="1400"
       loading="lazy"
       decoding="async"
     />
-    <figcaption><strong>Samuel Ortiz</strong> · Pre Juvenil Masculino A · 5.º, recibiendo la medalla</figcaption>
+    <figcaption><strong>Samuel Ortiz</strong> · Pre Juvenil Masculino A · 5.º</figcaption>
   </figure>
 </div>
 
