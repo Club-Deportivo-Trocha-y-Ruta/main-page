@@ -149,3 +149,102 @@ at the lower back evoking three crosses on a hill».
   Shimano): pedir permiso antes de usar sus marcas.
 - Sublimación solo sobre poliéster claro. En algodón cambia la técnica (DTF / serigrafía al
   agua) y la prenda calienta algo más.
+
+---
+
+## Una dirección por turno
+
+Si el agente con las cuatro direcciones juntas devuelve algo plano, pedirle una por turno:
+pegar el BASE y a continuación uno solo de los bloques de dirección. Al terminar la ronda,
+pedirle la dirección D (libre) con el mismo BASE.
+
+### BASE (se pega siempre)
+
+```text
+Eres director de arte de una marca de ropa de ciclismo de montaña. Diseña UNA sola camiseta:
+la del equipo de LOGÍSTICA de la VII Válida Copa Valle 2026 (XCO infantil y juvenil), domingo
+18 de octubre de 2026, Pista «Carlos Castro», Yumbo, Valle del Cauca. Organiza la logística el
+Club Deportivo Trocha y Ruta (escuela de ciclomontañismo para niños desde los 4 años). Español
+colombiano. No inventes datos; un lema nuevo va marcado como PROPUESTA.
+
+Adjuntos: logo del club (usar tal cual) y paleta: teal #20B7C9, teal profundo #0F6F79, lima
+#8BE000, lima profundo #456F00, grafito #2F2F2F. Base de la prenda blanca o hueso.
+
+Estética: jersey de carrera de MTB. Gráfica que envuelve del pecho a la espalda o cruza en
+diagonal, paneles de color en costados y mangas, sensación de velocidad. Tipografía sans
+condensada pesada en mayúsculas, tipo dorsal. Lima en bloques grandes como color del staff,
+teal para la gráfica, grafito para texto; texto pequeño nunca en lima ni teal sobre blanco.
+Prohibido: grabado, acuarela, postal, paisaje realista, souvenir, serif vintage, texturas
+desgastadas, alcohol, logos de terceros, nombres de personas, prenda oscura.
+
+Obligatorio: «LOGÍSTICA» en la espalda arriba, de hombro a hombro, grafito o teal profundo.
+Pecho izquierdo: logo del club 8–10 cm con «LOGÍSTICA» pequeño debajo. Manga derecha: «VII
+VÁLIDA COPA VALLE · YUMBO · 18.10.2026». Manga izquierda vacía, reservada.
+Prenda: poliéster microperforado 130–150 g/m², sublimación, manga corta, cuello redondo rib
+fino, fit regular. Corte hombre y corte mujer con la misma gráfica.
+
+Entrega: una sola imagen de mockup fotorrealista, prenda colgada en gancho ante vegetación
+tropical con luz natural, frente y espalda lado a lado, sin texto explicativo dentro de la
+imagen. Nada de ficha técnica. Debajo, en tres líneas: idea, recursos gráficos usados, lema
+PROPUESTO si lo hay.
+```
+
+### Dirección A — TRAZADO
+
+```text
+DIRECCIÓN: «TRAZADO». El circuito de 3,8 km como una sola línea teal continua que nace en el
+pecho izquierdo, baja por el costado y se despliega en la espalda entre curvas de nivel finas
+en teal claro. En la parte baja de la espalda, el bloque tipográfico YUMBO monumental, cortado
+por el dobladillo, como el letrero del cerro. Panel lateral y hombro derecho en lima.
+```
+
+### Dirección B — PIÑÓN
+
+```text
+DIRECCIÓN: «PIÑÓN». El monumento de las manos y los piñones de Yumbo reducido a geometría: un
+plato de bicicleta gigante en trama de medio tono teal que ocupa toda la espalda y parece
+girar, con líneas de velocidad hacia un lado; dos manos en silueta plana grafito lo sostienen
+desde la parte baja. Manga izquierda en lima con una franja de cadena de bici en grafito.
+```
+
+### Dirección C — DORSAL
+
+```text
+DIRECCIÓN: «DORSAL». Estética de placa de competencia: LOGÍSTICA dentro de un rectángulo de
+esquinas redondeadas en la parte alta de la espalda, como número de placa. Dos diagonales
+anchas, una lima y una teal, cruzan la prenda del hombro derecho a la cadera izquierda y
+continúan por el frente. En la parte baja de la espalda, las Tres Cruces de Yumbo convertidas
+en tres trazos verticales geométricos, el del centro más alto, sobre un arco de colina plano.
+```
+
+### Dirección D — libre
+
+```text
+DIRECCIÓN: libre. Con la misma disciplina del BASE, propón tu propia idea: un recurso gráfico
+que no esté en A, B ni C y que conecte Yumbo (cerro con el letrero, Tres Cruces, manos y
+piñones, santuario del Buen Consuelo) con el ciclomontañismo. Explica en una línea por qué es
+mejor que las tres anteriores.
+```
+
+### Equivalentes en inglés para un modelo de imagen (una prenda por prompt)
+
+```text
+A: Photorealistic mockup, front and back side by side, white lightweight MTB race-style
+t-shirt hanging on wooden hangers in front of tropical leaves, natural light. Sublimated
+graphic: one continuous teal #20B7C9 line tracing a race circuit from the left chest, around
+the side seam, unfolding across the back between fine light-teal contour lines; a huge bold
+condensed "YUMBO" cut off by the bottom hem of the back; lime #8BE000 side panel and right
+shoulder; "LOGÍSTICA" shoulder to shoulder on the upper back in heavy condensed graphite
+#2F2F2F sans; small club logo on left chest. Modern cycling-kit aesthetic. No engraving, no
+watercolor, no dark fabric, no captions. --ar 16:9
+
+B: same setup. Graphic: a giant halftone bicycle chainring in teal #20B7C9 filling the back,
+rotating with speed lines, two flat graphite hand silhouettes holding it from below; lime
+#8BE000 left sleeve with a graphite bicycle-chain stripe; "LOGÍSTICA" on upper back; club logo
+on left chest. --ar 16:9
+
+C: same setup. Graphic: race-number-plate look, "LOGÍSTICA" inside a rounded rectangle on the
+upper back; two wide diagonal bands, lime #8BE000 and teal #20B7C9, crossing from right
+shoulder to left hip and continuing on the front; three geometric vertical strokes at the
+lower back, the middle one taller, on a flat hill arc; club logo on left chest. --ar 16:9
+```
