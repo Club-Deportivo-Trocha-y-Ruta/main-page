@@ -83,6 +83,21 @@ PRENDA Y CALOR (obligatorio: no puede calentar)
   polo ligera del mismo material para coordinadores, con el mismo sistema gráfico.
 - Sin vinilos de gran área, sin forros ni capas dobles.
 
+HOMBRE Y MUJER (obligatorio)
+- El equipo de logística es mixto: diseñar la prenda en corte para hombre y corte para mujer,
+  con el MISMO sistema gráfico, la misma tela y los mismos colores. Nada de «versión rosada»
+  ni de reducir o suavizar la ilustración para la de mujer: cambia el patrón, no el diseño.
+- Corte hombre: hombro recto, cuerpo recto, largo a la cadera, manga a media parte del brazo.
+- Corte mujer: sisa y hombro más estrechos, ligera entalla en la cintura sin ajustar, largo a
+  la cadera, manga un poco más corta, escote redondo apenas más abierto. Debe seguir siendo
+  una prenda fresca y cómoda para trabajar, no una prenda ceñida.
+- Las aplicaciones (logo de pecho, LOGÍSTICA de espalda, textos de manga) se escalan por
+  talla para que ocupen la misma proporción en ambos cortes; indicar las medidas en cm para
+  cada talla, no una sola.
+- Tallas: XS a XXL en ambos cortes, con tabla de medidas de pecho y largo. Incluir la opción
+  de un corte unisex único solo si el proveedor no ofrece los dos: en ese caso decirlo como
+  limitación, no como decisión de diseño.
+
 ENTREGABLES
 1. Tres direcciones de diseño (A, B, C) que varíen el hito protagonista: A cerro con el
    letrero YUMBO; B monumento de las manos y los piñones con plato de bici; C Tres Cruces con
@@ -90,11 +105,15 @@ ENTREGABLES
 2. Mockups fotorrealistas de cada dirección: camiseta colgada en un gancho de madera ante
    vegetación tropical y cielo nublado, luz natural suave, a la manera de la referencia, y una
    vista puesta sobre una persona de espaldas para comprobar la legibilidad de LOGÍSTICA.
-3. Ficha técnica: tela, gramaje, técnica de impresión, medidas de cada aplicación en cm,
-   colores en HEX y su Pantone más cercano, y la lista exacta de textos que van en la prenda.
+   Los mockups puestos van en ambos cortes: un hombre y una mujer, de frente y de espalda,
+   con ropa de trabajo de campo (pantalón, tenis, gorra), no en pose de moda.
+3. Ficha técnica: tela, gramaje, técnica de impresión, medidas de cada aplicación en cm por
+   talla y por corte (hombre / mujer), tabla de tallas XS–XXL de ambos cortes, colores en HEX
+   y su Pantone más cercano, y la lista exacta de textos que van en la prenda.
 4. Una lámina de la ilustración central sola, fondo transparente, en alta resolución, lista
    para vectorizar.
-5. Lista de decisiones pendientes del club (lema, patrocinador de manga, cantidad y tallas).
+5. Lista de decisiones pendientes del club (lema, patrocinador de manga, cantidad de prendas
+   por corte y talla).
 
 REGLAS DE CIERRE
 - Legibilidad y contraste antes que decoración.
@@ -123,6 +142,10 @@ Valle · Yumbo · 18.10.2026". Color palette limited to lime greens #456F00–#8
 Ink-line illustration with open areas, no heavy solid ink blocks, sublimation-print look.
 No beer, no alcohol, no brand logos, no people's names. --ar 4:5
 ```
+
+Para los mockups puestos, añadir: «worn by a man and by a woman standing side by side, seen
+from the back and then from the front, field-work clothes (trousers, sneakers, cap), natural
+pose, men's straight cut and women's slightly shaped cut, identical print on both».
 
 Variantes: cambiar el paisaje central por «the Cencar roundabout monument: two stone hands
 holding two gears, merged with a bicycle chainring» (dirección B) o «the Tres Cruces hill with
