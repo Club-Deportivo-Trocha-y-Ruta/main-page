@@ -1387,10 +1387,10 @@
 
 /* Mapa del circuito: esquema del trazado con los momentos de la carrera
    anclados a puntos numerados. El SVG es un dibujo por válida.
-   EN RESERVA — construido y probado, pero ninguna crónica lo usa todavía:
-   se activa cuando haya trazado real de la sede y momentos ubicados sobre
-   él (ver .claude/agents/content-marketer.md). Misma convención que
-   TrochaVerdeGrid. No borrar: el markup de referencia está en ese protocolo. */
+   Solo con trazado real y momentos ubicados sobre él (ver
+   .claude/agents/content-marketer.md). Primer uso: el perfil de altitud de
+   la bajada en la crónica DH del Cali Bike Park (2026-09), dibujado desde el
+   GPS de un corredor; el mismo markup sirve para un plano o para un perfil. */
 .prose :where(.circuit-map) {
   margin-block: 2rem;
   padding: 1.25rem;

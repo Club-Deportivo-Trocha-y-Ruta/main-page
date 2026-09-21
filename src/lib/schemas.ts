@@ -147,7 +147,7 @@ export const eventsSchema = z.object({
   city: z.string().optional(),
   department: z.string().default('Valle del Cauca'),
   mapUrl: z.url().optional(),
-  category: z.enum(['xco', 'xcm', 'ruta', 'enduro', 'recreativo', 'social', 'entrenamiento']),
+  category: z.enum(['xco', 'xcm', 'dh', 'ruta', 'enduro', 'recreativo', 'social', 'entrenamiento']),
   level: z
     .enum(['municipal', 'departamental', 'regional', 'nacional', 'internacional', 'interno'])
     .default('departamental'),

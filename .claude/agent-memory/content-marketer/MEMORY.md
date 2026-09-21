@@ -1,0 +1,2 @@
+- [Formato fotocrónica](feedback_fotocronica_formato.md) — texto en pies de foto, ≤250 palabras, resultados ≤15 %, CTA 35-60 %, intro ≠ excerpt
+- [Personas del proceso DH](project_personas_proceso_dh.md) — Yomar sin apellido, Giraldo no es de Ram Bike, "Novatos" fuera del titular

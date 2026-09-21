@@ -1,5 +1,6 @@
 ---
 title: "IV Válida Copa Valle 2026 - Cali"
+shortName: "Válida IV"
 date: 2026-05-17
 location: "Club del Departamento - Sector La Voragine"
 city: "Cali"

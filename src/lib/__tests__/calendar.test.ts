@@ -95,6 +95,11 @@ describe('etiquetas', () => {
     expect(getEventCategory('xco').label).toBe('Cross Country olímpico');
   });
 
+  it('traduce el descenso', () => {
+    expect(getEventCategory('dh').short).toBe('DH');
+    expect(getEventCategory('dh').label).toBe('Descenso (downhill)');
+  });
+
   it('cae en XCO ante una categoría desconocida', () => {
     expect(getEventCategory('gravel')).toBe(EVENT_CATEGORIES.xco);
   });

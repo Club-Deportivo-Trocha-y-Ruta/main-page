@@ -139,6 +139,7 @@ collections:
         options:
           - { label: "XCO (Cross-Country Olímpico)", value: "xco" }
           - { label: "XCM (Cross-Country Maratón)", value: "xcm" }
+          - { label: "DH (Descenso / downhill)", value: "dh" }
           - { label: "Ruta", value: "ruta" }
           - { label: "Enduro", value: "enduro" }
           - { label: "Recreativo", value: "recreativo" }

@@ -13,7 +13,7 @@
  */
 
 export type EventCategory =
-  'xco' | 'xcm' | 'ruta' | 'enduro' | 'recreativo' | 'social' | 'entrenamiento';
+  'xco' | 'xcm' | 'dh' | 'ruta' | 'enduro' | 'recreativo' | 'social' | 'entrenamiento';
 
 export type EventLevel =
   'municipal' | 'departamental' | 'regional' | 'nacional' | 'internacional' | 'interno';
@@ -39,6 +39,7 @@ export interface CategoryStyle {
 export const EVENT_CATEGORIES: Record<EventCategory, CategoryStyle> = {
   xco: { label: 'Cross Country olímpico', short: 'XCO', icon: 'ph:mountains-bold' },
   xcm: { label: 'Maratón de montaña', short: 'XCM', icon: 'ph:path-bold' },
+  dh: { label: 'Descenso (downhill)', short: 'DH', icon: 'ph:trend-down-bold' },
   ruta: { label: 'Ciclismo de ruta', short: 'Ruta', icon: 'ph:road-horizon-bold' },
   enduro: { label: 'Enduro', short: 'Enduro', icon: 'ph:mountains-bold' },
   recreativo: {

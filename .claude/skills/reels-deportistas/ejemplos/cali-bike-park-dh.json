@@ -1,0 +1,608 @@
+{
+ "id": "cali-bike-park-dh-iii-valida",
+ "dir": "~/Documents/Personal/Trocha y Ruta/page/tmp",
+ "prompt": "Cali Bike Park. Downhill. Oscar Ortiz, Juan Esteban Ortiz, Samuel Ortiz, Isabel, Juan Diego García, Diego Ortiz, Yomar, Ram Bike, Héctor Rojas, Héctor Giraldo.",
+ "voice": {
+  "src": "Oscar Hablando.mov",
+  "in": 0.0,
+  "out": 102.4,
+  "offset": -3,
+  "cap": 16,
+  "ambient_db": 20,
+  "captions": [
+   [
+    0.0,
+    3.72,
+    "Bueno, estamos acá desde la Copa Cali Bike Park,"
+   ],
+   [
+    4.44,
+    8.94,
+    "una pista que exige mucho a nuestros deportistas"
+   ],
+   [
+    8.94,
+    10.64,
+    "en la modalidad de downhill."
+   ],
+   [
+    11.08,
+    13.28,
+    "Desde hace seis meses llevamos"
+   ],
+   [
+    13.28,
+    15.5,
+    "con los deportistas del Club Trocha y Ruta"
+   ],
+   [
+    15.5,
+    18.12,
+    "de la modalidad de ciclomontañismo,"
+   ],
+   [
+    18.28,
+    20.34,
+    "haciendo un proceso de entrenamiento"
+   ],
+   [
+    20.34,
+    22.86,
+    "para mejorar sus condiciones técnicas."
+   ],
+   [
+    22.86,
+    26.48,
+    "Venimos en un proceso que viene siendo acompañado"
+   ],
+   [
+    26.48,
+    28.58,
+    "por los muchachos líderes del downhill"
+   ],
+   [
+    28.58,
+    30.28,
+    "en el municipio de Yumbo,"
+   ],
+   [
+    30.48,
+    33.22,
+    "como lo es Juan Esteban Ortiz y Yomar."
+   ],
+   [
+    34.36,
+    37.62,
+    "Ellos dos han sido parte fundamental en ese proceso"
+   ],
+   [
+    37.62,
+    41.38,
+    "que nos ha llevado a poder participar el día de hoy."
+   ],
+   [
+    41.66,
+    43.3,
+    "Pero no solamente ellos dos,"
+   ],
+   [
+    43.5,
+    46.02,
+    "también ha sido otro grupo de compañeros"
+   ],
+   [
+    46.02,
+    49.04,
+    "con los que hemos estado viniendo"
+   ],
+   [
+    49.04,
+    52.6,
+    "desde la tienda Ram Bike con don Héctor Rojas,"
+   ],
+   [
+    52.6,
+    54.2,
+    "con Héctor Giraldo,"
+   ],
+   [
+    54.38,
+    56.2,
+    "con el profe Juan Diego García,"
+   ],
+   [
+    56.4,
+    58.56,
+    "con el profe Diego Ortiz también."
+   ],
+   [
+    59.36,
+    62.46,
+    "Este proceso nos ha permitido que el día de hoy"
+   ],
+   [
+    62.46,
+    64.52,
+    "estuviéramos con cuatro deportistas"
+   ],
+   [
+    64.52,
+    66.78,
+    "haciendo esta competencia."
+   ],
+   [
+    66.98,
+    69.6,
+    "Nos arriesgamos a hacerlo dado que"
+   ],
+   [
+    69.6,
+    72.28,
+    "hemos estado entrenando en esta pista"
+   ],
+   [
+    72.28,
+    73.82,
+    "y pues los resultados fueron"
+   ],
+   [
+    73.82,
+    75.72,
+    "muy importantes, muy interesantes."
+   ],
+   [
+    75.72,
+    78.44,
+    "Primero que todo, salimos sanos,"
+   ],
+   [
+    78.52,
+    80.7,
+    "hubo una competencia de mucho calor,"
+   ],
+   [
+    80.98,
+    82.72,
+    "mucha roca, polvo"
+   ],
+   [
+    82.72,
+    85.36,
+    "y donde se exigió al máximo sus bicicletas."
+   ],
+   [
+    85.74,
+    88.06,
+    "Agradecemos a todos los que nos vienen apoyando"
+   ],
+   [
+    88.06,
+    91.04,
+    "y a las personas que permitieron que ellos hicieran uso"
+   ],
+   [
+    91.04,
+    94.36,
+    "de sus bicicletas para poder estar hoy en competencia."
+   ],
+   [
+    95.1,
+    97.98,
+    "Pueden ver más de nuestro proceso"
+   ],
+   [
+    97.98,
+    99.7,
+    "en nuestras páginas,"
+   ],
+   [
+    99.8,
+    102.3,
+    "en nuestras redes sociales de Club Trocha y Ruta. Gracias."
+   ]
+  ]
+ },
+ "intro": [
+  {
+   "src": "Saludo y calentamiento.mp4",
+   "in": 0.0,
+   "out": 7.3,
+   "label": [
+    "Juan Esteban Ortiz",
+    "6.º puesto · Élite"
+   ],
+   "label_in": 0.5,
+   "level": {
+    "phrases": [
+     [
+      0.0,
+      0.8
+     ],
+     [
+      1.1,
+      2.3
+     ],
+     [
+      2.5,
+      4.55
+     ],
+     [
+      5.25,
+      7.0
+     ]
+    ],
+    "offset": -4
+   },
+   "captions": [
+    [
+     0.0,
+     1.9,
+     "…Juan Diego, Isabel,"
+    ],
+    [
+     1.9,
+     4.6,
+     "Samuel Ortiz y mi persona, Juan Esteban."
+    ],
+    [
+     5.28,
+     7.0,
+     "Pues ya vamos a comenzar."
+    ]
+   ]
+  },
+  {
+   "src": "Saludo y calentamiento.mp4",
+   "in": 9.4,
+   "out": 13.0,
+   "transition": [
+    "dissolve",
+    0.3
+   ],
+   "level": {
+    "phrases": [
+     [
+      9.65,
+      10.45
+     ]
+    ],
+    "offset": -6
+   },
+   "captions": [
+    [
+     9.68,
+     10.6,
+     "Let's go."
+    ]
+   ]
+  }
+ ],
+ "broll": [
+  {
+   "at": 0.0,
+   "src": "Oscar Hablando.mov",
+   "in": 0.0,
+   "audio": "mute",
+   "transition": [
+    "dissolve",
+    0.4
+   ],
+   "label": [
+    "Oscar Ortiz",
+    "Director deportivo"
+   ],
+   "label_in": 1.0,
+   "zoom": [
+    [
+     0,
+     1.0
+    ],
+    [
+     8.25,
+     1.07
+    ]
+   ],
+   "focus": [
+    0.5,
+    0.52
+   ]
+  },
+  {
+   "at": 7.75,
+   "src": "1. Samuel alistándose.mov",
+   "in": 0.8,
+   "label": [
+    "Samuel Ortiz",
+    "1.º puesto · Novatos"
+   ]
+  },
+  {
+   "at": 12.0,
+   "src": "Zona de saltos en el calentamiento.mp4",
+   "in": 3.7
+  },
+  {
+   "at": 17.5,
+   "src": "Zona de saltos en el calentamiento.mp4",
+   "in": 10.0,
+   "transition": [
+    "dissolve",
+    0.3
+   ]
+  },
+  {
+   "at": 22.9,
+   "src": "4. Arrancada épica de Juan Esteban Ortiz.mov",
+   "in": 0.0,
+   "audio": "mute",
+   "slow": 2.0,
+   "transition": [
+    "smoothleft",
+    0.35
+   ]
+  },
+  {
+   "at": 29.5,
+   "src": "5. Llegada a meta Juan Esteban Ortiz .mov",
+   "in": 0.0
+  },
+  {
+   "at": 33.0,
+   "src": "11. Llegada Juan Estaban Ortiz desde arriba, en 2da lanzada.mov",
+   "in": 1.5,
+   "captions_top": true
+  },
+  {
+   "at": 41.5,
+   "src": "1. Foto grupal con el equipo. Padres de familia, profesores, director deportivo, deportistas, amigos.mov",
+   "in": 0.0,
+   "transition": [
+    "dissolve",
+    0.45
+   ]
+  },
+  {
+   "at": 46.3,
+   "src": "La llegada.MOV",
+   "in": 0.0
+  },
+  {
+   "at": 52.6,
+   "src": "9. Llegada Juan Diego García .MOV",
+   "in": 5.0,
+   "label": [
+    "Juan Diego García",
+    "4.º puesto · Novatos"
+   ],
+   "label_in": 1.5
+  },
+  {
+   "at": 58.9,
+   "src": "6. Salida de Isabel.mov",
+   "in": 0.5,
+   "label": [
+    "Isabel Quiñones",
+    "Damas"
+   ],
+   "transition": [
+    "smoothleft",
+    0.35
+   ]
+  },
+  {
+   "at": 63.0,
+   "src": "7. Salida de Samuel Ortiz.mov",
+   "in": 0.3,
+   "transition": [
+    "smoothleft",
+    0.35
+   ]
+  },
+  {
+   "at": 67.0,
+   "src": "8. Samuel en pista .mov",
+   "in": 3.0,
+   "crop_zoom": 1.7,
+   "focus": [
+    0.5,
+    0.4
+   ]
+  },
+  {
+   "at": 71.5,
+   "src": "10. Llegada Samuel Ortiz.MOV",
+   "in": 3.0
+  },
+  {
+   "at": 79.0,
+   "src": "14. Llegada Isabel.mov",
+   "in": 4.3
+  },
+  {
+   "at": 85.5,
+   "src": "Saludo y calentamiento.mp4",
+   "in": 11.2
+  },
+  {
+   "at": 91.0,
+   "src": "Zona de saltos en el calentamiento.mp4",
+   "in": 0.0
+  },
+  {
+   "at": 94.7,
+   "src": "Oscar Hablando.mov",
+   "in": 94.7,
+   "audio": "mute",
+   "transition": [
+    "dissolve",
+    0.45
+   ],
+   "zoom": [
+    [
+     0,
+     1.0
+    ],
+    [
+     8.2,
+     1.07
+    ]
+   ],
+   "focus": [
+    0.5,
+    0.52
+   ]
+  }
+ ],
+ "outro": [
+  {
+   "src": "12. Podium de Samuel.MOV",
+   "in": 21.5,
+   "out": 28.5,
+   "transition": [
+    "fadeblack",
+    0.5
+   ],
+   "label": [
+    "Samuel Ortiz",
+    "1.º puesto · Novatos"
+   ],
+   "label_in": 1.0,
+   "level": {
+    "mode": "whole",
+    "offset": -3
+   },
+   "afade": [
+    0.08,
+    0.06
+   ]
+  },
+  {
+   "src": "13. Conclusiones de Isabel.mov",
+   "in": 0.0,
+   "out": 8.1,
+   "label": [
+    "Isabel Quiñones",
+    "Damas"
+   ],
+   "label_in": 1.2,
+   "level": {
+    "mode": "fixed",
+    "denoise": true,
+    "fixed": [
+     [
+      2.15,
+      2.65
+     ],
+     [
+      4.95,
+      5.8
+     ],
+     [
+      6.85,
+      7.45
+     ]
+    ],
+    "duck": [
+     [
+      0.0,
+      0.45
+     ],
+     [
+      2.85,
+      3.95
+     ]
+    ]
+   },
+   "afade": [
+    0.1,
+    0.06
+   ],
+   "captions": [
+    [
+     0.0,
+     0.9,
+     "¿Cómo te fue?"
+    ],
+    [
+     1.62,
+     2.7,
+     "Súper bien."
+    ],
+    [
+     2.88,
+     3.9,
+     "¿Y qué tal la pista?"
+    ],
+    [
+     4.56,
+     8.0,
+     "Muy técnica y muchos saltos."
+    ]
+   ]
+  },
+  {
+   "src": "Oscar invitando.mov",
+   "in": 0.0,
+   "out": 9.9,
+   "transition": [
+    "dissolve",
+    0.45
+   ],
+   "level": {
+    "phrases": [
+     [
+      0.0,
+      4.15
+     ],
+     [
+      4.6,
+      9.55
+     ]
+    ],
+    "offset": -6
+   },
+   "afade": [
+    0.03,
+    0.45
+   ],
+   "captions": [
+    [
+     0.0,
+     2.92,
+     "Los invitamos este próximo 18 de octubre"
+    ],
+    [
+     2.92,
+     4.64,
+     "en el municipio de Yumbo"
+    ],
+    [
+     4.64,
+     6.5,
+     "a la séptima* válida departamental"
+    ],
+    [
+     6.5,
+     8.55,
+     "de ciclomontañismo, Copa Valle."
+    ],
+    [
+     8.65,
+     9.8,
+     "¡No se lo pierdan!"
+    ]
+   ]
+  }
+ ],
+ "strip": {
+  "text": "18 de octubre · *VII Válida Copa Valle · Yumbo",
+  "outro": 2,
+  "in": 0.8
+ },
+ "default_transition": [
+  "dissolve",
+  0.35
+ ],
+ "fade_out": 0.45,
+ "cover_at": 116.0
+}

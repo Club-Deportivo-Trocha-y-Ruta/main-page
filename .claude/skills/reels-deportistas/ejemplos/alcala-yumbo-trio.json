@@ -1,0 +1,424 @@
+{
+  "id": "alcala-yumbo-trio",
+  "xfade_secs": 0.3,
+  "segments": [
+    {
+      "src": "~/Downloads/IMG_0622.MOV",
+      "start": 13.8,
+      "end": 25.22,
+      "say": [
+        14.08,
+        24.97
+      ],
+      "patch_tail": [
+        13.66,
+        14.04
+      ],
+      "name": "Mariana Coronado",
+      "detail": "2.º puesto · Prejuvenil A femenino",
+      "name_in": 2.4,
+      "name_secs": 3.6,
+      "zoom": [
+        [
+          0,
+          1.0
+        ],
+        [
+          2.2,
+          1.0
+        ],
+        [
+          11.42,
+          1.24
+        ]
+      ],
+      "focus": [
+        0.4,
+        0.33
+      ],
+      "captions": [
+        [
+          14.08,
+          15.98,
+          "Mariana, cuéntanos, ¿cómo te fue el día de hoy?"
+        ],
+        [
+          16.16,
+          18.5,
+          "Hola, la verdad me fue muy bien, gracias a Dios."
+        ],
+        [
+          18.62,
+          20.72,
+          "Quedé de segunda. Una pista muy física…"
+        ],
+        [
+          20.74,
+          23.34,
+          "…y también por el calor que está haciendo ahorita en Alcalá."
+        ],
+        [
+          23.42,
+          25.0,
+          "Es muy fuerte."
+        ]
+      ],
+      "transition": "dissolve"
+    },
+    {
+      "src": "~/Downloads/IMG_0619.MOV",
+      "start": 12.42,
+      "end": 15.5,
+      "say": [
+        12.58,
+        15.25
+      ],
+      "name": "Samuel Ortiz",
+      "detail": "5.º puesto · Prejuvenil A masculino",
+      "name_in": 0.3,
+      "name_secs": 2.5,
+      "zoom": [
+        [
+          0,
+          1.0
+        ],
+        [
+          3.08,
+          1.05
+        ]
+      ],
+      "focus": [
+        0.56,
+        0.28
+      ],
+      "captions": [
+        [
+          12.5,
+          13.3,
+          "Bueno, muchachos…"
+        ],
+        [
+          14.0,
+          15.22,
+          "…esa pista, la verdad,"
+        ]
+      ],
+      "transition": "fade",
+      "xfade": 0.042
+    },
+    {
+      "src": "~/Downloads/IMG_0619.MOV",
+      "start": 16.56,
+      "end": 24.8,
+      "say": [
+        16.76,
+        24.5
+      ],
+      "zoom": [
+        [
+          0,
+          1.16
+        ],
+        [
+          8.24,
+          1.26
+        ]
+      ],
+      "focus": [
+        0.56,
+        0.28
+      ],
+      "captions": [
+        [
+          16.72,
+          19.7,
+          "me gustó, porque había quedado de quinto"
+        ],
+        [
+          19.7,
+          21.85,
+          "en mi categoría de Prejuvenil A,"
+        ],
+        [
+          21.9,
+          24.55,
+          "pero esa pista es muy corta y explosiva."
+        ]
+      ],
+      "transition": "dissolve"
+    },
+    {
+      "src": "~/Downloads/IMG_0625.MOV",
+      "start": 12.4,
+      "end": 20.0,
+      "say": [
+        12.7,
+        19.78
+      ],
+      "patch_head": [
+        14.28,
+        14.82
+      ],
+      "name": "Isabel Quiñones",
+      "detail": "Prejuvenil A femenino",
+      "name_in": 0.4,
+      "name_secs": 3.2,
+      "zoom": [
+        [
+          0,
+          1.0
+        ],
+        [
+          7.6,
+          1.2
+        ]
+      ],
+      "focus": [
+        0.52,
+        0.3
+      ],
+      "captions": [
+        [
+          12.7,
+          14.25,
+          "Muy bien, gracias a Dios."
+        ],
+        [
+          14.8,
+          17.75,
+          "La pista, muy corta pero muy explosiva."
+        ],
+        [
+          18.0,
+          19.85,
+          "El calor, muy sofocante…"
+        ]
+      ],
+      "transition": "hblur",
+      "xfade": 0.2
+    },
+    {
+      "src": "~/Downloads/IMG_0619.MOV",
+      "start": 24.84,
+      "end": 31.98,
+      "say": [
+        25.06,
+        31.72
+      ],
+      "zoom": [
+        [
+          0,
+          1.08
+        ],
+        [
+          7.14,
+          1.26
+        ]
+      ],
+      "focus": [
+        0.56,
+        0.28
+      ],
+      "captions": [
+        [
+          25.06,
+          28.35,
+          "Uno de los problemas que tuvimos fue el calor,"
+        ],
+        [
+          28.45,
+          31.75,
+          "un calor muy… muy sofocante."
+        ]
+      ],
+      "transition": "hblur",
+      "xfade": 0.2
+    },
+    {
+      "src": "~/Downloads/IMG_0625.MOV",
+      "start": 20.74,
+      "end": 23.8,
+      "say": [
+        20.9,
+        23.48
+      ],
+      "zoom": [
+        [
+          0,
+          1.12
+        ],
+        [
+          3.06,
+          1.06
+        ]
+      ],
+      "focus": [
+        0.52,
+        0.3
+      ],
+      "captions": [
+        [
+          20.9,
+          23.55,
+          "…y los saltos, muy buenos."
+        ]
+      ],
+      "transition": "fade",
+      "xfade": 0.042
+    },
+    {
+      "src": "~/Downloads/IMG_0625.MOV",
+      "start": 24.78,
+      "end": 34.78,
+      "say": [
+        25.02,
+        34.46
+      ],
+      "strip": "18 de octubre · Pista Carlos Castro · Yumbo",
+      "strip_in": 3.5,
+      "zoom": [
+        [
+          0,
+          1.22
+        ],
+        [
+          3.4,
+          1.1
+        ],
+        [
+          10.0,
+          1.24
+        ]
+      ],
+      "focus": [
+        0.52,
+        0.3
+      ],
+      "captions": [
+        [
+          25.02,
+          25.6,
+          "Perfecto."
+        ],
+        [
+          25.64,
+          27.0,
+          "¿Y este 18, qué es lo que pasa?"
+        ],
+        [
+          27.42,
+          27.85,
+          "Ah…"
+        ],
+        [
+          28.22,
+          30.34,
+          "Este 18 de octubre te invitamos…"
+        ],
+        [
+          30.34,
+          31.8,
+          "…a la semifinal…"
+        ],
+        [
+          31.8,
+          34.5,
+          "…de la Copa Valle, en Yumbo."
+        ]
+      ],
+      "transition": "slideleft",
+      "xfade": 0.25
+    },
+    {
+      "src": "~/Downloads/IMG_0622.MOV",
+      "start": 25.0,
+      "end": 30.26,
+      "say": [
+        25.18,
+        30.02
+      ],
+      "strip": "18 de octubre · Pista Carlos Castro · Yumbo",
+      "zoom": [
+        [
+          0,
+          1.06
+        ],
+        [
+          5.26,
+          1.22
+        ]
+      ],
+      "focus": [
+        0.4,
+        0.33
+      ],
+      "captions": [
+        [
+          25.2,
+          26.0,
+          "Pues, la verdad,"
+        ],
+        [
+          26.0,
+          28.26,
+          "los invitamos este 18 de octubre"
+        ],
+        [
+          28.26,
+          30.05,
+          "a nuestra pista Carlos Castro."
+        ]
+      ],
+      "transition": "slideleft",
+      "xfade": 0.25,
+      "patch_head": [
+        13.66,
+        14.04
+      ]
+    },
+    {
+      "src": "~/Downloads/IMG_0619.MOV",
+      "start": 35.28,
+      "end": 40.8,
+      "say": [
+        35.48,
+        40.32
+      ],
+      "strip": "18 de octubre · Pista Carlos Castro · Yumbo",
+      "zoom": [
+        [
+          0,
+          1.06
+        ],
+        [
+          5.52,
+          1.22
+        ]
+      ],
+      "focus": [
+        0.56,
+        0.28
+      ],
+      "captions": [
+        [
+          35.48,
+          36.4,
+          "Pues nada,"
+        ],
+        [
+          36.5,
+          38.85,
+          "los invitamos este 18 de octubre"
+        ],
+        [
+          38.85,
+          40.35,
+          "a la pista Carlos Castro."
+        ]
+      ],
+      "transition": "smoothup",
+      "xfade": 0.3
+    }
+  ],
+  "fade_out": 0.45
+}
