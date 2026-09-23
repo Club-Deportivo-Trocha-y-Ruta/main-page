@@ -21,7 +21,7 @@ seo:
   metaDescription: 'Competencia pro-fondos del Club Trocha y Ruta el sábado 5 de septiembre, 8:00 a. m., en la Pista Carlos Castro de Yumbo. Inscripción $20.000.'
 ---
 
-Competencia organizada por el Club Deportivo Trocha y Ruta el **sábado 5 de septiembre a las 8:00 a. m.** en su casa, la Pista de Ciclomontañismo Carlos Castro de Yumbo. Lo recaudado se destina al **mantenimiento de la pista**: es el circuito donde entrena el club y donde en octubre se corre la séptima válida de la Copa Valle.
+Competencia organizada por el Club Deportivo Trocha y Ruta el **sábado 5 de septiembre a las 8:00 a. m.** en su casa, la Pista de Ciclomontañismo Carlos Castro de Yumbo. Lo recaudado se destina al **mantenimiento de la pista**: es el circuito donde entrena el club y donde en octubre se corre la sexta válida de la Copa Valle.
 
 ## Información general
 

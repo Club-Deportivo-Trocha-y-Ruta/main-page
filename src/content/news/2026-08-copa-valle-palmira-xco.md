@@ -320,7 +320,7 @@ Y hay tabla nueva: **Liam Fernando Guevara** (11 puntos) y **Celeste Muriel** (9
 
 ### Lo que queda
 
-Dos válidas: la **sexta en Roldanillo** y la **séptima en Yumbo**, esta última en casa. Ochenta puntos en juego por corredor. Las cuentas cortas están claras: Thiago a 6 del podio, Mariana a 11, Miguel a 13, Sofía a 20. Isabel a 7 del segundo lugar. Todo eso se decide en dos domingos.
+Dos válidas: la **sexta en Yumbo**, en casa, el 18 de octubre, y la **séptima en Roldanillo**, el 7 y 8 de noviembre. Ochenta puntos en juego por corredor. Las cuentas cortas están claras: Thiago a 6 del podio, Mariana a 11, Miguel a 13, Sofía a 20. Isabel a 7 del segundo lugar. Todo eso se decide en dos domingos.
 
 <!-- ESTADO: DRAFT. Este artículo salió de partir en dos la crónica original de
      Palmira; el día 1 (gymkanas) ya está publicado en

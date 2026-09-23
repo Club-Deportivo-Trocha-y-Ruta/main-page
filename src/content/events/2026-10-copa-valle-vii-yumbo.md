@@ -1,6 +1,6 @@
 ---
-title: "VII Válida Copa Valle 2026 - Yumbo"
-shortName: "Válida VII"
+title: "VI Válida Copa Valle 2026 - Yumbo"
+shortName: "Válida VI"
 date: 2026-10-18
 location: "Pista Carlos Castro - Cra. 14N con Cl. 13BN"
 city: "Yumbo"
@@ -14,7 +14,7 @@ featured: true
 draft: false
 ---
 
-Séptima válida de la Copa Valle Paraíso de Todos GW Shimano 2026, a disputarse en la Pista Carlos Castro de Yumbo, Valle del Cauca — la casa de Trocha y Ruta. Prueba de XCO con circuito de 3.8 km.
+Sexta válida de la Copa Valle Paraíso de Todos GW Shimano 2026, a disputarse en la Pista Carlos Castro de Yumbo, Valle del Cauca — la casa de Trocha y Ruta. Prueba de XCO con circuito de 3.8 km.
 
 La Comisión Vallecaucana de Ciclomontañismo confirmó el 3 de septiembre que la válida de Yumbo mantiene su fecha y que Roldanillo, aplazada en agosto, vuelve al calendario el 7 y 8 de noviembre. La temporada, entonces, no cierra aquí: cierra en Roldanillo.
 

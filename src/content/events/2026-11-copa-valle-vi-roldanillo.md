@@ -1,5 +1,5 @@
 ---
-title: "VI Válida Copa Valle 2026 - Roldanillo"
+title: "VII Válida Copa Valle 2026 - Roldanillo"
 date: 2026-11-07
 endDate: 2026-11-08
 location: "Sendero Eco-parque"
@@ -15,7 +15,7 @@ draft: false
 
 > **Válida reprogramada.** Aplazada tras el terremoto del 10 de agosto, la válida de Roldanillo vuelve al calendario para el **7 y 8 de noviembre de 2026**, según el comunicado oficial de la Comisión Vallecaucana de Ciclomontañismo del 3 de septiembre. Con el cambio de fecha, Roldanillo **cierra la temporada** de la Copa Valle: se corre después de la válida de Yumbo del 18 de octubre.
 
-Sexta válida de la Copa Valle Paraíso de Todos GW Shimano 2026, a disputarse el **sábado 7 y domingo 8 de noviembre** en el Sendero Eco-parque de Roldanillo, Valle del Cauca, con pruebas de Gymkanas y XCO sobre un circuito de 3.7 km.
+Séptima y última válida de la Copa Valle Paraíso de Todos GW Shimano 2026, a disputarse el **sábado 7 y domingo 8 de noviembre** en el Sendero Eco-parque de Roldanillo, Valle del Cauca, con pruebas de Gymkanas y XCO sobre un circuito de 3.7 km.
 
 ## Información general
 

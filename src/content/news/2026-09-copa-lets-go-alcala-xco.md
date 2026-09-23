@@ -290,7 +290,7 @@ El sábado, un día antes del XCO, Isabel Quiñones corrió la carrera de relevo
 
 ## Lo que viene
 
-La Copa Valle vuelve el 18 de octubre a la Pista Carlos Castro de Yumbo, con la séptima válida en casa del club, y cierra en Roldanillo el 7 y 8 de noviembre. Fechas y horarios en el [calendario](/calendario).
+La Copa Valle vuelve el 18 de octubre a la Pista Carlos Castro de Yumbo, con la sexta válida en casa del club, y cierra en Roldanillo el 7 y 8 de noviembre. Fechas y horarios en el [calendario](/calendario).
 
 <details class="visit-details">
   <summary>Ficha de la visita: sede, circuito y qué se jugaba</summary>

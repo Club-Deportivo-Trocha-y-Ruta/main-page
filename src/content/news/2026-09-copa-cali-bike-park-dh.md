@@ -326,7 +326,7 @@ El relato completo de Oscar está en el [reel de la válida en Instagram](https:
 
 ## Lo que viene
 
-El 18 de octubre el club corre en casa: la séptima válida de la Copa Valle de ciclomontañismo, en la Pista Carlos Castro de Yumbo. Fechas y horarios en el [calendario](/calendario).
+El 18 de octubre el club corre en casa: la sexta válida de la Copa Valle de ciclomontañismo, en la Pista Carlos Castro de Yumbo. Fechas y horarios en el [calendario](/calendario).
 
 <details class="visit-details">
   <summary>Ficha de la válida: pistas, formato y cronometraje</summary>

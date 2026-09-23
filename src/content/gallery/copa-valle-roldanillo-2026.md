@@ -1,10 +1,10 @@
 ---
-# ESQUELETO DE PRODUCCIÓN — VI válida Copa Valle 2026, Roldanillo.
+# ESQUELETO DE PRODUCCIÓN — VII válida Copa Valle 2026, Roldanillo.
 # Se publica (draft: false) cuando las fotos estén subidas y seleccionadas.
 # Existe desde ya porque la crónica `2026-11-copa-valle-roldanillo-xco.md`
 # la referencia en `relatedGallery`: sin este archivo, esa referencia apunta
 # a una página que no existe.
-title: "Copa Valle 2026 — VI válida, Roldanillo"
+title: "Copa Valle 2026 — VII válida, Roldanillo"
 # Fecha del evento. Reprogramada al 7 y 8 de noviembre (comunicado de la
 # Comisión del 3-sep-2026): formato de dos días, el álbum cubre ambos y esta
 # fecha es la de apertura.
@@ -13,7 +13,7 @@ date: 2026-11-07
 # esté en draft esta ruta puede no existir todavía.
 cover: "/images/news/copa-valle-roldanillo-2026/equipo-grupal.webp"
 coverAlt: "Equipo del Club Trocha y Ruta en el Sendero Eco-parque de Roldanillo"
-description: "La sexta válida de la Copa Valle 2026 en el Sendero Eco-parque de Roldanillo, reprogramada a noviembre y convertida en el cierre de la temporada."
+description: "La séptima válida de la Copa Valle 2026 en el Sendero Eco-parque de Roldanillo, reprogramada a noviembre y convertida en el cierre de la temporada."
 # Vacío a propósito: se llena al subir las fotos. El detalle del álbum no se
 # pinta con la parrilla vacía y el índice no lo lista mientras siga en draft.
 images: []

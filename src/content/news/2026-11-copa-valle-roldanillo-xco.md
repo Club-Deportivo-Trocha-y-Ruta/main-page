@@ -11,9 +11,9 @@ author: "Juan Diego García"
 category: "competencias"
 # Agregar tags de los corredores protagonistas al cerrar (patrón Palmira).
 tags: ["copa-valle", "copa-valle-2026", "xco", "roldanillo", "sendero-ecoparque", "resultados", "clasificacion-general"]
-# Afiche oficial de la sexta válida cuando salga; mientras tanto no publicar.
+# Afiche oficial de la séptima válida cuando salga; mientras tanto no publicar.
 image: "/images/news/copa-valle-roldanillo-2026/afiche-copa-valle-roldanillo.webp"
-imageAlt: "Afiche de la sexta válida de la Copa Valle 2026 en el Sendero Eco-parque de Roldanillo"
+imageAlt: "Afiche de la séptima válida de la Copa Valle 2026 en el Sendero Eco-parque de Roldanillo"
 imageLayout: contain
 # Máximo 200 caracteres (lo valida el schema). Reescribir con el hito real.
 excerpt: "La válida de Roldanillo, reprogramada a noviembre, cerró la Copa Valle 2026 en el Sendero Eco-parque: resultados, historias y la general definitiva del club."
@@ -30,13 +30,13 @@ seo:
 ---
 
 <!-- =====================================================================
-     PLANTILLA FORMATO v4 — CRÓNICA VI VÁLIDA ROLDANILLO
+     PLANTILLA FORMATO v4 — CRÓNICA VII VÁLIDA ROLDANILLO
      Estado: esqueleto de producción. Se publica solo cuando el checklist
      esté completo. Protocolo completo: .claude/agents/content-marketer.md.
 
      ⚠ VÁLIDA REPROGRAMADA (calendario actualizado tras el terremoto del 10 de
      agosto). Roldanillo pasó del 26 de septiembre al 7 y 8 de noviembre y
-     ahora se corre DESPUÉS de Yumbo: sigue siendo la sexta válida, pero es la
+     ahora se corre DESPUÉS de Yumbo: pasó a ser la séptima válida y la
      ÚLTIMA fecha de la temporada. Lo que eso cambia en este esqueleto:
        · Entre Palmira y Roldanillo se corre Yumbo (18 de octubre). Toda cuenta
          pre-escrita con la general de Palmira quedó vieja: rehacerla con la
@@ -58,7 +58,7 @@ seo:
          gymkanas.md (crónica corta del día 1, regla de dos artículos) y
          cruzar enlaces en el primer párrafo de cada una. Confirmar el orden
          de pruebas con el afiche antes de escribir.
-     [ ] PDFs oficiales: "RESULTADOS VI copa valle XCO 2026" y "GENERAL VI
+     [ ] PDFs oficiales: "RESULTADOS VII copa valle XCO 2026" y "GENERAL VII
          copa valle XCO 2026". Todo dato de tabla sale de ahí. Cero memoria.
      [ ] Fotos por corredor en /public/images/news/copa-valle-roldanillo-2026/
          (WebP, máx 1600 px, q76): salida, acción en obstáculo/curva, podios,
@@ -73,10 +73,10 @@ seo:
          (Ley 1581 y Ley 1098).
      [ ] Datos de pista: desnivel, tipo de terreno, clima del día.
      [ ] TABLERO DE LA GENERAL (nuevo v4): por cada corredor del club, tres
-         números del PDF GENERAL VI — sus puntos, su total antes de esta
+         números del PDF GENERAL VII — sus puntos, su total antes de esta
          válida y los puntos del 3° de su categoría. El tercero hay que
          buscarlo en el top-3 de cada categoría; sin él la fila no se dibuja.
-         Y el movimiento de puesto (VI vs V) para el chip: subió / mantiene /
+         Y el movimiento de puesto (VII vs VI) para el chip: subió / mantiene /
          bajó / entra. Debe coincidir con la columna "Tendencia" de la tabla.
      [ ] Verificar todo lo marcado CONFIRMAR (viaje, vía, color local).
      [ ] Título definitivo (50-65 chars), excerpt ≤200, metaTitle/metaDescription,
@@ -86,7 +86,7 @@ seo:
 
 <!-- ── BLOQUE 1 · COLD OPEN (50-80 palabras) ──
      Un momento concreto, no logística ni resultado plano. El zoom out
-     (sede + sexta válida) llega en la segunda o tercera frase.
+     (sede + séptima válida) llega en la segunda o tercera frase.
      Direcciones posibles según cómo se dé el día:
      a) La madrugada: el club saliendo de Yumbo a oscuras hacia el norte
         del Valle — el viaje más largo de la temporada. (CONFIRMAR hora)
@@ -237,7 +237,7 @@ Roldanillo queda en el norte del Valle, a [CONFIRMAR: ~dos horas] de Yumbo por l
 <figure class="figure--portrait">
   <img
     src="/images/news/copa-valle-roldanillo-2026/[PENDIENTE].webp"
-    alt="[Corredor] del Club Trocha y Ruta en la sexta válida Copa Valle XCO, Roldanillo, 2026"
+    alt="[Corredor] del Club Trocha y Ruta en la séptima válida Copa Valle XCO, Roldanillo, 2026"
     width="1200"
     height="1600"
     loading="lazy"
@@ -274,7 +274,7 @@ Roldanillo queda en el norte del Valle, a [CONFIRMAR: ~dos horas] de Yumbo por l
 
 ## Resultados del club — XCO
 
-<!-- Del PDF oficial RESULTADOS VI. Negrita a los podios (top-5 Copa Valle).
+<!-- Del PDF oficial RESULTADOS VII. Negrita a los podios (top-5 Copa Valle).
      Tiempo H:MM:SS · "-1 vuelta" si fue doblado · DNF solo en tabla. -->
 
 | Deportista | Categoría | Pos. | Tiempo | Puntos |
@@ -291,7 +291,7 @@ Con las siete válidas disputadas, así queda Trocha y Ruta en la tabla general 
      un vistazo la única pregunta que importa al cerrar la temporada:
      ¿dónde terminó cada corredor y por cuánto?
 
-     CÓMO SE LLENA (todo sale del PDF GENERAL VI)
+     CÓMO SE LLENA (todo sale del PDF GENERAL VII)
      · --board-max:280 — máximo posible tras las siete válidas (40 por
        válida). Es la escala común: no cambia entre corredores.
      · --reach:0 — Roldanillo cierra la temporada: no quedan puntos por
@@ -317,7 +317,7 @@ Con las siete válidas disputadas, así queda Trocha y Ruta en la tabla general 
      Reglas: la flecha va en un <span aria-hidden> y el VERBO en texto — el
      color nunca es el único portador del dato, así funciona impreso en
      blanco y negro y con lector de pantalla. Los puestos salen de comparar
-     el PDF GENERAL VI con el GENERAL V; son los mismos datos de la columna
+     el PDF GENERAL VII con el GENERAL VI; son los mismos datos de la columna
      "Tendencia" de la tabla de abajo, así que deben coincidir con ella.
      Si un corredor no corrió esta válida, igual puede haber bajado porque
      otros lo pasaron: ese caso se marca --down y se explica en "Quién se
@@ -338,7 +338,7 @@ Con las siete válidas disputadas, así queda Trocha y Ruta en la tabla general 
        <li class="standings-board__row standings-board__row--podium" style="--pts:150; --pts-prev:123; --podio:139">
      Miguel Ángel, 133 tras sumar 33, 5° de Infantil A, subió un puesto →
        <li class="standings-board__row" style="--pts:133; --pts-prev:100; --podio:146">
-     Ojo: esos --podio son ilustrativos; los reales salen del PDF GENERAL VI. -->
+     Ojo: esos --podio son ilustrativos; los reales salen del PDF GENERAL VII. -->
 
 <ol class="standings-board" style="--board-max:280; --reach:0">
   <li class="standings-board__row" style="--pts:0; --pts-prev:0; --podio:0">
@@ -369,7 +369,7 @@ Con las siete válidas disputadas, así queda Trocha y Ruta en la tabla general 
 ### La tabla completa
 
 <!-- Del PDF oficial de la general final, fila por fila. Ojo con el orden:
-     Roldanillo es la válida VI pero se corrió después de Yumbo (VII), así que
+     Roldanillo es la válida VII y se corre después de Yumbo (VI), así que
      la tendencia se compara contra la general publicada tras Yumbo. Columna "Al podio" = puntos al top-3 del campeonato.
      Se mantiene como respaldo de consulta bajo el tablero: hay familias que
      sí quieren ver válida por válida. -->
