@@ -24,6 +24,10 @@
  * bajo `prefers-reduced-motion: reduce`, el botón queda visible desde el
  * primer render (mismo comportamiento que el resto de usos de `.reveal`).
  *
+ * El texto va en grafito (`text-surface-dark`), no en blanco: sobre el verde
+ * de WhatsApp (#25D366) el blanco da 1.98:1 y el grafito 6.7:1 (WCAG AA pide
+ * 4.5:1). Es la regla general del sitio: sobre fondos de color, texto grafito.
+ *
  * Sin evento de analítica: `whatsapp_click` —el único evento del catálogo
  * que toca WhatsApp— mide "quiero hablar con el club" en el FAB, la barra de
  * conversión y los CTA de inscripción, una intención de contacto. Este botón
@@ -54,7 +58,7 @@ const whatsappHref = `https://wa.me/?text=${encodeURIComponent(title)}%20${encod
     href={whatsappHref}
     target="_blank"
     rel="noopener noreferrer"
-    class="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
+    class="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 font-semibold text-surface-dark transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
   >
     <Icon name="ph:whatsapp-logo" class="size-5 shrink-0" aria-hidden="true" />
     {SHARE_WHATSAPP_LABEL}

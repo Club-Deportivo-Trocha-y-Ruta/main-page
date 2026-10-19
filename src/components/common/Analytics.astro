@@ -139,8 +139,24 @@ const enableGA4 = Boolean(ga4Id);
           'sponsor_click',
           'transparencia_pdf_download',
           'scroll_depth',
+          'photo_download',
+          'photo_share',
+          'gallery_filter',
+          'race_results_click',
+          'photo_view',
+          'sponsor_wall_view',
+          'page_nav_click',
         ];
-        const ALLOWED_PARAMS = ['program_id', 'age_bucket', 'step', 'depth', 'pdf_name', 'sponsor_id'];
+        const ALLOWED_PARAMS = [
+          'program_id',
+          'age_bucket',
+          'step',
+          'depth',
+          'pdf_name',
+          'sponsor_id',
+          'content_id',
+          'method',
+        ];
 
         function sanitize(params) {
           const out = {};
@@ -173,9 +189,13 @@ const enableGA4 = Boolean(ga4Id);
           const pdf = el.getAttribute('data-analytics-pdf-name');
           const sponsor = el.getAttribute('data-analytics-sponsor-id');
           const programId = el.getAttribute('data-analytics-program-id');
+          const contentId = el.getAttribute('data-analytics-content-id');
+          const method = el.getAttribute('data-analytics-method');
           if (pdf) params.pdf_name = pdf;
           if (sponsor) params.sponsor_id = sponsor;
           if (programId) params.program_id = programId;
+          if (contentId) params.content_id = contentId;
+          if (method) params.method = method;
           emit(name, params);
         }
         document.addEventListener('click', handleDelegatedClick);

@@ -573,3 +573,219 @@ export const obstaculosSchema = z
     message: 'lat y lng van juntos: una coordenada sola no ubica nada',
     path: ['lng'],
   });
+
+// ============================================================
+// DATOS DE UNA VÁLIDA CORRIDA EN CASA (`src/data/valida-yumbo-2026/*.json`)
+// ============================================================
+//
+// No son colecciones de contenido: son cuatro JSON que alimentan
+// `/copa-valle-yumbo-2026` y que, el lunes después de la válida, edita a mano
+// alguien con prisa (o los regenera `scripts/valida-fotos.mjs`). Los tipos
+// viven en `src/lib/valida.ts`; aquí van las reglas.
+//
+// Los schemas validan la FORMA, no la coherencia entre archivos: que un grupo
+// de fotos exista, que un id de evento resuelva o que el logo esté en `public/`
+// lo revisa `valida-data.test.ts`. La página corre `parse()` en el build, y un
+// grupo desconocido no debe tumbar un deploy: `groupPhotos()` ya lo agrupa bajo
+// «Otras fotos» para no perder la foto en silencio.
+
+const VALIDA_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+/** Usuario de Instagram sin `@`: letras, números, punto y guion bajo, hasta 30. */
+const INSTAGRAM_HANDLE = /^[A-Za-z0-9._]{1,30}$/;
+/** Id de foto: va tal cual en la URL y en el nombre del archivo descargado. */
+const PHOTO_ID = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
+
+const nonEmpty = z.string().trim().min(1);
+/** Enlaces que acaban en un `href`: solo http(s), nunca `javascript:` ni `data:`. */
+const webUrl = z.url({ protocol: /^https?$/ });
+
+export const validaEventoSchema = z.object({
+  slug: z.string().regex(VALIDA_SLUG),
+  /** Mientras es `false`, la página sale con `noindex` y fuera del sitemap. */
+  published: z.boolean(),
+  /** Id del archivo de `src/content/events/` al que pertenece la página. */
+  eventId: nonEmpty,
+  nextEventId: nonEmpty.nullable(),
+  title: nonEmpty,
+  shortTitle: nonEmpty,
+  series: nonEmpty,
+  edition: nonEmpty,
+  date: z.iso.date(),
+  venue: z.object({
+    name: nonEmpty,
+    shortName: nonEmpty,
+    address: nonEmpty,
+    city: nonEmpty,
+    department: nonEmpty,
+    lat: z.number().min(-90).max(90),
+    lng: z.number().min(-180).max(180),
+  }),
+  organizer: nonEmpty,
+  host: nonEmpty,
+  resultsUrl: webUrl.nullable(),
+  /** Clasificación general de la Copa Valle después de esta válida. */
+  generalUrl: webUrl.nullish(),
+  /** Slug de la crónica en `news`; la página comprueba que resuelva. */
+  chronicle: nonEmpty.nullable(),
+  /** Slug del álbum en `gallery`; la página comprueba que resuelva. */
+  album: nonEmpty.nullable(),
+  photographer: z.object({
+    name: nonEmpty.nullable(),
+    instagram: z.string().regex(INSTAGRAM_HANDLE).nullable(),
+    url: webUrl.nullable(),
+  }),
+  hero: z.object({
+    /** Id de una foto del manifest; sin él, la apertura usa la foto de la pista. */
+    photoId: nonEmpty.nullable(),
+    alt: nonEmpty,
+  }),
+  /** Ruta pública (empieza con `/`) de una imagen de 1200×630 para compartir. */
+  ogImage: z
+    .string()
+    .regex(/^\/\S+$/)
+    .nullable(),
+  institutions: z.array(nonEmpty),
+});
+
+export const validaAliadoSchema = z.object({
+  id: z.string().regex(VALIDA_SLUG),
+  name: nonEmpty,
+  role: z.enum(['patrocinio', 'apoyo']),
+  tagline: nonEmpty.nullable(),
+  instagram: z.string().regex(INSTAGRAM_HANDLE).nullable(),
+  url: webUrl.nullable(),
+  /** Ruta pública del logo; el test comprueba que el archivo exista. */
+  logo: z.string().regex(/^\/images\/\S+$/),
+  /** Ancho ÷ alto del logo, lo escribe `scripts/prepare-valida-aliados.mjs`. */
+  logoRatio: z.number().positive().nullish(),
+});
+
+export const validaAliadosSchema = z.array(validaAliadoSchema);
+
+export const validaFotoGrupoSchema = z.object({
+  id: z.string().regex(VALIDA_SLUG),
+  label: nonEmpty,
+  categories: z.array(nonEmpty),
+  description: z.string(),
+  /** Texto del chip de filtro («Infantil»); sin él, las categorías o el label. */
+  chip: z.string().nullish(),
+});
+
+export const validaFotoSchema = z.object({
+  id: z.string().regex(PHOTO_ID),
+  group: nonEmpty,
+  /** Ancho y alto de la versión web, para reservar el espacio (CLS). */
+  w: z.number().int().positive(),
+  h: z.number().int().positive(),
+  /** Hora de captura, ISO local. Sin hora legible el pipeline escribe otra cosa. */
+  taken: z.string(),
+  /** Números de placa etiquetados a mano. Nunca viajan a analítica. */
+  placas: z.array(z.number().int().positive()).default([]),
+});
+
+export const validaFotosSchema = z.object({
+  /** URL absoluta de la carpeta de medios, sin barra final. */
+  base: webUrl,
+  generatedAt: z.string().nullable(),
+  groups: z.array(validaFotoGrupoSchema).min(1),
+  photos: z.array(validaFotoSchema),
+});
+
+/** Conteo opcional de la edición 2026: lo que no está en el JSON no se pinta. */
+const validaConteo = z.number().int().nonnegative().nullish();
+
+export const validaDatosSchema = z.object({
+  source: nonEmpty,
+  /** Título del bloque histórico («2022, 2024 y 2025»). */
+  historicoTitulo: nonEmpty.nullish(),
+  /** Si el total de 2026 queda por debajo, no se publica (`yumbo-en-numeros.md` §8). */
+  totalMinimoPublicable: validaConteo,
+  historico: z.array(
+    z.object({
+      id: z.string().regex(VALIDA_SLUG),
+      // Un `value` o un `label` en blanco es la forma de apagar una cifra sin
+      // borrarla: `historicStats()` la descarta, así que el schema la admite.
+      value: z.string(),
+      prefix: z.string().nullish(),
+      suffix: z.string().nullish(),
+      label: z.string(),
+      note: z.string().nullish(),
+      icon: z.string().regex(/^ph:[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    }),
+  ),
+  edicion2026: z
+    .object({
+      corredores: validaConteo,
+      municipios: validaConteo,
+      departamentos: validaConteo,
+      categorias: validaConteo,
+      mujeres: validaConteo,
+      terminaron: validaConteo,
+      ninosHasta12: validaConteo,
+      clubes: validaConteo,
+      fieles33Volvieron: validaConteo,
+      podiosClub: validaConteo,
+      finalMasAjustado: z.string().nullish(),
+    })
+    .nullable(),
+  /** Promedios por vuelta: solo quienes completaron las vueltas de su categoría. */
+  vueltas2026: z
+    .object({
+      source: nonEmpty,
+      categorias: z.array(
+        z.object({
+          code: z.string().regex(/^[A-Z0-9_]+$/),
+          label: nonEmpty,
+          vueltas: z.number().int().min(1),
+          /** Categoría solo de mujeres: alimenta el top de ellas. Teteros es mixta y no lleva la marca. */
+          femenina: z.boolean().optional(),
+        }),
+      ),
+      tiempos: z.array(
+        z.object({
+          categoria: z.string().regex(/^[A-Z0-9_]+$/),
+          puesto: z.number().int().min(1),
+          tiempo: z.string().regex(/^(?:\d+:)?\d{1,2}:\d{2}$/),
+          nombre: nonEmpty.optional(),
+        }),
+      ),
+    })
+    .nullish(),
+  /** La cifra que se cuenta sola: «15 segundos por vuelta», con su titular y su explicación. */
+  ritmo2026: z
+    .object({
+      valor: z.number().nonnegative(),
+      unidad: nonEmpty,
+      titulo: nonEmpty,
+      texto: nonEmpty,
+    })
+    .nullish(),
+  /** Competidores por grupo de categorías y la categoría más numerosa. */
+  composicion2026: z
+    .object({
+      nota: nonEmpty.nullish(),
+      grupos: z
+        .array(
+          z.object({
+            grupo: nonEmpty,
+            /** Rango de edades; vacío cuando el grupo no se define por edad. */
+            edad: z.string().nullish(),
+            n: z.number().int().nonnegative(),
+          }),
+        )
+        .min(1),
+      masNumerosa: z.object({ categoria: nonEmpty, n: z.number().int().positive() }).nullish(),
+    })
+    .nullish(),
+  /** De dónde vinieron: mapa (ruta pública) y municipios por departamento, en el orden de los marcadores. */
+  municipios2026: z
+    .object({
+      mapa: z
+        .string()
+        .regex(/^\/images\/[\w./-]+\.svg$/, 'ruta pública a un SVG bajo /images')
+        .nullish(),
+      nota: nonEmpty.nullish(),
+      departamentos: z.array(z.object({ nombre: nonEmpty, municipios: z.array(nonEmpty) })).min(1),
+    })
+    .nullish(),
+});

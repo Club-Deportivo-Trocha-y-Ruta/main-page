@@ -603,8 +603,8 @@ export function generateSportsClubJsonLd(): JsonLd {
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 3.4572,
-      longitude: -76.495,
+      latitude: 3.5965919,
+      longitude: -76.4855763,
     },
     telephone: CONTACT.phoneLink,
     email: CONTACT.email,

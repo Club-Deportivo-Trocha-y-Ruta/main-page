@@ -1,0 +1,640 @@
+{
+  "source": "Datos: resultados oficiales de la Comisión Vallecaucana de Ciclomontañismo, válidas de Yumbo de 2022, 2024, 2025 y 2026.",
+  "historicoTitulo": "2022, 2024 y 2025",
+  "totalMinimoPublicable": null,
+  "historico": [
+    {
+      "id": "ciclistas",
+      "value": "600",
+      "prefix": "Más de",
+      "label": "ciclistas distintos han corrido en Yumbo",
+      "note": "Al menos una vez, entre 2022 y 2025",
+      "icon": "ph:users-three-bold"
+    },
+    {
+      "id": "fieles",
+      "value": "33",
+      "prefix": "Al menos",
+      "label": "corrieron 2022, 2024 y 2025 sin faltar a ninguna",
+      "note": "Las tres válidas de Yumbo con registro",
+      "icon": "ph:repeat-bold"
+    },
+    {
+      "id": "municipios",
+      "value": "24",
+      "prefix": null,
+      "label": "municipios y 5 departamentos",
+      "note": "De donde llegaron los corredores en 2025",
+      "icon": "ph:map-trifold-bold"
+    },
+    {
+      "id": "edades",
+      "value": "4 a 60+",
+      "prefix": "De",
+      "label": "años, el mismo día, la misma pista",
+      "note": "De teteros sin pedales a máster D",
+      "icon": "ph:person-simple-bike-bold"
+    },
+    {
+      "id": "terminan",
+      "value": "96",
+      "prefix": null,
+      "suffix": "de cada 100",
+      "label": "terminan la carrera",
+      "note": "Incluye a quienes llegan con vueltas de menos",
+      "icon": "ph:flag-checkered-bold"
+    },
+    {
+      "id": "club",
+      "value": "9",
+      "prefix": null,
+      "label": "podios del club en su casa",
+      "note": "En 65 participaciones de tres ediciones",
+      "icon": "ph:medal-bold"
+    }
+  ],
+  "edicion2026": {
+    "corredores": 193,
+    "municipios": 25,
+    "departamentos": 4,
+    "categorias": 24,
+    "mujeres": 37,
+    "terminaron": null,
+    "ninosHasta12": 104,
+    "clubes": 23,
+    "fieles33Volvieron": 10,
+    "podiosClub": 6,
+    "finalMasAjustado": null
+  },
+  "vueltas2026": {
+    "source": "Datos: resultados oficiales de la Comisión Vallecaucana de Ciclomontañismo, VI Válida 2026. Vueltas según el cronograma del día.",
+    "categorias": [
+      {
+        "code": "ELITE_M",
+        "label": "Élite",
+        "vueltas": 6
+      },
+      {
+        "code": "ELITE_F",
+        "label": "Élite femenino",
+        "vueltas": 3,
+        "femenina": true
+      },
+      {
+        "code": "JUN_M",
+        "label": "Junior",
+        "vueltas": 5
+      },
+      {
+        "code": "MAS_A",
+        "label": "Máster A",
+        "vueltas": 5
+      },
+      {
+        "code": "PJUV_B",
+        "label": "Prejuvenil B",
+        "vueltas": 4
+      },
+      {
+        "code": "MAS_B1",
+        "label": "Máster B1",
+        "vueltas": 4
+      },
+      {
+        "code": "MAS_B2",
+        "label": "Máster B2",
+        "vueltas": 4
+      },
+      {
+        "code": "PJUV_B_F",
+        "label": "Prejuvenil B femenino",
+        "vueltas": 3,
+        "femenina": true
+      },
+      {
+        "code": "PJUV_A",
+        "label": "Prejuvenil A",
+        "vueltas": 3
+      },
+      {
+        "code": "PROMO",
+        "label": "Promocional",
+        "vueltas": 3
+      },
+      {
+        "code": "MAS_C1",
+        "label": "Máster C1",
+        "vueltas": 3
+      },
+      {
+        "code": "MAS_C2",
+        "label": "Máster C2",
+        "vueltas": 3
+      },
+      {
+        "code": "PJUV_A_F",
+        "label": "Prejuvenil A femenino",
+        "vueltas": 2,
+        "femenina": true
+      },
+      {
+        "code": "MAS_D",
+        "label": "Máster D",
+        "vueltas": 2
+      }
+    ],
+    "tiempos": [
+      {
+        "categoria": "ELITE_M",
+        "puesto": 1,
+        "tiempo": "1:16:15",
+        "nombre": "Juan Fernando Monroy Cerquera"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 1,
+        "tiempo": "0:51:53",
+        "nombre": "Samuel David Muñoz Monar"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 2,
+        "tiempo": "0:52:15",
+        "nombre": "Samuel Vargas"
+      },
+      {
+        "categoria": "ELITE_M",
+        "puesto": 2,
+        "tiempo": "1:18:34",
+        "nombre": "Jhean Pool Cardona"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 3,
+        "tiempo": "0:52:43",
+        "nombre": "Juan Steban Ewpejo Posada"
+      },
+      {
+        "categoria": "ELITE_M",
+        "puesto": 3,
+        "tiempo": "1:19:17",
+        "nombre": "Jonatan Ultengo"
+      },
+      {
+        "categoria": "MAS_B1",
+        "puesto": 1,
+        "tiempo": "0:53:08",
+        "nombre": "Juan Carlos Narvaez"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 4,
+        "tiempo": "0:54:09",
+        "nombre": "Samuel Cardona Arias"
+      },
+      {
+        "categoria": "MAS_B1",
+        "puesto": 2,
+        "tiempo": "0:54:27",
+        "nombre": "Juan Carlos Acevedo Grisales"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 5,
+        "tiempo": "0:54:55",
+        "nombre": "Cristian Felipe Vargas Muñoz"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 6,
+        "tiempo": "0:55:36",
+        "nombre": "Nicolas Peña"
+      },
+      {
+        "categoria": "ELITE_M",
+        "puesto": 4,
+        "tiempo": "1:23:32",
+        "nombre": "Juan José Molina Arias"
+      },
+      {
+        "categoria": "MAS_C1",
+        "puesto": 1,
+        "tiempo": "0:42:34",
+        "nombre": "Juan Diego Campo Saavedra"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 7,
+        "tiempo": "0:56:49",
+        "nombre": "Juan Steven Tintinago Gutierrez"
+      },
+      {
+        "categoria": "MAS_A",
+        "puesto": 1,
+        "tiempo": "1:11:24",
+        "nombre": "Jorge Ulises Lasso Villanueva"
+      },
+      {
+        "categoria": "MAS_A",
+        "puesto": 2,
+        "tiempo": "1:11:56",
+        "nombre": "Jhojan Alexis Herrera Taquinas"
+      },
+      {
+        "categoria": "MAS_C1",
+        "puesto": 2,
+        "tiempo": "0:43:11",
+        "nombre": "Luis Fernando Triana Franco"
+      },
+      {
+        "categoria": "ELITE_M",
+        "puesto": 5,
+        "tiempo": "1:26:39",
+        "nombre": "Andrés Martínez"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 8,
+        "tiempo": "0:57:49",
+        "nombre": "Juan Jose Chirivi Rangel"
+      },
+      {
+        "categoria": "MAS_A",
+        "puesto": 3,
+        "tiempo": "1:12:22",
+        "nombre": "Juan Ernesto Angulo"
+      },
+      {
+        "categoria": "ELITE_M",
+        "puesto": 6,
+        "tiempo": "1:28:36"
+      },
+      {
+        "categoria": "MAS_B2",
+        "puesto": 1,
+        "tiempo": "0:59:18"
+      },
+      {
+        "categoria": "MAS_B1",
+        "puesto": 3,
+        "tiempo": "0:59:29"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 9,
+        "tiempo": "1:00:08"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 10,
+        "tiempo": "1:00:14"
+      },
+      {
+        "categoria": "ELITE_F",
+        "puesto": 1,
+        "tiempo": "0:45:29",
+        "nombre": "Maria Isabel Castro Delgadillo"
+      },
+      {
+        "categoria": "PJUV_B",
+        "puesto": 11,
+        "tiempo": "1:00:46"
+      },
+      {
+        "categoria": "JUN_M",
+        "puesto": 1,
+        "tiempo": "1:16:15"
+      },
+      {
+        "categoria": "MAS_C1",
+        "puesto": 3,
+        "tiempo": "0:45:50"
+      },
+      {
+        "categoria": "PROMO",
+        "puesto": 1,
+        "tiempo": "0:46:53"
+      },
+      {
+        "categoria": "PJUV_A",
+        "puesto": 1,
+        "tiempo": "0:47:03"
+      },
+      {
+        "categoria": "PJUV_A",
+        "puesto": 2,
+        "tiempo": "0:47:15"
+      },
+      {
+        "categoria": "MAS_C1",
+        "puesto": 4,
+        "tiempo": "0:47:19"
+      },
+      {
+        "categoria": "MAS_C1",
+        "puesto": 5,
+        "tiempo": "0:47:52"
+      },
+      {
+        "categoria": "PROMO",
+        "puesto": 2,
+        "tiempo": "0:47:58"
+      },
+      {
+        "categoria": "PJUV_A",
+        "puesto": 3,
+        "tiempo": "0:48:01"
+      },
+      {
+        "categoria": "PJUV_A",
+        "puesto": 4,
+        "tiempo": "0:48:16"
+      },
+      {
+        "categoria": "MAS_B1",
+        "puesto": 4,
+        "tiempo": "1:04:22"
+      },
+      {
+        "categoria": "ELITE_F",
+        "puesto": 2,
+        "tiempo": "0:48:24",
+        "nombre": "Sandra Ospina"
+      },
+      {
+        "categoria": "MAS_A",
+        "puesto": 4,
+        "tiempo": "1:20:45"
+      },
+      {
+        "categoria": "MAS_B2",
+        "puesto": 2,
+        "tiempo": "1:04:36"
+      },
+      {
+        "categoria": "MAS_A",
+        "puesto": 5,
+        "tiempo": "1:21:34"
+      },
+      {
+        "categoria": "MAS_D",
+        "puesto": 1,
+        "tiempo": "0:32:43"
+      },
+      {
+        "categoria": "MAS_C1",
+        "puesto": 6,
+        "tiempo": "0:49:10"
+      },
+      {
+        "categoria": "MAS_B2",
+        "puesto": 3,
+        "tiempo": "1:05:44"
+      },
+      {
+        "categoria": "PJUV_A_F",
+        "puesto": 1,
+        "tiempo": "0:34:05",
+        "nombre": "Mariana Coronado Delgado"
+      },
+      {
+        "categoria": "PJUV_A",
+        "puesto": 5,
+        "tiempo": "0:52:07"
+      },
+      {
+        "categoria": "MAS_D",
+        "puesto": 2,
+        "tiempo": "0:34:45"
+      },
+      {
+        "categoria": "PROMO",
+        "puesto": 3,
+        "tiempo": "0:52:35"
+      },
+      {
+        "categoria": "PJUV_B_F",
+        "puesto": 1,
+        "tiempo": "0:53:45",
+        "nombre": "María José Madrid"
+      },
+      {
+        "categoria": "MAS_C2",
+        "puesto": 1,
+        "tiempo": "0:53:49"
+      },
+      {
+        "categoria": "MAS_C1",
+        "puesto": 7,
+        "tiempo": "0:53:54"
+      },
+      {
+        "categoria": "PJUV_A",
+        "puesto": 6,
+        "tiempo": "0:53:59"
+      },
+      {
+        "categoria": "PROMO",
+        "puesto": 4,
+        "tiempo": "0:54:06"
+      },
+      {
+        "categoria": "MAS_C2",
+        "puesto": 2,
+        "tiempo": "0:55:29"
+      },
+      {
+        "categoria": "ELITE_F",
+        "puesto": 3,
+        "tiempo": "0:55:41",
+        "nombre": "Olguita Garcia"
+      },
+      {
+        "categoria": "PJUV_A_F",
+        "puesto": 2,
+        "tiempo": "0:37:26",
+        "nombre": "Luciana Ríos Peña"
+      },
+      {
+        "categoria": "MAS_C1",
+        "puesto": 8,
+        "tiempo": "0:56:24"
+      },
+      {
+        "categoria": "PJUV_A_F",
+        "puesto": 3,
+        "tiempo": "0:37:41",
+        "nombre": "Dulce Marian Gomez Ordoñez"
+      },
+      {
+        "categoria": "PJUV_A",
+        "puesto": 7,
+        "tiempo": "0:56:57"
+      },
+      {
+        "categoria": "PJUV_A_F",
+        "puesto": 4,
+        "tiempo": "0:38:58",
+        "nombre": "Isabel Cristhina Quiñones Batero"
+      },
+      {
+        "categoria": "MAS_C2",
+        "puesto": 3,
+        "tiempo": "0:58:30"
+      },
+      {
+        "categoria": "MAS_D",
+        "puesto": 3,
+        "tiempo": "0:39:43"
+      },
+      {
+        "categoria": "PJUV_B_F",
+        "puesto": 2,
+        "tiempo": "0:59:59",
+        "nombre": "Juana Valentina Gil Largo"
+      },
+      {
+        "categoria": "MAS_B2",
+        "puesto": 4,
+        "tiempo": "1:20:11"
+      },
+      {
+        "categoria": "PJUV_A",
+        "puesto": 8,
+        "tiempo": "1:00:48"
+      },
+      {
+        "categoria": "PJUV_A_F",
+        "puesto": 5,
+        "tiempo": "0:41:34",
+        "nombre": "Heilyn Aguirre"
+      },
+      {
+        "categoria": "MAS_C2",
+        "puesto": 4,
+        "tiempo": "1:04:15"
+      },
+      {
+        "categoria": "ELITE_F",
+        "puesto": 4,
+        "tiempo": "1:05:27"
+      },
+      {
+        "categoria": "MAS_D",
+        "puesto": 4,
+        "tiempo": "0:43:49"
+      },
+      {
+        "categoria": "PJUV_A_F",
+        "puesto": 6,
+        "tiempo": "0:44:29"
+      },
+      {
+        "categoria": "PJUV_A",
+        "puesto": 9,
+        "tiempo": "1:08:16"
+      }
+    ]
+  },
+  "ritmo2026": {
+    "valor": 15,
+    "unidad": "segundos por vuelta",
+    "titulo": "A los 14 años, al ritmo de la élite",
+    "texto": "separaron al ganador de Prejuvenil B (12:58 por vuelta, 4 vueltas) del de la Élite (12:43, 6 vueltas). Y los 3 primeros de Prejuvenil B quedaron entre los 5 mejores promedios del día."
+  },
+  "composicion2026": {
+    "nota": "Competidores por grupo de categorías. Los teteros que corrieron con y sin pedales cuentan una vez.",
+    "grupos": [
+      {
+        "grupo": "Teteros",
+        "edad": "4 y 5 años",
+        "n": 21
+      },
+      {
+        "grupo": "Preinfantil",
+        "edad": "6 a 8",
+        "n": 33
+      },
+      {
+        "grupo": "Infantil",
+        "edad": "9 a 12",
+        "n": 50
+      },
+      {
+        "grupo": "Prejuvenil",
+        "edad": "13 y 14",
+        "n": 36
+      },
+      {
+        "grupo": "Junior y élite",
+        "edad": "15 en adelante",
+        "n": 12
+      },
+      {
+        "grupo": "Promocional",
+        "edad": "",
+        "n": 7
+      },
+      {
+        "grupo": "Máster",
+        "edad": "30 en adelante",
+        "n": 34
+      }
+    ],
+    "masNumerosa": {
+      "categoria": "Infantil A",
+      "n": 22
+    }
+  },
+  "municipios2026": {
+    "mapa": "/images/valida-yumbo-2026/mapa-municipios.svg",
+    "nota": "Municipio según la planilla de inscripción. Mapa: Natural Earth.",
+    "departamentos": [
+      {
+        "nombre": "Valle del Cauca",
+        "municipios": [
+          "Buga",
+          "Bolívar",
+          "Cali",
+          "Cartago",
+          "El Cerrito",
+          "Ginebra",
+          "Guacarí",
+          "Jamundí",
+          "La Cumbre",
+          "La Unión",
+          "Palmira",
+          "Restrepo",
+          "Roldanillo",
+          "Sevilla",
+          "Tuluá",
+          "Yotoco",
+          "Yumbo"
+        ]
+      },
+      {
+        "nombre": "Cauca",
+        "municipios": [
+          "El Tambo",
+          "Páez",
+          "Popayán",
+          "Santander de Quilichao",
+          "Silvia",
+          "Timbío"
+        ]
+      },
+      {
+        "nombre": "Quindío",
+        "municipios": [
+          "Armenia"
+        ]
+      },
+      {
+        "nombre": "Cundinamarca",
+        "municipios": [
+          "Cajicá"
+        ]
+      }
+    ]
+  }
+}

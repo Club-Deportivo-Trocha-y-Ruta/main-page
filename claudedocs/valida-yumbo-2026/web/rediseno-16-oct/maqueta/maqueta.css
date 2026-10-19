@@ -1,0 +1,442 @@
+/* Maqueta «La válida impresa» (v5). Dos tintas (lima y tinta) sobre papel; el teal del club una sola vez, en el cierre.
+   v5: sin antetítulos, sin palabra resaltada, sin sombras duras desplazadas ni tarjetas que se levantan, sin flechas
+   decorativas; un solo elemento enorme por pantalla. Ver ../investigacion-skills-tendencias.md §5.
+   No es CSS de producción: en el sitio esto vive en el <style> de cada componente (regla del proyecto). */
+
+@font-face { font-family: 'Inter Variable'; src: url('assets/fonts/InterVariable-latin.woff2') format('woff2'); font-weight: 100 900; font-display: block; }
+@font-face { font-family: 'Plus Jakarta Sans'; src: url('assets/fonts/PlusJakartaSans-Variable-latin.woff2') format('woff2'); font-weight: 200 800; font-display: block; }
+
+:root {
+  --lima: #8be000;
+  --lima-honda: #456f00;
+  --tinta: #1c1e20;
+  --papel: #f4f2eb;
+  --papel-2: #e8e4d6;
+  --teal: #20b7c9;
+  --sombra-lima: #374d18;
+  --display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --texto: 'Inter Variable', system-ui, sans-serif;
+  --env: min(1216px, 100% - 48px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body { font-family: var(--texto); color: var(--tinta); background: var(--papel); -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.envoltura { width: var(--env); margin-inline: auto; position: relative; }
+
+.aviso-maqueta { background: #b42318; color: #fff; font: 600 13px/1.3 var(--texto); text-align: center; padding: 6px 8px; }
+
+/* Cabecera del sitio, tal cual está hoy (no se toca) */
+.sitio { display: flex; align-items: center; gap: 24px; height: 64px; padding-inline: max(24px, (100% - 1216px) / 2); background: #fff; border-bottom: 1px solid rgb(0 0 0 / .08); }
+.sitio__logo img { height: 44px; width: auto; }
+.sitio__nav { margin-inline: auto; display: flex; gap: 4px; background: #ececec; border-radius: 999px; padding: 6px 10px; font-size: 14px; color: #444; }
+.sitio__nav a { padding: 6px 12px; }
+.sitio__cta { background: var(--lima); font: 600 14px var(--texto); padding: 11px 16px; border-radius: 8px; box-shadow: 0 3px 0 #4a4a4a; }
+
+/* ─── Botones: placa de tinta o de lima, sin sombra desplazada ─────────── */
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px; font: 800 italic 18px/1 var(--display); letter-spacing: -.01em; border-radius: 4px; touch-action: manipulation; }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.btn--lima { background: var(--lima); color: var(--tinta); }
+.btn--papel { color: var(--papel); box-shadow: inset 0 0 0 2px var(--papel); }
+.btn--contorno { color: var(--lima); box-shadow: inset 0 0 0 2px var(--lima); }
+.btn--tinta { background: var(--tinta); color: var(--papel); }
+.btn--contorno-tinta { color: var(--tinta); box-shadow: inset 0 0 0 2px var(--tinta); }
+
+/* Titular de cartel: toda la frase en itálica 800 mayúscula; nada de una palabra en otro color. */
+.cartel { font: 800 italic clamp(40px, 6.2vw, 92px)/.88 var(--display); text-transform: uppercase; letter-spacing: -.035em; text-wrap: balance; }
+.cartel--medio { font-size: clamp(36px, 4.4vw, 64px); }
+
+/* ─── 1. El afiche ────────────────────────────────────────────────── */
+.afiche { position: relative; isolation: isolate; aspect-ratio: 2400 / 1340; min-height: 600px; max-height: calc(100svh - 64px - 150px); width: 100%; overflow: hidden; background: var(--tinta); }
+.afiche__arte, .afiche__arte img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 78%; z-index: -1; }
+.afiche__cabeza { position: absolute; left: max(24px, (100% - 1216px) / 2); top: 5%; width: min(60%, 820px); }
+.migas { display: flex; gap: 8px; font: 500 14px var(--texto); color: rgb(28 30 32 / .8); margin-bottom: 30px; }
+.migas b { font-weight: 700; color: var(--tinta); }
+.afiche__pre { display: block; font: 800 italic clamp(22px, 2.6vw, 38px)/1 var(--display); letter-spacing: -.02em; }
+.afiche__nombre { display: block; margin-top: .3em; font: 800 italic clamp(46px, 7.6vw, 116px)/.84 var(--display); text-transform: uppercase; letter-spacing: -.045em; margin-left: -.05em; }
+/* El rótulo negro del afiche oficial, con una frase (no una cadena de datos con puntos). */
+.afiche__rotulo { width: fit-content; margin-top: 24px; padding: 11px 16px 12px; background: var(--tinta); color: var(--papel); font: 700 clamp(15px, 1.3vw, 19px)/1.25 var(--display); letter-spacing: -.005em; }
+
+.letrero { position: absolute; left: 62.6%; top: 67%; display: flex; gap: .06em; font: 800 clamp(28px, 4.1vw, 60px)/1 var(--display); color: var(--papel); letter-spacing: .02em; transform: rotate(-1.2deg); }
+.letrero span { position: relative; padding-bottom: .22em; text-shadow: 0 2px 0 rgb(0 0 0 / .35); }
+.letrero span::after { content: ''; position: absolute; left: 30%; right: 30%; bottom: 0; height: .22em; background: linear-gradient(90deg, var(--papel) 0 2px, transparent 2px calc(100% - 2px), var(--papel) calc(100% - 2px)); opacity: .9; }
+
+.afiche__pie { position: absolute; left: max(24px, (100% - 1216px) / 2); bottom: 7%; display: grid; gap: 18px; }
+.afiche__promesa { max-width: 24em; font: 700 clamp(17px, 1.5vw, 22px)/1.3 var(--display); color: var(--papel); }
+.afiche__n { font: 800 italic 2.4em/0 var(--display); color: var(--lima); letter-spacing: -.04em; vertical-align: -.12em; margin-right: .08em; }
+.afiche__acciones { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ─── 2. La franja del afiche: la de hoy, con la tipografía del concepto ─ */
+.franja { position: relative; margin-top: -22px; z-index: 2; }
+.franja__papel { position: relative; background: var(--papel); padding: 26px max(24px, (100% - 1216px) / 2) 22px; }
+.franja__papel::before { content: ''; position: absolute; left: 0; right: 0; top: -14px; height: 18px; background: var(--papel);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='18' viewBox='0 0 720 18' preserveAspectRatio='none'%3E%3Cpath d='M0 13L6 12.5 10 12.8 15 13.2 19 11.2 24 12.8 26 13.4 32 13.1 35 12.7 40 12.5 44 13.7 50 13.6 55 11 58 11.8 62 10.9 66 11.6 70 10.7 74 9.9 79 11.1 82 9.2 85 9.4 90 11.8 94 11.8 97 10.1 99 11.6 104 11 107 12.7 111 12.1 115 12.8 120 13.2 125 14.7 131 13.2 136 13.8 139 14.2 142 12.8 145 12.2 150 11.2 152 11.6 157 9.9 160 9.4 164 6.8 169 6.3 171 6.2 176 5.1 180 5.4 186 4.8 190 5.6 193 6 195 4.7 197 4.8 203 5.6 206 6.4 211 5.5 214 7 218 5.3 222 6.8 226 5.9 231 6.1 237 6.6 240 5.8 246 6.6 249 7.2 252 6.4 256 6.4 259 7.2 262 7.5 264 9 268 9 270 10.1 273 9.6 275 10.2 280 12 282 11 287 11.6 290 11.9 293 12.2 298 12.2 303 10.6 309 9.7 311 8.3 317 8.7 322 8 325 7.2 330 6.8 335 8.9 339 9 341 7.9 346 8.7 350 9.1 355 10.6 357 10.9 363 12.2 366 11.1 370 12.1 374 12.2 376 13.6 378 14.3 381 14.1 387 12.5 389 12.3 392 14.4 395 13.6 398 14.4 402 14.5 404 14.4 410 13.3 414 13.9 418 13.7 424 14.9 428 14.7 431 15.9 436 14.6 440 14.4 443 14.6 447 15.3 452 13.9 455 13.2 459 13.2 465 11.8 471 11.1 473 9.9 476 9.1 479 8.7 481 8.5 485 8.5 489 8.1 492 6.5 498 6.5 503 6.1 506 8.2 509 8.9 513 8.7 518 9.5 521 8.6 526 10.2 531 8.8 537 9.2 541 9.5 545 10.4 550 9 553 9 556 9.1 561 7.3 564 9 566 8.9 569 5.1 574 7.8 580 8 585 7.6 588 6.8 592 8.8 595 7.2 599 7.4 605 8.2 607 8.7 612 8.1 616 7.6 621 5.5 624 6.4 626 5.3 630 4.9 632 5.4 634 5.9 637 5.4 640 4.1 643 4.7 649 5.9 654 5.5 660 7.6 664 7.9 667 7.9 669 10.2 671 9.1 677 12 681 12.1 686 12.1 689 13.9 693 13.8 697 14.5 702 14.7 707 13.9 711 13 715 13.8 720 14.2 720 18 0 18Z'/%3E%3C/svg%3E") repeat-x left top / 720px 18px;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='18' viewBox='0 0 720 18' preserveAspectRatio='none'%3E%3Cpath d='M0 13L6 12.5 10 12.8 15 13.2 19 11.2 24 12.8 26 13.4 32 13.1 35 12.7 40 12.5 44 13.7 50 13.6 55 11 58 11.8 62 10.9 66 11.6 70 10.7 74 9.9 79 11.1 82 9.2 85 9.4 90 11.8 94 11.8 97 10.1 99 11.6 104 11 107 12.7 111 12.1 115 12.8 120 13.2 125 14.7 131 13.2 136 13.8 139 14.2 142 12.8 145 12.2 150 11.2 152 11.6 157 9.9 160 9.4 164 6.8 169 6.3 171 6.2 176 5.1 180 5.4 186 4.8 190 5.6 193 6 195 4.7 197 4.8 203 5.6 206 6.4 211 5.5 214 7 218 5.3 222 6.8 226 5.9 231 6.1 237 6.6 240 5.8 246 6.6 249 7.2 252 6.4 256 6.4 259 7.2 262 7.5 264 9 268 9 270 10.1 273 9.6 275 10.2 280 12 282 11 287 11.6 290 11.9 293 12.2 298 12.2 303 10.6 309 9.7 311 8.3 317 8.7 322 8 325 7.2 330 6.8 335 8.9 339 9 341 7.9 346 8.7 350 9.1 355 10.6 357 10.9 363 12.2 366 11.1 370 12.1 374 12.2 376 13.6 378 14.3 381 14.1 387 12.5 389 12.3 392 14.4 395 13.6 398 14.4 402 14.5 404 14.4 410 13.3 414 13.9 418 13.7 424 14.9 428 14.7 431 15.9 436 14.6 440 14.4 443 14.6 447 15.3 452 13.9 455 13.2 459 13.2 465 11.8 471 11.1 473 9.9 476 9.1 479 8.7 481 8.5 485 8.5 489 8.1 492 6.5 498 6.5 503 6.1 506 8.2 509 8.9 513 8.7 518 9.5 521 8.6 526 10.2 531 8.8 537 9.2 541 9.5 545 10.4 550 9 553 9 556 9.1 561 7.3 564 9 566 8.9 569 5.1 574 7.8 580 8 585 7.6 588 6.8 592 8.8 595 7.2 599 7.4 605 8.2 607 8.7 612 8.1 616 7.6 621 5.5 624 6.4 626 5.3 630 4.9 632 5.4 634 5.9 637 5.4 640 4.1 643 4.7 649 5.9 654 5.5 660 7.6 664 7.9 667 7.9 669 10.2 671 9.1 677 12 681 12.1 686 12.1 689 13.9 693 13.8 697 14.5 702 14.7 707 13.9 711 13 715 13.8 720 14.2 720 18 0 18Z'/%3E%3C/svg%3E") repeat-x left top / 720px 18px; }
+.franja__titulo { font: 800 italic 17px/1 var(--display); letter-spacing: -.01em; margin-bottom: 12px; }
+.franja__logos { isolation: isolate; display: grid; grid-template-columns: repeat(var(--cols), 1fr); }
+.franja__logos li { min-width: 0; display: grid; place-items: center; aspect-ratio: 5 / 3; border-left: 1px solid rgb(28 30 32 / .14); }
+.franja__logos li:nth-child(13n + 1) { border-left: 0; }
+/* multiply: el fondo blanco que traen varios logos se vuelve papel (elementos chicos y estáticos, dentro de isolation). */
+.franja__logos img { max-height: 72%; object-fit: contain; mix-blend-mode: multiply; }
+.franja__banda { display: flex; align-items: center; gap: 22px; background: var(--tinta); color: var(--papel); padding: 18px max(24px, (100% - 1216px) / 2); border-bottom: 3px solid var(--lima); }
+.franja__n { font: 800 italic 76px/.8 var(--display); letter-spacing: -.05em; color: var(--lima); }
+.franja__frase { font: 800 italic 26px/1.05 var(--display); letter-spacing: -.015em; flex: 1; }
+.franja__ir { font: 800 italic 17px var(--display); background: var(--lima); color: var(--tinta); padding: 14px 20px; border-radius: 4px; }
+
+/* ─── 3. La galería: controles sencillos, estilo en el cabezote ─────── */
+.fotos { padding: 96px 0 88px; background: var(--papel); }
+.cab { display: grid; grid-template-columns: 1.15fr 1fr; gap: 12px 56px; align-items: end; }
+.cab__bajada { font: 500 18px/1.55 var(--texto); padding-bottom: 6px; max-width: 30em; }
+.barra { position: sticky; top: 0; z-index: 3; display: flex; gap: 14px; align-items: flex-start; margin-top: 44px; padding: 16px 0; background: var(--papel); border-top: 3px solid var(--tinta); }
+.buscar-placa { flex: none; display: grid; gap: 2px; width: 168px; padding: 7px 12px 8px; background: #fff; box-shadow: inset 0 0 0 2px var(--tinta); border-radius: 4px; }
+.buscar-placa span { font: 600 13px/1.2 var(--texto); }
+.buscar-placa input { border: 0; outline: 0; font: 800 italic 22px/1.1 var(--display); width: 100%; background: transparent; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; white-space: nowrap; border-radius: 4px; box-shadow: inset 0 0 0 2px var(--tinta); font: 600 15px/1 var(--texto); background: #fff; }
+.chip__n { font: 600 13px/1 var(--texto); font-variant-numeric: tabular-nums; color: rgb(28 30 32 / .72); }
+.chip--activo { background: var(--tinta); color: var(--papel); }
+.chip--activo .chip__n { color: var(--lima); }
+
+.contacto { margin-top: 64px; }
+.contacto__cab { display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 0 20px; padding-bottom: 12px; }
+.contacto__manga { grid-row: span 2; font: 800 italic 72px/.8 var(--display); text-transform: uppercase; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px var(--tinta); }
+.contacto__cat { font: 800 italic 36px/1 var(--display); text-transform: uppercase; letter-spacing: -.02em; }
+.contacto__meta { font: 500 16px/1.4 var(--texto); font-variant-numeric: tabular-nums; }
+.contacto__tira { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.cuadro a { display: block; position: relative; }
+.cuadro img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: var(--papel-2); }
+/* Foco y hover: el lápiz graso de la hoja de contactos, por fuera de la foto (nunca encima). */
+.cuadro a:focus-visible, .cuadro--foco a { outline: none; }
+.cuadro a:focus-visible::after, .cuadro--foco a::after { content: ''; position: absolute; inset: -6px; border: 4px solid var(--lima); border-radius: 12px 16px 10px 18px / 16px 10px 18px 12px; transform: rotate(-.8deg); }
+.contacto__mas { display: inline-flex; margin-top: 20px; min-height: 48px; align-items: center; font: 800 italic 17px/1 var(--display); background: var(--tinta); color: var(--papel); padding: 0 20px; border-radius: 4px; }
+.letra-chica { margin-top: 72px; padding-top: 22px; border-top: 1px dashed var(--tinta); max-width: 760px; font: 500 15px/1.6 var(--texto); }
+.letra-chica h3 { font: 800 italic 17px var(--display); margin-bottom: 6px; }
+
+/* ─── 4. El muro: capítulo oscuro con un solo pliego ────────────────── */
+.muro { position: relative; isolation: isolate; background: var(--tinta); color: var(--papel); padding: 120px 0 104px; overflow: hidden; }
+.muro__trama { position: absolute; inset: -40% -20% auto; height: 120%; z-index: -1; transform: rotate(45deg); transform-origin: 50% 0;
+  background: radial-gradient(circle, var(--sombra-lima) 0 2.4px, transparent 2.8px) 0 0 / 11px 11px;
+  -webkit-mask: linear-gradient(180deg, #000 0%, transparent 30%); mask: linear-gradient(180deg, #000 0%, transparent 30%); }
+.muro__titulo { display: grid; gap: 6px; }
+.muro__gracias { font: 800 italic clamp(84px, 15vw, 232px)/.78 var(--display); text-transform: uppercase; letter-spacing: -.06em; color: var(--lima); margin-left: -.06em; }
+.muro__a { font: 800 italic clamp(24px, 3.2vw, 46px)/1.02 var(--display); letter-spacing: -.025em; text-wrap: balance; }
+.muro__bajada { margin-top: 18px; max-width: 36em; font: 500 18px/1.55 var(--texto); color: rgb(244 242 235 / .82); }
+/* El pliego: una hoja impresa con todos los logos y sus marcas de corte en las cuatro esquinas. */
+.pliego { position: relative; margin-top: 64px; background: var(--papel); color: var(--tinta); padding: 40px 44px 48px; }
+.pliego__corte { position: absolute; inset: -22px; pointer-events: none; --m: linear-gradient(var(--lima), var(--lima));
+  background: var(--m) left 0 top 21px / 14px 2px no-repeat, var(--m) left 21px top 0 / 2px 14px no-repeat,
+    var(--m) right 0 top 21px / 14px 2px no-repeat, var(--m) right 21px top 0 / 2px 14px no-repeat,
+    var(--m) left 0 bottom 21px / 14px 2px no-repeat, var(--m) left 21px bottom 0 / 2px 14px no-repeat,
+    var(--m) right 0 bottom 21px / 14px 2px no-repeat, var(--m) right 21px bottom 0 / 2px 14px no-repeat; }
+.rotulo { font: 800 italic 22px/1 var(--display); letter-spacing: -.01em; margin-bottom: 26px; }
+.aliados + .rotulo { margin-top: 56px; padding-top: 30px; border-top: 2px solid var(--tinta); }
+.rotulo--oscuro { margin-top: 64px; color: var(--papel); }
+.aliados { isolation: isolate; display: grid; grid-template-columns: repeat(6, 1fr); gap: 36px 28px; }
+.aliado__enlace { display: grid; gap: 6px; align-content: start; }
+.aliado__logo { display: grid; place-items: center; aspect-ratio: 3 / 2; }
+.aliado__logo img { max-height: 82%; object-fit: contain; mix-blend-mode: multiply; }
+.aliado__nombre { margin-top: 6px; font: 800 italic 16px/1.15 var(--display); letter-spacing: -.01em; }
+a.aliado__enlace:hover .aliado__nombre { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.aliado__tag { font: 500 13.5px/1.4 var(--texto); color: rgb(28 30 32 / .78); }
+.aliado__handle { display: inline-flex; align-items: center; gap: 6px; font: 600 13.5px/1.25 var(--texto); color: var(--lima-honda); overflow-wrap: anywhere; }
+.aliado__handle svg { width: 15px; height: 15px; flex: none; }
+.respaldo { margin-top: -10px; max-width: 52em; font: 500 17px/1.7 var(--texto); color: rgb(244 242 235 / .85); }
+.muro .btn--contorno { margin-top: 40px; }
+
+/* ─── 5. Resultados: el talón ────────────────────────────────────── */
+.resultados { background: var(--papel); padding: 72px 0; }
+.talon { display: flex; align-items: stretch; background: #fff; box-shadow: inset 0 0 0 2px var(--tinta); border-radius: 4px; max-width: 900px; overflow: hidden; }
+.talon__lomo { writing-mode: vertical-rl; transform: rotate(180deg); display: grid; place-items: center; padding: 16px 13px; font: 800 italic 14px var(--display); background: var(--lima); border-left: 2px dashed var(--tinta); }
+.talon__cuerpo { flex: 1; display: grid; gap: 8px; padding: 28px 32px; }
+.talon__titulo { font: 800 italic 46px/.95 var(--display); text-transform: uppercase; letter-spacing: -.035em; }
+.talon__de { font: 500 16px/1.4 var(--texto); }
+.talon__ir { display: flex; align-items: center; gap: 8px; padding: 0 32px; font: 800 italic 20px var(--display); border-left: 2px dashed var(--tinta); white-space: nowrap; }
+.talon__ir svg { width: 20px; height: 20px; }
+
+/* ─── 6. La planilla: una cifra gigante y la planilla de cronometraje ── */
+.planilla { position: relative; background: var(--lima); padding: 110px 0 96px; }
+.planilla::after { content: ''; position: absolute; inset: 0; background: url('assets/grano.png') 0 0 / 512px; mix-blend-mode: multiply; opacity: .55; pointer-events: none; }
+.planilla__titular { display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 0 28px; }
+.planilla__de { grid-column: 1 / -1; font: 800 italic 40px/1 var(--display); text-transform: uppercase; }
+.planilla__n { font: 800 italic clamp(120px, 19vw, 300px)/.78 var(--display); letter-spacing: -.065em; margin-left: -.05em; white-space: nowrap; }
+.planilla__frase { max-width: 9em; font: 800 italic clamp(26px, 3vw, 44px)/1.05 var(--display); text-transform: uppercase; letter-spacing: -.025em; padding-bottom: .3em; }
+.planillas { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 72px; }
+.pl-bloque__t { font: 800 italic 24px/1 var(--display); padding-bottom: 14px; border-bottom: 4px solid var(--tinta); }
+.pl-bloque__t span { font: 500 15px var(--texto); }
+.pl li { display: flex; align-items: baseline; gap: 10px; padding: 14px 0 12px; border-bottom: 1px solid rgb(28 30 32 / .35); }
+.pl__k { font: 600 16px/1.3 var(--texto); max-width: 60%; }
+.pl__nota { display: block; font: 500 14px/1.35 var(--texto); color: rgb(28 30 32 / .8); margin-top: 2px; }
+.pl__lider { flex: 1; border-bottom: 2px dotted var(--tinta); transform: translateY(-5px); min-width: 24px; }
+.pl__v { white-space: nowrap; font: 800 italic 28px/1 var(--display); font-variant-numeric: tabular-nums; }
+.pl li.cien { display: grid; grid-template-columns: repeat(25, 1fr); gap: 4px; padding: 14px 0 18px; }
+.cien i { aspect-ratio: 1; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--tinta); }
+.cien i.lleno { background: var(--tinta); box-shadow: none; }
+.fuente { margin-top: 30px; font: 500 14px/1.5 var(--texto); max-width: 60em; }
+
+/* ─── 7. La pista ────────────────────────────────────────────────── */
+.pista { background: var(--papel); padding: 110px 0; overflow: hidden; }
+.pista__grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 64px; align-items: start; }
+.pista__bajada { margin-top: 16px; font: 500 18px/1.5 var(--texto); }
+.pista__foto { margin-top: 32px; background: var(--lima); }
+.pista__foto img { width: 100%; aspect-ratio: 16 / 7; object-fit: cover; filter: grayscale(1) contrast(1.35) brightness(1.05); mix-blend-mode: multiply; }
+.hitos { margin-top: 36px; }
+.hitos li { display: grid; grid-template-columns: 150px 1fr; gap: 4px 24px; padding: 22px 0; border-top: 2px solid var(--tinta); }
+.hitos__a { grid-row: span 2; font: 800 italic 60px/.85 var(--display); letter-spacing: -.05em; color: transparent; -webkit-text-stroke: 2px var(--tinta); }
+.hitos__t { font: 800 italic 22px/1.1 var(--display); letter-spacing: -.015em; }
+.hitos__d { font: 500 16px/1.55 var(--texto); }
+.pista .btn--tinta { margin-top: 30px; }
+.pista__mapa { position: sticky; top: 40px; }
+.pista__mapa svg { width: 100%; height: auto; max-height: 820px; overflow: visible; }
+.trazo, .trazo-lima { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.trazo-lima { stroke: var(--lima); stroke-width: 26; }
+.trazo { stroke: var(--tinta); stroke-width: 7; }
+.meta { fill: var(--lima); stroke: var(--tinta); stroke-width: 5; }
+.pista__mapa figcaption { margin-top: 16px; font: 500 14px/1.45 var(--texto); }
+
+/* ─── 8. El cierre: una escena ───────────────────────────────────── */
+.cierre { background: var(--teal); color: var(--tinta); padding: 104px 0 120px; }
+.cierre__grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: center; }
+.cierre__evento { font: 800 italic clamp(48px, 6.4vw, 100px)/.86 var(--display); text-transform: uppercase; letter-spacing: -.045em; text-wrap: balance; }
+.cierre__fecha { margin-top: 20px; max-width: 30em; font: 600 18px/1.45 var(--texto); }
+.enlace-tinta { display: inline-block; margin-top: 18px; font: 800 italic 17px var(--display); border-bottom: 2.5px solid var(--tinta); padding-bottom: 3px; }
+.cierre__hoja { background: var(--papel); padding: 34px 34px 36px; }
+.cierre__titulo { font: 800 italic 34px/1.06 var(--display); text-transform: uppercase; letter-spacing: -.03em; text-wrap: balance; }
+.cierre__bajada { margin-top: 12px; font: 500 17px var(--texto); }
+.cierre__acciones { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 12px; }
+.pie { background: var(--tinta); color: rgb(244 242 235 / .7); text-align: center; font: 500 14px var(--texto); padding: 40px; }
+
+/* ─── Celular ────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  :root { --env: calc(100% - 32px); }
+  .sitio { height: 60px; padding-inline: 16px; }
+  .sitio__nav { display: none; }
+  .sitio__cta { margin-left: auto; }
+  .afiche { aspect-ratio: auto; height: calc(100svh - 60px - 26px); min-height: 640px; max-height: 760px; }
+  .afiche__arte img { object-position: 0 0; }
+  .afiche__cabeza { left: 16px; right: 16px; width: auto; top: 3%; }
+  .migas { margin-bottom: 20px; font-size: 13px; }
+  .afiche__pre { font-size: 19px; }
+  .afiche__nombre { font-size: 44px; }
+  .afiche__rotulo { margin-top: 16px; font-size: 15px; max-width: 16em; }
+  .letrero { left: 57%; top: 45%; font-size: 30px; }
+  .afiche__pie { left: 16px; right: 16px; bottom: 4%; }
+  .afiche__promesa { font-size: 17px; }
+  .afiche__acciones { display: grid; gap: 10px; }
+  .afiche__acciones .btn { justify-content: center; }
+  .franja__papel { padding: 22px 16px 16px; }
+  .franja__logos { grid-template-columns: repeat(4, 1fr); }
+  .franja__logos li:nth-child(n) { border-left: 1px solid rgb(28 30 32 / .14); }
+  .franja__logos li:nth-child(4n + 1) { border-left: 0; }
+  .franja__logos li:nth-child(n + 9) { display: none; }
+  .franja__banda { padding: 14px 16px; gap: 14px; flex-wrap: wrap; }
+  .franja__n { font-size: 56px; }
+  .franja__frase { font-size: 18px; }
+  .franja__ir { padding: 12px 14px; font-size: 15px; }
+  .fotos { padding: 64px 0; }
+  .cab { grid-template-columns: 1fr; }
+  .barra { flex-direction: column; margin-top: 28px; }
+  .buscar-placa { width: 100%; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; width: calc(100% + 16px); padding: 2px 16px 2px 2px; scrollbar-width: none; }
+  .chip { flex: none; }
+  .contacto__cab { grid-template-columns: 1fr; }
+  .contacto__manga { grid-row: auto; font-size: 44px; margin-bottom: 6px; }
+  .contacto__cat { font-size: 26px; }
+  .contacto__tira { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .contacto__tira li:nth-child(n + 7) { display: none; }
+  .muro { padding: 80px 0; }
+  .muro__gracias { font-size: 84px; }
+  .pliego { padding: 26px 20px 30px; }
+  .aliados { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
+  .aliados li:nth-child(n + 7) { display: none; }
+  .talon__titulo { font-size: 28px; }
+  .talon__ir { padding: 0 16px; }
+  .talon__cuerpo { padding: 20px; }
+  .planilla { padding: 72px 0; }
+  .planilla__titular { grid-template-columns: 1fr; }
+  .planilla__de { font-size: 28px; }
+  .planilla__n { font-size: 112px; }
+  .planilla__frase { max-width: none; font-size: 26px; padding-top: 10px; }
+  .planillas { grid-template-columns: 1fr; gap: 48px; margin-top: 48px; }
+  .pl__k { max-width: 62%; }
+  .pl__v { font-size: 24px; }
+  .pista { padding: 72px 0; }
+  .pista__grid { grid-template-columns: 1fr; gap: 40px; }
+  .pista__mapa { position: static; max-width: 230px; margin-inline: auto; }
+  .hitos li { grid-template-columns: 1fr; }
+  .hitos__a { font-size: 44px; }
+  .cierre { padding: 72px 0 88px; }
+  .cierre__grid { grid-template-columns: 1fr; gap: 40px; }
+  .cierre__hoja { padding: 24px; }
+  .cierre__titulo { font-size: 26px; }
+}
+
+/* ═══ v6: títulos y botones con el estilo global del sitio ══════════════════════════════════════
+   Lo que dicta `SectionIntro` (antetítulo + titular bold con trazo lima) y `Button` (redondeado 8 px,
+   Inter semibold, sombra dura de 4 px del tono oscuro de su color). La dirección del afiche (cerro,
+   papel, planilla, pliego, talón) se queda. Ningún texto va encima de la trama ni de los cables. */
+:root { --primary-deep: #0f6f79; --accent-dark: #6fb300; --grafito: #2f2f2f; --texto-2: #5f6368; }
+
+.ceja { display: flex; align-items: center; gap: 8px; font: 600 12px/1 var(--texto); letter-spacing: .18em; text-transform: uppercase; color: var(--primary-deep); margin-bottom: 12px; }
+.ceja::before { content: none; }
+.ceja--oscura { color: #a3e63d; }
+.t-h1, .t-h2, .t-h3 { font-family: var(--display); font-style: normal; font-weight: 700; text-transform: none; letter-spacing: -.01em; line-height: 1.15; color: var(--grafito); text-wrap: balance; }
+.t-h1 { font-size: clamp(30px, 4vw, 48px); }
+.t-h2 { font-size: clamp(24px, 3vw, 36px); }
+.t-h3 { font-size: clamp(20px, 2vw, 24px); }
+.t-h3--grande { font-size: clamp(22px, 2.4vw, 30px); }
+.t-h2--claro { color: #fff; }
+.marca { background-image: linear-gradient(to top, color-mix(in srgb, var(--lima) 55%, transparent) .34em, transparent .34em); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.marca--oscura { background-image: linear-gradient(to top, color-mix(in srgb, var(--lima) 80%, transparent) .34em, transparent .34em); }
+
+.btn { gap: 8px; min-height: 0; padding: 10px 20px; font: 600 16px/1.4 var(--texto); font-style: normal; letter-spacing: 0; text-transform: none; border-radius: 8px; box-shadow: 0 4px 0 0 var(--sombra-btn); }
+.btn--lg { padding: 14px 28px; font-size: 18px; }
+.btn--accent { --sombra-btn: var(--accent-dark); background: var(--lima); color: var(--grafito); }
+.btn--outline { --sombra-btn: var(--primary-deep); background: transparent; color: var(--primary-deep); border: 2px solid var(--primary-deep); }
+.btn--outline-claro { --sombra-btn: rgb(255 255 255 / .35); background: transparent; color: #fff; border: 2px solid rgb(255 255 255 / .6); }
+.btn--outline-tinta { --sombra-btn: var(--grafito); background: transparent; color: var(--grafito); border: 2px solid var(--grafito); }
+.btn--secundario { --sombra-btn: #b9b9b9; background: #ececec; color: var(--grafito); }
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(4px); box-shadow: none; }
+
+/* 1. Afiche: el texto va en un panel de cielo liso (los cables pasan por detrás) y la promesa con
+   los botones en una placa de tinta lisa (no sobre la trama). */
+.afiche__cabeza { top: 4%; width: min(52%, 640px); }
+.afiche__cabeza .migas { margin-bottom: 18px; }
+.afiche__cabeza .ceja, .afiche__cabeza .t-h1, .afiche__cabeza .afiche__rotulo { position: relative; }
+.afiche__cabeza::before { content: ''; position: absolute; inset: -16px -24px -20px -24px; background: var(--lima); border-radius: 16px; z-index: -1; }
+.afiche__cabeza { isolation: isolate; }
+.afiche__cabeza .t-h1 { color: var(--grafito); }
+.afiche__cabeza .ceja { color: var(--grafito); }
+.afiche__rotulo { margin-top: 18px; font: 600 15px/1.3 var(--texto); padding: 10px 14px; border-radius: 8px; }
+.afiche__pie { background: var(--tinta); padding: 20px 24px; border-radius: 16px; margin-left: -24px; gap: 16px; }
+.afiche__promesa { font: 600 18px/1.35 var(--texto); }
+.afiche__n { font: 800 2.2em/0 var(--display); font-style: normal; letter-spacing: -.03em; }
+
+/* 2. Franja */
+.franja__frase { font: 700 24px/1.15 var(--display); font-style: normal; }
+.franja__n { font-style: italic; }
+
+/* 3. Galería: chips y placa como los del sitio. */
+.cab { grid-template-columns: 1fr; gap: 0; }
+.cab .t-h2 { margin-bottom: 12px; }
+.cab__bajada { font: 400 18px/1.6 var(--texto); color: var(--texto-2); }
+.barra { border-top: 0; border-bottom: 1px solid rgb(0 0 0 / .1); align-items: center; }
+.buscar-placa { border-radius: 12px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .15); padding: 0 12px; height: 40px; grid-template-columns: auto 1fr; align-items: center; gap: 10px; width: 160px; }
+.buscar-placa span { font: 400 14px var(--texto); color: var(--texto-2); }
+.buscar-placa input { font: 400 14px var(--texto); }
+.chip { border-radius: 999px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .1); background: #ececec; font: 600 14px var(--texto); padding: 0 16px; }
+.chip--activo { background: var(--primary-deep); color: #fff; box-shadow: none; }
+.chip--activo .chip__n { color: #fff; opacity: .75; }
+.contacto__cab { display: block; padding-bottom: 12px; }
+.contacto__meta { margin-top: 2px; font-size: 14px; color: var(--texto-2); }
+.cuadro img { border-radius: 8px; }
+.contacto__tira + .btn { margin-top: 20px; }
+.letra-chica h3 { font: 700 16px var(--display); font-style: normal; }
+
+/* 4. Muro */
+.muro__bajada { margin-top: 16px; }
+.muro .t-h2 { max-width: 20em; }
+.aliado__nombre { font: 700 15px/1.2 var(--display); font-style: normal; }
+
+/* 5. Talón */
+.talon__cuerpo .t-h3 { font-size: 28px; }
+.talon__ir { font: 600 18px var(--texto); font-style: normal; }
+.talon__lomo { font: 700 13px var(--display); font-style: normal; }
+
+/* 6. Planilla: el titular como el del sitio; el dato enorme queda como cifra, debajo. */
+.planilla .ceja { color: var(--grafito); }
+.planilla__dato { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 4px 24px; margin-top: 36px; }
+.planilla__n { font: 800 clamp(96px, 15vw, 220px)/.8 var(--display); font-style: normal; letter-spacing: -.05em; }
+.planilla__frase { font: 700 clamp(20px, 2.4vw, 32px)/1.1 var(--display); font-style: normal; text-transform: none; max-width: 10em; padding-bottom: .2em; }
+.pl-bloque__t { font: 700 22px var(--display); font-style: normal; }
+.pl__v { font: 800 24px var(--display); font-style: normal; }
+.cien i.lleno { background: var(--tinta); }
+
+/* 7. Pista: el año en sólido (el contorno se perdía). */
+.pista .t-h2 { max-width: 22em; }
+.hitos__a { color: var(--tinta); -webkit-text-stroke: 0; font: 800 44px/.9 var(--display); font-style: normal; }
+.hitos__t { font: 700 20px/1.2 var(--display); font-style: normal; }
+
+/* 8. Cierre */
+.cierre .ceja { color: var(--grafito); }
+.cierre__fecha { margin-top: 12px; font-weight: 500; }
+.enlace-tinta { font: 600 16px var(--texto); font-style: normal; border-bottom-width: 2px; }
+.cierre__hoja { border-radius: 16px; }
+.cierre__bajada { color: var(--grafito); }
+
+@media (max-width: 700px) {
+  .afiche__cabeza { width: auto; top: 3%; }
+  .afiche__cabeza::before { inset: -40px -16px -18px -16px; border-radius: 0; }
+  .afiche__rotulo { max-width: none; font-size: 14px; }
+  .afiche__pie { margin-left: 0; padding: 16px; }
+  .afiche__promesa { font-size: 16px; }
+  .letrero { top: 52%; }
+  .planilla__n { font-size: 96px; }
+  .hitos__a { font-size: 36px; }
+}
+
+/* v6.1: sin panel (cortaba los cables en seco). Reserva de imprenta: cada letra lleva un halo del
+   color del cielo, así los cables siguen enteros y pasan por detrás del texto sin cruzarlo. */
+.afiche__cabeza::before { content: none; }
+.afiche__cabeza .t-h1, .afiche__cabeza .ceja, .afiche__cabeza .migas {
+  text-shadow: 0 0 2px var(--lima), 2px 0 0 var(--lima), -2px 0 0 var(--lima), 0 2px 0 var(--lima), 0 -2px 0 var(--lima),
+    3px 3px 0 var(--lima), -3px 3px 0 var(--lima), 3px -3px 0 var(--lima), -3px -3px 0 var(--lima),
+    5px 0 0 var(--lima), -5px 0 0 var(--lima), 0 5px 0 var(--lima), 0 -5px 0 var(--lima);
+}
+
+/* ═══ v6.2: retoques UI/UX ═══════════════════════════════════════════════════════════════════ */
+
+/* Barra de filtros: el campo y los chips miden lo mismo (44 px), con el mismo anillo, alineados arriba. */
+.barra { align-items: flex-start; gap: 12px; }
+.buscar-placa { flex: none; width: 236px; height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .18); gap: 10px; cursor: text; }
+.buscar-placa span { font: 600 14px/1 var(--texto); color: var(--grafito); white-space: nowrap; }
+.buscar-placa input { min-width: 0; font: 400 14px/1.2 var(--texto); color: var(--grafito); }
+.buscar-placa input::placeholder { color: var(--texto-2); opacity: 1; }
+.buscar-placa:focus-within { box-shadow: inset 0 0 0 2px var(--primary-deep), 0 0 0 3px rgb(15 111 121 / .22); }
+.chips { flex: 1; min-width: 0; }
+.chip { min-height: 44px; transition: background-color .15s; }
+.chip:hover:not(.chip--activo) { background: #e1e1e1; }
+.chip:focus-visible, .btn:focus-visible, .enlace-tinta:focus-visible, .talon__ir:focus-visible, .franja__banda:focus-visible { outline: 3px solid var(--primary-deep); outline-offset: 3px; }
+.btn--outline-claro:focus-visible, .franja__banda:focus-visible { outline-color: var(--lima); }
+
+/* «Ver las N fotos»: secundario liviano (blanco, borde fino, sombra suave); el gris duro pesaba. */
+.btn--secundario { --sombra-btn: rgb(0 0 0 / .1); background: #fff; color: var(--grafito); border: 1px solid rgb(0 0 0 / .2); box-shadow: 0 2px 0 0 var(--sombra-btn); padding: 11px 22px; min-height: 44px; }
+.btn--secundario:hover { background: #ececec; border-color: rgb(0 0 0 / .32); transform: none; }
+.btn--secundario:active { transform: translateY(2px); box-shadow: none; }
+
+/* Muro: aire entre el texto de respaldo y su botón; botón claro con sombra más fina. */
+.respaldo + .btn { margin-top: 24px; }
+.btn--outline-claro { box-shadow: 0 3px 0 0 rgb(255 255 255 / .28); }
+.franja__banda .btn { box-shadow: 0 3px 0 0 var(--accent-dark); }
+.franja__banda:hover .btn { transform: translateY(-1px); }
+
+/* Cierre: los dos botones de la hoja, del mismo ancho. */
+.cierre__hoja .cierre__acciones { flex-direction: column; align-items: stretch; }
+.cierre__hoja .cierre__acciones .btn { justify-content: center; }
+
+/* Huérfanas */
+.cierre__titulo, .talon__titulo, .franja__frase, .planilla__de { text-wrap: balance; }
+.cab__bajada, .muro__bajada, .respaldo { text-wrap: pretty; }
+
+@media (max-width: 700px) {
+  /* Barra: campo a todo el ancho; chips desplazables sangrando al borde, con desvanecido que insinúa más. */
+  .barra { flex-direction: column; align-items: stretch; gap: 10px; }
+  .buscar-placa { width: 100%; }
+  .chips { flex: none; width: calc(100% + 16px); margin-right: -16px; padding: 2px 28px 4px 2px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); }
+  .chip { scroll-snap-align: start; }
+
+  /* Franja de aliados: «25» + frase en una fila, botón debajo a todo el ancho (la frase caía en 4 líneas). */
+  .franja__banda { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 6px 14px; }
+  .franja__frase { font-size: 19px; }
+  .franja__n { line-height: 1; padding-top: 4px; }
+  .franja__banda .btn { grid-column: 1 / -1; justify-self: stretch; display: flex; justify-content: center; align-items: center; min-height: 44px; margin-top: 6px; }
+
+  .btn--secundario, .respaldo + .btn { width: 100%; justify-content: center; }
+  .cierre__hoja .btn--lg { padding: 12px 20px; font-size: 17px; }
+  .btn { min-height: 44px; }
+}

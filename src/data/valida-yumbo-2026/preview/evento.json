@@ -1,0 +1,47 @@
+{
+  "slug": "copa-valle-yumbo-2026",
+  "published": false,
+  "eventId": "2026-10-copa-valle-vii-yumbo",
+  "nextEventId": "2026-11-copa-valle-vi-roldanillo",
+  "title": "VI Válida Copa Valle 2026 · Yumbo",
+  "shortTitle": "VI Válida · Yumbo",
+  "series": "Copa Valle Paraíso de Todos GW Shimano 2026",
+  "edition": "VI Válida",
+  "date": "2026-10-18",
+  "venue": {
+    "name": "Pista de Ciclomontañismo Carlos Castro",
+    "shortName": "Pista Carlos Castro",
+    "address": "Cra. 14N con Cl. 13BN, barrio Pizarro",
+    "city": "Yumbo",
+    "department": "Valle del Cauca",
+    "lat": 3.5965919,
+    "lng": -76.4855763
+  },
+  "organizer": "Comisión Vallecaucana de Ciclomontañismo",
+  "host": "Club Deportivo Trocha y Ruta",
+  "resultsUrl": "https://xn--ciclomontaismovalle-43b.com/",
+  "generalUrl": "https://xn--ciclomontaismovalle-43b.com/",
+  "chronicle": null,
+  "album": null,
+  "photographer": {
+    "name": "Fotógrafo de prueba",
+    "instagram": "fotografo.prueba",
+    "url": null
+  },
+  "hero": {
+    "photoId": "dsc-1013-e547",
+    "alt": "Corredores en la Pista Carlos Castro durante la válida"
+  },
+  "ogImage": "/images/valida-yumbo-2026/og.jpg",
+  "institutions": [
+    "Comisión Vallecaucana de Ciclomontañismo",
+    "Liga de Ciclismo del Valle",
+    "Indervalle",
+    "IMDERTY",
+    "Gobernación del Valle del Cauca",
+    "Paraíso de Todos",
+    "GW",
+    "Manzur",
+    "Shimano"
+  ]
+}

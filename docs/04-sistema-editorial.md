@@ -69,7 +69,11 @@ a mano en las secciones**: si hace falta un fondo nuevo, se agrega un tono.
 - **Titular**: qué gana quien lee, no cómo se llama la sección. `Nuestros Programas` es una
   etiqueta; `Del primer equilibrio al primer podio` es una promesa.
 - `highlight`: el fragmento del titular que lleva el trazo lima. Uno por sección, sobre la
-  parte que carga la promesa.
+  parte que carga la promesa. **En el teléfono un fragmento de dos palabras puede caer en dos
+  líneas** y el trazo queda partido en dos pedazos («le» solo al final de la primera): se
+  escribe con un espacio duro (U+00A0) entre las palabras, igual en `title` y en
+  `highlight`, para que el fragmento no se corte. Lo hace `/copa-valle-yumbo-2026` con «le
+  apostaron» y «Juegos Nacionales».
 - **Bajada**: aterriza el titular con lo concreto (edades, horarios, cifras).
 
 ### 2.3 El dato ilustrado
@@ -1589,3 +1593,410 @@ seguimiento automático sin un estado «Sistema» que explicar.
   intercambiados por CSS (`dark:hidden` / `hidden dark:block`).
 - Única animación: `active:scale-95` con `duration-micro` y `motion-reduce`.
 - `window.__trochaTheme.get()` / `.set('light'|'dark'|null)` para tests y scripts.
+
+---
+
+## 30. Referencia de la válida en casa — `/copa-valle-yumbo-2026`
+
+Página archivo de una válida corrida en la Pista Carlos Castro: las fotos
+oficiales descargables gratis, el agradecimiento a los aliados que la
+financiaron, las cifras de la jornada y la casa. Se publica **después** de la
+carrera. El plan, las decisiones del club y la operación del lunes están en
+`claudedocs/valida-yumbo-2026/web/` (`plan-pagina-valida.md`,
+`fotos-operacion.md`); aquí queda lo que sirve de referencia al resto del sitio.
+
+| Sección              | Fondo                         | Qué muestra                                                                                 |
+| -------------------- | ----------------------------- | ------------------------------------------------------------------------------------------- |
+| Apertura             | afiche (imagen del cerro)     | Migas, antetítulo y `h1` con halo lima sobre el cielo; rótulo de fecha y lugar; placa de tinta con la promesa y los botones; letrero YUMBO decorativo |
+| Franja de aliados    | papel (blanco fijo)           | `ValidaSponsorRibbon`: todos los logos antes de la primera foto, con un solo enlace al muro |
+| Fotos oficiales      | papel (`--valida-papel`)      | Island `RacePhotoGallery` + aviso de imagen (`role="note"`)                                 |
+| Aliados              | `dark` + pliego de papel      | `ValidaAllies`: un solo pliego con marcas de corte, dos grupos con rótulo; respaldo en prosa fuera del pliego |
+| Resultados y crónica | papel                         | Una tarjeta: talón con lomo lima y perforación, todo enlace. Dos o tres: «Revive la jornada» con tarjetas |
+| En cifras            | `accent` + grano              | `ValidaNumbers`: dato de edades, dos planillas con línea punteada y la matriz de 100 puntos |
+| La pista             | papel                         | Titular, foto en duotono lima, hitos con el año grande y «Conoce la pista»; a la derecha, el trazado del GPX fijo |
+| Paso siguiente       | `brand`                       | Próxima parada a la izquierda; a la derecha, hoja de papel con la clase de prueba y los dos botones lado a lado |
+
+**Rediseño «afiche» (16-oct-2026, maqueta v6).** La página tomó el arte de las historias
+de Instagram de la válida (el cerro de Yumbo a dos tintas, lima y grafito), pero los
+títulos van con `SectionIntro` y los botones con `Button`, como el resto del sitio (pedido
+del usuario: la estética de la página puede ser propia, títulos y botones no). Maqueta,
+propuesta y respaldo de los archivos anteriores en
+`claudedocs/valida-yumbo-2026/web/rediseno-16-oct/`. Reglas que quedaron:
+
+- **Ningún texto sobre la trama ni los cables.** El titular lleva un halo lima
+  (`text-shadow`) y la promesa va en una placa lisa; `v2-esqueleto/herramientas/tapados.py`
+  lo comprueba con `elementFromPoint` (0 textos tapados en 6 tamaños, de 360 × 740 a
+  1440 × 900).
+- **Las imágenes del afiche van en `src/assets/images/valida-yumbo-2026/`** (`getImage`,
+  webp ~74), no en `public/`: `valida-data.test.ts` solo admite logos y `og.jpg` allí.
+- **El afiche mide de alto `clamp(600px, 55,8vw, 660px)`**, no `aspect-ratio`: con un tope
+  de alto, `aspect-ratio` encogía el ancho y dejaba una franja blanca a la derecha. En
+  1440 × 900 la primera fila de la franja entra en la primera pantalla.
+- **Tres encuadres del cerro:** vertical por debajo de 700 px, ancho (1,79:1) hasta 1500 px y
+  panorámico (2,9:1, `afiche-cerro-panoramico.webp`, de `maqueta/fuente/cerro_ultra.py`) desde
+  1500 px. Con un solo encuadre ancho, en 1920 px el `object-fit: cover` recortaba arriba y
+  abajo y las torres salían mochas. En el panorámico el letrero YUMBO va al pie de las torres
+  y el recorte se ancla al 64 % para que en monitores de 21:9 se pierda cielo y no torres.
+- **El papel (#f4f2eb) es una variable local de la página** (`--valida-papel`), que en tema
+  oscuro pasa a `--color-surface`. **El pliego de aliados es la excepción: queda claro en
+  los dos temas**, porque los logos llevan `mix-blend-mode: multiply` y sobre papel oscuro
+  se ennegrecen; dentro del pliego, los tokens de texto vuelven a los del tema claro.
+- **Los logos de los aliados tienen fondo transparente.** Los ocho que venían con fondo
+  blanco (Alcaldía, Coordinadora, Ferropinturas, Fury Factory, Moka Tools Store, Rapi Wey,
+  Sanín y Sunny Burger) se recortaron rellenando desde el borde, sin tocar los blancos
+  internos. Los originales están en `rediseno-16-oct/respaldo-logos-con-fondo/`.
+- **Usuarios de Instagram sin partir a mitad de palabra:** `<wbr>` después de `_` y `.`, y
+  la letra baja con el ancho de la tarjeta (`cqi`) si el tramo más largo no cabe
+  (`labelFontSize`). Desde 360 px ninguno se parte.
+- Medidas con 420 fotos de prueba: 10.801 px en 1440 × 900 y 14.340 px en 390 × 844.
+
+Los tonos alternan entre secciones contiguas. Encima de todo flota el índice
+`SectionDock` (§31), con una entrada por sección que de verdad se pinta; en el DOM
+va justo después de la apertura. La lógica derivada de la página (los textos de la
+apertura, las cifras, el estado sin fotos, las tarjetas de resumen, los ítems del
+índice) vive en funciones puras de `src/lib/valida.ts`; la plantilla solo hace las
+consultas a colecciones y las llama.
+
+**Revisión de conjunto (8-oct-2026).** Mirada de la página entera después del rediseño
+por piezas, con el informe y las capturas en
+`claudedocs/valida-yumbo-2026/web/revision-conjunto-sonnet.md`. Lo que cambió, y por qué:
+
+- **La apertura no lleva cifras.** Tenía tres `StatFigure` (fotos, aliados, municipios) y
+  las tres se repetían en la misma página: las fotos en el chip «Todas 420» y en el
+  índice; los aliados en la banda de la franja (88 px, 380 px más abajo), en el índice, en
+  la bajada del muro y en el visor; los municipios en «La edición 2026». Costaban 168 px en
+  escritorio (182–201 en móvil) y dejaban la franja bajo el pliegue en 1440×900. Sin ellas
+  la apertura mide 540 px (antes 709; 806 en un Pixel 7, antes 988), y en 1440×900 los 16
+  logos entran enteros en la primera pantalla; en 1920×1080, también la banda. Se borraron
+  `heroStats` y `publishableRunners` (la regla §8 del total de corredores vive en
+  `editionFacts`).
+- **Resultados y crónica: una tarjeta es una banda, no una sección.** Los resultados llegan
+  antes que la crónica y el álbum, así que la página pasa días con una sola tarjeta, y una
+  sección con antetítulo, titular, bajada y esa tarjeta pesaba 553 px y decía tres veces
+  «Resultados oficiales». Con `recap.length === 1` se pinta una banda de una fila (`plain`,
+  `compact`, `wide`): icono, título y descripción de la propia tarjeta y botón de contorno
+  a la derecha, 177 px en escritorio y 233 en un Pixel 7. Con dos o tres, «Revive la
+  jornada» con sus tarjetas y sin antetítulo (`recapLead` da la bajada solo con dos o más;
+  con dos tarjetas la rejilla es de dos columnas, no de tres con una vacía).
+- **Antetítulos solo donde dicen algo.** En Resultados y en La pista eran gemelos del
+  titular («RESULTADOS OFICIALES» y «Resultados oficiales»; «LA PISTA» y «La pista de los
+  Juegos…»): se quitaron. Se quedan los de la apertura, Fotos, Aliados, Cifras y la próxima
+  parada.
+- **Una sola columna.** Todas las secciones salvo La pista usan `width="wide"` (352 px de
+  borde izquierdo en 1920, 112 en 1440): con `default` en tres de ellas los titulares
+  saltaban entre 352 y 480 px y el cierre quedaba desalineado del pie. La pista sigue en
+  `default` porque su `Timeline` tiene el eje al centro, y su intro va centrado
+  (`align="center"`, el patrón de `/quienes-somos`).
+- **El cierre es teal.** `tone="brand"`, como el cierre de la portada
+  (`InscriptionCTA variant="banner"`): en grafito se fundía con el pie (1,00:1) y la
+  silueta de elevación que `Footer.astro` pinta sobre la sección anterior desaparecía. Todo
+  el texto va en grafito (5,53:1 sobre el teal, igual en claro y en oscuro, que no cambian
+  con el tema; el botón lima, 8,14:1). La bajada de la próxima parada va por el slot de
+  `SectionIntro` y no por `lead`: el `muted` del tono `brand` es grafito al 80 % y solo da
+  3,9:1. El botón lima lleva `focus-visible:outline-surface-dark`: con el
+  `outline-primary` de `Button` el anillo de foco era teal sobre teal, invisible.
+- **Sin vidrio, sin sombra suelta.** La barra de filtros es opaca (`bg-surface-raised`): al
+  95 % con `backdrop-blur` las miniaturas se transparentaban detrás de los chips. La foto
+  de la apertura lleva `ring-1 ring-hairline` y no `shadow-raised`, la única sombra suave
+  de la página.
+- **El recurso de ayuda no es el llamado principal.** «Escribir por WhatsApp» de
+  `FamilyCard` es de contorno: el relleno lima es el color del llamado principal de la
+  página, y cien píxeles más abajo «Compartir por WhatsApp» ya es un relleno.
+- **Botones de la apertura a ancho completo en el teléfono** (`w-full sm:w-auto`): el
+  secundario era más ancho que el primario.
+- **El muro, en oscuro, lleva un filete lima arriba** (`dark:shadow-[inset_0_3px_0_…]`):
+  el grafito del escenario (#2F2F2F) es más claro que el fondo oscuro (#1C1E20) y solo se
+  distingue por 1,25:1; en claro son 13,4:1 y no hace falta.
+- **Cifras sin repetir.** La bajada ya no dice los años (los dice el titular del bloque
+  histórico) ni la fuente (la dice la nota del pie), y las seis tarjetas históricas no
+  llevan icono: eran 15 en la sección, sin ningún dato. Las que no traen prefijo reservan
+  su fila desde `sm` (`hidden sm:block sm:min-h-5`) para que las cifras de una misma fila
+  de tarjetas arranquen a la misma altura; en una columna sería un hueco vacío.
+  El campo `icon` de `historico` en `datos.json` y su schema quedaron sin uso en la
+  plantilla.
+- **Texto del muro.** «Por ellos las fotos de esta página son gratis para todas las
+  familias. Van en orden alfabético.»: sin el «Son 16» (ya lo dicen la banda y el índice).
+- **Medidas de la página** (1440 y 1920 / Pixel 7 / 360×640): 10.594 px (11,8 pantallas a
+  900 px de alto) / 13.620 px (16,2 pantallas) / 13.751 px (21,5), contra 11.191 /
+  14.058 / 14.208 antes (12,4 / 16,8 / 22,2 pantallas).
+
+**Los datos viven en `src/data/valida-yumbo-2026/*.json`, no en una colección.**
+Son del evento, no del club: meterlos en `sponsors` o `gallery` habría inflado
+`/patrocinadores` y la portada de la galería con marcas y fotos de una sola
+fecha. Los cuatro JSON se validan con Zod en el build (`validaEventoSchema`,
+`validaAliadosSchema`, `validaFotosSchema`, `validaDatosSchema`) y su coherencia
+—logos en disco, ids que resuelven contra `events`, grupos de fotos que existen—
+la revisa `src/lib/__tests__/valida-data.test.ts`. La lógica pura está en
+`src/lib/valida.ts`, **sin imports locales**: `scripts/valida-fotos.mjs` lo
+importa directamente con Node.
+
+**Vista previa con datos de prueba.** Los JSON reales no se tocan para
+ensayar. Con `VALIDA_PREVIEW=true npm run dev`, el `index.ts` de esa carpeta
+lee `preview/` (`evento.json`, `fotos.json`, `datos.json`) en lugar de ellos, y
+`npm run valida:preview` sirve en `localhost:8765` unas 420 fotos de prueba
+desde un banco chico de imágenes en `~/Trocha-media/_valida-preview/` (fuera de
+git; `media:push` nunca sube lo que empieza con `_`). Existe porque antes se
+pisaban los reales con los de prueba y su respaldo vivía en `/tmp`, que el
+sistema borró en el reinicio del 7-oct. La variable es solo local (CI no la
+define: un deploy siempre publica los reales); en vista previa la página muestra
+una franja roja y va `noindex`, y `preview/evento.json` es `published: false`
+(un test lo exige, así que copiarlo por error a los reales nunca publica).
+
+**Las fotos no entran al repositorio.** `fotos.json` es solo el índice (id,
+tamaño, hora, manga); los archivos viven en `/public_html/media/<evento>/` de
+Hostinger, fuera de git y fuera de `dist/` (el `mirror` del deploy no borra lo
+que no está en `dist/`). Un test falla si el índice apunta a otro origen o a
+otra carpeta, o si aparece una carpeta de fotos dentro de `public/`. Es la Fase
+0 de `docs/10-plan-media-hostinger.md`, adelantada para esta carpeta.
+
+**Oculta hasta que se publique.** `published: false` en `evento.json` pone
+`noindex`, saca la página del sitemap (`astro.config.mjs` importa el JSON) y la
+deja fuera de Pagefind; es el patrón de `/equipo`. Al pasar a `true`, todo se
+invierte sin tocar la plantilla.
+
+*16-oct-2026: las tiras de «Todas» se reemplazaron por una rejilla de miniaturas iguales
+(4:3, recortadas) de dos filas: 3 columnas en el celular, 4 desde `sm` y 6 desde `lg`, sin
+desplazamiento horizontal. En escritorio la tira solo se recorría arrastrando la barra y
+escondía las fotos. Lo que sigue sobre las tiras queda como registro; la galería mide 4.973 px
+en 1440 × 900 (antes 3.893) y 4.171 en 390 × 844 (antes 3.507).*
+
+**La galería es un island con tiras en «Todas», filas justificadas en el resto y
+revelado progresivo.** Cada foto lleva su proporción real (`aspect-ratio`): las
+verticales no se recortan y el espacio queda reservado antes de cargar (CLS 0; sin
+JS el HTML del servidor mide lo mismo que el hidratado). En «Todas» cada manga es
+una **tira horizontal** con `scroll-snap`: alto fijo, ancho por proporción, y la
+miniatura cortada en el borde avisa que hay más. Sin barra de desplazamiento en
+táctil, donde se arrastra con el dedo; con mouse (`hover: hover` y `pointer: fine`)
+se muestra la nativa, delgada y con tokens del tema (pulgar `text-secondary` sobre
+riel `surface-muted`, legible en claro y en oscuro), porque una tira sin barra no se
+puede recorrer, y la tira gana 6 px de aire abajo para que no toque las miniaturas
+(el alto en táctil no cambia; en macOS la barra es superpuesta y solo aparece al
+desplazar). Con una categoría elegida o una placa, las fotos van en **filas
+justificadas**
+(`flex-basis` y `flex-grow` proporcionales a la foto). Las filas dejaban una foto
+sola en la última fila de casi cada manga y hacían de «Todas» una vista de 9.120 px
+en un Pixel 7, con el muro de aliados a 10.365 px; con tiras la galería mide
+≈ 2.700 px y el muro empieza a ≈ 4.850 px (360×640: de 12.267 a ≈ 2.700 px). La tira
+sangra hasta el borde de la pantalla en el celular, igual que la barra de filtros
+(si la barra solo cubriera la columna, las tiras que pasan por debajo asomarían a
+los lados), y lleva relleno arriba y abajo con margen negativo que lo compensa:
+`overflow-x` recorta también en vertical y sin ese relleno el contorno de foco de
+las miniaturas de las puntas quedaría cortado. El alto de fila (`--row-h`) es `6rem`,
+`7rem` desde 400 px, `9rem` desde `sm` y `10rem` desde `lg`: a 360 px caben dos
+horizontales por fila (con 7rem pedían 344 px y la fila tiene 328).
+
+Cuántas fotos se pintan depende de la vista: en «Todas», 12 por categoría y, si hay
+más, «Ver las N fotos» (la categoría la dice el titular de la manga y solo la oye el
+lector de pantalla: «… de X»), que aplica el filtro de esa categoría (lo mismo que
+tocar su chip); con una categoría elegida, 48 por manga y «Mostrar las N restantes»
+(«Mostrar la foto restante» si queda una) despliega el resto en el sitio; con una
+placa, todas las coincidencias. Lo desplegado vale solo para la vista donde se
+hizo: al cambiar de categoría cada una arranca en su tope, y «Todas» no se alarga
+por lo que se abrió en otra. El visor, en cambio, recorre todas las fotos del
+filtro activo sin detenerse en el tope; al pasarlo despliega la manga (que pasa de
+tira a filas) para que, al cerrar, exista la miniatura a la que vuelve el foco, y
+el navegador desplaza la tira hasta mostrarla. Empuja `#foto-<id>` al historial
+imitando el estado de `ClientRouter`: sin eso, el botón atrás de Android disparaba
+una transición completa en vez de cerrar el visor.
+
+**El titular de cada manga es el texto del chip** («Femeninas»: la familia busca
+por categoría) y debajo, en pequeño, la manga y las categorías completas («Manga 4
+· Élite femenina, … · 50 fotos»), sin repetir lo que el titular ya dice; el texto
+alternativo de las fotos no cambia. Las mangas son `div`, no `section` (nueve
+regiones con nombre llenaban la lista de puntos de referencia del lector de
+pantalla) y su lista lleva el nombre del titular. **La barra de filtros es de una
+sola fila**, con la placa primero (`w-32`: caben el rótulo, cuatro dígitos y el
+botón de borrar) y los chips a su lado; sin campo de placa los chips ocupan la fila,
+y desde `md` los chips pasan a varias líneas junto al campo (el mismo orden en el
+DOM y a la vista, y sin la fila que repetía el conteo del chip activo). El mensaje
+de resultados solo se ve con una placa escrita; el `role="status"` siempre existe y
+su texto largo siempre llega al lector de pantalla. En medio de la galería,
+cabecera, barra e índice ocupan 185 px: el 22,1 % de un Pixel 7 y el 28,9 % de un
+360×640 (antes, 241 px: 28,7 % y 37,7 %). La barra es `sticky`, por lo que la
+sección lleva `scrollDriven` (`overflow-clip` en vez de `overflow-hidden`, trampa 1
+de 2.5).
+
+**La franja y el muro de aliados son el pie del afiche llevado a la página.**
+`ValidaSponsorRibbon`, entre la apertura y la galería, pone todos los logos en una
+franja de papel blanco de borde rasgado (blanca también en el tema oscuro, §29):
+casillas iguales, en orden alfabético y con la misma superficie por logo
+(`equalAreaWidth` con `logoRatio`), de modo que ninguno gana ni pierde por su
+forma. En el teléfono la fila se mueve ligada al scroll (`animation-timeline`,
+CSS puro) y no por reloj, porque una cinta automática sin pausa choca con WCAG
+2.2.2; desde 768 px, sin animaciones de scroll o con movimiento reducido, es una
+rejilla quieta. **La valla es un bucle para que sea justa**: la fila va seguida
+de un eco (`--echo`, `aria-hidden`, `alt=""`, solo visible dentro de la valla) y
+recorre exactamente una vuelta (`translateX(-50%)`) desde que la mitad de la
+fila entra por abajo hasta que su mitad sale por arriba, sin contar la cabecera
+(`view(block 4rem 0px)`, `entry 50% exit 50%`). Sin bucle, las puntas del
+alfabeto quedaban contra los bordes de la pantalla (30 px de scroll a la vista
+contra 245); con él, las 16 marcas están entre 150 y 185 px en un Pixel 7 y
+entre 80 y 120 en 360×640, y todas se ven enteras. El lector de pantalla las
+nombra una sola vez. Los logos bajan con la página (`loading="eager"`,
+`fetchpriority="low"`, después del LCP) y en su versión de 320 px
+(`<id>-320.webp`, que genera `scripts/prepare-valida-aliados.mjs`; `srcset` con
+`allyLogoSources` y `sizes` calculado por logo): sin eso, con 4G y caché fría,
+la valla pasaba con casillas vacías. Su único enlace baja al muro y se mide como
+salto (`page_nav_click`, `method: 'franja'`), no como clic a una marca.
+
+*9-oct: con 18 aliados (Mera Artesanal y la Alcaldía de Yumbo) la rejilla quieta ya no cabe en dos filas de ocho (quedaba una tercera con dos logos sueltos). `ribbonColumns(total)` en `src/lib/valida.ts` da las casillas por fila: ocho hasta 16 aliados y, con más, las que hagan falta para seguir en dos filas (18 → nueve, 19 → diez); la lista las lleva en la variable `--ribbon-cols` y el CSS las lee con respaldo en 8 (`flex-basis: calc(100% / var(--ribbon-cols, 8))`). Las cifras de scroll de arriba se midieron con 16; la valla del teléfono sigue siendo una fila con su eco, ahora de 18 casillas. En el muro, el grupo «Con el apoyo de» tiene dos tarjetas (ASCOMY y la Alcaldía, que nombra sus cuatro secretarías en su descripción) y el respaldo institucional ya no repite a la Alcaldía; `valida-data.test.ts` lo vigila.*
+`ValidaAllies` es el muro: un escenario grafito después de la galería, con dos
+grupos con el rótulo del afiche («Con el patrocinio de», «Con el apoyo de»),
+placas de papel iguales y orden alfabético (sin niveles ni jerarquía), más el
+respaldo institucional en prosa, también con su `h3`. Para que las tarjetas
+sean iguales también en el texto, la línea descriptiva sale por grupo solo si
+todas la tienen (`AllyGroup.taglines`) y el enlace va en blanco tenue, lima solo
+al pasar o enfocar. `sponsor_wall_view` lleva `content_id`: `'franja'` cuando la
+franja pasa entera por la pantalla y `'muro'` cuando el muro llega a su mitad,
+una vez cada uno por visita, con un solo script (el del muro) que observa los
+dos `[data-sponsor-wall]`. Ningún logo va sobre una foto. Las capturas y las
+alternativas descartadas están en
+`claudedocs/valida-yumbo-2026/web/concepto-aliados-web.md`.
+
+**El CSS vive en el propio componente, no en `global.css`.** Lo que Tailwind no
+expresa va en un `<style>` del componente, que Astro encapsula y solo carga en las
+páginas que lo usan: la franja lleva el suyo (el canto rasgado, los keyframes y la
+animación ligada al scroll) y el índice `<style is:global>` con prefijo `sdock-`,
+porque sus reglas miran marcado ajeno (el visor de fotos es una isla React montada
+en `<body>`). Las trampas están en docs/09: `is:global` con prefijo único cuando
+el selector depende de marcado de otro componente o de una isla, y nunca un
+`<style>` dentro de un condicional. `global.css` queda para lo que comparte todo
+el sitio.
+
+**Nunca el nombre de un menor, nunca el número de placa en analítica.** Los
+textos alternativos se arman con manga, categoría y posición («Manga 3,
+Infantil A y B: foto 17 de 180»); las tarjetas de crónica y álbum no imprimen
+su título porque los titulares deportivos llevan nombres. El filtro por placa
+solo vive en el navegador: a GA4 va `gallery_filter` con `content_id: 'placa'`.
+Eventos propios: `photo_download`, `photo_share`, `gallery_filter`,
+`race_results_click`, todos con `content_id`; `analytics-parity.test.ts` exige
+que cada evento escrito en una plantilla o island exista en el catálogo.
+
+**Lo que no se publica.** La serie de corredores por año y cualquier proyección
+(decisión del club); el total de 2026 si queda por debajo del año anterior
+(regla de `claudedocs/valida-yumbo-2026/yumbo-en-numeros.md` §8): cada cifra
+de `edicion2026` es opcional y lo que no está, no se pinta.
+
+---
+
+## 31. Índice flotante — `SectionDock`
+
+Una página larga pierde lo que va al final. En `/copa-valle-yumbo-2026` la galería
+tiene entre 500 y 2.000 fotos y todo lo de después —aliados, resultados, cifras, la
+pista, la próxima válida— queda a miles de píxeles: quien llega por sus fotos no se
+entera de que hay algo más abajo. `SectionDock` (`src/components/common/`) es el
+índice que flota abajo con una entrada por sección, marca en cuál se está y lleva a
+cualquier otra de un toque. Es genérico; hoy lo monta solo la página de la válida.
+
+**Cuándo usarlo.** En páginas cuyo contenido importante queda a varias pantallas del
+inicio, sobre todo si una sección crece con los datos (una galería, un archivo). No
+en páginas cortas ni como segundo menú del sitio: no reemplaza a la cabecera.
+
+### Cómo se arman los ítems
+
+```astro
+<SectionDock items={dockItems} heroId="inicio" label="En esta página" />
+```
+
+- `items: DockItem[]` (`{ id, label, shortLabel?, icon, count? }`, el tipo se exporta del
+  componente), en el orden de la página, **uno por sección que de verdad se pinta**:
+  se calculan en el frontmatter con las mismas condiciones de la plantilla. Si una
+  sección desaparece (sin resultados no hay `#resultados`), su entrada también.
+- `label`: una o dos palabras; el riel y la lista la dicen completa.
+- `shortLabel` (opcional): la versión que se ve en la píldora móvil. Cada mitad mide
+  152 px a 360 de ancho y la de la sección actual comparte el sitio con el icono, la cifra
+  y la flecha: «Próxima válida» se cortaba como «Próxima v…» entre 360 y 390 px. El cierre
+  de la válida lleva «Próxima» y «Clase gratis». El lector de pantalla oye siempre `label`
+  (la corta va `aria-hidden`), y a 320 px siguen cortándose las etiquetas con cifra
+  («Fotos 420»), como antes.
+- `icon`: el mismo `ph:*` del antetítulo de la sección, para que se reconozcan.
+- `count`: cifra opcional («420» fotos, «16» aliados), con separador de miles
+  `es-CO`; `null` o `0` no pintan nada.
+- `heroId`: la apertura. Mientras se ve, el índice se aparta.
+- El anillo de la barra y de la lista es `ring-white/30`: sobre una sección grafito (el
+  muro) el índice es del mismo color que el fondo y solo el anillo lo recorta.
+- Con menos de dos ítems no se pinta nada.
+- **En el DOM va justo después de la apertura**, aunque se vea abajo: el orden del
+  DOM decide cuándo llega el teclado, y al final de `<main>` quedaría detrás de cada
+  foto de la galería.
+- Cada sección destino lleva `id` y `scroll-mt-[var(--header-h,4rem)]`: el borde de la
+  sección se pega a la cabecera y su propio relleno separa el titular. Con
+  `scroll-mt-24` (96 px, contra 64 de cabecera) asomaban 32 px de la sección anterior:
+  una franja blanca encima del muro grafito o una grafito encima de Resultados.
+
+### Comportamiento
+
+| | Desde `lg` | Bajo `lg` |
+| --- | --- | --- |
+| Forma | Riel con todas las secciones | Píldora de dos mitades iguales: la sección actual (abre la lista) y el salto a la siguiente |
+| Sección actual | Placa clara, icono lima y una regla lima fija debajo | La mitad izquierda la nombra con su cifra, sobre la misma regla lima |
+| Ir a otra | Un clic en el riel | El salto de un toque (en la última sección vuelve a la primera) o la lista completa |
+
+- **Aparece y se aparta.** Se aparta mientras se ve la apertura o el pie (dos
+  `IntersectionObserver`), con `opacity` y `transform`, sin `visibility`: sigue en el
+  árbol de accesibilidad y en el orden de Tab, y `:focus-within` lo trae de vuelta en
+  cuanto el foco entra. Arranca apartado por CSS, así no parpadea encima de la
+  apertura mientras carga.
+- **Sección actual**: la última cuyo borde superior ya pasó el 40 % de la pantalla,
+  medida en un cuadro de animación por ráfaga de scroll (no con un observador por
+  sección: un salto largo, del pie a la apertura, no cruza ninguna). Va en
+  `aria-current="location"`.
+- **La lista móvil es un `<details>` nativo**: funciona en todos los navegadores y
+  sin JS. El script le agrega lo que `<details>` no trae: se cierra al elegir, con
+  Escape (el foco vuelve al botón), al tocar fuera (una capa invisible recibe ese
+  toque, para que no abra la foto de debajo) y cuando el foco sale.
+- **El salto es un ancla normal.** Lo resuelve el navegador o `ClientRouter`; funciona
+  sin JS y el botón atrás devuelve al punto exacto de la galería desde el que se
+  saltó. Después del salto el foco pasa al titular de la sección (`tabindex="-1"`
+  de quita y pon): con teclado o lector de pantalla no se queda en el índice.
+- **Debajo de todo lo modal.** Vive dentro de `<main>`, contexto de apilamiento por su
+  `view-transition-name`: su `z-30` no pasa por encima de la cabecera, del menú móvil,
+  del visor de fotos ni del aviso de cookies. Con un diálogo modal montado en
+  `<body>` (visor, buscador) se esconde del todo.
+- **Sin JS**, o si el script fallara, una animación de rescate lo muestra a los 2,5 s
+  y se queda: nunca queda escondido para siempre.
+- **La sección actual se marca con una regla, no con una barra de avance.** La
+  primera versión llevaba un tramo por sección (vacío, lleno o lima a medias): era lo
+  más «de app» del índice, repetía lo que ya dice el ítem actual, «leída» resultaba
+  falso después de un salto y había que aprender a leerlo. Se quitó con su JS.
+- **Con `prefers-reduced-motion`** aparece y se aparta sin deslizarse.
+- **CLS 0** medido recorriendo la página entera en móvil y en escritorio: lo que
+  cambia al bajar es texto dentro de cajas de ancho fijo (por eso las dos mitades
+  miden lo mismo) y la entrada y salida son `transform`.
+- `html:has(.sdock)` le da al documento `scroll-padding-bottom: 6rem`, así lo que
+  recibe el foco con Tab no queda debajo del índice. Solo en las páginas que lo
+  montan.
+- **Analítica**: `page_nav_click` con `content_id` = id de la sección destino y
+  `method="indice"`, por la delegación de `Analytics.astro`. Los otros saltos de la
+  página emiten el mismo evento con su propio `method` (`franja`, `apertura`), así se
+  sabe qué buscan quienes salen de la galería y qué atajo usan. Nada de logos ni
+  nombres: flota sobre fotos de niños.
+
+### Lo que se descartó
+
+- **Arriba, como `TrochaVerdeNav`**: en la galería ya están fijas la cabecera (64 px)
+  y la barra de filtros (69 px en móvil); una tercera barra arriba se comía la
+  pantalla.
+- **Riel vertical a un costado**: la galería es `wide` y a 1.440 px deja 112 px de
+  margen por lado; las etiquetas pisarían las fotos, y en móvil no sirve.
+- **Barra de pestañas con seis iconos**: unos 64 px fijos de ancho completo, etiquetas
+  de 11 px y aire de aplicación pegada encima del sitio.
+- **`popover` para la lista**: va a la capa superior (por encima de cabecera y aviso
+  de cookies), necesita posicionamiento por anclaje y no existe en iOS 16; `<details>`
+  no tiene ninguno de esos problemas.
+
+### Trampas
+
+1. **Las utilidades `translate-*` de Tailwind 4 escriben `translate: 0 0`, que no es
+   `none`**: el elemento pasa a ser el bloque contenedor de sus descendientes
+   `fixed`. La capa invisible de la lista es `fixed inset-0`; por eso el estado
+   apartado se escribe con `transform` en CSS propio y el estado visible no declara
+   ninguna transformación.
+2. **El cajón del menú móvil también es `role="dialog"` con `aria-modal`, y vive
+   montado siempre** (fuera de pantalla). La regla que esconde el índice mira solo
+   diálogos envueltos en un `div` hijo de `<body>` (`body > div > [role='dialog']`),
+   que es como montan sus portales el visor y el buscador. El cajón es hijo directo
+   de `<body>` y no la dispara; con el menú abierto el índice ya queda bajo su velo.
+3. CSS en `<style is:global>` con prefijo `sdock-` (hay reglas que miran marcado
+   ajeno) y fuera de la expresión condicional del componente (docs/09). Astro solo lo
+   incluye en las páginas que lo montan.

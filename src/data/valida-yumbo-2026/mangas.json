@@ -1,0 +1,91 @@
+{
+  "_comentario": "Horas REALES de salida de cada manga el domingo 18. Las de abajo son las del cronograma del 29-ago (sin confirmar): el domingo se anotan las reales y se corrige este archivo antes de correr scripts/valida-fotos.mjs. Cada foto cae en el grupo cuya hora de salida es la última anterior a su hora de captura; las anteriores a la primera salida caen en `previa`.",
+  "groups": [
+    {
+      "id": "previa",
+      "label": "Antes de la salida",
+      "categories": [],
+      "description": "Entrega de números, calentamiento y la pista lista",
+      "start": null,
+      "chip": "Antes de la salida"
+    },
+    {
+      "id": "manga-1",
+      "label": "Manga 1",
+      "categories": [
+        "Teteros sin pedales",
+        "Teteros con pedales"
+      ],
+      "description": "Los más pequeños abren la jornada",
+      "start": "08:30",
+      "chip": "Teteros"
+    },
+    {
+      "id": "manga-2",
+      "label": "Manga 2",
+      "categories": [
+        "Preinfantil A",
+        "Preinfantil B"
+      ],
+      "description": "",
+      "start": "09:00",
+      "chip": "Preinfantil"
+    },
+    {
+      "id": "manga-3",
+      "label": "Manga 3",
+      "categories": [
+        "Infantil A",
+        "Infantil B"
+      ],
+      "description": "",
+      "start": "10:15",
+      "chip": "Infantil"
+    },
+    {
+      "id": "manga-4",
+      "label": "Manga 4",
+      "categories": [
+        "Élite femenina",
+        "Junior femenina",
+        "Prejuvenil femenina",
+        "Máster femenina"
+      ],
+      "description": "Categorías femeninas y primera premiación",
+      "start": "11:00",
+      "chip": "Femeninas"
+    },
+    {
+      "id": "manga-5",
+      "label": "Manga 5",
+      "categories": [
+        "Prejuvenil A",
+        "Promocional",
+        "Máster"
+      ],
+      "description": "",
+      "start": "11:20",
+      "chip": "Prejuvenil A, Promocional y Máster"
+    },
+    {
+      "id": "manga-6",
+      "label": "Manga 6",
+      "categories": [
+        "Junior",
+        "Élite",
+        "Prejuvenil B"
+      ],
+      "description": "",
+      "start": "12:40",
+      "chip": "Junior, Élite y Prejuvenil B"
+    },
+    {
+      "id": "premiacion",
+      "label": "Premiación",
+      "categories": [],
+      "description": "Podios de la segunda premiación y cierre",
+      "start": "13:00",
+      "chip": "Premiación"
+    }
+  ]
+}

@@ -168,6 +168,34 @@ export function monthShort(date: Date): string {
   return MONTH_SHORT.format(date).replace('.', '');
 }
 
+const DAY_MONTH_YEAR = new Intl.DateTimeFormat('es-CO', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const DAY_MONTH = new Intl.DateTimeFormat('es-CO', {
+  day: 'numeric',
+  month: 'long',
+  timeZone: 'UTC',
+});
+
+/**
+ * Fecha larga de un evento, en prosa y en UTC (como se escribió):
+ * «18 de octubre de 2026», «7 y 8 de noviembre de 2026» (días seguidos),
+ * «7 al 9 de noviembre de 2026» o, si cruza de mes, «30 de octubre al 1 de
+ * noviembre de 2026». Un `endDate` del mismo día se trata como un solo día.
+ */
+export function longDateRange(date: Date, endDate?: Date): string {
+  if (!endDate || eventDay(endDate) === eventDay(date)) return DAY_MONTH_YEAR.format(date);
+  const sameMonth =
+    endDate.getUTCFullYear() === date.getUTCFullYear() &&
+    endDate.getUTCMonth() === date.getUTCMonth();
+  if (!sameMonth) return `${DAY_MONTH.format(date)} al ${DAY_MONTH_YEAR.format(endDate)}`;
+  const joiner = endDate.getUTCDate() - date.getUTCDate() === 1 ? 'y' : 'al';
+  return `${date.getUTCDate()} ${joiner} ${DAY_MONTH_YEAR.format(endDate)}`;
+}
+
 export interface SeasonStop<T> {
   event: T;
   id: string;

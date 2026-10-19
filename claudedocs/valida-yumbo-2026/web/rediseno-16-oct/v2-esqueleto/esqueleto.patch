@@ -1,0 +1,1377 @@
+diff --git a/src/components/editorial/Timeline.astro b/src/components/editorial/Timeline.astro
+index 757b683..f73fa9f 100644
+--- a/src/components/editorial/Timeline.astro
++++ b/src/components/editorial/Timeline.astro
+@@ -9,7 +9,10 @@
+  *
+  * En móvil el sendero va a la izquierda y todo el contenido a su derecha; desde
+  * `md` la línea se centra y los hitos alternan lado, con la foto siempre en la
+- * columna opuesta al texto.
++ * columna opuesta al texto. Con `layout="stacked"` se queda en la forma del
++ * móvil en todos los anchos: es la que sirve cuando el recorrido ocupa media
++ * columna (en `/copa-valle-yumbo-2026` va al lado del trazado de la pista) y la
++ * alternancia dejaría dos columnas angostas con huecos entre hitos.
+  */
+ import { Image } from 'astro:assets';
+ import { Icon } from 'astro-icon/components';
+@@ -29,11 +32,14 @@ export interface TimelineItem {
+ interface Props {
+   items: TimelineItem[];
+   tone?: SectionTone;
++  /** `alternate` (por defecto): centrado y alternado desde `md`. `stacked`: siempre a la izquierda. */
++  layout?: 'alternate' | 'stacked';
+   class?: string;
+ }
+ 
+-const { items, tone = 'plain', class: className } = Astro.props;
++const { items, tone = 'plain', layout = 'alternate', class: className } = Astro.props;
+ const tokens = getTone(tone);
++const alternate = layout === 'alternate';
+ ---
+ 
+ {items.length > 0 && (
+@@ -41,7 +47,8 @@ const tokens = getTone(tone);
+     <!-- El sendero: punteado, como una ruta en un mapa -->
+     <div
+       class:list={[
+-        'absolute inset-y-2 left-4 border-l-2 border-dashed md:left-1/2 md:-translate-x-px',
++        'absolute inset-y-2 left-4 border-l-2 border-dashed',
++        alternate && 'md:left-1/2 md:-translate-x-px',
+         tone === 'dark' ? 'border-white/25' : 'border-primary/30',
+       ]}
+       aria-hidden="true"
+@@ -59,7 +66,10 @@ const tokens = getTone(tone);
+       `SectionShell` eso se resuelve con la prop `scrollDriven`.
+     -->
+     <div
+-      class="pointer-events-none absolute inset-y-2 left-4 md:left-1/2 md:-translate-x-px"
++      class:list={[
++        'pointer-events-none absolute inset-y-2 left-4',
++        alternate && 'md:left-1/2 md:-translate-x-px',
++      ]}
+       aria-hidden="true"
+     >
+       <div
+@@ -73,15 +83,17 @@ const tokens = getTone(tone);
+     {items.map((item, index) => (
+       <li
+         class:list={[
+-          'reveal relative pl-12 md:grid md:grid-cols-2 md:items-center md:gap-14 md:pl-0',
+-          index > 0 && 'mt-12 md:mt-20',
++          'reveal relative pl-12',
++          alternate && 'md:grid md:grid-cols-2 md:items-center md:gap-14 md:pl-0',
++          index > 0 && (alternate ? 'mt-12 md:mt-20' : 'mt-10'),
+         ]}
+         style={`--stagger:${Math.min(index, 3) * 80}ms`}
+       >
+         <span
+           class:list={[
+             'absolute left-4 top-1 flex size-8 -translate-x-1/2 items-center justify-center rounded-full',
+-            'bg-primary text-surface-dark ring-4 md:left-1/2 md:top-1/2 md:-translate-y-1/2',
++            'bg-primary text-surface-dark ring-4',
++            alternate && 'md:left-1/2 md:top-1/2 md:-translate-y-1/2',
+             tone === 'dark' ? 'ring-surface-dark' : 'ring-surface',
+           ]}
+           aria-hidden="true"
+@@ -95,8 +107,8 @@ const tokens = getTone(tone);
+ 
+         <div
+           class:list={[
+-            'md:row-start-1',
+-            index % 2 === 0 ? 'md:col-start-1 md:text-right' : 'md:col-start-2',
++            alternate && 'md:row-start-1',
++            alternate && (index % 2 === 0 ? 'md:col-start-1 md:text-right' : 'md:col-start-2'),
+           ]}
+         >
+           <p
+@@ -116,8 +128,10 @@ const tokens = getTone(tone);
+         {item.image && (
+           <div
+             class:list={[
+-              'mt-5 md:row-start-1 md:mt-0',
+-              index % 2 === 0 ? 'md:col-start-2' : 'md:col-start-1',
++              'mt-5',
++              !alternate && 'sm:max-w-md',
++              alternate && 'md:row-start-1 md:mt-0',
++              alternate && (index % 2 === 0 ? 'md:col-start-2' : 'md:col-start-1'),
+             ]}
+           >
+             <Image
+@@ -125,7 +139,7 @@ const tokens = getTone(tone);
+               alt={item.imageAlt ?? ''}
+               layout="none"
+               widths={[400, 700, 1000]}
+-              sizes="(min-width: 768px) 45vw, 100vw"
++              sizes={alternate ? '(min-width: 768px) 45vw, 100vw' : '(min-width: 640px) 448px, 100vw'}
+               loading={index === 0 ? 'eager' : 'lazy'}
+               decoding="async"
+               class="aspect-[3/2] w-full rounded-2xl object-cover shadow-md"
+diff --git a/src/components/interactive/RacePhotoGallery.tsx b/src/components/interactive/RacePhotoGallery.tsx
+index 2e7efb8..5b9c7db 100644
+--- a/src/components/interactive/RacePhotoGallery.tsx
++++ b/src/components/interactive/RacePhotoGallery.tsx
+@@ -411,6 +411,14 @@ const STRIP = `-mx-4 -my-1.5 flex snap-x snap-proximity gap-2 overflow-x-auto ov
+ const MORE_BUTTON =
+   'bg-surface-muted text-text-primary ring-hairline focus-visible:outline-primary-deep ease-spring inline-flex min-h-11 items-center rounded-lg px-5 text-center font-semibold text-balance ring-1 transition-transform duration-[var(--duration-micro)] hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px motion-reduce:transition-none';
+ 
++/**
++ * «Ver las N fotos» de una manga en «Todas»: un enlace de texto en la línea del titular, como
++ * «Ver en el calendario» del cierre (no otro botón gris debajo de cada tira). En el teléfono dice
++ * «Ver las N»; el nombre accesible completo va en `aria-label`.
++ */
++const ENTER_LINK =
++  'text-primary-deep focus-visible:outline-primary-deep inline-flex min-h-11 shrink-0 items-center gap-1 rounded-lg text-sm font-semibold whitespace-nowrap underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-base';
++
+ interface GroupSectionProps {
+   group: PhotoGroup;
+   photos: Photo[];
+@@ -453,13 +461,40 @@ const GroupSection = memo(function GroupSection({
+ 
+   // `div` y no `section`: nueve regiones con nombre en la galería llenaban la lista de puntos
+   // de referencia del lector de pantalla. El `h3` sigue siendo navegable y nombra la lista.
++  //
++  // En «Todas», «Ver las N fotos» va en la línea del titular, a la derecha, y no centrado debajo
++  // de la tira: con ocho mangas eran ocho botones de 70 px que alargaban la galería, y arriba se
++  // ve antes de recorrer la tira (en el teléfono la tira se recorre de lado y el botón de abajo
++  // quedaba lejos de la última foto que se veía).
++  const enter = depth === 'preview' && hidden > 0;
+   return (
+     <div>
+-      <div className="mb-3">
+-        <h3 id={headingId} className="font-display text-text-primary text-xl font-bold sm:text-2xl">
+-          {chip}
+-        </h3>
+-        <p className="text-text-secondary mt-0.5 text-sm text-pretty">{detail}</p>
++      <div className="mb-3 flex items-end justify-between gap-4">
++        <div className="min-w-0">
++          <h3
++            id={headingId}
++            className="font-display text-text-primary text-xl font-bold sm:text-2xl"
++          >
++            {chip}
++          </h3>
++          <p className="text-text-secondary mt-0.5 text-sm text-pretty">{detail}</p>
++        </div>
++        {enter && (
++          // Mismos atributos de analítica que el chip de la categoría: es el mismo filtro.
++          <button
++            type="button"
++            onClick={() => onEnter(group.id, photos[0].id)}
++            aria-label={`Ver las ${photos.length} fotos de ${chip}`}
++            data-analytics-event="gallery_filter"
++            data-analytics-content-id={group.id}
++            className={ENTER_LINK}
++          >
++            {`Ver las ${photos.length}`}
++            <span className="max-sm:hidden"> fotos</span>
++            <span className="sr-only"> de {chip}</span>
++            <Icon name="next" className="ml-1 size-4" />
++          </button>
++        )}
+       </div>
+       {group.description && <p className="text-text-secondary mb-4">{group.description}</p>}
+       <ul role="list" aria-labelledby={headingId} className={strip ? STRIP : ROWS}>
+@@ -475,29 +510,16 @@ const GroupSection = memo(function GroupSection({
+           />
+         ))}
+       </ul>
+-      {hidden > 0 && (
++      {hidden > 0 && depth !== 'preview' && (
+         <div className="mt-5 flex justify-center">
+-          {depth === 'preview' ? (
+-            // Mismos atributos de analítica que el chip de la categoría: es el mismo filtro.
+-            <button
+-              type="button"
+-              onClick={() => onEnter(group.id, photos[0].id)}
+-              data-analytics-event="gallery_filter"
+-              data-analytics-content-id={group.id}
+-              className={MORE_BUTTON}
+-            >
+-              {`Ver las ${photos.length} fotos`} <span className="sr-only">de {chip}</span>
+-            </button>
+-          ) : (
+-            <button
+-              type="button"
+-              onClick={() => onReveal(group.id, photos[visible.length].id)}
+-              className={MORE_BUTTON}
+-            >
+-              {hidden === 1 ? 'Mostrar la foto restante' : `Mostrar las ${hidden} restantes`}{' '}
+-              <span className="sr-only">de {group.label}</span>
+-            </button>
+-          )}
++          <button
++            type="button"
++            onClick={() => onReveal(group.id, photos[visible.length].id)}
++            className={MORE_BUTTON}
++          >
++            {hidden === 1 ? 'Mostrar la foto restante' : `Mostrar las ${hidden} restantes`}{' '}
++            <span className="sr-only">de {group.label}</span>
++          </button>
+         </div>
+       )}
+     </div>
+@@ -594,15 +616,15 @@ function FilterBar({
+     <div
+       ref={barRef}
+       id="buscar"
+-      className="bg-surface-raised border-hairline sticky top-[var(--header-h,4rem)] z-30 -mx-4 scroll-mt-[var(--header-h,4rem)] border-b px-4 py-2 sm:-mx-1.5 sm:px-1.5"
++      className="bg-surface-raised border-hairline sticky top-[var(--header-h,4rem)] z-30 -mx-4 scroll-mt-[var(--header-h,4rem)] border-b px-4 py-2 sm:-mx-1.5 sm:px-1.5 lg:top-[calc(var(--header-h,4rem)+1.5rem)] lg:mx-0 lg:self-start lg:border-b-0 lg:bg-transparent lg:p-0"
+     >
+-      <div className="flex items-center gap-2 md:items-start md:gap-3">
++      <div className="flex items-center gap-2 md:items-start md:gap-3 lg:flex-col lg:items-stretch lg:gap-4">
+         {placaEnabled && (
+           <form
+             role="search"
+             aria-label="Buscar por número de placa"
+             onSubmit={handleSubmit}
+-            className="relative shrink-0 md:mt-1.5"
++            className="relative shrink-0 md:mt-1.5 lg:mt-0"
+           >
+             <label htmlFor={inputId} className="sr-only">
+               Tu número de placa
+@@ -623,7 +645,7 @@ function FilterBar({
+               autoComplete="off"
+               value={placaText}
+               onChange={handleChange}
+-              className={`bg-surface text-text-primary border-hairline focus-visible:outline-primary-deep h-10 w-32 rounded-xl border pl-14 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-40 ${placaText === '' ? 'pr-3' : 'pr-9'}`}
++              className={`bg-surface text-text-primary border-hairline focus-visible:outline-primary-deep h-10 w-32 rounded-xl border pl-14 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-40 lg:h-11 lg:w-full ${placaText === '' ? 'pr-3' : 'pr-9'}`}
+             />
+             {placaText !== '' && (
+               <button
+@@ -642,8 +664,16 @@ function FilterBar({
+           ref={scrollerRef}
+           role="group"
+           aria-label="Filtrar por categoría"
+-          className="relative -mx-1 flex min-w-0 flex-1 snap-x snap-proximity scroll-px-1 [scrollbar-width:none] gap-2 overflow-x-auto px-1 py-1 md:flex-wrap md:overflow-visible [&::-webkit-scrollbar]:hidden"
++          className="relative -mx-1 flex min-w-0 flex-1 snap-x snap-proximity scroll-px-1 [scrollbar-width:none] gap-2 overflow-x-auto px-1 py-1 md:flex-wrap md:overflow-visible lg:mx-0 lg:flex-col lg:flex-nowrap lg:gap-1 lg:px-0 [&::-webkit-scrollbar]:hidden"
+         >
++          {/* En la columna lateral (desde `lg`) la lista lleva un rótulo visible; el nombre del
++              grupo para el lector de pantalla sigue siendo su `aria-label`. */}
++          <p
++            aria-hidden="true"
++            className="text-text-secondary hidden px-3 pb-1 text-sm font-semibold lg:block"
++          >
++            Categorías
++          </p>
+           {chips.map((chip) => {
+             const key = chip.id ?? 'todas';
+             const active = selected === chip.id;
+@@ -662,16 +692,16 @@ function FilterBar({
+                 data-analytics-event="gallery_filter"
+                 data-analytics-content-id={key}
+                 onClick={() => onSelect(chip.id)}
+-                className={`focus-visible:outline-primary-deep ease-spring inline-flex min-h-11 shrink-0 snap-start items-center rounded-full px-4 text-sm font-semibold whitespace-nowrap transition-transform duration-[var(--duration-micro)] focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 motion-reduce:transition-none ${
++                className={`focus-visible:outline-primary-deep ease-spring inline-flex min-h-11 shrink-0 snap-start items-center rounded-full px-4 text-sm font-semibold whitespace-nowrap transition-transform duration-[var(--duration-micro)] focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 motion-reduce:transition-none lg:w-full lg:justify-between lg:gap-3 lg:rounded-lg lg:px-3 lg:py-2 lg:text-left lg:whitespace-normal lg:active:scale-100 ${
+                   active
+                     ? 'bg-primary-deep text-on-deep'
+                     : empty
+-                      ? 'bg-surface-muted text-text-secondary ring-hairline ring-1'
+-                      : 'bg-surface-muted text-text-primary ring-hairline ring-1'
++                      ? 'bg-surface-muted text-text-secondary ring-hairline lg:hover:bg-surface-muted ring-1 lg:bg-transparent lg:ring-0'
++                      : 'bg-surface-muted text-text-primary ring-hairline lg:hover:bg-surface-muted ring-1 lg:bg-transparent lg:ring-0'
+                 }`}
+               >
+                 {chip.label}
+-                <span className="ml-1.5 text-xs font-medium tabular-nums opacity-75">
++                <span className="ml-1.5 text-xs font-medium tabular-nums opacity-75 lg:ml-0">
+                   {chip.count}
+                 </span>
+               </button>
+@@ -1432,6 +1462,19 @@ function Gallery({
+     replaceGroupSearch(id);
+   }, []);
+ 
++  // Las categorías de la apertura de la página (`valida:categoria`, ver la plantilla): tocarlas
++  // es tocar el chip. Si la isla todavía no estaba hidratada, el filtro le llega por la URL.
++  useEffect(() => {
++    const onCategory = (event: Event) => {
++      const id = (event as CustomEvent<{ id?: unknown }>).detail?.id;
++      if (typeof id === 'string' && groups.some(({ group }) => group.id === id)) {
++        handleSelectGroup(id);
++      }
++    };
++    window.addEventListener('valida:categoria', onCategory);
++    return () => window.removeEventListener('valida:categoria', onCategory);
++  }, [groups, handleSelectGroup]);
++
+   const flushPlacaAnalytics = useCallback((digits: string) => {
+     window.clearTimeout(placaTimer.current);
+     // Nunca el número: identifica a un corredor y casi todos son menores.
+@@ -1504,7 +1547,10 @@ function Gallery({
+   const shortMessage = shortResultMessage(total, placa);
+ 
+   return (
+-    <div inert={viewerOpen || undefined} className="w-full">
++    <div
++      inert={viewerOpen || undefined}
++      className="w-full lg:grid lg:grid-cols-[14rem_minmax(0,1fr)] lg:items-start lg:gap-10 xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-12"
++    >
+       <FilterBar
+         barRef={barRef}
+         chips={chips}
+@@ -1520,34 +1566,38 @@ function Gallery({
+         onPlacaClear={handlePlacaClear}
+       />
+ 
+-      <div ref={resultsRef} className="mt-6 space-y-10 sm:mt-8 sm:space-y-12">
+-        {placa !== null && total === 0 ? (
+-          <NoMatches
+-            placa={placa}
+-            familyRequestHref={familyRequestHref}
+-            onShowAll={() => {
+-              handlePlacaClear();
+-              handleSelectGroup(null);
+-            }}
+-          />
+-        ) : (
+-          visibleGroups.map(({ group, photos }) => (
+-            <GroupSection
+-              key={group.id}
+-              group={group}
+-              photos={photos}
+-              base={manifest.base}
+-              depth={expanded.has(group.id) ? 'all' : baseDepth}
+-              onOpen={handleOpen}
+-              register={registerTile}
+-              onReveal={handleReveal}
+-              onEnter={handleEnterGroup}
++      {/* Desde `lg`, la columna de la derecha. Es el hermano siguiente de la barra y el que mide
++          el regreso al inicio de los resultados: arriba están las mangas. */}
++      <div ref={resultsRef} className="min-w-0">
++        <div className="mt-6 space-y-10 sm:mt-8 sm:space-y-12 lg:mt-0">
++          {placa !== null && total === 0 ? (
++            <NoMatches
++              placa={placa}
++              familyRequestHref={familyRequestHref}
++              onShowAll={() => {
++                handlePlacaClear();
++                handleSelectGroup(null);
++              }}
+             />
+-          ))
+-        )}
+-      </div>
++          ) : (
++            visibleGroups.map(({ group, photos }) => (
++              <GroupSection
++                key={group.id}
++                group={group}
++                photos={photos}
++                base={manifest.base}
++                depth={expanded.has(group.id) ? 'all' : baseDepth}
++                onOpen={handleOpen}
++                register={registerTile}
++                onReveal={handleReveal}
++                onEnter={handleEnterGroup}
++              />
++            ))
++          )}
++        </div>
+ 
+-      {familyRequestHref && <FamilyCard href={familyRequestHref} />}
++        {familyRequestHref && <FamilyCard href={familyRequestHref} />}
++      </div>
+ 
+       {activeEntry !== null && active !== null && (
+         <PhotoViewer
+diff --git a/src/components/interactive/__tests__/RacePhotoGallery.react.test.tsx b/src/components/interactive/__tests__/RacePhotoGallery.react.test.tsx
+index 8acf8cc..889265b 100644
+--- a/src/components/interactive/__tests__/RacePhotoGallery.react.test.tsx
++++ b/src/components/interactive/__tests__/RacePhotoGallery.react.test.tsx
+@@ -381,17 +381,22 @@ describe('RacePhotoGallery', () => {
+           8,
+         );
+         expect(enterButtons().map((button) => button.textContent)).toEqual([ENTER_MANGA]);
+-        // El botón vive en su manga, debajo de la rejilla.
++        // El botón vive en su manga, en la línea del titular (a su derecha) y no debajo de la
++        // tira: con ocho mangas, ocho botones debajo alargaban la galería.
+         const manga = groupList('Infantil A y B').parentElement!;
+         const enter = within(manga).getByRole('button', { name: ENTER_MANGA });
+-        expect(enter).toBeInTheDocument();
+-        // Se ve «Ver las 52 fotos»: la categoría ya la dice el titular de la manga y solo la
+-        // oye el lector de pantalla. Y el texto se balancea: sin eso, en el teléfono dejaba una
+-        // letra sola en la segunda línea.
++        const heading = within(manga).getByRole('heading', { name: 'Infantil A y B' });
++        expect(enter.parentElement).toContainElement(heading);
++        expect(enter.compareDocumentPosition(groupList('Infantil A y B'))).toBe(
++          Node.DOCUMENT_POSITION_FOLLOWING,
++        );
++        // Se ve «Ver las 52 fotos» («Ver las 52» en el teléfono): la categoría ya la dice el
++        // titular de la manga y solo la oye el lector de pantalla, que recibe el nombre completo.
+         const hidden = enter.querySelector('.sr-only')!;
+         expect(hidden).toHaveTextContent('de Infantil A y B');
+         expect(enter.textContent!.replace(hidden.textContent!, '').trim()).toBe('Ver las 52 fotos');
+-        expect(enter).toHaveClass('text-balance', 'text-center');
++        expect(enter).toHaveAttribute('aria-label', ENTER_MANGA);
++        expect(enter).toHaveClass('whitespace-nowrap');
+         // «Mostrar las N restantes» es de la vista de una categoría.
+         expect(screen.queryByRole('button', { name: /Mostrar las/ })).not.toBeInTheDocument();
+       });
+diff --git a/src/components/sections/ValidaAllies.astro b/src/components/sections/ValidaAllies.astro
+index 0d03e54..e09bd32 100644
+--- a/src/components/sections/ValidaAllies.astro
++++ b/src/components/sections/ValidaAllies.astro
+@@ -91,17 +91,17 @@ const { total } = summarizeAllies(allies);
+ const PLATE: LogoBox = { side: 42, maxWidth: 88, maxHeight: 52 };
+ 
+ /**
+- * `sizes` de cada logo: su fracción de la placa, y la placa en cada tramo (dos
+- * columnas en el teléfono, tres desde 640 px, cuatro desde 1024 y cinco de
+- * 224 px con el tope de `max-w-7xl`), descontando márgenes y huecos.
++ * `sizes` de cada logo: su fracción de la placa, y la placa en cada tramo (tres
++ * columnas en el teléfono, cuatro desde 640 px, cuatro en la columna derecha
++ * desde 1024 y cinco de unos 160 px desde 1280), descontando márgenes y huecos.
+  */
+ function logoSizes(widthPct: number): string {
+   const part = (value: number) => Math.round(value * widthPct) / 100;
+   return [
+-    `(min-width: 1280px) ${part(224)}px`,
+-    `(min-width: 1024px) calc(${part(25)}vw - ${part(34)}px)`,
+-    `(min-width: 640px) calc(${part(33.33)}vw - ${part(32)}px)`,
+-    `calc(${part(50)}vw - ${part(24)}px)`,
++    `(min-width: 1280px) ${part(195)}px`,
++    `(min-width: 1024px) calc(${part(22)}vw - ${part(18)}px)`,
++    `(min-width: 640px) calc(${part(25)}vw - ${part(28)}px)`,
++    `calc(${part(33.33)}vw - ${part(19)}px)`,
+   ].join(', ');
+ }
+ 
+@@ -206,146 +206,184 @@ function linkLabel(href: string): string {
+         ))}
+       </svg>
+ 
+-      <SectionIntro
+-        id={headingId}
+-        tone="dark"
+-        eyebrow="Aliados"
+-        eyebrowIcon="ph:handshake-bold"
+-        title={headingTitle}
+-        highlight={headingHighlight}
+-        lead={lead}
+-      />
++      {/* Desde `lg`, dos columnas: el agradecimiento queda fijo a la izquierda mientras los
++            logos pasan a la derecha. Con 25 aliados el muro de una columna medía más de 2.000 px
++            en escritorio y 3.600 en el teléfono, y el titular se perdía arriba. */}
++      <div class="lg:grid lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:items-start lg:gap-12 xl:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] xl:gap-16">
++        <div class="lg:sticky lg:top-[calc(var(--header-h,4rem)+2rem)]">
++          <SectionIntro
++            id={headingId}
++            tone="dark"
++            eyebrow="Aliados"
++            eyebrowIcon="ph:handshake-bold"
++            title={headingTitle}
++            highlight={headingHighlight}
++            lead={lead}
++          />
++        </div>
+ 
+-      {/* El muro entero es lo que observa `sponsor_wall_view` («muro»): los dos
++        {/* El muro entero es lo que observa `sponsor_wall_view` («muro»): los dos
+             grupos cuentan como una sola vista. */}
+-      <div
+-        data-sponsor-wall="muro"
+-        class="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 sm:mt-14 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-14 lg:grid-cols-4 xl:grid-cols-5"
+-      >
+-        {groups.map((group) => {
+-          const groupId = `${id}-${group.role}`;
+-          return (
+-            <div
+-              class:list={[
+-                'col-span-full grid grid-cols-subgrid content-start',
+-                group === closing && CLOSING_SPAN[closingSize],
+-              ]}
+-            >
+-              <h3
+-                id={groupId}
+-                class="font-display col-span-full flex items-center gap-4 text-lg font-extrabold text-white italic sm:text-xl"
++        <div
++          data-sponsor-wall="muro"
++          class="mt-10 grid grid-cols-3 gap-x-3 gap-y-10 sm:mt-12 sm:grid-cols-4 sm:gap-x-5 lg:mt-0 lg:grid-cols-3 lg:gap-y-12 xl:grid-cols-4"
++        >
++          {groups.map((group) => {
++            const groupId = `${id}-${group.role}`;
++            return (
++              <div
++                class:list={[
++                  'col-span-full grid grid-cols-subgrid content-start',
++                  group === closing && CLOSING_SPAN[closingSize],
++                ]}
+               >
+-                <span class="shrink-0">{group.title}</span>
+-                <span class="h-px flex-1 bg-white/20" aria-hidden="true" />
+-              </h3>
++                <h3
++                  id={groupId}
++                  class="font-display col-span-full flex items-center gap-4 text-lg font-extrabold text-white italic sm:text-xl"
++                >
++                  <span class="shrink-0">{group.title}</span>
++                  <span class="h-px flex-1 bg-white/20" aria-hidden="true" />
++                </h3>
+ 
+-              <ul
+-                role="list"
+-                aria-labelledby={groupId}
+-                class="col-span-full mt-6 grid grid-cols-subgrid gap-y-8 lg:gap-y-10"
+-              >
+-                {group.allies.map((ally) => {
+-                  const href = allyHref(ally);
+-                  const handle = allyHandle(ally);
+-                  const Card = href ? 'a' : 'div';
+-                  const linkProps = href
+-                    ? {
+-                        href,
+-                        target: '_blank',
+-                        rel: 'noopener noreferrer',
+-                        'data-analytics-event': 'sponsor_click',
+-                        'data-analytics-sponsor-id': ally.id,
+-                      }
+-                    : {};
++                <ul
++                  role="list"
++                  aria-labelledby={groupId}
++                  class="col-span-full mt-5 grid grid-cols-subgrid gap-y-7 lg:gap-y-9"
++                >
++                  {group.allies.map((ally) => {
++                    const href = allyHref(ally);
++                    const handle = allyHandle(ally);
++                    const Card = href ? 'a' : 'div';
++                    const linkProps = href
++                      ? {
++                          href,
++                          target: '_blank',
++                          rel: 'noopener noreferrer',
++                          'data-analytics-event': 'sponsor_click',
++                          'data-analytics-sponsor-id': ally.id,
++                        }
++                      : {};
+ 
+-                  return (
+-                    <li>
+-                      <Card
+-                        {...linkProps}
+-                        class:list={[
+-                          'group flex h-full flex-col',
+-                          href &&
+-                            'focus-visible:outline-accent rounded-xs focus-visible:outline-2 focus-visible:outline-offset-4',
+-                        ]}
+-                      >
+-                        {/* Placa de papel. `alt=""`: el nombre ya está en el
+-                              título de la tarjeta, y en una tarjeta enlazada el
+-                              lector de pantalla lo diría dos veces. */}
+-                        <div
++                    // En el teléfono el grupo con línea descriptiva (hoy «Con el apoyo de»: la
++                    // Alcaldía nombra sus cuatro secretarías) va como lista, placa a la izquierda y
++                    // texto a la derecha: en una casilla de un tercio de pantalla esa línea ocupaba
++                    // diez renglones. En los demás el usuario de Instagram sale desde `lg`, con
++                    // casillas de unos 190 px: más angostas lo partían a media palabra
++                    // («@alquiequiposber / ucolombia»). Abajo de eso la casilla entera es el enlace.
++                    const listed = group.taglines;
++                    return (
++                      <li class:list={[listed && 'max-sm:col-span-full']}>
++                        <Card
++                          {...linkProps}
+                           class:list={[
+-                            'grid aspect-[5/3] place-items-center rounded-xs bg-white',
+-                            href && [
+-                              'ease-spring transition-transform duration-[var(--duration-micro)]',
+-                              'group-hover:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0',
+-                            ],
++                            'group flex h-full flex-col',
++                            listed && 'max-sm:flex-row max-sm:items-start max-sm:gap-4',
++                            href &&
++                              'focus-visible:outline-accent rounded-xs focus-visible:outline-2 focus-visible:outline-offset-4',
+                           ]}
+                         >
+-                          <img
+-                            {...logoImage(ally)}
+-                            alt=""
+-                            loading="lazy"
+-                            decoding="async"
+-                            class="h-auto max-h-full object-contain"
+-                          />
+-                        </div>
++                          {/* Placa de papel. `alt=""`: el nombre ya está en el
++                              título de la tarjeta, y en una tarjeta enlazada el
++                              lector de pantalla lo diría dos veces. */}
++                          <div
++                            class:list={[
++                              'grid aspect-[5/3] place-items-center rounded-xs bg-white',
++                              listed && 'max-sm:w-2/5 max-sm:shrink-0',
++                              href && [
++                                'ease-spring transition-transform duration-[var(--duration-micro)]',
++                                'group-hover:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0',
++                              ],
++                            ]}
++                          >
++                            <img
++                              {...logoImage(ally)}
++                              alt=""
++                              loading="lazy"
++                              decoding="async"
++                              class="h-auto max-h-full object-contain"
++                            />
++                          </div>
+ 
+-                        <h4 class="font-display mt-4 text-base leading-snug font-bold [overflow-wrap:anywhere] text-white sm:text-lg">
+-                          {ally.name}
+-                        </h4>
+-                        {group.taglines && ally.tagline && (
+-                          <p class="mt-1 text-sm leading-snug text-white/70">{ally.tagline}</p>
+-                        )}
++                          <div class="flex min-w-0 flex-1 flex-col">
++                            <h4
++                              class:list={[
++                                'font-display text-sm leading-snug font-bold [overflow-wrap:anywhere] text-white sm:mt-3 sm:text-base',
++                                listed ? 'max-sm:mt-0' : 'mt-2.5',
++                              ]}
++                            >
++                              {ally.name}
++                            </h4>
++                            {group.taglines && ally.tagline && (
++                              <p class="mt-1 text-xs leading-snug text-white/70 sm:text-sm">
++                                {ally.tagline}
++                              </p>
++                            )}
+ 
+-                        {href && (
+-                          <span class="group-hover:text-accent-light group-focus-visible:text-accent-light mt-auto inline-flex items-start gap-1.5 pt-3 text-sm font-semibold text-white/80 group-hover:underline">
+-                            {/* En tarjetas angostas el icono le quita al usuario el
++                            {href && (
++                              <span
++                                class:list={[
++                                  'group-hover:text-accent-light group-focus-visible:text-accent-light mt-auto inline-flex items-start gap-1.5 pt-2 text-xs font-semibold text-white/80 group-hover:underline sm:pt-2.5 sm:text-[0.8125rem]',
++                                  !listed && 'max-lg:hidden',
++                                ]}
++                              >
++                                {/* En tarjetas angostas el icono le quita al usuario el
+                                   ancho que necesita para no partirse a media palabra:
+                                   el «@» ya dice que es un usuario. */}
+-                            <Icon
+-                              name={handle ? 'ph:instagram-logo-bold' : 'ph:arrow-square-out-bold'}
+-                              class:list={['mt-0.5 size-4 shrink-0', handle && 'max-sm:hidden']}
+-                              aria-hidden="true"
+-                            />
+-                            <span class="[overflow-wrap:anywhere]">
+-                              {handle ?? linkLabel(href)}
+-                            </span>
+-                            <span class="sr-only"> (se abre en una pestaña nueva)</span>
+-                          </span>
+-                        )}
+-                      </Card>
+-                    </li>
+-                  );
+-                })}
+-              </ul>
+-            </div>
+-          );
+-        })}
++                                {/* Con usuario no va icono: el «@» ya dice que es Instagram y el ancho
++                                  lo necesita el usuario para no partirse. */}
++                                {!handle && (
++                                  <Icon
++                                    name="ph:arrow-square-out-bold"
++                                    class="mt-0.5 size-4 shrink-0"
++                                    aria-hidden="true"
++                                  />
++                                )}
++                                <span class="[overflow-wrap:anywhere]">
++                                  {handle ?? linkLabel(href)}
++                                </span>
++                                <span class="sr-only"> (se abre en una pestaña nueva)</span>
++                              </span>
++                            )}
++                            {/* Sin el usuario visible en el teléfono, el aviso de pestaña nueva va aparte. */}
++                            {href && !listed && (
++                              <span class="sr-only lg:hidden"> (se abre en una pestaña nueva)</span>
++                            )}
++                          </div>
++                        </Card>
++                      </li>
++                    );
++                  })}
++                </ul>
++              </div>
++            );
++          })}
+ 
+-        {/* Cierre: el respaldo institucional del afiche (en prosa, no son
++          {/* Cierre: el respaldo institucional del afiche (en prosa, no son
+               aliados de la válida) y la invitación a la próxima. */}
+-        <div class:list={['col-span-full flex flex-col items-start', REST_SPAN[closingSize]]}>
+-          {institutions.length > 0 && (
+-            <>
+-              <h3 class="font-display flex w-full items-center gap-4 text-lg font-extrabold text-white italic sm:text-xl">
+-                <span class="shrink-0">Con el respaldo de</span>
+-                <span class="h-px flex-1 bg-white/20" aria-hidden="true" />
+-              </h3>
+-              <p class="mt-6 max-w-3xl text-base leading-relaxed text-white/75">
+-                {listInProse(institutions)}.
+-              </p>
+-            </>
+-          )}
+-          <a
+-            href="/patrocinadores"
+-            data-analytics-event="sponsor_click"
+-            data-analytics-sponsor-id="quiero-patrocinar"
+-            class:list={[
+-              'hover:text-surface-dark inline-flex items-center justify-center rounded-lg border-2 border-white/40 px-5 py-2.5 font-semibold text-white transition-colors duration-200 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white',
+-              institutions.length > 0 && 'mt-8',
+-            ]}
+-          >
+-            ¿Tu marca en la próxima?
+-          </a>
++          <div class:list={['col-span-full flex flex-col items-start', REST_SPAN[closingSize]]}>
++            {institutions.length > 0 && (
++              <>
++                <h3 class="font-display flex w-full items-center gap-4 text-lg font-extrabold text-white italic sm:text-xl">
++                  <span class="shrink-0">Con el respaldo de</span>
++                  <span class="h-px flex-1 bg-white/20" aria-hidden="true" />
++                </h3>
++                <p class="mt-6 max-w-3xl text-base leading-relaxed text-white/75">
++                  {listInProse(institutions)}.
++                </p>
++              </>
++            )}
++            <a
++              href="/patrocinadores"
++              data-analytics-event="sponsor_click"
++              data-analytics-sponsor-id="quiero-patrocinar"
++              class:list={[
++                'hover:text-surface-dark inline-flex items-center justify-center rounded-lg border-2 border-white/40 px-5 py-2.5 font-semibold text-white transition-colors duration-200 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white',
++                institutions.length > 0 && 'mt-8',
++              ]}
++            >
++              ¿Tu marca en la próxima?
++            </a>
++          </div>
+         </div>
+       </div>
+     </SectionShell>
+diff --git a/src/components/sections/ValidaNumbers.astro b/src/components/sections/ValidaNumbers.astro
+index 32b5fb6..7628d4e 100644
+--- a/src/components/sections/ValidaNumbers.astro
++++ b/src/components/sections/ValidaNumbers.astro
+@@ -99,6 +99,22 @@ function shareOfHundred(stat: StatItem): number | null {
+ function asCountable(value: string): number | null {
+   return /^\d{1,6}$/.test(value.trim()) ? Number(value) : null;
+ }
++
++/**
++ * Las cifras históricas van en un solo bloque partido por filetes (dos columnas en el teléfono,
++ * tres desde `lg`), no en seis tarjetas sueltas: en el teléfono las tarjetas iban de a una por
++ * fila y la sección medía casi 2.500 px. En dos columnas la de la matriz de puntos ocupa la fila
++ * entera (a media fila los puntos quedaban de 3 px), y si después quedan en número impar las de
++ * media fila, la última también se estira: una casilla vacía se vería como un hueco del filete.
++ */
++const spanFull = (() => {
++  const full = new Set(
++    stats.filter((stat) => shareOfHundred(stat) !== null).map((stat) => stat.id),
++  );
++  const halves = stats.filter((stat) => !full.has(stat.id));
++  if (halves.length % 2 === 1) full.add(halves[halves.length - 1].id);
++  return full;
++})();
+ ---
+ 
+ {
+@@ -128,10 +144,15 @@ function asCountable(value: string): number | null {
+               {highlights.map((item, index) => (
+                 // `.reveal` es lo que dispara el conteo de `StatFigure`; sin él
+                 // la cifra se queda en cero.
+-                <li class="reveal flex flex-col gap-3" style={`--stagger:${index * 80}ms`}>
++                // En el teléfono el icono va al lado de la cifra y no encima: tres cifras apiladas
++                // con su icono arriba medían 170 px cada una.
++                <li
++                  class="reveal flex items-start gap-4 sm:flex-col sm:gap-3"
++                  style={`--stagger:${index * 80}ms`}
++                >
+                   <Icon
+                     name={item.icon}
+-                    class="text-primary-deep size-7 shrink-0"
++                    class="text-primary-deep mt-1 size-7 shrink-0 sm:mt-0"
+                     aria-hidden="true"
+                   />
+                   <StatFigure
+@@ -150,7 +171,11 @@ function asCountable(value: string): number | null {
+               items={facts}
+               columns={3}
+               tone="tinted"
+-              class={highlights.length > 0 ? 'border-hairline mt-8 border-t pt-8' : 'mt-6'}
++              class={
++                highlights.length > 0
++                  ? 'border-hairline mt-8 border-t pt-8 max-sm:grid-cols-2'
++                  : 'mt-6 max-sm:grid-cols-2'
++              }
+             />
+           )}
+         </div>
+@@ -160,7 +185,10 @@ function asCountable(value: string): number | null {
+         <div class:list={[hasEdition ? 'mt-12' : 'mt-10']}>
+           <h3 class="font-display text-text-primary text-xl font-bold">{historicTitle}</h3>
+ 
+-          <ul role="list" class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
++          <ul
++            role="list"
++            class="bg-primary/15 ring-primary/15 mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl ring-1 lg:grid-cols-3"
++          >
+             {stats.map((stat, index) => {
+               const countable = asCountable(stat.value);
+               const share = shareOfHundred(stat);
+@@ -170,21 +198,22 @@ function asCountable(value: string): number | null {
+               return (
+                 <li
+                   class:list={[
+-                    'rounded-2xl border p-5',
+-                    tokens.hairline,
++                    'p-4 sm:p-6',
+                     tokens.card,
++                    spanFull.has(stat.id) && 'col-span-2 lg:col-span-1',
+                     countable !== null && 'reveal',
+                   ]}
+                   style={countable !== null ? `--stagger:${(index % 3) * 80}ms` : undefined}
+                 >
+                   {/* Sin icono: el prefijo («Más de», «Al menos») es lo que orienta. Sin
+-                      prefijo la fila se reserva solo desde `sm` (`hidden sm:block sm:min-h-5`):
+-                      ahí las tarjetas van en filas de dos y tres y las cifras tienen que
+-                      arrancar a la misma altura; en una columna sería un hueco vacío. */}
++                      prefijo la fila se reserva igual (`min-h-5`): las casillas van en filas de
++                      dos o tres y las cifras tienen que arrancar a la misma altura. Solo la que
++                      ocupa la fila entera en el teléfono no la necesita. */}
+                   <p
+                     class:list={[
+                       'text-text-secondary mb-3 text-sm font-semibold',
+-                      !stat.prefix && 'hidden sm:block sm:min-h-5',
++                      !stat.prefix &&
++                        (spanFull.has(stat.id) ? 'max-lg:hidden lg:min-h-5' : 'min-h-5'),
+                     ]}
+                   >
+                     {stat.prefix}
+diff --git a/src/components/sections/__tests__/ValidaAllies.astro.test.ts b/src/components/sections/__tests__/ValidaAllies.astro.test.ts
+index ba36e5c..57c501b 100644
+--- a/src/components/sections/__tests__/ValidaAllies.astro.test.ts
++++ b/src/components/sections/__tests__/ValidaAllies.astro.test.ts
+@@ -132,8 +132,14 @@ describe('ValidaAllies', () => {
+       expect(texts).not.toContain('Patrocinador');
+       expect(texts).not.toContain('Apoyo');
+     }
+-    // Misma placa para todos.
+-    const plates = cards.map((card) => card.querySelector('img')!.parentElement!.className);
++    // Misma placa para todos. Lo único que cambia es la disposición en el teléfono (`max-sm:`) del
++    // grupo con línea descriptiva, que ahí va como lista: el tamaño y la forma de la placa no.
++    const plates = cards.map((card) =>
++      card
++        .querySelector('img')!
++        .parentElement!.className.replace(/\s*max-sm:\S+/g, '')
++        .trim(),
++    );
+     expect(new Set(plates).size).toBeLessThanOrEqual(2); // con o sin efecto de hover, nada más
+     for (const plate of plates) expect(plate).toContain('aspect-[5/3]');
+   });
+diff --git a/src/data/valida-yumbo-2026/preview/evento.json b/src/data/valida-yumbo-2026/preview/evento.json
+index 606147a..7babe79 100644
+--- a/src/data/valida-yumbo-2026/preview/evento.json
++++ b/src/data/valida-yumbo-2026/preview/evento.json
+@@ -36,7 +36,6 @@
+     "Comisión Vallecaucana de Ciclomontañismo",
+     "Liga de Ciclismo del Valle",
+     "Indervalle",
+-    "IMDERTY",
+     "Gobernación del Valle del Cauca",
+     "Paraíso de Todos",
+     "GW",
+diff --git a/src/pages/copa-valle-yumbo-2026.astro b/src/pages/copa-valle-yumbo-2026.astro
+index c9b02b4..8dcadcc 100644
+--- a/src/pages/copa-valle-yumbo-2026.astro
++++ b/src/pages/copa-valle-yumbo-2026.astro
+@@ -22,14 +22,17 @@
+  * un pie de foto o un parámetro de analítica, ni el número de placa.
+  *
+  * Orden y tonos (alternan entre secciones contiguas):
+- *   1. Apertura — tinted + topo (`#inicio`)
++ *   1. Apertura — tinted + topo (`#inicio`; con fotos, la entrada por categoría al lado del
++ *      titular; sin fotos, la foto de la pista)
+  *   2. Franja de aliados — papel (`ValidaSponsorRibbon`)
+  *   3. Fotos oficiales — plain (`#fotos`)
+- *   4. Aliados — dark (`ValidaAllies`, `#aliados`)
++ *   4. Aliados — dark (`ValidaAllies`, `#aliados`; desde `lg`, el agradecimiento fijo a la
++ *      izquierda y los logos a la derecha)
+  *   5. Resultados y crónica — plain (`#resultados`; solo si hay algo que enlazar: con
+  *      una tarjeta, una banda de una fila; con dos o tres, la sección con tarjetas)
+  *   6. En cifras — tinted + yumbo (`ValidaNumbers`, `#cifras`)
+- *   7. La pista — muted (`#la-pista`, intro centrado como el eje de su Timeline)
++ *   7. La pista — muted (`#la-pista`; los hitos a la izquierda y el trazado de una vuelta a la
++ *      derecha)
+  *   8. Paso siguiente — brand (`#siguiente`, el teal del cierre de la portada)
+  * Encima de todo, el índice flotante (`SectionDock`) con una entrada por
+  * sección pintada.
+@@ -63,23 +66,30 @@ import {
+   validaFotosSchema,
+ } from '@lib/schemas';
+ import { generateEventJsonLd } from '@lib/seo';
++import { buildTrackPath, parseGpx } from '@lib/track-map';
+ import {
++  chipLabel,
+   countPhotos,
+   dockItems,
+   galleryEmptyCopy,
++  groupPhotos,
++  groupSearch,
+   hasPlacaTags,
+   heroCopy,
+   isPublished,
+   pageMeta,
++  photoCount,
+   photoUrls,
+   recapCards,
+   recapLead,
+   summarizeAllies,
++  takenClock,
+   type Ally,
+   type PhotoManifest,
+   type ValidaData,
+   type ValidaEvent,
+ } from '@lib/valida';
++import gpx from '../data/la-pista.gpx?raw';
+ // Reales o, con `VALIDA_PREVIEW=true` en local, los de prueba de `preview/`.
+ import {
+   aliadosJson,
+@@ -172,12 +182,28 @@ const jsonLd = [
+ const allySummary = summarizeAllies(aliados);
+ const totalPhotos = countPhotos(fotos);
+ 
+-// Una foto de la carrera si el club la eligió y sigue en el manifest (si una
+-// familia pidió retirarla y ya no está, la apertura vuelve a la foto de la pista).
+-const heroPhoto = evento.hero.photoId
+-  ? fotos.photos.find((photo) => photo.id === evento.hero.photoId)
+-  : undefined;
+-const heroUrls = heroPhoto ? photoUrls(fotos.base, heroPhoto.id) : null;
++// Con fotos, la columna de la derecha de la apertura deja de ser una foto y pasa a ser la
++// entrada a la galería: una fila por manga (lo que dice su chip, la hora de salida y cuántas
++// fotos tiene). Es lo que la familia vino a hacer, y así lo hace desde la primera pantalla y
++// con un toque, en vez de bajar hasta los chips. Sin fotos (antes del lunes) la columna sigue
++// siendo la foto de la pista. La hora sale de `mangas.json`, la misma que asigna las fotos.
++const startById = new Map(
++  mangasJson.groups.map((group) => [group.id, group.start ?? null] as const),
++);
++const heroGroups =
++  totalPhotos > 0
++    ? groupPhotos(fotos)
++        .filter(({ photos }) => photos.length > 0)
++        .map(({ group, photos }) => {
++          const start = startById.get(group.id) ?? null;
++          return {
++            id: group.id,
++            label: chipLabel(group),
++            count: photos.length,
++            clock: start ? takenClock(`${evento.date}T${start}:00-05:00`) : '',
++          };
++        })
++    : [];
+ 
+ // Con fotos, la apertura promete las fotos; sin ellas, narra la jornada.
+ const {
+@@ -213,16 +239,25 @@ const removalHref = whatsappMessage(
+ 
+ // ─── La casa ────────────────────────────────────────────────────────────────
+ const trackHistoryAll = buildMilestoneItems(filterTrackMilestones(milestones).map((e) => e.data));
+-// Sin foto de la carrera, la apertura ya muestra la foto de la pista: el primer
+-// hito no la repite (además, `Timeline` carga con prioridad la imagen del primer
+-// hito, y aquí queda muy por debajo del pliegue).
+-const trackHistory = heroPhoto
+-  ? trackHistoryAll
+-  : trackHistoryAll.map((item) =>
++// Sin fotos, la apertura muestra la foto de la pista: el primer hito no la repite
++// (además, `Timeline` carga con prioridad la imagen del primer hito, y aquí queda
++// muy por debajo del pliegue). Con fotos la apertura es la entrada por categoría y
++// la foto vuelve a su hito.
++const heroShowsTrackPhoto = heroGroups.length === 0;
++const trackHistory = heroShowsTrackPhoto
++  ? trackHistoryAll.map((item) =>
+       item.image?.src === historiaPista.src
+         ? { ...item, image: undefined, imageAlt: undefined }
+         : item,
+-    );
++    )
++  : trackHistoryAll;
++
++// El trazado real de la pista, del GPX de una vuelta (el mismo de `/la-pista`): va al lado de
++// los hitos, en la columna que la alternancia de la línea de tiempo dejaba vacía.
++const trackGeometry = buildTrackPath(parseGpx(gpx), { toleranceMeters: 6 });
++const lapKm = trackGeometry
++  ? (trackGeometry.lengthMeters / 1000).toFixed(1).replace('.', ',')
++  : null;
+ // El texto alternativo de la foto de respaldo es el de su hito («Valla de la Pista
+ // XCO…»), no el de `evento.hero.alt`, que describe la foto de la carrera elegida
+ // por el club: la de la pista no muestra corredores.
+@@ -329,8 +364,12 @@ const dock = dockItems({
+       items={[{ label: 'Calendario', href: '/calendario' }, { label: evento.shortTitle }]}
+     />
+ 
+-    <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-14">
+-      <div>
++    <!-- Tres piezas en una rejilla: el titular, la entrada por categoría y los botones. En el
++         DOM van en ese orden (es el de lectura y el del teclado: primero las categorías, que
++         son la tarea); desde `lg` el titular y los botones forman la columna izquierda y la
++         tarjeta ocupa la derecha a todo el alto. Sin fotos la derecha es la foto de la pista. -->
++    <div class="valida-hero mt-2 grid gap-8 lg:gap-x-14 lg:gap-y-0">
++      <div class="valida-hero__intro self-end">
+         <SectionIntro
+           as="h1"
+           id="valida-titulo"
+@@ -340,62 +379,76 @@ const dock = dockItems({
+           highlight={heroHighlight}
+           lead={heroLead}
+         />
+-
+-        <!-- «Buscar mis fotos» emite `page_nav_click` (salto dentro de la página), no
+-             `gallery_filter`: no filtra nada, y contarlo como filtro inflaba el embudo.
+-             Aterriza en `#buscar`, la barra de categorías, no en el titular de la sección. -->
+-        <div class="mt-8 flex flex-wrap items-center gap-3">
+-          {
+-            totalPhotos > 0 && (
+-              <Button
+-                href="#buscar"
+-                variant="accent"
+-                size="lg"
+-                class="w-full gap-2 sm:w-auto"
+-                data-analytics-event="page_nav_click"
+-                data-analytics-content-id="buscar"
+-                data-analytics-method="apertura"
+-              >
+-                <Icon name="ph:magnifying-glass-bold" class="size-5 shrink-0" aria-hidden="true" />
+-                Buscar mis fotos
+-              </Button>
+-            )
+-          }
+-          {
+-            resultsUrl && (
+-              <Button
+-                href={resultsUrl}
+-                variant="outline"
+-                size="lg"
+-                class="w-full gap-2 sm:w-auto"
+-                target="_blank"
+-                rel="noopener noreferrer"
+-                data-analytics-event="race_results_click"
+-                data-analytics-content-id="hero"
+-              >
+-                <Icon name="ph:trophy-bold" class="size-5 shrink-0" aria-hidden="true" />
+-                Resultados oficiales
+-                <span class="sr-only">(se abre en una pestaña nueva)</span>
+-              </Button>
+-            )
+-          }
+-        </div>
+       </div>
+ 
+-      <figure>
+-        {
+-          heroUrls && heroPhoto ? (
+-            <img
+-              src={heroUrls.web}
+-              alt={evento.hero.alt}
+-              width={heroPhoto.w}
+-              height={heroPhoto.h}
+-              loading="eager"
+-              decoding="async"
+-              fetchpriority="high"
+-              class="ring-hairline aspect-[3/2] w-full max-w-full rounded-2xl object-cover ring-1"
+-            />
+-          ) : (
++      {
++        heroGroups.length > 0 ? (
++          <nav
++            aria-labelledby="valida-categorias-titulo"
++            class="valida-hero__aside bg-surface-raised ring-hairline shadow-card self-center rounded-2xl p-4 ring-1 sm:p-6"
++          >
++            <div class="flex items-baseline justify-between gap-4 px-1">
++              <h2
++                id="valida-categorias-titulo"
++                class="font-display text-text-primary text-lg font-bold sm:text-xl"
++              >
++                Busca por categoría
++              </h2>
++              <p class="text-text-secondary text-sm tabular-nums">{photoCount(totalPhotos)}</p>
++            </div>
++            <ul role="list" class="divide-hairline mt-2 divide-y sm:mt-3">
++              {heroGroups.map((group) => (
++                <li>
++                  <a
++                    href={`${groupSearch(group.id)}#buscar`}
++                    data-valida-categoria={group.id}
++                    data-analytics-event="gallery_filter"
++                    data-analytics-content-id={group.id}
++                    data-analytics-method="apertura"
++                    aria-label={`${group.label}: ${photoCount(group.count)}${group.clock ? `, salida a las ${group.clock}` : ''}`}
++                    class="group hover:bg-surface-muted focus-visible:outline-primary-deep -mx-1 flex min-h-12 items-center gap-3 rounded-lg px-2 py-2 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 sm:min-h-11 lg:min-h-10 lg:py-1.5"
++                  >
++                    <span class="text-text-primary min-w-0 flex-1 text-[0.9375rem] leading-snug font-semibold text-pretty sm:text-base">
++                      {group.label}
++                    </span>
++                    {group.clock && (
++                      <span class="text-text-secondary shrink-0 text-xs tabular-nums sm:text-sm">
++                        {group.clock}
++                      </span>
++                    )}
++                    <span class="text-text-secondary w-8 shrink-0 text-right text-sm font-semibold tabular-nums">
++                      {group.count}
++                    </span>
++                    <Icon
++                      name="ph:caret-right-bold"
++                      class="text-primary-deep ease-spring size-4 shrink-0 transition-transform duration-[var(--duration-micro)] group-hover:translate-x-0.5 motion-reduce:transition-none"
++                      aria-hidden="true"
++                    />
++                  </a>
++                </li>
++              ))}
++            </ul>
++            {/* En escritorio la placa la busca el botón «Buscar mis fotos» de al lado; este pie
++                  es para el teléfono y la tableta, donde ese botón no está. Sin él, además, la
++                  primera fila de logos de la franja entra en la primera pantalla de una
++                  laptop de 1440 × 900 (regla del 8-oct). */}
++            {placaSearch && (
++              <p class="border-hairline text-text-secondary mt-2 border-t px-1 pt-3 text-sm lg:hidden">
++                ¿Tienes su número de placa?{' '}
++                <a
++                  href="#buscar"
++                  data-analytics-event="page_nav_click"
++                  data-analytics-content-id="buscar"
++                  data-analytics-method="apertura"
++                  class="text-primary-deep font-semibold underline underline-offset-2 hover:no-underline"
++                >
++                  Búscalo en la galería
++                </a>
++              </p>
++            )}
++          </nav>
++        ) : (
++          <figure class="valida-hero__aside self-center">
+             <Image
+               src={historiaPista}
+               alt={trackPhotoAlt}
+@@ -407,9 +460,58 @@ const dock = dockItems({
+               fetchpriority="high"
+               class="ring-hairline aspect-[3/2] w-full max-w-full rounded-2xl object-cover ring-1"
+             />
++          </figure>
++        )
++      }
++
++      <!-- «Buscar mis fotos» emite `page_nav_click` (salto dentro de la página), no
++           `gallery_filter`: no filtra nada, y contarlo como filtro inflaba el embudo.
++           Aterriza en `#buscar`, la barra de categorías, no en el titular de la sección. -->
++      <div
++        class:list={[
++          'valida-hero__actions flex flex-wrap items-center gap-3 self-start lg:mt-8',
++          // Sin resultados todavía y con la lista de categorías, en el teléfono no queda nada aquí.
++          heroGroups.length > 0 && !resultsUrl && 'max-lg:hidden',
++        ]}
++      >
++        {
++          // Con la lista de categorías debajo del titular, en el teléfono y la tableta este botón
++          // repetía lo que la lista ya hace (y la búsqueda por placa tiene su enlace al pie de
++          // la lista): solo queda en escritorio, donde la lista va al lado.
++          totalPhotos > 0 && (
++            <Button
++              href="#buscar"
++              variant="accent"
++              size="lg"
++              class:list={['w-full gap-2 sm:w-auto', heroGroups.length > 0 && 'max-lg:hidden']}
++              data-analytics-event="page_nav_click"
++              data-analytics-content-id="buscar"
++              data-analytics-method="apertura"
++            >
++              <Icon name="ph:magnifying-glass-bold" class="size-5 shrink-0" aria-hidden="true" />
++              Buscar mis fotos
++            </Button>
++          )
++        }
++        {
++          resultsUrl && (
++            <Button
++              href={resultsUrl}
++              variant="outline"
++              size="lg"
++              class="w-full gap-2 sm:w-auto"
++              target="_blank"
++              rel="noopener noreferrer"
++              data-analytics-event="race_results_click"
++              data-analytics-content-id="hero"
++            >
++              <Icon name="ph:trophy-bold" class="size-5 shrink-0" aria-hidden="true" />
++              Resultados oficiales
++              <span class="sr-only">(se abre en una pestaña nueva)</span>
++            </Button>
+           )
+         }
+-      </figure>
++      </div>
+     </div>
+   </SectionShell>
+ 
+@@ -702,29 +804,82 @@ const dock = dockItems({
+   <!-- 6. Las cifras de la casa -->
+   <ValidaNumbers data={datos} />
+ 
+-  <!-- 7. La casa: la pista -->
++  <!-- 7. La casa: la pista. Los hitos a la izquierda, uno debajo del otro, y desde `lg` el
++       trazado real a la derecha, fijo mientras se leen. La línea de tiempo alternada dejaba media
++       pantalla vacía en cada hito; el trazado (el GPX de una vuelta, el mismo de `/la-pista`)
++       ocupa esa mitad con lo único que esta sección no decía: cómo es la pista. -->
+   {
+     trackHistory.length > 0 && (
+       <SectionShell
+         tone="muted"
+-        width="default"
++        width="wide"
+         id="la-pista"
+         class="scroll-mt-[var(--header-h,4rem)]"
+         scrollDriven
+         labelledby="valida-casa-titulo"
+       >
+-        <SectionIntro
+-          id="valida-casa-titulo"
+-          align="center"
+-          title={casaTitle}
+-          highlight={casaHighlight}
+-          lead="Desde 2012 la Copa Valle se corre en Pizarro."
+-        />
+-        <Timeline items={trackHistory} tone="muted" class="mt-10" />
+-        <div class="mt-12 text-center">
+-          <Button href="/la-pista" variant="outline">
+-            Conoce la pista
+-          </Button>
++        <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,23rem)] lg:items-start lg:gap-16 xl:grid-cols-[minmax(0,1fr)_minmax(0,25rem)] xl:gap-20">
++          <div>
++            <SectionIntro
++              id="valida-casa-titulo"
++              title={casaTitle}
++              highlight={casaHighlight}
++              lead="Desde 2012 la Copa Valle se corre en Pizarro."
++            />
++            <Timeline items={trackHistory} tone="muted" layout="stacked" class="mt-10" />
++          </div>
++
++          {/* El trazado de una vuelta y la entrada a `/la-pista`. En el teléfono, de lado (dibujo a
++                la izquierda, dato y botón a la derecha): de pie, debajo de los hitos, sumaba 450 px a
++                la sección. `vector-effect`: el trazo mide lo mismo en pantalla a cualquier tamaño del
++                dibujo (el `viewBox` es de 1000 de ancho y el dibujo se ve a 100-200 px). */}
++          <div class="bg-surface-raised ring-hairline shadow-card mt-10 rounded-2xl p-4 ring-1 sm:p-8 lg:sticky lg:top-[calc(var(--header-h,4rem)+2rem)] lg:mt-0">
++            <div class="flex items-center gap-5 lg:block">
++              {trackGeometry && (
++                <svg
++                  viewBox={trackGeometry.viewBox}
++                  class="block h-36 w-auto shrink-0 sm:h-56 lg:mx-auto lg:h-[22rem]"
++                  role="presentation"
++                  aria-hidden="true"
++                >
++                  <path
++                    d={trackGeometry.path}
++                    fill="none"
++                    stroke="currentColor"
++                    stroke-width="10"
++                    stroke-linejoin="round"
++                    stroke-linecap="round"
++                    vector-effect="non-scaling-stroke"
++                    class="text-primary/20"
++                  />
++                  <path
++                    d={trackGeometry.path}
++                    fill="none"
++                    stroke="currentColor"
++                    stroke-width="3"
++                    stroke-linejoin="round"
++                    stroke-linecap="round"
++                    vector-effect="non-scaling-stroke"
++                    class="text-primary-deep"
++                  />
++                </svg>
++              )}
++              <div class="min-w-0 flex-1 lg:mt-6 lg:text-center">
++                {lapKm && (
++                  <p class="font-display text-text-primary text-3xl leading-none font-extrabold">
++                    {lapKm}
++                    <span class="text-text-secondary ml-1 text-base font-bold">km por vuelta</span>
++                  </p>
++                )}
++                <p class="text-text-secondary mt-2 text-sm leading-snug">
++                  El trazado de una vuelta real, grabado con GPS.
++                </p>
++                <Button href="/la-pista" variant="outline" class="mt-5 lg:mt-6">
++                  Conoce la pista
++                </Button>
++              </div>
++            </div>
++          </div>
+         </div>
+       </SectionShell>
+     )
+@@ -817,5 +972,68 @@ const dock = dockItems({
+     })();
+   </script>
+ 
++  <!-- Las categorías de la apertura. Sin JavaScript son enlaces `?manga=…#buscar` (la página se
++       vuelve a cargar con el filtro, como un enlace compartido). Con él no se recarga nada: se
++       escribe el filtro en la URL (conservando el estado del router, como hace la galería), se
++       avisa a la galería con `valida:categoria` y se baja hasta la barra de filtros. Si la isla
++       todavía no se hidrató (`client:visible`), al llegar a la pantalla lee el filtro de la URL. -->
++  <script is:inline>
++    (function () {
++      var links = document.querySelectorAll('[data-valida-categoria]');
++      if (!links.length) return;
++      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
++      links.forEach(function (link) {
++        link.addEventListener('click', function (event) {
++          if (event.defaultPrevented || event.button !== 0) return;
++          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
++          var id = link.getAttribute('data-valida-categoria');
++          var target = document.getElementById('buscar') || document.getElementById('fotos');
++          if (!id || !target) return;
++          event.preventDefault();
++          try {
++            window.history.replaceState(
++              window.history.state,
++              '',
++              window.location.pathname + '?manga=' + encodeURIComponent(id),
++            );
++          } catch (error) {
++            // El filtro funciona igual sin reflejarse en la URL.
++          }
++          window.dispatchEvent(new CustomEvent('valida:categoria', { detail: { id: id } }));
++          target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
++        });
++      });
++    })();
++  </script>
++
+   <ScrollDepth target="main" />
+ </BaseLayout>
++
++<style>
++  /* Apertura: en el teléfono, titular → categorías → botones (el orden del DOM). Desde `lg`,
++     titular y botones a la izquierda, centrados contra la tarjeta (o la foto) de la derecha.
++     Las filas `1fr` de las puntas son las que centran el bloque de la izquierda. */
++  .valida-hero {
++    grid-template-areas: 'intro' 'aside' 'actions';
++  }
++  .valida-hero__intro {
++    grid-area: intro;
++  }
++  .valida-hero__aside {
++    grid-area: aside;
++  }
++  .valida-hero__actions {
++    grid-area: actions;
++  }
++  @media (min-width: 1024px) {
++    .valida-hero {
++      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
++      grid-template-rows: 1fr auto auto 1fr;
++      grid-template-areas:
++        '. aside'
++        'intro aside'
++        'actions aside'
++        '. aside';
++    }
++  }
++</style>

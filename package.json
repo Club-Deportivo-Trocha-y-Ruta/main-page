@@ -16,7 +16,10 @@
     "test:run": "vitest run",
     "test:astro": "vitest --project astro",
     "test:react": "vitest --project react",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "valida:fotos": "node scripts/valida-fotos.mjs",
+    "valida:preview": "node scripts/valida-preview.mjs",
+    "media:push": "bash scripts/media-push.sh"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",

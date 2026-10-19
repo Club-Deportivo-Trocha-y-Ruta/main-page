@@ -1,0 +1,526 @@
+---
+/**
+ * «Yumbo en cifras»: la planilla lima de la página de la válida (maqueta v6, §6). Va
+ * justo después de la franja de aliados y antes de las fotos.
+ *
+ * Un pliego lima a todo el ancho con el grano de imprenta encima
+ * (`mix-blend-mode: multiply`) y todo el texto en grafito. Sobre lima el trazo
+ * lima de `highlight` no se vería, así que el titular va sin resaltado. No lleva
+ * la silueta `pattern="yumbo"` (tampoco se ve sobre lima), por eso no usa
+ * `SectionShell`: es una `<section>` propia que conserva `id`, `labelledby` y
+ * `scroll-mt`. El pliego no cambia con el tema oscuro (`accent` y `surface-dark`
+ * son fijos), así que ningún texto depende de tokens que sí cambian. Los gráficos
+ * usan solo tinta grafito (sin paleta de colores: un solo tono, el del texto).
+ *
+ * Estructura, en este orden (cada bloque se pinta solo si tiene datos; si el dato
+ * no existe, no hay bloque; toda la sección sale con `numbersAvailable(data)`, la
+ * misma condición del índice flotante):
+ * 1. **El dato enorme**: la cifra `edades` de `historicStats()` («4 a 60+ años, el
+ *    mismo día, la misma pista»). Es `aria-hidden` porque el titular ya lo dice.
+ * 2. **El ritmo** (`data.ritmo2026`): el titular del dato («A los 14 años, al ritmo de
+ *    la élite»), la cifra enorme con su unidad («15 segundos por vuelta») y el texto,
+ *    que continúa la frase de la cifra («… separaron al ganador de …»). Es texto
+ *    real, no `aria-hidden`: se lee de corrido.
+ * 3. **Dos planillas de cronometraje** lado a lado (una columna en el celular),
+ *    con filas de etiqueta, nota, línea punteada y valor:
+ *    - «La edición 2026»: `editionHighlights()` + `editionFacts()` (sin repetir las
+ *      destacadas), solo si `data.edicion2026` existe. El total de corredores
+ *      pasa por `totalMinimoPublicable` (regla §8 de `yumbo-en-numeros.md`; el club
+ *      decidió publicarlo, así que el JSON lo trae en `null`).
+ *    - El histórico (`historicStats()` sin `edades`), con `data.historicoTitulo`.
+ *      No va la serie de corredores por año ni proyecciones.
+ * 4. **Quiénes corrieron** (`data.composicion2026`): barras horizontales por grupo
+ *    de categorías, en una escala común que parte de cero (`compositionGroups()`).
+ *    Las barras son `aria-hidden`: el conteo de cada grupo está escrito. Debajo,
+ *    «La categoría más numerosa» y la nota del JSON.
+ * 5. **De dónde vinieron** (`data.municipios2026`): el mapa SVG con los
+ *    departamentos pintados y marcadores numerados, junto a una leyenda con el
+ *    mismo número, el departamento, cuántos municipios y cuáles. El mapa es
+ *    decorativo (`alt=""`, `aria-hidden`): la leyenda es su equivalente en texto.
+ *    Lado a lado desde `lg`, apilado en el celular; el texto nunca va sobre el mapa.
+ * 6. **Los mejores promedios por vuelta** (`lapRanking()`, solo si
+ *    `data.vueltas2026` da filas): el top 20 general y, debajo, el top 10 de las
+ *    mujeres (`onlyFemale`), los dos con el mismo marcado (un solo bucle sobre
+ *    `rankings`). Lista ordenada `<ol>`: puesto, nombre (o «categoría · puesto» si
+ *    la fila no lleva nombre), categoría, vueltas, tiempo total, promedio por
+ *    vuelta y diferencia con el primero. Cada fila lleva una barra de tinta
+ *    (`aria-hidden`) que codifica la diferencia con el primero por vuelta, en una
+ *    escala común que parte de cero (así el primero es una marca mínima y ninguna
+ *    barra exagera); en el top de las mujeres, «el primero» es la primera de ellas.
+ *    Son los únicos bloques con nombres; por eso la bajada solo dice «sin nombres»
+ *    cuando no se pintan. En el celular cada fila se apila dentro de su tarjeta.
+ * 7. Las fuentes: la de los promedios al pie de los rankings y la general al final.
+ *
+ * El `prefix` de cada cifra histórica («Más de», «Al menos») **no es adorno**:
+ * sin él, «33» se lee como exacto cuando es un piso. Va dentro del valor
+ * («más de 600») y por eso también lo oye el lector de pantalla.
+ *
+ * «N de cada 100» lleva una matriz de 100 puntos en tinta, decorativa
+ * (`aria-hidden`): el dato equivalente ya está en el texto de la fila.
+ *
+ * Sin `.reveal` ni conteo animado: las cifras nunca arrancan en cero.
+ */
+import { getImage } from 'astro:assets';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import grano from '@assets/images/valida-yumbo-2026/afiche-grano.webp';
+import {
+  compositionGroups,
+  editionFacts,
+  lapRanking,
+  editionHighlights,
+  historicStats,
+  municipalityLegend,
+  numbersAvailable,
+  ritmoAvailable,
+  type LapRankingRow,
+  type StatItem,
+  type ValidaData,
+} from '@lib/valida';
+
+interface Props {
+  data: ValidaData;
+  /** Id de la sección: sirve de ancla (`#cifras`) y nombra el titular. */
+  id?: string;
+}
+
+const { data, id = 'cifras' } = Astro.props;
+
+const headingId = `${id}-titulo`;
+const allStats = historicStats(data);
+const ages = allStats.find((stat) => stat.id === 'edades');
+const stats = allStats.filter((stat) => stat.id !== 'edades');
+const highlights = editionHighlights(data.edicion2026);
+const highlighted = new Set(highlights.map((item) => item.id));
+const facts = editionFacts(data.edicion2026, { minRunners: data.totalMinimoPublicable }).filter(
+  (fact) => !highlighted.has(fact.id),
+);
+const hasEdition = highlights.length > 0 || facts.length > 0;
+
+const historicTitle = data.historicoTitulo ?? 'Ediciones anteriores';
+// La bajada no repite los años: los dice el titular del bloque histórico y la
+// fuente completa, la nota del pie (`data.source`).
+const TOP_GENERAL = 20;
+const TOP_WOMEN = 10;
+
+/** Un barra de tinta mide la diferencia con el primero de SU lista, en escala común desde cero. */
+function rankingBlock(
+  key: string,
+  title: string,
+  intro: string,
+  rows: LapRankingRow[],
+  first: { top: string; gap: string },
+) {
+  const maxGap = Math.max(...rows.map((row) => row.gapToFirstSeconds), 0);
+  return {
+    key,
+    id: `${id}-${key}`,
+    title,
+    intro,
+    rows,
+    first,
+    barWidth: (gap: number) => (maxGap > 0 ? Math.max((gap / maxGap) * 100, 1.5) : 1.5),
+  };
+}
+
+const generalRows = lapRanking(data.vueltas2026, TOP_GENERAL);
+const womenRows = lapRanking(data.vueltas2026, TOP_WOMEN, { onlyFemale: true });
+const rankings = [
+  generalRows.length > 0 &&
+    rankingBlock(
+      'promedios',
+      generalRows.length === 1
+        ? 'El mejor promedio por vuelta'
+        : `Los ${generalRows.length} mejores promedios por vuelta`,
+      'Tiempo total dividido entre las vueltas de cada categoría, de menor a mayor. Solo entran quienes completaron todas las vueltas. La barra de cada fila mide cuánto más lento es su promedio frente al primero; la diferencia también está escrita.',
+      generalRows,
+      { top: 'Primero', gap: 'Diferencia con el primero' },
+    ),
+  womenRows.length > 0 &&
+    rankingBlock(
+      'promedios-mujeres',
+      womenRows.length === 1
+        ? 'El mejor promedio de las mujeres'
+        : `Los ${womenRows.length} mejores promedios de las mujeres`,
+      'El mismo cálculo, solo con las categorías femeninas. Aquí la diferencia y la barra se miden contra la primera de ellas, no contra el primero del día.',
+      womenRows,
+      { top: 'Primera', gap: 'Diferencia con la primera' },
+    ),
+].filter((block): block is ReturnType<typeof rankingBlock> => Boolean(block));
+
+const ritmo = ritmoAvailable(data.ritmo2026) ? data.ritmo2026 : null;
+const bars = compositionGroups(data.composicion2026);
+const mostNumerous = data.composicion2026?.masNumerosa ?? null;
+const legend = municipalityLegend(data.municipios2026);
+const mapSrc = legend.length > 0 ? (data.municipios2026?.mapa ?? null) : null;
+
+const countsLead = hasEdition
+  ? 'Conteos de los resultados oficiales: los de esta válida y los de las anteriores con registro.'
+  : 'Conteos de los resultados oficiales: los de las válidas anteriores con registro.';
+// Solo los rankings llevan nombres: sin ellos la bajada sigue diciendo «sin nombres».
+const lead =
+  rankings.length > 0
+    ? `${countsLead} Al final, los mejores promedios por vuelta del día, con nombre.`
+    : countsLead.replace('oficiales:', 'oficiales, sin nombres:');
+
+const INT = new Intl.NumberFormat('es-CO');
+
+interface Row {
+  key: string;
+  label: string;
+  note?: string | null;
+  value: string;
+  /** Cuántos de 100 pinta la matriz de puntos; sin matriz, `null`. */
+  share?: number | null;
+}
+
+const capitalize = (text: string) => text.charAt(0).toLocaleUpperCase('es-CO') + text.slice(1);
+
+/** Matriz de 25 × 4 puntos. */
+const DOTS = 100;
+const DOT_COLUMNS = 25;
+
+/**
+ * Cuántos de cada 100 representa la cifra, solo cuando el JSON lo dice así:
+ * `suffix` «de cada 100» y un entero de 0 a 100 como `value`.
+ */
+function shareOfHundred(stat: StatItem): number | null {
+  if (!stat.suffix || !/^de cada 100$/i.test(stat.suffix.trim())) return null;
+  const value = Number(stat.value);
+  return Number.isInteger(value) && value >= 0 && value <= DOTS ? value : null;
+}
+
+/** «más de 600», «al menos 33», «96 de cada 100»: el prefijo y el sufijo van en el valor. */
+function historicValue(stat: StatItem): string {
+  return [stat.prefix?.toLocaleLowerCase('es-CO'), stat.value, stat.suffix]
+    .filter(Boolean)
+    .join(' ');
+}
+
+const editionRows: Row[] = [
+  ...highlights.map((item) => ({
+    key: item.id,
+    label: capitalize(item.label),
+    value: [typeof item.value === 'number' ? INT.format(item.value) : item.value, item.unit]
+      .filter(Boolean)
+      .join(' '),
+  })),
+  ...facts.map((fact) => ({ key: fact.id, label: fact.label, value: fact.value })),
+];
+
+const historicRows: Row[] = stats.map((stat) => ({
+  key: stat.id,
+  label: capitalize(stat.label),
+  note: stat.note,
+  value: historicValue(stat),
+  share: shareOfHundred(stat),
+}));
+
+const blocks = [
+  hasEdition && { key: 'edicion', title: 'La edición 2026', rows: editionRows },
+  historicRows.length > 0 && { key: 'historico', title: historicTitle, rows: historicRows },
+].filter((block): block is { key: string; title: string; rows: Row[] } => Boolean(block));
+
+const grainImage = await getImage({ src: grano, width: 512, format: 'webp', quality: 74 });
+---
+
+{
+  numbersAvailable(data) && (
+    <section
+      id={id}
+      aria-labelledby={headingId}
+      class="bg-accent text-surface-dark relative isolate scroll-mt-[var(--header-h,4rem)] overflow-hidden py-16 md:py-24"
+    >
+      <span
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 -z-10 opacity-55 mix-blend-multiply"
+        style={`background:url(${grainImage.src}) 0 0 / 512px`}
+      />
+
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionIntro
+          id={headingId}
+          eyebrow="Yumbo en cifras"
+          eyebrowIcon="ph:chart-bar-bold"
+          title="De 4 a más de 60 años en la misma pista"
+          tone="brand"
+        >
+          {/* La bajada va por el slot, no por `lead`: el 80 % del tono `brand` sobre lima no da contraste. */}
+          <p class="mt-4 max-w-2xl text-base leading-relaxed sm:text-lg">{lead}</p>
+        </SectionIntro>
+
+        {ages && (
+          <p aria-hidden="true" class="mt-9 flex flex-wrap items-end gap-x-6 gap-y-1 tabular-nums">
+            <span class="font-display text-[clamp(6rem,15vw,13.75rem)] leading-[0.8] font-extrabold tracking-[-0.05em] text-nowrap">
+              {ages.value}
+            </span>
+            <span class="font-display max-w-[10em] pb-[0.2em] text-[clamp(1.25rem,2.4vw,2rem)] leading-[1.1] font-bold">
+              {ages.label}
+            </span>
+          </p>
+        )}
+
+        {ritmo && (
+          <section
+            aria-labelledby={`${id}-ritmo`}
+            class="border-surface-dark mt-12 border-t-4 pt-6 md:mt-16"
+          >
+            <h3
+              id={`${id}-ritmo`}
+              class="font-display max-w-3xl text-2xl leading-tight font-bold text-balance sm:text-3xl"
+            >
+              {ritmo.titulo}
+            </h3>
+            <p class="mt-5 flex flex-wrap items-end gap-x-6 gap-y-2">
+              <span class="font-display text-[clamp(5.5rem,14vw,11rem)] leading-[0.8] font-extrabold tracking-[-0.05em] tabular-nums">
+                {INT.format(ritmo.valor)}
+              </span>
+              <span class="font-display max-w-[9em] pb-[0.15em] text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.1] font-bold">
+                {ritmo.unidad}
+              </span>
+            </p>
+            <p class="mt-5 max-w-3xl text-base leading-relaxed sm:text-lg">{ritmo.texto}</p>
+          </section>
+        )}
+
+        {blocks.length > 0 && (
+          <div class="mt-12 grid gap-12 md:mt-16 lg:grid-cols-2 lg:gap-16">
+            {blocks.map((block) => (
+              <section aria-labelledby={`${id}-${block.key}`}>
+                <h3
+                  id={`${id}-${block.key}`}
+                  class="font-display border-surface-dark border-b-4 pb-3.5 text-xl font-bold sm:text-[1.375rem]"
+                >
+                  {block.title}
+                </h3>
+                <ul role="list">
+                  {block.rows.map((row) => (
+                    <li class="border-surface-dark/35 flex flex-wrap items-baseline gap-x-2.5 border-b py-3.5">
+                      <span class="max-w-[62%] text-base leading-snug font-semibold">
+                        {row.label}
+                        {row.note && (
+                          <span class="text-surface-dark/80 mt-0.5 block text-sm leading-snug font-medium">
+                            {row.note}
+                          </span>
+                        )}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        class="border-surface-dark min-w-6 flex-1 -translate-y-1.5 border-b-2 border-dotted"
+                      />
+                      <span class="font-display text-2xl leading-none font-extrabold text-nowrap tabular-nums">
+                        {row.value}
+                      </span>
+                      {row.share != null && (
+                        <span
+                          aria-hidden="true"
+                          class="mt-4 grid w-full gap-1"
+                          style={`grid-template-columns:repeat(${DOT_COLUMNS},minmax(0,1fr))`}
+                        >
+                          {Array.from({ length: DOTS }, (_, dot) => (
+                            <i
+                              class:list={[
+                                'aspect-square rounded-full',
+                                dot < (row.share ?? 0)
+                                  ? 'bg-surface-dark'
+                                  : 'ring-surface-dark ring-[1.5px] ring-inset',
+                              ]}
+                            />
+                          ))}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        )}
+
+        {bars.length > 0 && (
+          <section aria-labelledby={`${id}-composicion`} class="mt-14 md:mt-20">
+            <h3
+              id={`${id}-composicion`}
+              class="font-display border-surface-dark border-b-4 pb-3.5 text-xl font-bold sm:text-[1.375rem]"
+            >
+              Quiénes corrieron
+            </h3>
+            <ul role="list">
+              {bars.map((bar) => (
+                <li class="border-surface-dark/35 grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-2 border-b py-3 sm:grid-cols-[11rem_minmax(0,1fr)_3rem] sm:items-center sm:gap-x-5">
+                  <span class="text-base leading-tight font-semibold">
+                    {bar.label}
+                    {bar.age && (
+                      <span class="mt-0.5 block text-sm leading-tight font-medium">
+                        {bar.age}
+                      </span>
+                    )}
+                  </span>
+                  <span class="font-display text-right text-xl leading-none font-extrabold tabular-nums sm:order-3 sm:text-2xl">
+                    <span class="sr-only">Competidores: </span>
+                    {INT.format(bar.n)}
+                  </span>
+                  <span aria-hidden="true" class="col-span-2 block h-3 sm:order-2 sm:col-span-1">
+                    <span
+                      class="bg-surface-dark block h-full rounded-r"
+                      style={`width:${bar.percent.toFixed(1)}%`}
+                    />
+                  </span>
+                </li>
+              ))}
+              {mostNumerous && (
+                <li class="border-surface-dark/35 flex flex-wrap items-baseline gap-x-2.5 border-b py-3.5">
+                  <span class="max-w-[62%] text-base leading-snug font-semibold">
+                    La categoría más numerosa
+                    <span class="mt-0.5 block text-sm leading-snug font-medium">
+                      {mostNumerous.categoria}
+                    </span>
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    class="border-surface-dark min-w-6 flex-1 -translate-y-1.5 border-b-2 border-dotted"
+                  />
+                  <span class="font-display text-2xl leading-none font-extrabold tabular-nums">
+                    {INT.format(mostNumerous.n)}
+                  </span>
+                </li>
+              )}
+            </ul>
+            {data.composicion2026?.nota && (
+              <p class="mt-4 max-w-3xl text-sm leading-relaxed">{data.composicion2026.nota}</p>
+            )}
+          </section>
+        )}
+
+        {legend.length > 0 && (
+          <section aria-labelledby={`${id}-procedencia`} class="mt-14 md:mt-20">
+            <h3
+              id={`${id}-procedencia`}
+              class="font-display border-surface-dark border-b-4 pb-3.5 text-xl font-bold sm:text-[1.375rem]"
+            >
+              De dónde vinieron
+            </h3>
+            <div
+              class:list={[
+                'mt-6 grid gap-8 md:gap-10',
+                mapSrc && 'lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:items-start lg:gap-14',
+              ]}
+            >
+              {mapSrc && (
+                <img
+                  src={mapSrc}
+                  alt=""
+                  aria-hidden="true"
+                  width="512"
+                  height="722"
+                  loading="lazy"
+                  decoding="async"
+                  class="mx-auto block h-auto w-full max-w-[16rem] lg:mx-0 lg:max-w-none"
+                />
+              )}
+              <div>
+                <ol role="list" class="max-w-3xl">
+                  {legend.map((item) => (
+                    <li class="border-surface-dark/35 grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3 border-b py-4">
+                      <span
+                        aria-hidden="true"
+                        class="bg-surface-dark text-accent font-display grid size-9 place-items-center rounded-full text-lg leading-none font-extrabold tabular-nums"
+                      >
+                        {item.number}
+                      </span>
+                      <div>
+                        <h4 class="font-display text-xl leading-tight font-bold">{item.name}</h4>
+                        <p class="mt-1 text-base font-bold">{item.countLabel}</p>
+                        <p class="mt-1 text-base leading-relaxed">
+                          {item.municipalities.join(', ')}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                {mapSrc && (
+                  <p class="mt-4 flex items-center gap-2.5 text-base font-semibold italic">
+                    <span
+                      aria-hidden="true"
+                      class="border-surface-dark grid size-5 shrink-0 place-items-center rounded-full border-2"
+                    >
+                      <span class="bg-surface-dark size-2 rounded-full" />
+                    </span>
+                    Yumbo, sede de la válida
+                  </p>
+                )}
+                {data.municipios2026?.nota && (
+                  <p class="mt-4 max-w-3xl text-sm leading-relaxed">{data.municipios2026.nota}</p>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {rankings.map((block, index) => (
+          <section aria-labelledby={block.id} class="mt-14 md:mt-20">
+            <h3
+              id={block.id}
+              class="font-display border-surface-dark border-b-4 pb-3.5 text-xl font-bold sm:text-[1.375rem]"
+            >
+              {block.title}
+            </h3>
+            <p class="mt-3 max-w-3xl text-sm leading-relaxed">{block.intro}</p>
+            <ol role="list" class="mt-2">
+              {block.rows.map((row) => (
+                <li class="border-surface-dark/35 grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-baseline gap-x-3 gap-y-1.5 border-b py-3.5 sm:grid-cols-[2.75rem_minmax(0,1.4fr)_minmax(0,1fr)_6.5rem_5rem] sm:gap-x-5">
+                  <span class="font-display text-xl leading-none font-extrabold tabular-nums sm:text-2xl">
+                    {row.rank}
+                    <span class="sr-only">.</span>
+                  </span>
+                  <span class="min-w-0 text-base leading-snug font-semibold">
+                    {row.name ?? `${row.categoryLabel} · ${row.position}.º`}
+                    <span class="mt-0.5 block text-sm leading-snug font-medium tabular-nums">
+                      {row.name && (
+                        <>
+                          {row.categoryLabel}
+                          <span class="sr-only">, puesto {row.position}.</span>
+                          <span aria-hidden="true"> · {row.position}.º</span>
+                          {' · '}
+                        </>
+                      )}
+                      {row.laps} vueltas
+                      <span aria-hidden="true"> · </span>
+                      <span class="sr-only">, tiempo total </span>
+                      {row.total}
+                    </span>
+                  </span>
+                  <span class="font-display text-right text-xl leading-none font-extrabold tabular-nums sm:order-4 sm:text-2xl">
+                    <span class="sr-only">Promedio por vuelta </span>
+                    {row.perLap}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    class="bg-surface-dark/15 col-start-2 col-end-3 block h-2.5 self-center rounded-full sm:order-3 sm:col-auto"
+                  >
+                    <span
+                      class="bg-surface-dark block h-full rounded-full"
+                      style={`width:${block.barWidth(row.gapToFirstSeconds).toFixed(1)}%`}
+                    />
+                  </span>
+                  <span class="col-start-3 text-right text-sm font-semibold tabular-nums sm:order-5 sm:col-auto">
+                    <span class="sr-only">
+                      {row.rank === 1 ? block.first.top : block.first.gap}
+                    </span>
+                    {row.gap}
+                  </span>
+                </li>
+              ))}
+            </ol>
+            {index === rankings.length - 1 && (
+              <p class="text-surface-dark/90 mt-6 max-w-3xl text-sm leading-relaxed">
+                {data.vueltas2026?.source}
+              </p>
+            )}
+          </section>
+        ))}
+
+        <p class="text-surface-dark/90 mt-8 max-w-3xl text-sm leading-relaxed">{data.source}</p>
+      </div>
+    </section>
+  )
+}

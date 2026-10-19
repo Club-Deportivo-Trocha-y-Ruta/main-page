@@ -24,7 +24,11 @@ import { Icon } from 'astro-icon/components';
 import { CONTACT, CTA_TRIAL_LABEL } from '@lib/constants';
 
 const pathname = Astro.url.pathname;
-const hiddenPaths = ['/contacto', '/inscripciones'];
+// En la página de la válida, las familias de otros clubes recorren cientos de
+// fotos con la cabecera y la barra de filtros ya fijas: una tercera barra fija
+// se comía el 29 % de la pantalla, y la invitación a la clase de prueba ya va
+// en el cierre de esa página.
+const hiddenPaths = ['/contacto', '/inscripciones', '/copa-valle-yumbo-2026'];
 const isHidden = hiddenPaths.some((p) => pathname === p || pathname === p + '/');
 
 const whatsappHref = `${CONTACT.whatsapp}?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20el%20club`;

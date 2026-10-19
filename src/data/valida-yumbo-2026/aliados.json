@@ -1,0 +1,252 @@
+[
+  {
+    "id": "zuleyma-valencia",
+    "name": "Zuleyma Valencia",
+    "role": "patrocinio",
+    "tagline": "Gestora social de Yumbo",
+    "instagram": "zuleyma_valencia01",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/zuleyma-valencia.webp",
+    "logoRatio": 3.5
+  },
+  {
+    "id": "sanin",
+    "name": "Sanin",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "productossanin",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/sanin.webp",
+    "logoRatio": 1.46
+  },
+  {
+    "id": "ferropinturas-chamorro",
+    "name": "Ferropinturas Chamorro",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "pinturaschamorro",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/ferropinturas-chamorro.webp",
+    "logoRatio": 2.41
+  },
+  {
+    "id": "moka-tools-store",
+    "name": "Moka Tools Store",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "mokatoolsstore",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/moka-tools-store.webp",
+    "logoRatio": 2.96
+  },
+  {
+    "id": "yumbileta",
+    "name": "Yumbileta",
+    "role": "patrocinio",
+    "tagline": "Paletería artesanal de Yumbo",
+    "instagram": "yumbileta",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/yumbileta.webp",
+    "logoRatio": 3.2
+  },
+  {
+    "id": "infinity-bike-yumbo",
+    "name": "Infinity Bike Yumbo",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "infinitybikeyumbo",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/infinity-bike-yumbo.webp",
+    "logoRatio": 1.32
+  },
+  {
+    "id": "centro-integral-del-saber",
+    "name": "Centro Integral del Saber",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "centrointegraldelsaber",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/centro-integral-del-saber.webp",
+    "logoRatio": 1.4
+  },
+  {
+    "id": "fury-factory",
+    "name": "Fury Factory",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "fury_factory",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/fury-factory.webp",
+    "logoRatio": 1.24
+  },
+  {
+    "id": "aguila-roja",
+    "name": "Café Águila Roja",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "cafeaguilaroja",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/aguila-roja.webp",
+    "logoRatio": 1
+  },
+  {
+    "id": "croki-platano",
+    "name": "Croki Plátano",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "croki_platano",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/croki-platano.webp",
+    "logoRatio": 1
+  },
+  {
+    "id": "rapi-wey",
+    "name": "Rapi Wey",
+    "role": "patrocinio",
+    "tagline": "Tienda de abarrotes",
+    "instagram": "rapi.wey",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/rapi-wey.webp",
+    "logoRatio": 4.13
+  },
+  {
+    "id": "beru",
+    "name": "Alquiequipos Beru",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "alquiequiposberucolombia",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/beru.webp",
+    "logoRatio": 1.75
+  },
+  {
+    "id": "elian-rider-shop",
+    "name": "Elian Rider Shop",
+    "role": "patrocinio",
+    "tagline": "Calcomanías y personalizado de motos y bicis en Yumbo",
+    "instagram": "elian_rider_shop",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/elian-rider-shop.webp",
+    "logoRatio": 2.08
+  },
+  {
+    "id": "ram-bike-atelier",
+    "name": "Ram Bike Atelier",
+    "role": "patrocinio",
+    "tagline": "Taller de bicicletas, aliado del club",
+    "instagram": "rambikeatelier",
+    "url": "https://www.facebook.com/rambikeatelier/",
+    "logo": "/images/valida-yumbo-2026/aliados/ram-bike-atelier.webp",
+    "logoRatio": 1.17
+  },
+  {
+    "id": "incolmix",
+    "name": "Incolmix",
+    "role": "patrocinio",
+    "tagline": "Industria Colombiana de Mezclas S.A.S.",
+    "instagram": null,
+    "url": "https://incolmix.com",
+    "logo": "/images/valida-yumbo-2026/aliados/incolmix.webp",
+    "logoRatio": 2.9
+  },
+  {
+    "id": "ascomy",
+    "name": "ASCOMY",
+    "role": "apoyo",
+    "tagline": "Asociación de Comerciantes del Municipio de Yumbo",
+    "instagram": "ascomyyumbo",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/ascomy.webp",
+    "logoRatio": 0.79
+  },
+  {
+    "id": "mera-artesanal",
+    "name": "Mera Artesanal",
+    "role": "patrocinio",
+    "tagline": "Pastelería creativa",
+    "instagram": "mera_artesanal",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/mera-artesanal.webp",
+    "logoRatio": 1.71
+  },
+  {
+    "id": "alcaldia-de-yumbo",
+    "name": "Alcaldía de Yumbo",
+    "role": "apoyo",
+    "tagline": "Secretarías de Desarrollo Económico; Gobierno, Seguridad y Convivencia; Infraestructura y Servicios Públicos; y Movilidad",
+    "instagram": "alcaldiayumbo",
+    "url": "https://www.yumbo.gov.co",
+    "logo": "/images/valida-yumbo-2026/aliados/alcaldia-de-yumbo.webp",
+    "logoRatio": 2.82
+  },
+  {
+    "id": "coordinadora",
+    "name": "Coordinadora",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "coordinadoraoficial",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/coordinadora.webp",
+    "logoRatio": 10.85
+  },
+  {
+    "id": "bicicletas-garces",
+    "name": "Bicicletas Garcés",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "bicicletas_garces",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/bicicletas-garces.webp",
+    "logoRatio": 1.06
+  },
+  {
+    "id": "sunny-burger",
+    "name": "Sunny Burger Food Truck",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "sunny_burger29",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/sunny-burger.webp",
+    "logoRatio": 0.98
+  },
+  {
+    "id": "espy",
+    "name": "ESPY",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "espyumbo",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/espy.webp",
+    "logoRatio": 2.63
+  },
+  {
+    "id": "fundacion-smurfit-westrock",
+    "name": "Fundación Smurfit Westrock",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": null,
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/fundacion-smurfit-westrock.webp",
+    "logoRatio": 2.75
+  },
+  {
+    "id": "smurfit-westrock",
+    "name": "Smurfit Westrock",
+    "role": "patrocinio",
+    "tagline": null,
+    "instagram": "smurfitwestrock.co",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/smurfit-westrock.webp",
+    "logoRatio": 4.21
+  },
+  {
+    "id": "imderty",
+    "name": "IMDERTY",
+    "role": "apoyo",
+    "tagline": "Instituto Municipal del Deporte y la Recreación de Yumbo",
+    "instagram": "imderty_yumbo",
+    "url": null,
+    "logo": "/images/valida-yumbo-2026/aliados/imderty.webp",
+    "logoRatio": 0.8
+  }
+]

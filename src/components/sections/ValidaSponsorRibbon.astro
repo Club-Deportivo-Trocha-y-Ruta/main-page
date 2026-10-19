@@ -1,0 +1,340 @@
+---
+/**
+ * Franja de aliados de `/copa-valle-yumbo-2026`: el pie del afiche oficial
+ * llevado a la página. Va entre la apertura y las cifras (que van antes de las
+ * fotos), así que la ve todo el que baja, vaya a lo que vaya.
+ *
+ * Decisiones que no son de estilo:
+ * - **El papel rasgado del afiche.** El afiche pone las marcas en una franja
+ *   blanca de borde rasgado y, debajo, una barra de tinta con la dirección del
+ *   sitio. El papel sigue blanco en el tema oscuro: los logos están hechos sobre
+ *   blanco y varios traen su fondo blanco pegado (docs/04 §29, la excepción de
+ *   los logos).
+ * - **La barra de tinta es una invitación, no un pie.** Una línea de 44 px con un
+ *   texto lima chico se leía como separador (lo dijo el usuario: «no es tan
+ *   llamativa»). Ahora es una banda con composición propia: el número de aliados
+ *   enorme en lima itálica (el dato enorme del estilo aprobado), «aliados le
+ *   apostaron a esta válida» (la voz del titular del muro), la promesa de las
+ *   fotos gratis si hay fotos, y el botón lima de la página, «Conócelos». Toda la
+ *   banda es el enlace al muro. En el teléfono el número y la frase van en una
+ *   fila y el botón debajo, a todo el ancho (con la frase al lado del botón caía en
+ *   cuatro líneas); conserva sus 44 px de área táctil y la banda, 12 px de aire
+ *   arriba y abajo para la sombra dura del botón, más el filete. Sin movimiento propio:
+ *   la valla de arriba ya se mueve, y una flecha que rebota es el aviso de
+ *   «baja» de cualquier plantilla.
+ * - **Casillas iguales, misma superficie.** Todos en casillas del mismo tamaño,
+ *   en orden alfabético (`sortAllies`) y separadas por reglas finas, y cada logo
+ *   con la misma superficie (`equalAreaWidth` con `logoRatio`): ninguno gana ni
+ *   pierde por su forma.
+ * - **En el teléfono (menos de 768 px), la fila pasa cuando uno baja.** Ahí no
+ *   caben 16 logos legibles en una fila, y en dos no queda alto para la
+ *   galería. Una cinta que corre sola no sirve: con 45 s por vuelta, quien baja
+ *   en dos segundos ve tres o cuatro marcas, y una animación automática sin
+ *   botón de pausa choca con WCAG 2.2.2. La fila se desplaza ligada al scroll,
+ *   como las vallas de una pista vistas desde la bici, y si el visitante se
+ *   detiene, la valla también. CSS puro (`animation-timeline: view()`), sin JS.
+ * - **La valla es un bucle, para que sea justa.** Una fila que va de la primera
+ *   marca a la última deja las puntas del alfabeto contra los bordes de la
+ *   pantalla: medido en un Pixel 7, Zuleyma Valencia estaba 30 px de scroll a la
+ *   vista y Centro Integral del Saber 245. Con la fila repetida (la copia,
+ *   `--echo`, `aria-hidden` y sin `alt`) y un recorrido de exactamente una
+ *   vuelta (`translateX(-50%)`), cada marca cruza la pantalla entera una vez:
+ *   las 16 quedan entre 150 y 185 px de scroll a la vista. El recorrido va
+ *   desde que la mitad de la fila entra por abajo hasta que su mitad sale por
+ *   arriba, sin contar la cabecera fija (`view(block 4rem 0px)`), así la
+ *   última marca no termina escondida debajo de ella.
+ * - **Rejilla quieta con todas a la vista** desde 768 px (dos filas, como el
+ *   afiche) y donde no hay animaciones de scroll o se pidió menos movimiento:
+ *   dos filas desde 640 px, de cuatro en cuatro por debajo. Son dos filas de
+ *   ocho con 16 aliados o menos; con más, `ribbonColumns` abre las casillas a
+ *   las que hagan falta (18 aliados: dos filas de nueve; con ocho por fila
+ *   quedaba una tercera con dos logos sueltos), en la variable `--ribbon-cols`.
+ * - **Los logos llegan antes de pasar.** `loading="eager"` con
+ *   `fetchpriority="low"`: bajan después de la foto de la apertura (el LCP), no
+ *   cuando ya están cruzando la pantalla, y la versión de 320 px (`-320.webp`,
+ *   unos 180 KB los 16) basta para casillas de menos de 130 px CSS.
+ * - **Una sola parada de tabulación**: el enlace. Los logos no son enlaces (cada
+ *   marca tiene el suyo en el muro) y el lector de pantalla los nombra una vez.
+ * - **Analítica.** El enlace es un salto dentro de la página (`page_nav_click`,
+ *   `method: 'franja'`), no un clic a una marca: `sponsor_click` queda para los
+ *   clics que se les reportan a ellas. La vista de la franja
+ *   (`data-sponsor-wall="franja"`) la mide el script de `ValidaAllies`.
+ * - Ningún logo encima de una foto (regla del plan de redes): la franja es papel.
+ */
+import { Icon } from 'astro-icon/components';
+import {
+  allyCreditLine,
+  allyLogoSources,
+  equalAreaWidth,
+  ribbonColumns,
+  sortAllies,
+  type Ally,
+  type LogoBox,
+} from '@lib/valida';
+
+interface Props {
+  allies: Ally[];
+  /** Ancla del muro completo de aliados. */
+  wallId?: string;
+  /** Fotos publicadas. Con fotos, la banda dice que son gratis gracias a ellos. */
+  photos?: number;
+}
+
+const { allies, wallId = 'aliados', photos = 0 } = Astro.props;
+
+const sorted = sortAllies(allies);
+const columns = ribbonColumns(sorted.length);
+const credit = allyCreditLine(allies);
+const labelId = `${wallId}-franja`;
+
+// La banda de tinta: el dato enorme, la frase y la acción. «Le apostaron» es la
+// voz del titular del muro, a donde lleva el botón; «tus fotos son gratis» es la
+// promesa de la apertura y del visor («Gratis gracias a N aliados»), y solo se
+// dice si hay fotos publicadas.
+const total = sorted.length;
+const single = total === 1;
+const bandHeadline = single
+  ? 'aliado le apostó a esta válida'
+  : 'aliados le apostaron a esta válida';
+const bandBenefit =
+  photos > 0
+    ? single
+      ? 'Gracias a este aliado, tus fotos son gratis.'
+      : 'Gracias a ellos, tus fotos son gratis.'
+    : null;
+const bandAction = single ? 'Conócelo' : 'Conócelos';
+
+/**
+ * Casilla de 5:3, medidas en % de su ancho. El logo cuadrado ocupa el 41 %; el
+ * más apaisado de hoy con área igual (Rapi Wey, 4,13:1) llega al 83 % de ancho
+ * y el más alto (ASCOMY, 0,79:1) al 46 % de alto, con aire en los dos casos (la
+ * casilla mide 60 de alto). Coordinadora (10,85:1) topa en el 88 % de ancho.
+ */
+const SLOT: LogoBox = { side: 41, maxWidth: 88, maxHeight: 52 };
+
+/**
+ * `sizes` de cada logo: su fracción del ancho de la casilla, en cada tramo. La
+ * casilla mide 6,25 rem en la valla, un octavo de la ventana desde 640 px y
+ * 152 px con el tope de `max-w-7xl`. Con esto el teléfono elige la versión de
+ * 320 px aun a densidad 3.
+ */
+function logoSizes(widthPct: number): string {
+  const part = (value: number) => Math.round(value * widthPct) / 100;
+  return `(min-width: 1280px) ${part(152)}px, (min-width: 640px) ${part(12.5)}vw, ${part(6.25)}rem`;
+}
+
+const logos = sorted.map((ally) => {
+  const width = equalAreaWidth(ally.logoRatio, SLOT);
+  const { src, srcset } = allyLogoSources(ally);
+  const ratio = ally.logoRatio && ally.logoRatio > 0 ? `;aspect-ratio:${ally.logoRatio}` : '';
+  return {
+    ally,
+    src,
+    srcset,
+    sizes: srcset ? logoSizes(width) : undefined,
+    style: `width:${width}%${ratio}`,
+  };
+});
+---
+
+{
+  sorted.length > 0 && (
+    <section
+      aria-labelledby={labelId}
+      data-sponsor-wall="franja"
+      class="valida-ribbon text-surface-dark relative bg-white"
+    >
+      <div class="mx-auto max-w-7xl px-4 pt-3 sm:px-6 lg:px-8 lg:pt-5">
+        <p
+          id={labelId}
+          class="font-display text-sm leading-tight font-extrabold italic sm:text-base lg:text-lg"
+        >
+          {credit}
+        </p>
+      </div>
+
+      <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="valida-ribbon__window">
+          <ul role="list" class="valida-ribbon__track" style={`--ribbon-cols:${columns}`}>
+            {logos.map(({ ally, src, srcset, sizes, style }) => (
+              <li class="valida-ribbon__slot">
+                <img
+                  src={src}
+                  srcset={srcset}
+                  sizes={sizes}
+                  alt={ally.name}
+                  loading="eager"
+                  fetchpriority="low"
+                  decoding="async"
+                  style={style}
+                  class="h-auto max-h-full object-contain"
+                />
+              </li>
+            ))}
+            {/* El eco: la misma fila otra vez, para que la valla dé la vuelta sin
+                  puntas. Solo existe dentro de la valla (`display: none` fuera de
+                  ella) y no cuenta para el lector de pantalla: cada marca se
+                  nombra una sola vez, en la fila de arriba. Mismos archivos: no
+                  pide nada a la red. */}
+            {logos.map(({ src, srcset, sizes, style }) => (
+              <li class="valida-ribbon__slot valida-ribbon__slot--echo" aria-hidden="true">
+                <img
+                  src={src}
+                  srcset={srcset}
+                  sizes={sizes}
+                  alt=""
+                  loading="eager"
+                  fetchpriority="low"
+                  decoding="async"
+                  style={style}
+                  class="h-auto max-h-full object-contain"
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* La banda de tinta del pie del afiche, con composición propia: el dato
+            enorme (cuántos son, en lima), la frase y el botón lima de la página. Toda
+            la banda es el enlace (un solo blanco grande en el teléfono, una sola
+            parada de tabulación); el foco se dibuja en el botón. El filete lima de
+            abajo es un registro corrido de imprenta: separa la tinta de la página
+            también en el tema oscuro, donde el fondo es casi del mismo grafito. */}
+      <div class="bg-surface-dark border-accent border-b-[3px]">
+        <a
+          href={`#${wallId}`}
+          data-analytics-event="page_nav_click"
+          data-analytics-content-id={wallId}
+          data-analytics-method="franja"
+          class="group mx-auto grid max-w-7xl grid-cols-[auto_1fr] items-center gap-x-3.5 gap-y-2 px-4 py-3 focus-visible:outline-hidden sm:flex sm:gap-6 sm:px-6 sm:py-5 lg:px-8 lg:py-6"
+        >
+          <span class="font-display text-accent shrink-0 pe-1 text-[2.75rem] leading-none font-extrabold tracking-[-0.04em] italic sm:text-6xl lg:text-[5.5rem]">
+            {total}
+          </span>{' '}
+          <span class="min-w-0 flex-1">
+            <span class="font-display block text-[1.1875rem] leading-tight font-bold text-balance text-white sm:text-lg sm:leading-snug lg:text-2xl">
+              {bandHeadline}
+            </span>
+            {bandBenefit && (
+              <span class="mt-1 hidden text-sm leading-snug text-white/75 sm:block lg:text-base">
+                {' '}
+                {bandBenefit}
+              </span>
+            )}
+          </span>{' '}
+          <span class="bg-accent text-surface-dark shadow-pressable ease-spring col-span-2 inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-lg px-3.5 text-sm font-semibold transition-transform duration-[var(--duration-micro)] [--btn-shadow-color:var(--color-accent-dark)] group-hover:-translate-y-px group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-white group-active:translate-y-1 group-active:shadow-none motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-active:translate-y-0 sm:col-auto sm:px-5 sm:text-base lg:px-7 lg:py-3.5 lg:text-lg">
+            {bandAction}
+            <Icon
+              name="ph:arrow-down-bold"
+              class="ease-spring size-4 shrink-0 transition-transform duration-[var(--duration-micro)] group-hover:translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 lg:size-5"
+              aria-hidden="true"
+            />
+          </span>
+        </a>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  /* Borde rasgado del afiche: el papel y su canto de fibras, en un módulo de
+     720 px que se repite (generado una vez con semilla fija). Sobresale por
+     encima de la franja y se monta sobre el pie de la apertura, sin sumar alto. */
+  .valida-ribbon::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: calc(100% - 4px);
+    height: 22px;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='18' viewBox='0 0 720 18'%3E%3Cpath fill='%23dcdcd8' d='M0 11L5.8 11L10.4 10.3L14.5 11.8L18.8 8.2L23.7 10.8L26.3 10.3L31.6 11.7L34.6 10L40.4 11.4L44.3 12.6L50.1 11.8L55.3 8.7L58 9.9L61.8 9.4L66 10.6L69.7 9.6L73.5 8.3L79.1 8.1L82.3 6.9L85.2 6.9L89.7 10L94.1 10.4L97.2 8.3L99.4 8.9L103.6 9.1L106.6 10.1L110.5 9.3L114.5 10.2L120.4 10.2L124.8 13.1L130.7 11.2L136.4 10.7L139.2 11.7L142.2 10.8L145.3 10.7L150.2 8.4L152.3 10.3L157.2 8.2L159.7 7.1L163.9 3.7L168.5 4.1L170.7 3.8L175.9 1.9L180.4 3.5L186.3 3.7L190.1 2.7L192.8 3.9L194.8 2.1L197.1 2.2L202.7 4.3L205.8 3.4L211.4 2.9L213.5 4.7L218.3 2.5L221.8 5L226.4 3L230.8 4.8L236.7 3.9L240.3 4.3L245.9 4.7L248.5 4.2L251.5 4L255.7 4.4L259 5.9L261.7 4.4L264 6.5L267.5 6.9L270.4 8L273 7L275.1 8.4L279.9 10.2L282.4 9L286.9 8.9L289.9 9.3L293.3 9.9L297.9 10L303.1 8L309.1 7.2L311.2 6.5L316.8 5.8L321.8 5.6L325.1 5.4L330.3 4.8L335.1 7L338.8 6.2L341 5.9L346.2 7.4L350.4 7.7L355.3 8.9L357.4 8.4L362.7 10.1L365.5 8.1L369.5 9.2L373.6 10.3L376.1 12L378.2 11.7L380.7 11.8L386.5 9.4L388.9 10.6L391.7 13L394.7 12.2L397.9 12.5L401.6 11.9L404.1 12.5L409.7 11L414 12.5L418 12L423.8 13.5L427.7 13.4L431.4 13.7L435.7 11.5L439.7 13L443 13L447.4 13.4L451.6 11.9L454.8 11.5L458.7 10.6L464.7 10.4L470.5 9.9L473.1 7.3L475.8 6.5L479.2 5.8L481.4 5.4L484.7 5.5L489.2 5.9L492.1 4.1L497.6 4.5L502.7 3.8L505.5 5.2L509.3 6.1L513.2 6.8L518 7.8L521.4 6.6L526 7.1L530.8 6.1L536.5 7.5L541.3 8.3L545.3 8.6L550.4 7.3L552.7 5.9L555.9 6.8L560.5 6L563.6 6.5L566.3 7.1L569.1 2.9L574.2 6.7L580.2 5.8L584.8 6.3L588 5.7L592 7.1L595 5.5L599.2 6.4L604.5 6.4L606.6 7.4L612.2 5L615.7 5.1L621 4.1L623.6 5.4L626.3 2.5L629.5 2.7L631.6 4.3L633.7 3.2L636.5 2.8L640.4 2.3L642.8 2.6L648.6 3.3L653.6 4.4L659.5 4.5L664.4 5.5L666.6 6.7L668.8 8L671 7.6L676.8 9.2L681.3 9.5L686.4 10.8L688.8 11.1L692.6 12.3L697 13.4L702.3 12.1L707.3 11.5L710.8 10.9L715.3 11.7L719.6 12.1L720 11L720 18L0 18Z'/%3E%3Cpath fill='%23fff' d='M0 13L5.8 12.5L10.4 12.8L14.5 13.2L18.8 11.2L23.7 12.8L26.3 13.4L31.6 13.1L34.6 12.7L40.4 12.5L44.3 13.7L50.1 13.6L55.3 11L58 11.8L61.8 10.9L66 11.6L69.7 10.7L73.5 9.9L79.1 11.1L82.3 9.2L85.2 9.4L89.7 11.8L94.1 11.8L97.2 10.1L99.4 11.6L103.6 11L106.6 12.7L110.5 12.1L114.5 12.8L120.4 13.2L124.8 14.7L130.7 13.2L136.4 13.8L139.2 14.2L142.2 12.8L145.3 12.2L150.2 11.2L152.3 11.6L157.2 9.9L159.7 9.4L163.9 6.8L168.5 6.3L170.7 6.2L175.9 5.1L180.4 5.4L186.3 4.8L190.1 5.6L192.8 6L194.8 4.7L197.1 4.8L202.7 5.6L205.8 6.4L211.4 5.5L213.5 7L218.3 5.3L221.8 6.8L226.4 5.9L230.8 6.1L236.7 6.6L240.3 5.8L245.9 6.6L248.5 7.2L251.5 6.4L255.7 6.4L259 7.2L261.7 7.5L264 9L267.5 9L270.4 10.1L273 9.6L275.1 10.2L279.9 12L282.4 11L286.9 11.6L289.9 11.9L293.3 12.2L297.9 12.2L303.1 10.6L309.1 9.7L311.2 8.3L316.8 8.7L321.8 8L325.1 7.2L330.3 6.8L335.1 8.9L338.8 9L341 7.9L346.2 8.7L350.4 9.1L355.3 10.6L357.4 10.9L362.7 12.2L365.5 11.1L369.5 12.1L373.6 12.2L376.1 13.6L378.2 14.3L380.7 14.1L386.5 12.5L388.9 12.3L391.7 14.4L394.7 13.6L397.9 14.4L401.6 14.5L404.1 14.4L409.7 13.3L414 13.9L418 13.7L423.8 14.9L427.7 14.7L431.4 15.9L435.7 14.6L439.7 14.4L443 14.6L447.4 15.3L451.6 13.9L454.8 13.2L458.7 13.2L464.7 11.8L470.5 11.1L473.1 9.9L475.8 9.1L479.2 8.7L481.4 8.5L484.7 8.5L489.2 8.1L492.1 6.5L497.6 6.5L502.7 6.1L505.5 8.2L509.3 8.9L513.2 8.7L518 9.5L521.4 8.6L526 10.2L530.8 8.8L536.5 9.2L541.3 9.5L545.3 10.4L550.4 9L552.7 9L555.9 9.1L560.5 7.3L563.6 9L566.3 8.9L569.1 5.1L574.2 7.8L580.2 8L584.8 7.6L588 6.8L592 8.8L595 7.2L599.2 7.4L604.5 8.2L606.6 8.7L612.2 8.1L615.7 7.6L621 5.5L623.6 6.4L626.3 5.3L629.5 4.9L631.6 5.4L633.7 5.9L636.5 5.4L640.4 4.1L642.8 4.7L648.6 5.9L653.6 5.5L659.5 7.6L664.4 7.9L666.6 7.9L668.8 10.2L671 9.1L676.8 12L681.3 12.1L686.4 12.1L688.8 13.9L692.6 13.8L697 14.5L702.3 14.7L707.3 13.9L710.8 13L715.3 13.8L719.6 14.2L720 13L720 18L0 18Z'/%3E%3C/svg%3E")
+        repeat-x left top / 720px 18px,
+      linear-gradient(#fff, #fff) no-repeat left bottom / 100% 4px;
+    pointer-events: none;
+  }
+
+  /* `clip` y no `hidden`: `hidden` crea un contenedor de scroll y la línea de
+     tiempo `view()` se anclaría a él (docs/04 §2.5, trampa 1). */
+  .valida-ribbon__window {
+    overflow: clip;
+    /* Aire bajo la última fila: con muchos aliados las casillas son angostas y el
+       logo llena su alto; sin esto toca la banda de tinta de abajo. */
+    padding-block-end: 0.75rem;
+  }
+
+  @media (min-width: 1024px) {
+    .valida-ribbon__window {
+      padding-block-end: 1.25rem;
+    }
+  }
+
+  /* Rejilla quieta: el estado de partida y el de quien no tiene animaciones de
+     scroll o pidió menos movimiento. El margen de -1 px esconde la regla de la
+     primera casilla de cada fila contra el borde. */
+  .valida-ribbon__track {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-inline-start: -1px;
+  }
+
+  .valida-ribbon__slot {
+    display: grid;
+    flex: 0 0 25%;
+    place-items: center;
+    aspect-ratio: 5 / 3;
+    border-inline-start: 1px solid rgb(47 47 47 / 0.14);
+  }
+
+  /* El eco solo existe dentro de la valla. */
+  .valida-ribbon__slot--echo {
+    display: none;
+  }
+
+  /* Desde 640 px, dos filas como el afiche: ocho por fila (12,5 %) y, con más de
+     16 aliados, las que dé `ribbonColumns` (`--ribbon-cols`, escrita en la
+     lista). Entre 640 y 767 px solo se ve sin la valla de abajo. */
+  @media (min-width: 640px) {
+    .valida-ribbon__slot {
+      flex-basis: calc(100% / var(--ribbon-cols, 8));
+    }
+  }
+
+  /* La valla (menos de 768 px, donde las dos filas no caben legibles): la fila
+     y su eco se corren hacia la izquierda exactamente una vuelta (`-50%`)
+     mientras la franja atraviesa la pantalla: desde que la mitad de la fila
+     entra por abajo hasta que su mitad sale por arriba. La cabecera fija no
+     cuenta como pantalla (`view(block 4rem 0px)`, recorte de 4 rem arriba).
+     Longhands: Lightning CSS rompe el shorthand con `view()` (trampa 2). */
+  @media (prefers-reduced-motion: no-preference) and (max-width: 767.98px) {
+    @supports (animation-timeline: view()) {
+      .valida-ribbon__track {
+        flex-wrap: nowrap;
+        width: max-content;
+        animation-name: valida-ribbon-pass;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view(block 4rem 0px);
+        animation-range: entry 50% exit 50%;
+      }
+
+      .valida-ribbon__slot {
+        flex-basis: 6.25rem;
+      }
+
+      .valida-ribbon__slot--echo {
+        display: grid;
+      }
+    }
+  }
+
+  @keyframes valida-ribbon-pass {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+</style>

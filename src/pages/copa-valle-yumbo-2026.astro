@@ -1,0 +1,1215 @@
+---
+/**
+ * `/copa-valle-yumbo-2026` — archivo de la VI Válida Copa Valle, corrida en casa
+ * el domingo 18 de octubre de 2026 en la Pista Carlos Castro de Yumbo.
+ *
+ * Se publica **después** de la carrera y hasta entonces queda oculta (patrón de
+ * `/equipo`: `noindex` aquí y fuera del sitemap en `astro.config.mjs`, los dos
+ * gobernados por `published` en `evento.json`). Su centro son dos cosas: las
+ * fotos oficiales, descargables gratis y en calidad original, y el
+ * agradecimiento a los aliados que financiaron la válida. Alrededor, las
+ * cifras de la jornada y «la casa» (la pista).
+ *
+ * Todo texto y dato visible sale de `src/data/valida-yumbo-2026/*.json` —se
+ * validan con Zod en el build— y de las colecciones; la redacción de cada
+ * sección la ponen la plantilla y las funciones puras de `@lib/valida`
+ * (apertura, estado sin fotos, resumen de la jornada, índice). Lo que no
+ * existe no se pinta: sin fotos, la galería muestra su estado vacío; sin
+ * resultados, crónica ni álbum, la sección de «Revive la jornada» desaparece;
+ * sin cifras de 2026, no hay bloque ni promesa de que lo haya.
+ *
+ * Regla que atraviesa la página: **nunca el nombre de un menor** en un texto,
+ * un pie de foto o un parámetro de analítica, ni el número de placa.
+ *
+ * Orden y tonos (rediseño «afiche», maqueta v6; el papel `#f4f2eb` es una variable local
+ * de la página, `--valida-papel`, que en tema oscuro pasa a `--color-surface`). El índice
+ * flotante sigue exactamente este orden:
+ *   1. Apertura — el afiche: el cerro a sangre y, abajo, una placa lisa con la promesa
+ *      (`#inicio`)
+ *   2. Franja de aliados — papel (`ValidaSponsorRibbon`)
+ *   3. Fotos oficiales — papel (`#fotos`)
+ *   4. Aliados — dark (`ValidaAllies`, `#aliados`)
+ *   5. En cifras — planilla lima (`ValidaNumbers`, `#cifras`)
+ *   6. Resultados y crónica — dark (`#resultados`; solo si hay algo que enlazar: con una
+ *      tarjeta, un talón de una fila; con dos o tres, la sección con tarjetas). Va en
+ *      grafito para alternar con la lima de las cifras y el papel de La pista.
+ *   7. La pista — papel (`#la-pista`: a la izquierda el texto y los hitos, a la derecha
+ *      el trazado real del GPX, fijo mientras se lee)
+ *   8. Paso siguiente — brand (`#siguiente`, el teal del cierre de la portada)
+ * Encima de todo, el índice flotante (`SectionDock`) con una entrada por
+ * sección pintada.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumb from '@components/common/Breadcrumb.astro';
+import Button from '@components/common/Button.astro';
+import ScrollDepth from '@components/common/ScrollDepth.astro';
+import WhatsappShareButton from '@components/common/WhatsappShareButton.astro';
+import RacePhotoGallery from '@components/interactive/RacePhotoGallery.tsx';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import SectionDock from '@components/common/SectionDock.astro';
+import ValidaAllies from '@components/sections/ValidaAllies.astro';
+import ValidaNumbers from '@components/sections/ValidaNumbers.astro';
+import ValidaSponsorRibbon from '@components/sections/ValidaSponsorRibbon.astro';
+import historiaPista from '@assets/images/refresh/historia-pista.webp';
+import aficheAncho from '@assets/images/valida-yumbo-2026/afiche-cerro-ancho.webp';
+import afichePanoramico from '@assets/images/valida-yumbo-2026/afiche-cerro-panoramico.webp';
+import aficheVertical from '@assets/images/valida-yumbo-2026/afiche-cerro-vertical.webp';
+import grano from '@assets/images/valida-yumbo-2026/afiche-grano.webp';
+import { longDateRange, resolveEventStatus } from '@lib/calendar';
+import { CONTACT, CTA_TRIAL_LABEL, SITE } from '@lib/constants';
+import { chroniclesForEvent } from '@lib/gallery';
+import { filterTrackMilestones } from '@lib/la-pista';
+import { buildMilestoneItems } from '@lib/milestones';
+import {
+  validaAliadosSchema,
+  validaDatosSchema,
+  validaEventoSchema,
+  validaFotosSchema,
+} from '@lib/schemas';
+import { generateEventJsonLd } from '@lib/seo';
+import { buildTrackPath, parseGpx } from '@lib/track-map';
+import {
+  countPhotos,
+  dockItems,
+  galleryEmptyCopy,
+  hasPlacaTags,
+  heroCopy,
+  isPublished,
+  pageMeta,
+  recapCards,
+  recapLead,
+  summarizeAllies,
+  type Ally,
+  type PhotoManifest,
+  type ValidaData,
+  type ValidaEvent,
+} from '@lib/valida';
+// Reales o, con `VALIDA_PREVIEW=true` en local, los de prueba de `preview/`.
+import {
+  aliadosJson,
+  datosJson,
+  eventoJson,
+  fotosJson,
+  isPreview,
+  mangasJson,
+} from '../data/valida-yumbo-2026';
+import gpx from '../data/la-pista.gpx?raw';
+
+type EventEntry = CollectionEntry<'events'>;
+type NewsEntry = CollectionEntry<'news'>;
+type GalleryEntry = CollectionEntry<'gallery'>;
+type ProgramEntry = CollectionEntry<'programs'>;
+
+// ─── Datos ──────────────────────────────────────────────────────────────────
+// `parse()` en el build: un JSON mal formado tumba el deploy con el campo que
+// falla, en vez de publicar una página rota. La coherencia entre archivos (que
+// los logos existan, que los ids resuelvan) la revisa `valida-data.test.ts`.
+const evento: ValidaEvent = validaEventoSchema.parse(eventoJson);
+const aliados: Ally[] = validaAliadosSchema.parse(aliadosJson);
+const fotos: PhotoManifest = validaFotosSchema.parse(fotosJson);
+const datos: ValidaData = validaDatosSchema.parse(datosJson);
+
+const published = isPublished(evento);
+const pagePath = `/${evento.slug}`;
+const pageUrl = new URL(pagePath, SITE.url).href;
+
+// ─── Colecciones ────────────────────────────────────────────────────────────
+const events = (await getCollection('events')).filter((e: EventEntry) => !e.data.draft);
+const news = (await getCollection('news')).filter((n: NewsEntry) => !n.data.draft);
+const albums = (await getCollection('gallery')).filter((g: GalleryEntry) => !g.data.draft);
+const programs = (await getCollection('programs')).filter((p: ProgramEntry) => !p.data.draft);
+const milestones = await getCollection('milestones');
+
+// El día de la válida sale del JSON (el test lo cruza con el archivo del evento);
+// de la colección solo se toma lo que el JSON no sabe: si se canceló, sus enlaces.
+const raceDate = new Date(`${evento.date}T00:00:00Z`);
+const eventEntry = events.find((e: EventEntry) => e.id === evento.eventId);
+const raceStatus = resolveEventStatus({
+  date: raceDate,
+  status: eventEntry?.data.status,
+});
+
+// Próxima parada: solo mientras todavía no pasó. Con la página viviendo años, un
+// «próxima parada» que ya se corrió sería una afirmación falsa.
+const nextEntry = evento.nextEventId
+  ? events.find((e: EventEntry) => e.id === evento.nextEventId)
+  : undefined;
+const nextStatus = nextEntry ? resolveEventStatus(nextEntry.data) : null;
+const nextStop =
+  nextEntry && (nextStatus === 'upcoming' || nextStatus === 'ongoing') ? nextEntry : undefined;
+
+// ─── Metadatos y datos estructurados ────────────────────────────────────────
+const meta = pageMeta(evento, fotos, aliados);
+// Respaldo: la foto de la pista, sin niños identificables. Nunca el póster de la
+// portada (dos niños del club en primer plano): la vista previa de WhatsApp es
+// lo primero que ven unas 250 familias, y la regla es plano general.
+const ogImage = evento.ogImage ?? historiaPista.src;
+const ogSize = evento.ogImage
+  ? { width: 1200, height: 630 }
+  : { width: historiaPista.width, height: historiaPista.height };
+
+// `startDate` con la hora de la primera salida (la de `mangas.json`), no la
+// medianoche: la válida empezó a las 8:30, no a las 12 de la noche.
+const firstStart = mangasJson.groups
+  .map((group) => group.start)
+  .filter((start): start is string => typeof start === 'string')
+  .sort()[0];
+const startDate = firstStart ? new Date(`${evento.date}T${firstStart}:00-05:00`) : raceDate;
+
+// El `BreadcrumbList` lo emite el componente `Breadcrumb`; repetirlo aquí
+// duplicaría el bloque en el HTML.
+const jsonLd = [
+  generateEventJsonLd({
+    title: evento.title,
+    date: startDate,
+    location: evento.venue.name,
+    city: evento.venue.city,
+    department: evento.venue.department,
+    description: meta.description,
+    image: ogImage,
+    url: pagePath,
+    status: raceStatus,
+    organizer: evento.organizer,
+  }),
+];
+
+// ─── Apertura ───────────────────────────────────────────────────────────────
+const allySummary = summarizeAllies(aliados);
+const totalPhotos = countPhotos(fotos);
+
+// El afiche es el cerro de Yumbo, no una foto: ni la pista ni la carrera salen en la apertura
+// (la foto de la pista vive en «La casa»). El cerro va a sangre: ancho desde 700 px, vertical
+// por debajo; webp ~74, dos variantes por orientación. Desde 1500 px el afiche (que no pasa de
+// 660 px de alto) es más ancho que 2,3:1 y el encuadre de 1,79:1 se recortaba arriba y abajo:
+// las torres salían mochas. Ahí va el panorámico (2,9:1), el mismo cerro a la misma escala.
+const AFICHE_QUALITY = 74;
+const [
+  aficheAncho1440,
+  aficheAncho2400,
+  aficheVert640,
+  aficheVert780,
+  afichePano1920,
+  afichePano3200,
+] = await Promise.all([
+  getImage({ src: aficheAncho, width: 1440, format: 'webp', quality: AFICHE_QUALITY }),
+  getImage({ src: aficheAncho, width: 2400, format: 'webp', quality: AFICHE_QUALITY }),
+  getImage({ src: aficheVertical, width: 640, format: 'webp', quality: AFICHE_QUALITY }),
+  getImage({ src: aficheVertical, width: 780, format: 'webp', quality: AFICHE_QUALITY }),
+  getImage({ src: afichePanoramico, width: 1920, format: 'webp', quality: AFICHE_QUALITY }),
+  getImage({ src: afichePanoramico, width: 3200, format: 'webp', quality: AFICHE_QUALITY }),
+]);
+
+// El rótulo negro del afiche: «Domingo 18 de octubre · Pista Carlos Castro», con el día del JSON.
+const rotuloDia = new Intl.DateTimeFormat('es-CO', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+  timeZone: 'UTC',
+})
+  .format(raceDate)
+  .replace(',', '')
+  .replace(/^./, (c) => c.toUpperCase());
+const aficheRotulo = `${rotuloDia} · ${evento.venue.shortName}`;
+
+// El grano de imprenta del pliego lima de «Revive la jornada» (el mismo de las cifras).
+const granoImage = await getImage({ src: grano, width: 512, format: 'webp', quality: 74 });
+
+const numberFormat = new Intl.NumberFormat('es-CO');
+// «**420** fotos oficiales, gratis y en calidad original gracias a 25 aliados.»: el número va aparte, en grande.
+const promiseTail = `${totalPhotos === 1 ? 'foto oficial' : 'fotos oficiales'}, gratis y en calidad original${
+  allySummary.total > 0
+    ? ` gracias a ${allySummary.total} ${allySummary.total === 1 ? 'aliado' : 'aliados'}`
+    : ''
+}.`;
+
+// Con fotos, la apertura promete las fotos; sin ellas, narra la jornada.
+const {
+  title: heroTitle,
+  highlight: heroHighlight,
+  lead: heroLead,
+  shareTitle,
+} = heroCopy(evento, totalPhotos);
+
+// ─── Fotos oficiales ────────────────────────────────────────────────────────
+const photographer = evento.photographer;
+const photographerHref =
+  photographer.url ??
+  (photographer.instagram ? `https://www.instagram.com/${photographer.instagram}/` : null);
+
+// El estado sin fotos promete «el día siguiente» a la válida: el texto sigue a
+// `evento.date`, no una fecha escrita a mano.
+const { title: emptyTitle, body: emptyBody } = galleryEmptyCopy(evento.date);
+
+const whatsappMessage = (text: string) => `${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
+// Con placas etiquetadas la bajada lo dice; sin ellas, el campo ni aparece.
+const placaSearch = hasPlacaTags(fotos);
+const photosLead = placaSearch
+  ? 'Toca su categoría o escribe su número de placa, abre la foto y descárgala.'
+  : 'Toca su categoría, abre la foto y descárgala.';
+
+const familyRequestHref = whatsappMessage(
+  `Hola, quiero las fotos de mi deportista de la ${evento.edition} de ${evento.venue.city}. Número de placa: `,
+);
+const removalHref = whatsappMessage(
+  `Hola, quiero que retiren una foto de la ${evento.edition} de ${evento.venue.city}. Enlace de la foto: `,
+);
+
+// ─── La casa ────────────────────────────────────────────────────────────────
+const trackHistory = buildMilestoneItems(filterTrackMilestones(milestones).map((e) => e.data));
+// La foto de la pista es la del hito «La casa» (`historia-pista`): va grande, en duotono lima,
+// encima de la lista. Ese hito queda representado por la foto; la lista lleva los demás.
+const trackListItems = trackHistory.filter((item) => item.image?.src !== historiaPista.src);
+// El texto alternativo de la foto es el de su hito («Valla de la Pista XCO…»): no muestra corredores.
+const trackPhotoAlt =
+  trackHistory.find((item) => item.image?.src === historiaPista.src)?.imageAlt ??
+  `${evento.venue.name}, ${evento.venue.city}`;
+
+// El trazado real de la pista: el GPX de una vuelta, proyectado al SVG (como `/la-pista`).
+// Salida y meta están en el primer punto del `path`.
+const trackGeometry = buildTrackPath(parseGpx(gpx), { toleranceMeters: 6, width: 520 });
+const trackStart = trackGeometry?.path.match(/^M(-?[\d.]+) (-?[\d.]+)/);
+const gpxDay = gpx.match(/<metadata>[\s\S]*?<time>(\d{4}-\d{2}-\d{2})/)?.[1];
+const gpxDate = gpxDay
+  ? new Intl.DateTimeFormat('es-CO', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }).format(new Date(`${gpxDay}T00:00:00Z`))
+  : null;
+
+// «Juegos Nacionales» lleva espacio duro (U+00A0): en el teléfono el trazo lima del resaltado
+// se partía en dos líneas («Juegos» al final de la primera y «Nacionales» al principio de la
+// segunda).
+const casaHighlight = 'Juegos\u00A0Nacionales';
+const casaTitle = `La pista de los ${casaHighlight} y los Panamericanos Junior`;
+
+// ─── Resultados, crónica y álbum ────────────────────────────────────────────
+// Un enlace solo existe si lo que apunta resuelve contra la colección real: el
+// JSON manda; si no declara nada, se cruzan las relaciones del evento en las dos
+// direcciones, como hace `/calendario`.
+const resultsUrl = evento.resultsUrl ?? eventEntry?.data.resultsUrl ?? null;
+
+const generalUrl = evento.generalUrl ?? null;
+
+const newsById = new Map(news.map((n: NewsEntry) => [n.id, n]));
+const chronicleIds = [
+  evento.chronicle,
+  ...(eventEntry ? chroniclesForEvent(eventEntry, news).map((link) => link.id) : []),
+];
+const chronicle = chronicleIds.map((id) => (id ? newsById.get(id) : undefined)).find(Boolean);
+
+const albumsById = new Map(albums.map((g: GalleryEntry) => [g.id, g]));
+const albumIds = [
+  evento.album,
+  eventEntry?.data.relatedGallery,
+  ...albums.filter((g: GalleryEntry) => g.data.relatedEvent === evento.eventId).map((g) => g.id),
+];
+const album = albumIds.map((id) => (id ? albumsById.get(id) : undefined)).find(Boolean);
+
+// `recapCards` recibe valores planos: la crónica y el álbum ya vienen resueltos
+// contra las colecciones, y su tarjeta solo existe si lo resuelto existe.
+const recap = recapCards({
+  resultsUrl,
+  generalUrl,
+  organizer: evento.organizer,
+  chronicleId: chronicle?.id ?? null,
+  album: album ? { id: album.id, imageCount: album.data.images.length } : null,
+});
+// Con una sola tarjeta no hay sección sino una banda de una fila que se explica sola (la
+// tarjeta ya trae título, descripción y botón); la bajada de «Revive la jornada» existe solo
+// con dos o más.
+const recapBand = recap.length === 1 ? recap[0] : null;
+const recapSectionLead = recapLead(recap);
+
+// ─── Paso siguiente ─────────────────────────────────────────────────────────
+// La edad de entrada sale de la colección `programs`, como en `/programas`.
+const entryAge = programs.length > 0 ? Math.min(...programs.map((p) => p.data.ageMin)) : null;
+const ctaHeading =
+  entryAge !== null
+    ? `Tu hijo o tu hija puede empezar desde los ${entryAge} años`
+    : 'Conoce la escuela del club';
+// Con próxima parada, su titular es el `h2` y la invitación un `h3`; sin ella, la
+// invitación es el único titular. La sección se nombra «Próximos pasos» (aria-label):
+// llamarla como la próxima carrera dejaría fuera la clase de prueba.
+const CtaHeading = nextStop ? 'h3' : 'h2';
+const enrollWhatsapp = whatsappMessage('Hola, quiero inscribir a mi hijo o hija en el club');
+
+// ─── Índice flotante ────────────────────────────────────────────────────────
+// Con cientos de fotos, todo lo que va después de la galería queda a miles de
+// píxeles: el índice lleva a cada sección sin recorrerla, en el mismo orden en que aparecen
+// en la página (cifras, fotos, aliados…). Una entrada por
+// sección que de verdad se pinta; `dockItems` aplica las mismas condiciones de
+// la plantilla (incluida la de `ValidaNumbers`, que es la misma función).
+const dock = dockItems({
+  totalPhotos,
+  allyCount: allySummary.total,
+  recapCount: recap.length,
+  data: datos,
+  trackCount: trackHistory.length,
+  hasNextStop: nextStop !== undefined,
+});
+---
+
+<BaseLayout
+  title={meta.title}
+  description={meta.description}
+  ogImage={ogImage}
+  ogImageWidth={ogSize.width}
+  ogImageHeight={ogSize.height}
+  jsonLd={jsonLd}
+  noindex={!published || isPreview}
+>
+  {
+    isPreview && (
+      <p class="bg-danger text-on-deep py-1 text-center text-xs font-bold tracking-wide uppercase">
+        Vista previa con datos de prueba · no publicar
+      </p>
+    )
+  }
+
+  <!-- 1. Apertura: el afiche. El cerro a sangre; arriba, sobre el cielo, migas y titular (con un halo
+       lima para que los cables pasen por detrás, nunca encima del texto); abajo, una placa de tinta
+       lisa con la promesa y los botones. El letrero YUMBO es decoración. -->
+  <section
+    id="inicio"
+    aria-labelledby="valida-titulo"
+    class="afiche bg-surface-dark relative isolate grid overflow-hidden"
+  >
+    <picture class="absolute inset-0 -z-10">
+      <source
+        media="(max-width: 700px)"
+        type="image/webp"
+        srcset={`${aficheVert640.src} 640w, ${aficheVert780.src} 780w`}
+        sizes="100vw"
+      />
+      <source
+        media="(min-width: 1500px)"
+        type="image/webp"
+        srcset={`${afichePano1920.src} 1920w, ${afichePano3200.src} 3200w`}
+        sizes="100vw"
+      />
+      <img
+        src={aficheAncho1440.src}
+        srcset={`${aficheAncho1440.src} 1440w, ${aficheAncho2400.src} 2400w`}
+        sizes="100vw"
+        alt=""
+        width={aficheAncho.width}
+        height={aficheAncho.height}
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+        class="afiche-arte"
+      />
+    </picture>
+
+    <div
+      class="afiche-letrero font-display pointer-events-none absolute select-none"
+      aria-hidden="true"
+    >
+      <span>Y</span><span>U</span><span>M</span><span>B</span><span>O</span>
+    </div>
+
+    <div
+      class="relative mx-auto flex w-full max-w-7xl flex-col justify-between gap-10 px-4 pt-6 pb-8 sm:px-6 lg:px-8 lg:pt-8 lg:pb-10"
+    >
+      <div class="afiche-cabeza">
+        <div class="afiche-halo">
+          <Breadcrumb
+            items={[{ label: 'Calendario', href: '/calendario' }, { label: evento.shortTitle }]}
+          />
+          <SectionIntro
+            as="h1"
+            tone="brand"
+            id="valida-titulo"
+            eyebrow={`Copa Valle 2026 · ${evento.edition}`}
+            eyebrowIcon="ph:flag-checkered-bold"
+            title={heroTitle}
+            highlight={heroHighlight}
+          />
+        </div>
+        <p
+          class="afiche-rotulo bg-surface-dark mt-5 w-fit rounded-lg px-3.5 py-2.5 text-sm leading-snug font-semibold text-white sm:text-[15px]"
+        >
+          {aficheRotulo}
+        </p>
+      </div>
+
+      <div class="afiche-placa bg-surface-dark rounded-2xl p-4 sm:p-6">
+        {
+          totalPhotos > 0 ? (
+            <p class="max-w-[26rem] text-base leading-snug font-semibold text-white sm:text-lg">
+              <span class="font-display text-accent align-[-0.08em] text-[2.2em] leading-none font-extrabold tracking-tight">
+                {numberFormat.format(totalPhotos)}
+              </span>{' '}
+              {promiseTail}
+            </p>
+          ) : (
+            <p class="max-w-[30rem] text-base leading-relaxed text-white sm:text-lg">{heroLead}</p>
+          )
+        }
+
+        <!-- «Buscar mis fotos» emite `page_nav_click` (salto dentro de la página), no
+             `gallery_filter`: no filtra nada, y contarlo como filtro inflaba el embudo.
+             Aterriza en `#buscar`, la barra de categorías, no en el titular de la sección. -->
+        {
+          (totalPhotos > 0 || resultsUrl) && (
+            <div class="mt-5 flex flex-wrap items-center gap-3">
+              {totalPhotos > 0 && (
+                <Button
+                  href="#buscar"
+                  variant="accent"
+                  size="lg"
+                  class="w-full gap-2 sm:w-auto"
+                  data-analytics-event="page_nav_click"
+                  data-analytics-content-id="buscar"
+                  data-analytics-method="apertura"
+                >
+                  <Icon
+                    name="ph:magnifying-glass-bold"
+                    class="size-5 shrink-0"
+                    aria-hidden="true"
+                  />
+                  Buscar mis fotos
+                </Button>
+              )}
+              {resultsUrl && (
+                <Button
+                  href={resultsUrl}
+                  variant="outline"
+                  size="lg"
+                  class="afiche-contorno w-full gap-2 sm:w-auto"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-analytics-event="race_results_click"
+                  data-analytics-content-id="hero"
+                >
+                  <Icon name="ph:trophy-bold" class="size-5 shrink-0" aria-hidden="true" />
+                  Resultados oficiales
+                  <span class="sr-only">(se abre en una pestaña nueva)</span>
+                </Button>
+              )}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Índice flotante: se ve abajo, pero en el DOM va aquí, después de la apertura,
+       para que el teclado lo alcance antes de las fotos y no después de todas
+       ellas. Aparece al dejar atrás la apertura y marca la sección en la que se está. -->
+  <SectionDock items={dock} heroId="inicio" label="En esta página" />
+
+  <!-- 2. Franja de aliados: todos los logos antes de lo demás. Con cientos de
+       fotos más abajo, quien vino por las suyas quizá nunca llegue al muro. -->
+  <ValidaSponsorRibbon allies={aliados} wallId="aliados" photos={totalPhotos} />
+
+  <!-- 4. Fotos oficiales: la razón por la que llegan las familias.
+       `scrollDriven` no anima nada aquí: es lo que cambia el `overflow-hidden` del
+       marco por `overflow-clip`. La barra de mangas de la galería es `sticky`, y un
+       ancestro con `overflow: hidden` es un contenedor de scroll: la barra se
+       quedaría en su sitio en vez de acompañar al visitante por cientos de fotos
+       (docs/04 §2.5, trampa 1). -->
+  <SectionShell
+    tone="plain"
+    width="wide"
+    id="fotos"
+    class="valida-papel scroll-mt-[var(--header-h,4rem)]"
+    scrollDriven
+    labelledby="valida-fotos-titulo"
+  >
+    <SectionIntro
+      id="valida-fotos-titulo"
+      eyebrow="Fotos oficiales"
+      eyebrowIcon="ph:camera-bold"
+      title="Encuentra a tu deportista por categoría"
+      highlight="por categoría"
+      lead={photosLead}
+    />
+
+    {
+      photographer.name && (
+        <p class="text-text-secondary mt-4 flex items-center gap-2 text-sm">
+          <Icon
+            name="ph:camera-bold"
+            class="text-primary-deep size-4 shrink-0"
+            aria-hidden="true"
+          />
+          <span>
+            Fotos:{' '}
+            {photographerHref ? (
+              <a
+                href={photographerHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary-deep font-semibold underline underline-offset-2"
+              >
+                {photographer.name}
+                <span class="sr-only"> (se abre en una pestaña nueva)</span>
+              </a>
+            ) : (
+              <span class="text-text-primary font-semibold">{photographer.name}</span>
+            )}
+          </span>
+        </p>
+      )
+    }
+
+    <div class="mt-10">
+      <RacePhotoGallery
+        client:visible
+        manifest={fotos}
+        pageUrl={pageUrl}
+        eventSlug={evento.slug}
+        eventTitle={evento.shortTitle}
+        familyRequestHref={familyRequestHref}
+        photographerName={photographer.name}
+        allyCount={allySummary.total}
+        emptyTitle={emptyTitle}
+        emptyBody={emptyBody}
+      />
+      <noscript>
+        <p class="bg-surface-muted text-text-primary mt-4 rounded-2xl p-4 text-sm">
+          Para ver y descargar las fotos hace falta activar JavaScript en tu navegador. Si no
+          puedes,{' '}
+          <a href={familyRequestHref} class="font-semibold underline underline-offset-2"
+            >escríbenos por WhatsApp</a
+          >{' '}
+          y te las enviamos.
+        </p>
+      </noscript>
+    </div>
+
+    <!-- Compartir la página va al final de la galería, cuando la familia ya
+         encontró lo suyo: es cuando se manda al grupo del club. `display:
+         contents`: el envoltorio solo lleva el dato de GA4 (`photo_share`). -->
+    {
+      totalPhotos > 0 && (
+        <div class="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-5">
+          <p class="font-display text-text-primary text-lg font-bold">
+            Pasa la página al grupo de tu club
+          </p>
+          <div
+            class="contents"
+            data-analytics-event="photo_share"
+            data-analytics-content-id="pagina"
+            data-analytics-method="whatsapp"
+          >
+            <WhatsappShareButton title={shareTitle} url={pageUrl} />
+          </div>
+        </div>
+      )
+    }
+
+    <!-- Aviso de imagen, en palabras de familia. Es una `note`, no un `<aside>`:
+         un `aside` es un landmark y no puede ir dentro de la sección. Fondo
+         `surface-raised`, no gris: es información, no una advertencia. -->
+    <div
+      role="note"
+      aria-labelledby="valida-aviso-titulo"
+      class="bg-surface-raised text-text-primary ring-hairline mt-10 rounded-2xl p-5 text-sm leading-relaxed ring-1 sm:p-6"
+    >
+      <h3
+        id="valida-aviso-titulo"
+        class="font-display text-text-primary flex items-center gap-2 text-base font-bold"
+      >
+        <Icon name="ph:shield-check-bold" class="size-5 shrink-0" aria-hidden="true" />
+        Sobre estas fotos
+      </h3>
+      <p class="mt-2">
+        Las publica el {evento.host}, operador de la válida, para que cada familia tenga las suyas.
+        No publicamos nombres de deportistas. Puedes guardarlas y compartirlas, también desde la
+        cuenta de tu club{photographer.name ? `, mencionando a ${photographer.name}` : ''}; no se
+        pueden vender ni usar en publicidad.
+      </p>
+      <p class="mt-2">
+        ¿Sales en una foto y prefieres que no esté? Escríbenos por{' '}
+        <a
+          href={removalHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-analytics-event="whatsapp_click"
+          data-analytics-content-id="retiro-foto"
+          class="font-semibold underline underline-offset-2"
+          >WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span></a
+        >{' '}
+        o a{' '}
+        <a href={`mailto:${CONTACT.email}`} class="font-semibold underline underline-offset-2"
+          >{CONTACT.email}</a
+        >{' '}
+        y la retiramos el mismo día.
+      </p>
+      <details class="group mt-3">
+        <summary class="cursor-pointer py-1.5 font-semibold underline underline-offset-2">
+          Política de imágenes de la válida
+        </summary>
+        <ol class="mt-3 list-decimal space-y-2 pl-5">
+          <li>
+            <strong>Responsable.</strong>
+            {evento.host}, operador de la válida. {CONTACT.email}.
+          </li>
+          <li>
+            <strong>Finalidad.</strong> Contar la válida y entregar a cada familia las fotos de su deportista.
+            Las fotos de niños y niñas no se venden ni se usan en piezas de patrocinadores.
+          </li>
+          <li>
+            <strong>Sin nombres.</strong> No publicamos nombres de deportistas, ni en las fotos ni en
+            sus descripciones.
+          </li>
+          <li>
+            <strong>Retiro.</strong> Cualquiera puede pedirlo por WhatsApp o por correo (asunto «Retiro
+            de foto»). Se retira el mismo día, sin pedir explicaciones.
+          </li>
+          <li>
+            <strong>Archivos.</strong> Se publican sin metadatos: sin ubicación, sin número de serie de
+            la cámara, sin nombres.
+          </li>
+        </ol>
+        <p class="mt-3">
+          Tus derechos sobre tus datos:{' '}
+          <a
+            href="/politica-de-tratamiento-de-datos"
+            class="font-semibold underline underline-offset-2">política de tratamiento de datos</a
+          >.
+        </p>
+      </details>
+    </div>
+  </SectionShell>
+
+  <!-- 5. Aliados: el agradecimiento, entre las fotos y las cifras: quien baja de las
+       fotos a las cifras pasa por el muro -->
+  <ValidaAllies allies={aliados} institutions={evento.institutions} />
+
+  <!-- 6. Las cifras de la casa: después de las fotos y los aliados. Con ellas, la jornada se
+       lee de corrido antes de llegar a los resultados. -->
+  <ValidaNumbers data={datos} />
+
+  <!-- 7. Resultados y crónica: solo con lo que de verdad existe. Con una sola tarjeta (lo
+       habitual los primeros días: los resultados llegan antes que la crónica y el álbum), una
+       banda de una fila: una sección entera con antetítulo, titular y bajada para un solo
+       enlace pesaba 553 px y repetía tres veces «Resultados oficiales». Con dos o tres, la
+       sección con sus tarjetas. Fondo grafito (`tone="dark"`): va después de las cifras
+       (lima) y antes de La pista (papel), así que alterna con los dos. -->
+  {
+    recap.length > 0 && (
+      <SectionShell
+        tone="dark"
+        width="wide"
+        spacing={recapBand ? 'compact' : 'default'}
+        id="resultados"
+        class="text-white scroll-mt-[var(--header-h,4rem)]"
+        labelledby="valida-resultados-titulo"
+      >
+        <span
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-0 -z-10 opacity-55 mix-blend-multiply"
+          style={`background:url(${granoImage.src}) 0 0 / 512px`}
+        />
+        {/* El talón: la entrada de la válida, con su lomo lima y la perforación; toda la pieza es el enlace y el titular de la sección va dentro. */}
+        {recapBand ? (
+          <a
+            href={recapBand.href}
+            target={recapBand.external ? '_blank' : undefined}
+            rel={recapBand.external ? 'noopener noreferrer' : undefined}
+            data-analytics-event={recapBand.event}
+            data-analytics-content-id={recapBand.contentId}
+            class="valida-talon bg-surface-raised ring-surface-dark focus-visible:outline-surface-dark group flex max-w-3xl items-stretch overflow-hidden rounded-lg ring-2 focus-visible:outline-3 focus-visible:outline-offset-4"
+          >
+            <span
+              class="valida-talon-lomo bg-accent text-surface-dark border-text-primary font-display grid place-items-center border-r-2 border-dashed px-3 py-4 text-[13px] font-bold"
+              aria-hidden="true"
+            >
+              Copa Valle 2026
+            </span>
+            <span class="flex min-w-0 flex-1 flex-col gap-1.5 px-5 py-5 sm:px-8 sm:py-7">
+              <h2
+                id="valida-resultados-titulo"
+                class="font-display text-text-primary text-2xl leading-tight font-bold text-balance sm:text-[28px]"
+              >
+                {recapBand.title}
+              </h2>
+              <span class="text-text-secondary text-base leading-snug text-pretty">
+                {recapBand.description}
+              </span>
+            </span>
+            <span class="border-text-primary text-primary-deep flex items-center gap-2 border-l-2 border-dashed px-4 text-lg font-semibold whitespace-nowrap sm:px-8">
+              {recapBand.cta}
+              <Icon
+                name={recapBand.external ? 'ph:arrow-square-out-bold' : 'ph:arrow-right-bold'}
+                class="valida-talon-flecha size-5 shrink-0"
+                aria-hidden="true"
+              />
+              {recapBand.external && <span class="sr-only">(se abre en una pestaña nueva)</span>}
+            </span>
+          </a>
+        ) : (
+          <>
+            <SectionIntro tone="dark" id="valida-resultados-titulo" title="Revive la jornada">
+              <p class="mt-4 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
+                {recapSectionLead}
+              </p>
+            </SectionIntro>
+            <ul
+              role="list"
+              class:list={[
+                'mt-10 grid gap-4 sm:grid-cols-2',
+                recap.length === 3 && 'lg:grid-cols-3',
+              ]}
+            >
+              {recap.map((card) => (
+                <li>
+                  <a
+                    href={card.href}
+                    target={card.external ? '_blank' : undefined}
+                    rel={card.external ? 'noopener noreferrer' : undefined}
+                    data-analytics-event={card.event}
+                    data-analytics-content-id={card.contentId}
+                    class="group bg-surface-raised ring-hairline ease-spring hover:ring-surface-dark focus-visible:outline-surface-dark flex h-full flex-col rounded-2xl p-5 ring-1 transition-transform duration-[var(--duration-micro)] hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                  >
+                    <span class="bg-primary/15 text-primary-deep grid size-11 place-items-center rounded-xl">
+                      <Icon name={card.icon} class="size-6" aria-hidden="true" />
+                    </span>
+                    <h3 class="font-display text-text-primary mt-4 text-lg font-bold">
+                      {card.title}
+                    </h3>
+                    <p class="text-text-secondary mt-1 flex-1 text-sm leading-snug">
+                      {card.description}
+                    </p>
+                    <span class="text-primary-deep mt-4 inline-flex items-center gap-1.5 text-sm font-semibold">
+                      {card.cta}
+                      <Icon
+                        name={card.external ? 'ph:arrow-square-out-bold' : 'ph:arrow-right-bold'}
+                        class="size-4 shrink-0"
+                        aria-hidden="true"
+                      />
+                      {card.external && <span class="sr-only">(se abre en una pestaña nueva)</span>}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </SectionShell>
+    )
+  }
+
+  <!-- 7. La casa: la pista. Texto y hitos a la izquierda; a la derecha, el trazado real del GPX,
+       fijo mientras se lee la lista (`scrollDriven` deja el marco en `overflow-clip`: con
+       `overflow-hidden` el `sticky` no funcionaría). -->
+  {
+    trackHistory.length > 0 && (
+      <SectionShell
+        tone="plain"
+        width="wide"
+        id="la-pista"
+        class="valida-papel scroll-mt-[var(--header-h,4rem)]"
+        scrollDriven
+        labelledby="valida-casa-titulo"
+      >
+        <div class="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start lg:gap-16">
+          <div>
+            <SectionIntro
+              id="valida-casa-titulo"
+              title={casaTitle}
+              highlight={casaHighlight}
+              lead="Desde 2012 la Copa Valle se corre en Pizarro."
+            />
+
+            <figure class="bg-accent mt-8 overflow-hidden rounded-lg">
+              <Image
+                src={historiaPista}
+                alt={trackPhotoAlt}
+                layout="none"
+                widths={[480, 800, 1200]}
+                sizes="(min-width: 1024px) 560px, 100vw"
+                loading="lazy"
+                decoding="async"
+                class="aspect-[16/7] w-full max-w-full object-cover mix-blend-multiply brightness-105 contrast-[1.35] grayscale"
+              />
+            </figure>
+
+            {trackListItems.length > 0 && (
+              <ol role="list" class="mt-8">
+                {trackListItems.map((item) => (
+                  <li class="border-text-primary grid gap-x-6 gap-y-1 border-t-2 py-5 sm:grid-cols-[8rem_minmax(0,1fr)]">
+                    <span class="font-display text-text-primary text-4xl leading-none font-extrabold tracking-tight sm:row-span-2 sm:text-[44px]">
+                      {item.label}
+                    </span>
+                    <h3 class="font-display text-text-primary text-xl leading-snug font-bold">
+                      {item.title}
+                    </h3>
+                    <p class="text-text-secondary text-base leading-relaxed">{item.body}</p>
+                  </li>
+                ))}
+              </ol>
+            )}
+
+            <div class="mt-8">
+              <Button href="/la-pista" variant="outline">
+                Conoce la pista
+              </Button>
+            </div>
+          </div>
+
+          {trackGeometry && (
+            <figure class="valida-trazado mx-auto w-full max-w-[16rem] lg:sticky lg:max-w-none">
+              <svg
+                viewBox={trackGeometry.viewBox}
+                class="valida-trazado-svg mx-auto block h-auto w-full"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d={trackGeometry.path}
+                  class="valida-trazo-lima"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  vector-effect="non-scaling-stroke"
+                />
+                <path
+                  d={trackGeometry.path}
+                  class="valida-trazo"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  vector-effect="non-scaling-stroke"
+                />
+                {trackStart && (
+                  <circle
+                    cx={trackStart[1]}
+                    cy={trackStart[2]}
+                    r="13"
+                    class="valida-trazo-meta"
+                    vector-effect="non-scaling-stroke"
+                  />
+                )}
+              </svg>
+              <figcaption class="text-text-secondary mt-4 text-sm leading-snug">
+                Una vuelta a la pista, grabada con GPS{gpxDate ? ` el ${gpxDate}` : ''}. Salida y
+                meta en el punto lima.
+              </figcaption>
+            </figure>
+          )}
+        </div>
+      </SectionShell>
+    )
+  }
+
+  <!-- 8. Paso siguiente: la próxima parada y la clase de prueba. Teal de marca, como el cierre de
+       la portada (`InscriptionCTA`): en grafito se fundía con el pie (1,00:1) y la silueta de
+       elevación que el pie pinta sobre la sección anterior desaparecía. Sobre el teal todo el
+       texto va en grafito (5,5:1), también las bajadas: el 80 % del tono `brand` solo da 3,9:1,
+       así que la bajada de la próxima parada va por el slot de `SectionIntro` y no por `lead`.
+       La invitación es una hoja de papel (la columna de la derecha es la más ancha) y sus dos
+       botones van lado a lado desde `sm`: en una columna angosta quedaban apilados. -->
+  <SectionShell
+    tone="brand"
+    width="wide"
+    spacing="compact"
+    id="siguiente"
+    class="scroll-mt-[var(--header-h,4rem)]"
+    label="Próximos pasos"
+  >
+    <div
+      class:list={[
+        'grid gap-10',
+        nextStop && 'lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-14',
+      ]}
+    >
+      {
+        nextStop && (
+          <div>
+            <SectionIntro
+              tone="brand"
+              eyebrow="Próxima parada"
+              eyebrowIcon="ph:flag-checkered-bold"
+              title={nextStop.data.shortName ?? nextStop.data.title}
+            >
+              <p class="text-surface-dark mt-4 max-w-2xl text-base leading-relaxed sm:text-lg">
+                {`${longDateRange(nextStop.data.date, nextStop.data.endDate)} · ${nextStop.data.location}`}
+              </p>
+            </SectionIntro>
+            <a
+              href={`/calendario#evento-${nextStop.id}`}
+              class="text-surface-dark focus-visible:outline-surface-dark mt-6 inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-4 hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-4"
+            >
+              Ver en el calendario
+              <Icon name="ph:arrow-right-bold" class="size-4 shrink-0" aria-hidden="true" />
+            </a>
+          </div>
+        )
+      }
+
+      <div class="valida-hoja rounded-2xl p-6 sm:p-8">
+        <CtaHeading
+          class="font-display text-text-primary text-2xl leading-tight font-bold text-balance sm:text-3xl"
+        >
+          {ctaHeading}
+        </CtaHeading>
+        <p class="text-text-primary mt-3 text-base leading-relaxed">
+          La primera clase es de prueba y no tiene costo.
+        </p>
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <Button
+            href="/inscripciones"
+            variant="accent"
+            size="lg"
+            class="focus-visible:outline-surface-dark"
+            data-analytics-event="cta_inscripcion_click"
+          >
+            {CTA_TRIAL_LABEL}
+          </Button>
+          <a
+            href={enrollWhatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-analytics-event="whatsapp_click"
+            data-analytics-content-id="inscripcion"
+            class="border-text-primary text-text-primary hover:bg-text-primary hover:text-surface focus-visible:outline-text-primary inline-flex items-center justify-center gap-2 rounded-lg border-2 px-7 py-3.5 text-center text-lg font-semibold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            Preguntar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </SectionShell>
+
+  <!-- Enlaces para compartir (`?manga=…`, `#foto-…`; la placa nunca va en la URL). La galería es un
+       island `client:visible` y solo lee la URL al hidratarse, o sea cuando entra en
+       pantalla: sin esto, quien abre el enlace de las fotos de su deportista aterriza
+       arriba, en la apertura, y tiene que bajar a buscarlas. El script lo lleva hasta
+       la galería; al llegar, el island se hidrata y aplica el filtro o abre la foto. -->
+  <script is:inline>
+    (function () {
+      var gallery = document.getElementById('fotos');
+      if (!gallery) return;
+      var wantsGallery =
+        /[?&]manga=/.test(window.location.search) || window.location.hash.indexOf('#foto-') === 0;
+      if (wantsGallery) gallery.scrollIntoView();
+    })();
+  </script>
+
+  <ScrollDepth target="main" />
+</BaseLayout>
+
+<style>
+  /* ─── Papel ───────────────────────────────────────────────────────────────
+     El papel de la maqueta (#f4f2eb) es una variable local de la página, no un token del
+     sitio: en tema oscuro pasa a `--color-surface` (el remapeo de tokens ya hace el resto).
+     Las secciones lo llevan como fondo y la hoja del cierre lo declara por su cuenta (va sobre
+     el teal, fuera de cualquier sección de papel). */
+  :global(.valida-papel),
+  .valida-hoja {
+    --valida-papel: #f4f2eb;
+  }
+  :global(:root[data-theme='dark'] .valida-papel),
+  :global(:root[data-theme='dark']) .valida-hoja {
+    --valida-papel: var(--color-surface);
+  }
+  :global(section.valida-papel) {
+    background-color: var(--valida-papel);
+  }
+  .valida-hoja {
+    background-color: var(--valida-papel);
+  }
+
+  /* ─── 1. El afiche ────────────────────────────────────────────────────────
+     En escritorio no pasa de 660 px (mínimo 600) para que la primera fila de logos de la franja
+     entre en una pantalla de 1440 × 900; en el celular ocupa la pantalla. El arte es el
+     cerro a sangre: el cielo lima queda arriba (texto) y la sombra del cerro abajo (placa). */
+  /* Alto y no `aspect-ratio`: con un tope de alto, el `aspect-ratio` encoge el ancho y el
+     afiche dejaba una franja blanca a la derecha en pantallas anchas. */
+  .afiche {
+    height: clamp(
+      600px,
+      calc(100vw * 1340 / 2400),
+      min(660px, calc(100svh - var(--header-h, 4rem) - 150px))
+    );
+  }
+  .afiche-arte {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 78%;
+  }
+  .afiche-cabeza {
+    width: 100%;
+  }
+  .afiche-placa {
+    width: 100%;
+  }
+
+  /* Halo lima en cada letra: reserva de imprenta. Los cables del cerro pasan por detrás del
+     texto, nunca por encima. El texto es grafito fijo: el cielo es una imagen y no cambia con
+     el tema (por eso también se fuerza el color de las migas, que traen texto de tema). */
+  .afiche-halo {
+    color: var(--color-surface-dark);
+    text-shadow:
+      0 0 2px var(--color-accent),
+      2px 0 0 var(--color-accent),
+      -2px 0 0 var(--color-accent),
+      0 2px 0 var(--color-accent),
+      0 -2px 0 var(--color-accent),
+      3px 3px 0 var(--color-accent),
+      -3px 3px 0 var(--color-accent),
+      3px -3px 0 var(--color-accent),
+      -3px -3px 0 var(--color-accent),
+      5px 0 0 var(--color-accent),
+      -5px 0 0 var(--color-accent),
+      0 5px 0 var(--color-accent),
+      0 -5px 0 var(--color-accent);
+  }
+  .afiche-halo :global(nav :is(a, span, ol, li)) {
+    color: var(--color-surface-dark);
+  }
+  .afiche-halo :global(nav a:hover) {
+    text-decoration: underline;
+  }
+  .afiche-halo :global(nav a:focus-visible) {
+    outline-color: var(--color-surface-dark);
+  }
+
+  /* El letrero YUMBO: decorativo, sobre la sombra del cerro. */
+  .afiche-letrero {
+    left: 62.6%;
+    top: 67%;
+    display: flex;
+    gap: 0.06em;
+    font-size: clamp(28px, 4.1vw, 60px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: #fff;
+    transform: rotate(-1.2deg);
+  }
+  .afiche-letrero span {
+    position: relative;
+    padding-bottom: 0.22em;
+    text-shadow: 0 2px 0 rgb(0 0 0 / 0.35);
+  }
+  .afiche-letrero span::after {
+    content: '';
+    position: absolute;
+    inset: auto 30% 0;
+    height: 0.22em;
+    background: linear-gradient(
+      90deg,
+      #fff 0 2px,
+      transparent 2px calc(100% - 2px),
+      #fff calc(100% - 2px)
+    );
+    opacity: 0.9;
+  }
+
+  /* «Resultados oficiales» sobre la placa de tinta: contorno claro, sombra dura clara. */
+  .afiche-placa :global(.afiche-contorno) {
+    border-color: rgb(255 255 255 / 0.6);
+    color: #fff;
+    --btn-shadow-color: rgb(255 255 255 / 0.35);
+  }
+  .afiche-placa :global(.afiche-contorno:hover) {
+    background-color: #fff;
+    color: var(--color-surface-dark);
+  }
+  .afiche-placa :global(.afiche-contorno:focus-visible) {
+    outline-color: var(--color-accent);
+  }
+
+  @media (min-width: 640px) {
+    .afiche-placa {
+      width: fit-content;
+    }
+  }
+  @media (min-width: 1024px) {
+    .afiche-cabeza {
+      width: 52%;
+      max-width: 640px;
+    }
+    .afiche-placa {
+      margin-left: -1.5rem;
+    }
+  }
+  /* Panorámico (desde 1500 px): las torres quedan al centro y los cables de la derecha bajan
+     por donde estaba el letrero; va al pie de las torres, sobre la sombra del cerro. */
+  @media (min-width: 1500px) {
+    /* Más ancho que 2,9:1 (monitores de 21:9) el recorte se come el cielo y no las torres. */
+    .afiche-arte {
+      object-position: 50% 64%;
+    }
+    .afiche-letrero {
+      left: 50%;
+      top: 72%;
+    }
+  }
+  @media (max-width: 700px) {
+    .afiche {
+      aspect-ratio: auto;
+      height: calc(100svh - var(--header-h, 4rem));
+      min-height: 640px;
+      max-height: 760px;
+    }
+    .afiche-arte {
+      object-position: 0 0;
+    }
+    .afiche-letrero {
+      left: 57%;
+      top: 52%;
+      font-size: 30px;
+    }
+  }
+
+  /* ─── 5. El talón ─────────────────────────────────────────────────────────
+     Lomo lima con el texto girado, perforación punteada a cada lado del cuerpo. */
+  .valida-talon-lomo {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    letter-spacing: 0.02em;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .valida-talon-flecha {
+      transition: transform var(--duration-micro) var(--ease-spring);
+    }
+    .valida-talon:hover .valida-talon-flecha {
+      transform: translateX(3px);
+    }
+  }
+
+  /* ─── 7. El trazado de la pista ───────────────────────────────────────────
+     Trazo grueso lima y, encima, uno fino oscuro (`text-primary`: grafito en claro, claro en
+     oscuro). `non-scaling-stroke`: el grosor es en píxeles de pantalla, no del viewBox. */
+  .valida-trazado {
+    top: calc(var(--header-h, 4rem) + 1.5rem);
+  }
+  .valida-trazado-svg {
+    max-height: min(78svh, 820px);
+    overflow: visible;
+  }
+  .valida-trazo-lima {
+    stroke: var(--color-accent);
+    stroke-width: 12px;
+  }
+  .valida-trazo {
+    stroke: var(--color-text-primary);
+    stroke-width: 3px;
+  }
+  .valida-trazo-meta {
+    fill: var(--color-accent);
+    stroke: var(--color-text-primary);
+    stroke-width: 3px;
+  }
+  @media (min-width: 1024px) {
+    .valida-trazo-lima {
+      stroke-width: 18px;
+    }
+    .valida-trazo {
+      stroke-width: 4px;
+    }
+  }
+</style>

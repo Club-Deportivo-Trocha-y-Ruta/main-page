@@ -1,0 +1,505 @@
+---
+/**
+ * Muro de aliados de una válida corrida en casa: «Gracias a quienes le
+ * apostaron a la válida».
+ *
+ * Es la mitad de la razón de ser de `/copa-valle-yumbo-2026` (la otra son las
+ * fotos) y la prueba de visibilidad que cada marca recibe después: vistas de
+ * la página y clics por marca (`sponsor_click` + `sponsor_id`), medidos en GA4.
+ *
+ * Decisiones que no son de estilo:
+ * - **Un capítulo oscuro con un solo pliego.** Fondo grafito (`tone="dark"`) entre
+ *   las fotos y los resultados, que son claros. Todos los aliados van en UNA
+ *   hoja de papel con marcas de corte lima en las cuatro esquinas (maqueta v6),
+ *   sin placa blanca por logo: cada logo va sobre el papel con
+ *   `mix-blend-mode: multiply` dentro de un contenedor `isolate`, así el blanco
+ *   de su fondo desaparece. El papel (`--pliego-papel`, #f4f2eb) queda claro
+ *   también en el tema oscuro (con `multiply`, un papel oscuro ennegrece los
+ *   logos) y dentro de la hoja los tokens de texto vuelven a los del tema claro.
+ *   «Con el respaldo de» y la invitación quedan fuera de la
+ *   hoja, sobre el oscuro.
+ * - **En el tema oscuro, un filete lima arriba.** El grafito del escenario
+ *   (#2F2F2F) es más claro que el fondo oscuro (#1C1E20) y solo se le distingue
+ *   por 1,25:1; el filete lima de 3 px es el mismo registro de imprenta del pie
+ *   de la banda de la franja y le devuelve el borde. En claro no hace falta
+ *   (13,4:1 contra las secciones vecinas): por eso es `dark:`.
+ * - **Dos grupos con el rótulo del afiche** (`groupAlliesByRole`): «Con el
+ *   patrocinio de» y «Con el apoyo de». Patrocinar y apoyar no son lo mismo
+ *   (ASCOMY apoya), y lo dice el rótulo del grupo, no una píldora en cada
+ *   tarjeta: así las tarjetas son todas iguales.
+ * - **Rejilla uniforme y orden alfabético** dentro de cada grupo. El usuario
+ *   decidió que no hay niveles ni jerarquía: el alfabeto es el único orden que
+ *   nadie puede leer como ranking. Ni tamaño distinto, ni «destacados».
+ * - **Se iguala la superficie de los logos, no la caja** (`equalAreaWidth` con
+ *   `logoRatio`). En una caja fija un logo apaisado llena el ancho y uno
+ *   cuadrado queda chico, y en un muro de «todos iguales» el chico se lee como
+ *   el aliado menor. El tamaño va en % de la caja de 5:3, así que crece con ella.
+ * - **Ningún texto sale de aquí.** Nombre, línea descriptiva, usuario de
+ *   Instagram y logo vienen de `aliados.json`; el componente solo los pinta.
+ *   No se inventa procedencia («de Yumbo», «del Valle»).
+ * - **La tarjeta es un enlace solo si hay a dónde ir** (`allyHref`: Instagram
+ *   confirmado, si no la web). Una tarjeta sin enlace es un `<div>`, no un `<a>`
+ *   muerto.
+ * - **Tarjetas iguales también en el texto.** La línea descriptiva sale por
+ *   grupo y solo si todas las del grupo la tienen (`AllyGroup.taglines`): hoy
+ *   ASCOMY y la Alcaldía de Yumbo (esta nombra sus secretarías), las dos de «Con
+ *   el apoyo de», conservan la suya, y en patrocinio no sale ninguna. El usuario va en `accent-deep` (lima solo como texto sobre
+ *   oscuro; sobre el papel claro es verde hondo, 5,6:1) y, al pasar o enfocar,
+ *   se subraya el nombre: la tarjeta no se levanta.
+ *   PENDIENTE DEL CLUB (desde la revisión del 6-oct): enlace (Instagram,
+ *   Facebook, WhatsApp Business o ficha de Google Maps) y una línea de qué hace
+ *   cada una, para todas, en `aliados.json`, antes del lunes 19. Sin enlace, una
+ *   marca no puede recibir ni un `sponsor_click` para el reporte del 25.
+ * - **Cuántos vieron las marcas** (`sponsor_wall_view`, una vez por visita cada
+ *   una): `content_id: 'franja'` cuando la franja de arriba pasa entera por la
+ *   pantalla y `'muro'` cuando el muro llega a la mitad de la pantalla. Un solo
+ *   script, aquí, observa los dos marcadores `[data-sponsor-wall]`. Son las
+ *   cifras del reporte a las marcas, que `scroll_depth` no da porque mide
+ *   `main` por cuartos.
+ * - **Usuarios largos sin partir a mitad de palabra.** `<wbr>` después de `_` y
+ *   `.` y `overflow-wrap: break-word` (no `anywhere`, que parte primero); el
+ *   texto es de 13 px y baja con el ancho de la tarjeta (`cqi`) si el tramo más
+ *   largo del usuario no cabe (`labelFontSize`). Rejilla de 2 columnas en el teléfono, 3 desde 640 px, 4
+ *   desde 1024 y 6 desde 1280.
+ * - Regla del plan de redes: ningún logo sobre fotos con niños. Las marcas
+ *   viven en el pliego, aquí, nunca encima de una foto.
+ */
+import { Icon } from 'astro-icon/components';
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import {
+  allyHandle,
+  allyHref,
+  allyLogoSources,
+  equalAreaWidth,
+  groupAlliesByRole,
+  listInProse,
+  summarizeAllies,
+  type Ally,
+  type LogoBox,
+} from '@lib/valida';
+
+interface Props {
+  allies: Ally[];
+  /** Instituciones que respaldan la válida (franja institucional del afiche). */
+  institutions?: string[];
+  /** Id de la sección: sirve de ancla (`#aliados`) y nombra el titular. */
+  id?: string;
+}
+
+const { allies, institutions = [], id = 'aliados' } = Astro.props;
+
+const headingId = `${id}-titulo`;
+const groups = groupAlliesByRole(allies);
+const { total } = summarizeAllies(allies);
+
+/**
+ * Caja de 5:3, medidas en % de su ancho: el logo cuadrado ocupa el 42 %. El
+ * más apaisado con área igual (Rapi Wey, 4,13:1) llega al 85 % de ancho y el más
+ * alto (ASCOMY, 0,79:1) al 47 % de alto, con aire en los dos (la caja mide 60).
+ * Coordinadora (10,85:1) topa en el 88 % de ancho.
+ */
+const PLATE: LogoBox = { side: 42, maxWidth: 88, maxHeight: 52 };
+
+/**
+ * `sizes` de cada logo: su fracción de la caja, y la caja en cada tramo (dos
+ * columnas en el teléfono, tres desde 640 px, cuatro desde 1024 y seis de
+ * 172 px desde 1280, con el tope de `max-w-7xl`), descontando los márgenes de
+ * la sección, el relleno del pliego y los huecos.
+ */
+function logoSizes(widthPct: number): string {
+  const part = (value: number) => Math.round(value * widthPct) / 100;
+  return [
+    `(min-width: 1280px) ${part(172)}px`,
+    `(min-width: 1024px) calc(${part(25)}vw - ${part(50)}px)`,
+    `(min-width: 640px) calc(${part(33.33)}vw - ${part(53.3)}px)`,
+    `calc(${part(50)}vw - ${part(46)}px)`,
+  ].join(', ');
+}
+
+function logoImage(ally: Ally) {
+  const width = equalAreaWidth(ally.logoRatio, PLATE);
+  const { src, srcset } = allyLogoSources(ally);
+  const ratio = ally.logoRatio && ally.logoRatio > 0 ? `;aspect-ratio:${ally.logoRatio}` : '';
+  return {
+    src,
+    srcset,
+    sizes: srcset ? logoSizes(width) : undefined,
+    style: `width:${width}%${ratio}`,
+  };
+}
+
+// El fragmento resaltado lleva un espacio duro (U+00A0): en el teléfono el
+// trazo lima se partía en dos líneas («le» solo al final de la primera).
+const headingHighlight = 'le\u00A0apostaron';
+const headingTitle = `Gracias a quienes ${headingHighlight} a la válida`;
+
+// La misma promesa del visor de fotos («Gratis gracias a N aliados»), dicha
+// desde el lado de las marcas. Sin repetir el «Gracias» del titular ni el
+// número de aliados, que ya dicen la banda de arriba y el índice.
+const lead =
+  total === 1
+    ? 'Por este aliado las fotos de esta página son gratis para todas las familias.'
+    : 'Por ellos las fotos de esta página son gratis para todas las familias. Van en orden alfabético.';
+
+/**
+ * La trama de puntos lima del afiche, en la esquina de arriba a la derecha.
+ * Semitono de verdad: lo que cambia es el tamaño del punto (área proporcional
+ * al tono), no la opacidad, en una retícula a 45° como la de una plancha. Se
+ * calcula en el build y es decorativa (`aria-hidden`). Cada punto es un trazo
+ * de largo cero con punta redonda, agrupados por radio (medio punto de paso,
+ * como una plancha real): un `<path>` por tamaño en vez de un círculo por punto.
+ */
+const TRAMA_SIZE = 360;
+const TRAMA_CELL = 24;
+const tramaLayers = (() => {
+  const byRadius = new Map<number, string[]>();
+  const half = TRAMA_CELL / 2;
+  const maxRadius = TRAMA_CELL * 0.34; // sin tocarse en la diagonal (0,707 · celda)
+  for (let row = 0; row * half <= TRAMA_SIZE; row++) {
+    const y = row * half;
+    for (let x = row % 2 ? half : 0; x <= TRAMA_SIZE; x += TRAMA_CELL) {
+      const tone = Math.max(0, 1 - Math.hypot(x, y) / TRAMA_SIZE) ** 2;
+      const radius = Math.round(maxRadius * Math.sqrt(tone) * 2) / 2;
+      if (radius < 1) continue;
+      const dots = byRadius.get(radius) ?? [];
+      dots.push(`M${TRAMA_SIZE - x} ${y}h0`);
+      byRadius.set(radius, dots);
+    }
+  }
+  return [...byRadius].map(([radius, dots]) => ({ width: radius * 2, d: dots.join('') }));
+})();
+
+/** Parte un usuario después de `_` y `.`: ahí el navegador puede cortar la línea. */
+/**
+ * Tamaño de letra del usuario: 13 px, o menos si su tramo más largo (sin `_` ni `.`
+ * donde partirse) no cabe en el ancho de la tarjeta. La tarjeta es contenedor
+ * (`cqi`); `--reserva-icono` es el ancho del icono de Instagram, que solo se ve de
+ * `sm` a `xl`, y 0,56 em es el ancho medio de una letra.
+ */
+function labelFontSize(label: string): string {
+  const longest = Math.max(...handleParts(label).map((part) => part.length));
+  return `font-size: min(13px, calc((100cqi - var(--reserva-icono, 20px)) / ${(longest * 0.56).toFixed(2)}))`;
+}
+
+function handleParts(handle: string): string[] {
+  return handle.split(/(?<=[_.])/);
+}
+
+/** Etiqueta del enlace cuando no hay usuario de Instagram que mostrar. */
+function linkLabel(href: string): string {
+  const host = new URL(href).hostname.replace(/^www\./, '');
+  return host === 'facebook.com' || host.endsWith('.facebook.com') ? 'Facebook' : 'Sitio web';
+}
+---
+
+{
+  groups.length > 0 && (
+    <SectionShell
+      tone="dark"
+      width="wide"
+      id={id}
+      class="scroll-mt-[var(--header-h,4rem)] dark:shadow-[inset_0_3px_0_var(--color-accent)]"
+      labelledby={headingId}
+    >
+      <svg
+        viewBox={`0 0 ${TRAMA_SIZE} ${TRAMA_SIZE}`}
+        class="text-accent pointer-events-none absolute top-0 right-0 -z-10 size-28 sm:size-56 lg:size-72"
+        aria-hidden="true"
+        focusable="false"
+      >
+        {tramaLayers.map((layer) => (
+          <path
+            d={layer.d}
+            fill="none"
+            stroke="currentColor"
+            stroke-width={layer.width}
+            stroke-linecap="round"
+          />
+        ))}
+      </svg>
+
+      <SectionIntro
+        id={headingId}
+        tone="dark"
+        eyebrow="Aliados"
+        eyebrowIcon="ph:handshake-bold"
+        title={headingTitle}
+        highlight={headingHighlight}
+        lead={lead}
+      />
+
+      {/* El muro entero es lo que observa `sponsor_wall_view` («muro»): el
+            pliego y su cierre cuentan como una sola vista. */}
+      <div data-sponsor-wall="muro" class="mt-12 sm:mt-14">
+        {/* El pliego: una sola hoja con todos los aliados y marcas de corte en
+              las cuatro esquinas. */}
+        <div class="pliego text-text-primary relative bg-[var(--pliego-papel)] px-5 pt-8 pb-10 sm:px-8 sm:pt-10 sm:pb-12 xl:px-10">
+          <span class="pliego__corte" aria-hidden="true" />
+
+          {groups.map((group, index) => {
+            const groupId = `${id}-${group.role}`;
+            return (
+              <div
+                class:list={[
+                  index > 0 && 'border-text-primary mt-12 border-t-2 pt-8 sm:mt-14 sm:pt-10',
+                ]}
+              >
+                <h3
+                  id={groupId}
+                  class="font-display text-text-primary text-lg font-extrabold italic sm:text-xl"
+                >
+                  {group.title}
+                </h3>
+
+                <ul
+                  role="list"
+                  aria-labelledby={groupId}
+                  class="mt-6 grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4 xl:grid-cols-6 xl:gap-x-5"
+                >
+                  {group.allies.map((ally) => {
+                    const href = allyHref(ally);
+                    const handle = allyHandle(ally);
+                    const Card = href ? 'a' : 'div';
+                    const linkProps = href
+                      ? {
+                          href,
+                          target: '_blank',
+                          rel: 'noopener noreferrer',
+                          'data-analytics-event': 'sponsor_click',
+                          'data-analytics-sponsor-id': ally.id,
+                        }
+                      : {};
+                    const label = handle ?? (href ? linkLabel(href) : '');
+
+                    return (
+                      <li
+                        class={
+                          handle
+                            ? '@container [--reserva-icono:0px] sm:[--reserva-icono:20px] xl:[--reserva-icono:0px]'
+                            : '@container'
+                        }
+                      >
+                        <Card
+                          {...linkProps}
+                          class:list={[
+                            'group flex h-full flex-col',
+                            href &&
+                              'focus-visible:outline-text-primary rounded-xs focus-visible:outline-2 focus-visible:outline-offset-4',
+                          ]}
+                        >
+                          {/* Caja del logo, sobre el papel y sin placa. `isolate`
+                                  + `multiply`: el blanco del fondo del logo se
+                                  funde con el papel. `alt=""`: el nombre ya está en
+                                  el título de la tarjeta, y en una tarjeta enlazada
+                                  el lector de pantalla lo diría dos veces. */}
+                          <div class="isolate grid aspect-[5/3] place-items-center">
+                            <img
+                              {...logoImage(ally)}
+                              alt=""
+                              loading="lazy"
+                              decoding="async"
+                              class="h-auto max-h-full object-contain mix-blend-multiply"
+                            />
+                          </div>
+
+                          <h4
+                            class:list={[
+                              'font-display mt-3 text-[15px] leading-tight font-bold [overflow-wrap:break-word]',
+                              href &&
+                                'decoration-2 underline-offset-4 group-hover:underline group-focus-visible:underline',
+                            ]}
+                          >
+                            {ally.name}
+                          </h4>
+                          {group.taglines && ally.tagline && (
+                            <p class="text-text-secondary mt-1 text-[13px] leading-snug">
+                              {ally.tagline}
+                            </p>
+                          )}
+
+                          {href && (
+                            <span class="text-accent-deep mt-auto inline-flex items-start gap-1.5 pt-2 text-[13px] leading-tight font-semibold">
+                              {/* El icono le quita al usuario el ancho que necesita
+                                      para no partirse: el «@» ya dice que es un
+                                      usuario, así que solo lo lleva en tarjetas
+                                      anchas (sm a lg). */}
+                              <Icon
+                                name={
+                                  handle ? 'ph:instagram-logo-bold' : 'ph:arrow-square-out-bold'
+                                }
+                                class:list={[
+                                  'mt-px size-[15px] shrink-0',
+                                  handle && 'max-sm:hidden xl:hidden',
+                                ]}
+                                aria-hidden="true"
+                              />
+                              <span
+                                class="min-w-0 [overflow-wrap:break-word]"
+                                style={labelFontSize(label)}
+                              >
+                                {handleParts(label).map((part, i) => (
+                                  <>
+                                    {i > 0 && <wbr />}
+                                    {part}
+                                  </>
+                                ))}
+                              </span>
+                              <span class="sr-only"> (se abre en una pestaña nueva)</span>
+                            </span>
+                          )}
+                        </Card>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Fuera del pliego, sobre el oscuro: el respaldo institucional del
+              afiche (en prosa, no son aliados de la válida) y la invitación a la
+              próxima. */}
+        <div class="mt-14 flex flex-col items-start">
+          {institutions.length > 0 && (
+            <>
+              <h3 class="font-display flex w-full items-center gap-4 text-lg font-extrabold text-white italic sm:text-xl">
+                <span class="shrink-0">Con el respaldo de</span>
+                <span class="h-px flex-1 bg-white/20" aria-hidden="true" />
+              </h3>
+              <p class="mt-6 max-w-3xl text-base leading-relaxed text-white/75">
+                {listInProse(institutions)}.
+              </p>
+            </>
+          )}
+          <a
+            href="/patrocinadores"
+            data-analytics-event="sponsor_click"
+            data-analytics-sponsor-id="quiero-patrocinar"
+            class:list={[
+              'hover:text-surface-dark inline-flex items-center justify-center rounded-lg border-2 border-white/40 px-5 py-2.5 font-semibold text-white transition-colors duration-200 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white',
+              institutions.length > 0 ? 'mt-8' : 'mt-0',
+            ]}
+          >
+            ¿Tu marca en la próxima?
+          </a>
+        </div>
+      </div>
+    </SectionShell>
+  )
+}
+
+<!-- `sponsor_wall_view`, una vez por visita para cada superficie de marcas:
+     `content_id: 'franja'` (la franja de arriba, `ValidaSponsorRibbon`) y
+     `'muro'` (este muro). Mismo patrón que `ScrollDepth` (marcadores en el DOM,
+     arranque en `astro:page-load`, limpieza en `astro:before-swap`), porque bajo
+     `ClientRouter` el script no se reejecuta al cambiar de página. La franja
+     cuenta cuando pasa entera por la pantalla. El muro es más alto que la
+     pantalla en móvil: en vez de un umbral sobre el muro, se recorta la raíz a
+     su mitad superior y basta con que entre ahí. -->
+<script is:inline>
+  (function () {
+    var state = (window.__trochaSponsorWall = window.__trochaSponsorWall || {});
+    if (state.bootstrapped) return;
+    state.bootstrapped = true;
+    state.seen = {};
+    state.observers = [];
+
+    function stop() {
+      state.observers.forEach(function (observer) {
+        observer.disconnect();
+      });
+      state.observers = [];
+    }
+
+    // Una vez por visita a la página: `astro:page-load` y `DOMContentLoaded`
+    // llaman los dos a `start` en la carga inicial.
+    function leave() {
+      stop();
+      state.seen = {};
+    }
+
+    function watch(element) {
+      var kind = element.getAttribute('data-sponsor-wall') || 'muro';
+      if (state.seen[kind]) return;
+      var whole = kind === 'franja';
+      var observer = new IntersectionObserver(
+        function (entries) {
+          var seen = entries.some(function (entry) {
+            return whole ? entry.intersectionRatio >= 0.99 : entry.isIntersecting;
+          });
+          if (!seen || state.seen[kind]) return;
+          state.seen[kind] = true;
+          observer.disconnect();
+          if (typeof window.__trochaEmit === 'function') {
+            window.__trochaEmit('sponsor_wall_view', { content_id: kind });
+          }
+        },
+        whole ? { threshold: 1 } : { rootMargin: '0px 0px -50% 0px' },
+      );
+      observer.observe(element);
+      state.observers.push(observer);
+    }
+
+    function start() {
+      stop();
+      if (!('IntersectionObserver' in window)) return;
+      document.querySelectorAll('[data-sponsor-wall]').forEach(watch);
+    }
+
+    document.addEventListener('astro:before-swap', leave);
+    document.addEventListener('astro:page-load', start);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start, { once: true });
+    } else {
+      start();
+    }
+  })();
+</script>
+
+<style>
+  /* Papel del pliego: #f4f2eb en los dos temas. Los logos llevan `multiply` y están
+     hechos sobre blanco: sobre un papel oscuro se verían casi negros. Por eso, en el
+     tema oscuro, la hoja sigue clara y dentro de ella los tokens de texto vuelven a
+     los valores del tema claro (la hoja es un objeto impreso, no una superficie). */
+  .pliego {
+    --pliego-papel: #f4f2eb;
+    --corte-desvio: 12px;
+    --corte-largo: 8px;
+  }
+  :global(:root[data-theme='dark']) .pliego {
+    --color-text-primary: #2f2f2f;
+    --color-text-secondary: #5a5a5a;
+    --color-primary-deep: #0f6f79;
+    --color-accent-deep: #456f00;
+    --color-on-deep: #ffffff;
+    --color-hairline: rgb(0 0 0 / 0.1);
+    --color-surface-raised: #ffffff;
+    color-scheme: light;
+  }
+  @media (min-width: 640px) {
+    .pliego {
+      --corte-desvio: 22px;
+      --corte-largo: 14px;
+    }
+  }
+
+  /* Marcas de corte lima en las cuatro esquinas, por fuera del papel. */
+  .pliego__corte {
+    --m: linear-gradient(var(--color-accent), var(--color-accent));
+    --d: calc(var(--corte-desvio) - 1px);
+    position: absolute;
+    inset: calc(var(--corte-desvio) * -1);
+    pointer-events: none;
+    background:
+      var(--m) left 0 top var(--d) / var(--corte-largo) 2px no-repeat,
+      var(--m) left var(--d) top 0 / 2px var(--corte-largo) no-repeat,
+      var(--m) right 0 top var(--d) / var(--corte-largo) 2px no-repeat,
+      var(--m) right var(--d) top 0 / 2px var(--corte-largo) no-repeat,
+      var(--m) left 0 bottom var(--d) / var(--corte-largo) 2px no-repeat,
+      var(--m) left var(--d) bottom 0 / 2px var(--corte-largo) no-repeat,
+      var(--m) right 0 bottom var(--d) / var(--corte-largo) 2px no-repeat,
+      var(--m) right var(--d) bottom 0 / 2px var(--corte-largo) no-repeat;
+  }
+</style>

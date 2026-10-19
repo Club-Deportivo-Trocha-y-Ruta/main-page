@@ -11,6 +11,7 @@ import {
   getEventCategory,
   getEventLevel,
   getEventStatusLabel,
+  longDateRange,
   EVENT_CATEGORIES,
 } from '../calendar';
 
@@ -130,6 +131,43 @@ describe('fechas legibles', () => {
   it('abrevia el mes sin punto', () => {
     expect(monthShort(at('2026-09-26'))).toBe('sept');
     expect(monthShort(at('2026-01-31'))).not.toContain('.');
+  });
+});
+
+describe('longDateRange', () => {
+  it('escribe un solo día completo, con o sin fecha de cierre', () => {
+    expect(longDateRange(at('2026-10-18'))).toBe('18 de octubre de 2026');
+    // Un `endDate` del mismo día no hace un rango.
+    expect(longDateRange(at('2026-10-18'), at('2026-10-18'))).toBe('18 de octubre de 2026');
+  });
+
+  it('junta dos días seguidos con «y»', () => {
+    expect(longDateRange(at('2026-11-07'), at('2026-11-08'))).toBe('7 y 8 de noviembre de 2026');
+  });
+
+  it('junta tres o más días del mismo mes con «al»', () => {
+    expect(longDateRange(at('2026-11-07'), at('2026-11-09'))).toBe('7 al 9 de noviembre de 2026');
+    expect(longDateRange(at('2026-08-01'), at('2026-08-16'))).toBe('1 al 16 de agosto de 2026');
+  });
+
+  it('escribe los dos meses cuando el evento cruza de mes', () => {
+    expect(longDateRange(at('2026-10-30'), at('2026-11-01'))).toBe(
+      '30 de octubre al 1 de noviembre de 2026',
+    );
+  });
+
+  it('cruzando de año, el año va una sola vez, al final', () => {
+    expect(longDateRange(at('2026-12-30'), at('2027-01-02'))).toBe(
+      '30 de diciembre al 2 de enero de 2027',
+    );
+  });
+
+  it('lee los días en UTC, tal como se escribieron', () => {
+    // La medianoche UTC del 31 sería el 30 en Colombia: la fecha no se corre.
+    expect(longDateRange(at('2026-01-31'))).toBe('31 de enero de 2026');
+    expect(longDateRange(at('2026-01-31'), at('2026-02-01'))).toBe(
+      '31 de enero al 1 de febrero de 2026',
+    );
   });
 });
 

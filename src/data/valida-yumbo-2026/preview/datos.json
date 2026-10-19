@@ -1,0 +1,387 @@
+{
+  "source": "Datos: conteos de los resultados oficiales de la Comisión Vallecaucana de Ciclomontañismo, válidas de Yumbo de 2022, 2024 y 2025. Sin nombres.",
+  "historicoTitulo": "2022, 2024 y 2025",
+  "totalMinimoPublicable": 228,
+  "historico": [
+    {
+      "id": "ciclistas",
+      "value": "600",
+      "prefix": "Más de",
+      "label": "ciclistas distintos han corrido en Yumbo",
+      "note": "Al menos una vez, entre 2022 y 2025",
+      "icon": "ph:users-three-bold"
+    },
+    {
+      "id": "fieles",
+      "value": "33",
+      "prefix": "Al menos",
+      "label": "corrieron 2022, 2024 y 2025 sin faltar a ninguna",
+      "note": "Las tres válidas de Yumbo con registro",
+      "icon": "ph:repeat-bold"
+    },
+    {
+      "id": "municipios",
+      "value": "24",
+      "prefix": null,
+      "label": "municipios y 5 departamentos",
+      "note": "De donde llegaron los corredores en 2025",
+      "icon": "ph:map-trifold-bold"
+    },
+    {
+      "id": "edades",
+      "value": "4 a 60+",
+      "prefix": "De",
+      "label": "años, el mismo día, la misma pista",
+      "note": "De teteros sin pedales a máster D",
+      "icon": "ph:person-simple-bike-bold"
+    },
+    {
+      "id": "terminan",
+      "value": "96",
+      "prefix": null,
+      "suffix": "de cada 100",
+      "label": "terminan la carrera",
+      "note": "Incluye a quienes llegan con vueltas de menos",
+      "icon": "ph:flag-checkered-bold"
+    },
+    {
+      "id": "club",
+      "value": "9",
+      "prefix": null,
+      "label": "podios del club en su casa",
+      "note": "En 65 participaciones de tres ediciones",
+      "icon": "ph:medal-bold"
+    }
+  ],
+  "edicion2026": {
+    "corredores": 214,
+    "municipios": 22,
+    "departamentos": 4,
+    "categorias": 24,
+    "mujeres": 48,
+    "terminaron": 206,
+    "ninosHasta12": 104,
+    "clubes": 31,
+    "fieles33Volvieron": 21,
+    "podiosClub": 3,
+    "finalMasAjustado": "2 segundos en infantil A"
+  },
+  "vueltas2026": {
+    "source": "Datos de prueba (vista previa): no son resultados reales.",
+    "categorias": [
+      {
+        "code": "ELITE_M",
+        "label": "Élite",
+        "vueltas": 6
+      },
+      {
+        "code": "SUB23_M",
+        "label": "Sub-23",
+        "vueltas": 5
+      },
+      {
+        "code": "MASTER_A",
+        "label": "Máster A",
+        "vueltas": 4
+      },
+      {
+        "code": "INF_B",
+        "label": "Infantil B",
+        "vueltas": 2
+      },
+      {
+        "code": "PREJ_B",
+        "label": "Prejuvenil B",
+        "vueltas": 3
+      },
+      {
+        "code": "ELITE_F",
+        "label": "Élite femenino",
+        "vueltas": 3,
+        "femenina": true
+      },
+      {
+        "code": "PREJ_F",
+        "label": "Prejuvenil femenino",
+        "vueltas": 3,
+        "femenina": true
+      }
+    ],
+    "tiempos": [
+      {
+        "categoria": "ELITE_M",
+        "puesto": 1,
+        "tiempo": "1:18:00",
+        "nombre": "Ana Prueba"
+      },
+      {
+        "categoria": "ELITE_M",
+        "puesto": 2,
+        "tiempo": "1:20:06",
+        "nombre": "Beto Ejemplo"
+      },
+      {
+        "categoria": "ELITE_M",
+        "puesto": 4,
+        "tiempo": "1:20:12",
+        "nombre": "Carla Muestra"
+      },
+      {
+        "categoria": "ELITE_M",
+        "puesto": 5,
+        "tiempo": "1:20:30",
+        "nombre": "Diego Falso"
+      },
+      {
+        "categoria": "ELITE_M",
+        "puesto": 3,
+        "tiempo": "1:21:42",
+        "nombre": "Elena Demo"
+      },
+      {
+        "categoria": "SUB23_M",
+        "puesto": 1,
+        "tiempo": "1:08:25",
+        "nombre": "Fabio Simulado"
+      },
+      {
+        "categoria": "SUB23_M",
+        "puesto": 2,
+        "tiempo": "1:09:55",
+        "nombre": "Gina Ficticia"
+      },
+      {
+        "categoria": "SUB23_M",
+        "puesto": 4,
+        "tiempo": "1:10:50",
+        "nombre": "Hugo Probeta"
+      },
+      {
+        "categoria": "SUB23_M",
+        "puesto": 3,
+        "tiempo": "1:10:55",
+        "nombre": "Iris Maqueta"
+      },
+      {
+        "categoria": "MASTER_A",
+        "puesto": 2,
+        "tiempo": "0:56:52",
+        "nombre": "Jorge Borrador"
+      },
+      {
+        "categoria": "MASTER_A",
+        "puesto": 1,
+        "tiempo": "0:57:44",
+        "nombre": "Karla Piloto"
+      },
+      {
+        "categoria": "MASTER_A",
+        "puesto": 3,
+        "tiempo": "0:58:08",
+        "nombre": "Luis Sintético"
+      },
+      {
+        "categoria": "SUB23_M",
+        "puesto": 5,
+        "tiempo": "1:13:25",
+        "nombre": "Marta Ensayo"
+      },
+      {
+        "categoria": "MASTER_A",
+        "puesto": 4,
+        "tiempo": "0:58:48",
+        "nombre": "Nico Dummy"
+      },
+      {
+        "categoria": "PREJ_B",
+        "puesto": 1,
+        "tiempo": "0:44:21",
+        "nombre": "Olga Plantilla"
+      },
+      {
+        "categoria": "PREJ_B",
+        "puesto": 4,
+        "tiempo": "0:45:21",
+        "nombre": "Pablo Test"
+      },
+      {
+        "categoria": "PREJ_B",
+        "puesto": 2,
+        "tiempo": "0:45:24",
+        "nombre": "Quique Boceto"
+      },
+      {
+        "categoria": "PREJ_B",
+        "puesto": 3,
+        "tiempo": "0:45:45",
+        "nombre": "Rosa Muestreo"
+      },
+      {
+        "categoria": "INF_B",
+        "puesto": 2,
+        "tiempo": "0:30:54",
+        "nombre": "Saúl Inventado"
+      },
+      {
+        "categoria": "INF_B",
+        "puesto": 1,
+        "tiempo": "0:30:56",
+        "nombre": "Tania Placeholder"
+      },
+      {
+        "categoria": "MASTER_A",
+        "puesto": 5,
+        "tiempo": "1:02:32"
+      },
+      {
+        "categoria": "PREJ_B",
+        "puesto": 5,
+        "tiempo": "0:47:09"
+      },
+      {
+        "categoria": "INF_B",
+        "puesto": 3,
+        "tiempo": "0:31:30"
+      },
+      {
+        "categoria": "INF_B",
+        "puesto": 5,
+        "tiempo": "0:32:14"
+      },
+      {
+        "categoria": "INF_B",
+        "puesto": 4,
+        "tiempo": "0:33:10"
+      },
+      {
+        "categoria": "ELITE_F",
+        "puesto": 1,
+        "tiempo": "0:43:10",
+        "nombre": "Sara Simulada"
+      },
+      {
+        "categoria": "ELITE_F",
+        "puesto": 2,
+        "tiempo": "0:44:02",
+        "nombre": "Tania Ficticia"
+      },
+      {
+        "categoria": "ELITE_F",
+        "puesto": 3,
+        "tiempo": "0:46:30",
+        "nombre": "Ursula Maqueta"
+      },
+      {
+        "categoria": "PREJ_F",
+        "puesto": 1,
+        "tiempo": "0:42:40",
+        "nombre": "Vera Borrador"
+      },
+      {
+        "categoria": "PREJ_F",
+        "puesto": 2,
+        "tiempo": "0:43:55",
+        "nombre": "Wanda Plantilla"
+      },
+      {
+        "categoria": "PREJ_F",
+        "puesto": 3,
+        "tiempo": "0:44:48",
+        "nombre": "Ximena Ensayo"
+      },
+      {
+        "categoria": "PREJ_F",
+        "puesto": 4,
+        "tiempo": "0:47:05",
+        "nombre": "Yadira Demo"
+      }
+    ]
+  },
+  "ritmo2026": {
+    "valor": 15,
+    "unidad": "segundos por vuelta",
+    "titulo": "A los 14 años, al ritmo de la élite (datos de prueba)",
+    "texto": "separaron al ganador de una categoría juvenil de prueba del de la categoría reina de prueba. Texto de ejemplo para la vista previa: no son resultados reales."
+  },
+  "composicion2026": {
+    "nota": "Datos de prueba: competidores por grupo de categorías. No son cifras reales.",
+    "grupos": [
+      {
+        "grupo": "Grupo de prueba uno",
+        "edad": "4 y 5 años",
+        "n": 24
+      },
+      {
+        "grupo": "Grupo de prueba dos",
+        "edad": "6 a 8",
+        "n": 38
+      },
+      {
+        "grupo": "Grupo de prueba tres",
+        "edad": "9 a 12",
+        "n": 52
+      },
+      {
+        "grupo": "Grupo de prueba cuatro",
+        "edad": "13 y 14",
+        "n": 40
+      },
+      {
+        "grupo": "Grupo de prueba cinco",
+        "edad": "15 en adelante",
+        "n": 14
+      },
+      {
+        "grupo": "Grupo sin edad",
+        "edad": "",
+        "n": 8
+      },
+      {
+        "grupo": "Grupo de prueba siete",
+        "edad": "30 en adelante",
+        "n": 38
+      }
+    ],
+    "masNumerosa": {
+      "categoria": "Categoría de prueba",
+      "n": 25
+    }
+  },
+  "municipios2026": {
+    "mapa": "/images/valida-yumbo-2026/mapa-municipios.svg",
+    "nota": "Datos de prueba: nombres inventados. El mapa es el real.",
+    "departamentos": [
+      {
+        "nombre": "Departamento de prueba uno",
+        "municipios": [
+          "Municipio A",
+          "Municipio B",
+          "Municipio C",
+          "Municipio D",
+          "Municipio E",
+          "Municipio F",
+          "Municipio G",
+          "Municipio H",
+          "Municipio I",
+          "Municipio J",
+          "Municipio K",
+          "Municipio L",
+          "Municipio M",
+          "Municipio N"
+        ]
+      },
+      {
+        "nombre": "Departamento de prueba dos",
+        "municipios": ["Municipio O", "Municipio P", "Municipio Q", "Municipio R", "Municipio S"]
+      },
+      {
+        "nombre": "Departamento de prueba tres",
+        "municipios": ["Municipio T", "Municipio U"]
+      },
+      {
+        "nombre": "Departamento de prueba cuatro",
+        "municipios": ["Municipio V"]
+      }
+    ]
+  }
+}

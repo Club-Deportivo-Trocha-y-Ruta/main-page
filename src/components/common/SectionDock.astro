@@ -1,0 +1,632 @@
+---
+/**
+ * Índice flotante de una página larga: una entrada por sección que de verdad
+ * se pinta, la sección en la que se está marcada y cualquier otra a un toque.
+ *
+ * Nació en `/copa-valle-yumbo-2026`, donde la galería tiene entre 500 y 2.000
+ * fotos y todo lo que va después (aliados, resultados, cifras, la pista, la
+ * próxima válida) queda a miles de píxeles: quien llega por sus fotos no se
+ * entera de que hay algo más abajo. Es genérico: sirve en cualquier página larga
+ * cuyas secciones tengan `id`. Referencia completa en docs/04 §31.
+ *
+ * Decisiones que no se leen en el marcado:
+ *
+ * - **Abajo, nunca arriba.** Arriba ya están la cabecera (64 px) y, dentro de la
+ *   galería, su barra de filtros `sticky` (69 px en móvil).
+ * - **Dos formas.** Desde `lg` caben todas las secciones a la vista: un riel en
+ *   el que la sección actual lleva placa, icono lima y una regla lima fija debajo
+ *   (de imprenta, no una barra de avance). En móvil, una
+ *   píldora de dos mitades: la sección actual, que abre la lista completa
+ *   (`<details>`), y un salto de un toque a la siguiente. El dolor real es salir
+ *   de cientos de fotos, y desde la galería «siguiente» es el muro de aliados.
+ *   Las dos mitades miden lo mismo: su texto cambia al bajar y, si el ancho
+ *   dependiera de él, cada cambio movería la otra mitad (CLS).
+ * - **Etiqueta corta para la píldora.** Cada mitad mide 152 px a 360 de ancho y
+ *   la de la sección actual comparte el sitio con el icono, la cifra y la
+ *   flecha: «Próxima válida» se cortaba como «Próxima v…» entre 360 y 390 px.
+ *   `shortLabel` es lo que se ve ahí; el riel y la lista llevan `label` y el
+ *   lector de pantalla oye siempre `label` (la corta va `aria-hidden`).
+ * - **El anillo es `ring-white/30`.** Sobre las secciones grafito (el muro, el
+ *   cierre) el índice es del mismo color que el fondo y solo el anillo lo recorta.
+ * - **En el DOM va justo después de la apertura**, no al final: `fixed` decide
+ *   dónde se ve; el orden del DOM, cuándo llega el teclado. Al final de `<main>`,
+ *   quien navega con Tab lo alcanzaría después de pasar por cada foto.
+ * - **Apartado no es inalcanzable.** Mientras se ve la apertura o el pie, el
+ *   índice se aparta con `opacity` y `transform`, sin `visibility`: sigue en el
+ *   árbol de accesibilidad y en el orden de Tab, y `:focus-within` lo trae de
+ *   vuelta cuando el foco entra. Arranca apartado por CSS (así no parpadea
+ *   encima de la apertura mientras carga); sin JS, o si el script fallara, una
+ *   animación de rescate lo muestra a los 2,5 s y ya no se va.
+ * - **Debajo de todo lo modal.** Vive dentro de `<main>`, que por su
+ *   `view-transition-name` es un contexto de apilamiento: su `z-30` nunca pasa
+ *   por encima de la cabecera, del menú móvil, del visor de fotos ni del aviso de
+ *   cookies, que cuelgan de `<body>`. Con un diálogo modal abierto, además, se
+ *   esconde del todo (`:has()`), para no asomar bajo el fondo del visor.
+ * - **Al saltar, el foco pasa al titular de la sección** (`tabindex="-1"` de
+ *   quita y pon). Sin eso, con teclado o lector de pantalla se seguiría en el
+ *   índice, al otro lado de la página. El salto lo hace el navegador (o
+ *   `ClientRouter`, que lo resuelve igual): el enlace funciona sin JS y el botón
+ *   atrás devuelve al punto exacto de la galería desde el que se saltó.
+ * - **Analítica**: `page_nav_click` con `content_id` = id de la sección y
+ *   `method="indice"` (la franja de aliados y la apertura emiten el mismo evento
+ *   con su propio `method`), por la delegación de `Analytics.astro`. Nunca un
+ *   nombre ni una placa: el índice flota sobre fotos de niños y tampoco lleva
+ *   logos.
+ *
+ * El script sigue el patrón de `ScrollDepth.astro`: marcador en el DOM, arranque
+ * en `astro:page-load` y `DOMContentLoaded`, limpieza en `astro:before-swap`,
+ * arranque idempotente y sin `define:vars`. CSS en `<style is:global>` con
+ * prefijo `sdock-`: hay reglas que miran marcado ajeno (el visor es una isla
+ * React montada en `<body>`), y Astro solo lo incluye en las páginas que montan
+ * el componente.
+ */
+import { Icon } from 'astro-icon/components';
+
+export interface DockItem {
+  /** `id` de la sección en la página (sin `#`). */
+  id: string;
+  label: string;
+  /**
+   * Versión corta de `label` para la píldora móvil, donde cada mitad mide 152 px
+   * a 360 de ancho y el texto compite con el icono, la cifra y la flecha. El riel
+   * y la lista llevan `label`; el lector de pantalla oye siempre `label`.
+   */
+  shortLabel?: string;
+  /** Icono `ph:*`; conviene que sea el mismo del antetítulo de la sección. */
+  icon: string;
+  /** Cifra corta junto a la etiqueta («420» fotos, «16» aliados), si aplica. */
+  count?: number | null;
+}
+
+interface Props {
+  /** En el orden de la página. Con menos de dos no se pinta nada. */
+  items: DockItem[];
+  /** `id` de la apertura: mientras se ve, el índice se aparta. */
+  heroId?: string;
+  /** Nombre del `<nav>` y texto de la píldora antes de la primera sección. */
+  label?: string;
+}
+
+const { items, heroId, label = 'En esta página' } = Astro.props;
+
+const NUMBER = new Intl.NumberFormat('es-CO');
+const countOf = (item: DockItem): string | null =>
+  typeof item.count === 'number' && item.count > 0 ? NUMBER.format(item.count) : null;
+
+const first = items[0];
+
+/** Lo que se ve en la píldora móvil: la etiqueta corta si el ítem la trae. */
+const pillLabel = (item: DockItem): string => item.shortLabel ?? item.label;
+
+const focusRing =
+  'focus-visible:outline-accent focus-visible:outline-2 focus-visible:-outline-offset-2';
+---
+
+{
+  items.length > 1 && (
+    <nav
+      aria-label={label}
+      data-sdock
+      data-sdock-hero={heroId}
+      class="sdock pointer-events-none fixed inset-x-0 z-30 flex justify-center px-3 print:hidden"
+    >
+      <div class="sdock-bar bg-surface-dark shadow-overlay pointer-events-auto relative w-full max-w-sm rounded-2xl p-1 text-white ring-1 ring-white/30 lg:w-auto lg:max-w-none">
+        {/* Desde `lg`: todas las secciones; la actual, con su regla lima. */}
+        <ol role="list" data-sdock-rail class="hidden lg:flex lg:gap-0.5">
+          {items.map((item) => (
+            <li class="flex">
+              <a
+                href={`#${item.id}`}
+                data-sdock-link={item.id}
+                data-analytics-event="page_nav_click"
+                data-analytics-content-id={item.id}
+                data-analytics-method="indice"
+                class:list={[
+                  'group/item font-display relative flex h-12 items-center gap-2 rounded-xl px-4 text-sm font-semibold whitespace-nowrap text-white/75',
+                  'transition-colors duration-[var(--duration-micro)] hover:bg-white/5 hover:text-white motion-reduce:transition-none',
+                  'aria-[current=location]:bg-white/10 aria-[current=location]:text-white',
+                  // Regla lima recta bajo la sección actual, del ancho del texto. Una
+                  // sombra interior se curvaría con el radio de la placa.
+                  'aria-[current=location]:after:bg-accent after:absolute after:inset-x-4 after:bottom-1 after:h-0.5',
+                  focusRing,
+                ]}
+              >
+                <Icon
+                  name={item.icon}
+                  class="group-aria-[current=location]/item:text-accent size-4 shrink-0 text-white/55"
+                  aria-hidden="true"
+                />
+                {item.label}
+                {countOf(item) && (
+                  <span class="font-extrabold text-white/55 italic tabular-nums group-aria-[current=location]/item:text-white">
+                    <span class="sr-only">, </span>
+                    {countOf(item)}
+                  </span>
+                )}
+              </a>
+            </li>
+          ))}
+        </ol>
+
+        {/* Bajo `lg`: la sección actual (abre la lista) y la siguiente. */}
+        <div class="sdock-compact grid lg:hidden">
+          <details class="sdock-menu group/menu min-w-0" data-sdock-menu>
+            <summary
+              class:list={[
+                'font-display relative flex h-11 cursor-pointer list-none items-center gap-2 rounded-xl px-3 text-[0.9375rem] font-bold select-none hover:bg-white/10 [&::-webkit-details-marker]:hidden',
+                focusRing,
+              ]}
+            >
+              <span data-sdock-current="" class="flex min-w-0 flex-1 items-center gap-2">
+                <Icon
+                  name="ph:list-bullets-bold"
+                  class="text-accent size-5 shrink-0"
+                  aria-hidden="true"
+                />
+                <span class="truncate">{label}</span>
+              </span>
+              {items.map((item) => (
+                <span
+                  data-sdock-current={item.id}
+                  hidden
+                  class="flex min-w-0 flex-1 items-center gap-2"
+                >
+                  <Icon name={item.icon} class="text-accent size-5 shrink-0" aria-hidden="true" />
+                  <span class="truncate">
+                    <span class="sr-only">Estás en {item.shortLabel && item.label}</span>
+                    <span aria-hidden={item.shortLabel ? 'true' : undefined}>
+                      {pillLabel(item)}
+                    </span>
+                  </span>
+                  {countOf(item) && (
+                    <span class="font-extrabold text-white/60 italic tabular-nums">
+                      <span class="sr-only">, </span>
+                      {countOf(item)}
+                    </span>
+                  )}
+                </span>
+              ))}
+              <Icon
+                name="ph:caret-up-bold"
+                class="size-4 shrink-0 text-white/70 transition-[rotate] duration-[var(--duration-micro)] group-open/menu:rotate-180 motion-reduce:transition-none"
+                aria-hidden="true"
+              />
+            </summary>
+
+            {/* Capa invisible que recibe el toque de fuera y cierra la lista, para
+                que ese toque no abra la foto que hay debajo. Solo con JS. */}
+            <div class="sdock-backdrop" data-sdock-backdrop aria-hidden="true" />
+
+            <div class="sdock-panel bg-surface-dark shadow-overlay absolute inset-x-0 bottom-full mb-2 overflow-y-auto overscroll-contain rounded-2xl p-1.5 ring-1 ring-white/30">
+              <ol role="list">
+                {items.map((item) => (
+                  <li>
+                    <a
+                      href={`#${item.id}`}
+                      data-sdock-link={item.id}
+                      data-analytics-event="page_nav_click"
+                      data-analytics-content-id={item.id}
+                      data-analytics-method="indice"
+                      class:list={[
+                        'group/row font-display flex min-h-12 items-center gap-3 rounded-xl px-3 text-base font-semibold text-white hover:bg-white/10',
+                        'aria-[current=location]:bg-accent aria-[current=location]:text-surface-dark',
+                        focusRing,
+                      ]}
+                    >
+                      <Icon
+                        name={item.icon}
+                        class="text-accent group-aria-[current=location]/row:text-surface-dark size-5 shrink-0"
+                        aria-hidden="true"
+                      />
+                      <span class="flex-1">{item.label}</span>
+                      {countOf(item) && (
+                        <span class="font-extrabold italic tabular-nums">
+                          <span class="sr-only">, </span>
+                          {countOf(item)}
+                        </span>
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </details>
+
+          {items.map((item) => (
+            <a
+              href={`#${item.id}`}
+              hidden
+              data-sdock-next={item.id}
+              data-analytics-event="page_nav_click"
+              data-analytics-content-id={item.id}
+              data-analytics-method="indice"
+              class:list={[
+                'font-display relative flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl px-3 text-[0.9375rem] font-bold hover:bg-white/10',
+                // Filete recto entre las dos mitades (un `border-l` se curvaría con el radio).
+                'before:absolute before:inset-y-2.5 before:left-0 before:w-px before:bg-white/15',
+                focusRing,
+              ]}
+            >
+              <span class="truncate">
+                <span class="sr-only">Ir a {item.shortLabel && item.label}</span>
+                <span aria-hidden={item.shortLabel ? 'true' : undefined}>{pillLabel(item)}</span>
+              </span>
+              <Icon
+                name="ph:arrow-down-bold"
+                class="text-accent size-4 shrink-0"
+                aria-hidden="true"
+              />
+            </a>
+          ))}
+          {/* En la última sección, el salto vuelve a la primera. */}
+          <a
+            href={`#${first.id}`}
+            hidden
+            data-sdock-wrap
+            data-analytics-event="page_nav_click"
+            data-analytics-content-id={first.id}
+            data-analytics-method="indice"
+            class:list={[
+              'font-display relative flex h-11 min-w-0 items-center justify-center gap-1.5 rounded-xl px-3 text-[0.9375rem] font-bold hover:bg-white/10',
+              // Filete recto entre las dos mitades (un `border-l` se curvaría con el radio).
+              'before:absolute before:inset-y-2.5 before:left-0 before:w-px before:bg-white/15',
+              focusRing,
+            ]}
+          >
+            <span class="truncate">
+              <span class="sr-only">Volver a {first.shortLabel && first.label}</span>
+              <span aria-hidden={first.shortLabel ? 'true' : undefined}>{pillLabel(first)}</span>
+            </span>
+            <Icon name="ph:arrow-up-bold" class="text-accent size-4 shrink-0" aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </nav>
+  )
+}
+
+<script is:inline>
+  (function () {
+    // Este script va justo después del índice: en la primera carga ya puede
+    // marcarlo, antes de que termine de llegar el resto de la página. Si
+    // esperara a `DOMContentLoaded`, en una conexión lenta la animación de
+    // rescate (2,5 s) lo mostraría encima de la apertura.
+    var early = document.querySelector('[data-sdock]');
+    if (early) early.setAttribute('data-sdock-ready', '');
+
+    var state = (window.__trochaSectionDock = window.__trochaSectionDock || {});
+    if (state.bootstrapped) return;
+    state.bootstrapped = true;
+
+    // Línea de lectura: la sección activa es la última cuyo borde superior ya
+    // pasó el 40 % de la pantalla.
+    var LINE = 0.4;
+
+    function stop() {
+      if (!state.cleanup) return;
+      state.cleanup();
+      state.cleanup = null;
+    }
+
+    function focusSection(section) {
+      var labelledby = (section.getAttribute('aria-labelledby') || '').split(' ')[0];
+      var heading =
+        (labelledby && document.getElementById(labelledby)) ||
+        section.querySelector('h1, h2, h3') ||
+        section;
+      if (!heading.hasAttribute('tabindex')) {
+        heading.setAttribute('tabindex', '-1');
+        heading.addEventListener(
+          'blur',
+          function () {
+            heading.removeAttribute('tabindex');
+          },
+          { once: true },
+        );
+      }
+      heading.focus({ preventScroll: true });
+    }
+
+    function start() {
+      stop();
+      var nav = document.querySelector('[data-sdock]');
+      if (!nav) return;
+      // Apaga la animación de rescate: desde aquí manda el script.
+      nav.setAttribute('data-sdock-ready', '');
+      try {
+        run(nav);
+      } catch (_error) {
+        // Mejor a la vista que perdido: sin la lógica de aparecer y apartarse,
+        // el índice queda fijo y sus enlaces siguen funcionando.
+        stop();
+        nav.setAttribute('data-state', 'shown');
+      }
+    }
+
+    function run(nav) {
+      var items = [];
+      var railLinks = nav.querySelectorAll('[data-sdock-rail] [data-sdock-link]');
+      for (var i = 0; i < railLinks.length; i++) {
+        var id = railLinks[i].getAttribute('data-sdock-link');
+        var section = document.getElementById(id);
+        if (section) items.push({ id: id, el: section });
+      }
+
+      var heroId = nav.getAttribute('data-sdock-hero');
+      var hero = heroId ? document.getElementById(heroId) : null;
+      var footer = document.querySelector('body > footer');
+      var menu = nav.querySelector('[data-sdock-menu]');
+      var summary = menu ? menu.querySelector('summary') : null;
+      var controller = new AbortController();
+      var signal = controller.signal;
+      var observers = [];
+      state.cleanup = function () {
+        controller.abort();
+        observers.forEach(function (observer) {
+          observer.disconnect();
+        });
+      };
+
+      // Hasta que el observador responda, se supone que la apertura se ve.
+      var heroVisible = Boolean(hero);
+      var footerVisible = false;
+      var active = -1;
+      var ticking = false;
+
+      function closeMenu() {
+        if (menu && menu.open) menu.open = false;
+      }
+
+      function indexOf(id) {
+        for (var k = 0; k < items.length; k++) if (items[k].id === id) return k;
+        return -1;
+      }
+
+      // Un cuadro por ráfaga de scroll para la sección activa. Con el índice
+      // apartado (apertura o pie a la vista) no se mide nada; al volver a
+      // mostrarse, `updateShown` lo pone al día.
+      function schedule() {
+        if (ticking || nav.getAttribute('data-state') !== 'shown') return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          ticking = false;
+          computeActive();
+        });
+      }
+
+      function paint() {
+        var current = active >= 0 ? items[active].id : '';
+        // La regla lima de la píldora solo va cuando nombra una sección.
+        if (current) nav.setAttribute('data-sdock-active', '');
+        else nav.removeAttribute('data-sdock-active');
+        var links = nav.querySelectorAll('[data-sdock-link]');
+        for (var a = 0; a < links.length; a++) {
+          if (indexOf(links[a].getAttribute('data-sdock-link')) === active) {
+            links[a].setAttribute('aria-current', 'location');
+          } else {
+            links[a].removeAttribute('aria-current');
+          }
+        }
+
+        var labels = nav.querySelectorAll('[data-sdock-current]');
+        for (var b = 0; b < labels.length; b++) {
+          labels[b].hidden = labels[b].getAttribute('data-sdock-current') !== current;
+        }
+
+        // Un solo salto visible: a la sección que sigue o, en la última, a la primera.
+        var focused = document.activeElement;
+        var lostFocus = false;
+        var wraps = active === items.length - 1;
+        var nextId = !wraps && items[active + 1] ? items[active + 1].id : '';
+        var shown = null;
+        var jumps = nav.querySelectorAll('[data-sdock-next], [data-sdock-wrap]');
+        for (var c = 0; c < jumps.length; c++) {
+          var jump = jumps[c];
+          var visible = jump.hasAttribute('data-sdock-wrap')
+            ? wraps
+            : jump.getAttribute('data-sdock-next') === nextId;
+          if (!visible && jump === focused) lostFocus = true;
+          jump.hidden = !visible;
+          if (visible) shown = jump;
+        }
+        // Si el salto que tenía el foco desapareció, el foco pasa al nuevo.
+        if (lostFocus && shown) shown.focus({ preventScroll: true });
+      }
+
+      function computeActive() {
+        var line = window.innerHeight * LINE;
+        var next = -1;
+        var best = -Infinity;
+        for (var d = 0; d < items.length; d++) {
+          var top = items[d].el.getBoundingClientRect().top;
+          if (top <= line && top > best) {
+            best = top;
+            next = d;
+          }
+        }
+        if (next !== active) {
+          active = next;
+          paint();
+        }
+      }
+
+      function updateShown() {
+        var shown = !heroVisible && !footerVisible;
+        nav.setAttribute('data-state', shown ? 'shown' : 'hidden');
+        if (!shown) closeMenu();
+        // También al apartarse: tras un salto largo (del pie a la apertura)
+        // ninguna ráfaga de scroll lo midió, y el foco puede traerlo de vuelta.
+        computeActive();
+      }
+
+      if ('IntersectionObserver' in window && items.length > 1) {
+        var headerHeight =
+          parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) ||
+          64;
+        if (hero) {
+          var heroObserver = new IntersectionObserver(
+            function (entries) {
+              heroVisible = entries[entries.length - 1].isIntersecting;
+              updateShown();
+            },
+            { rootMargin: '-' + Math.round(headerHeight) + 'px 0px 0px 0px' },
+          );
+          heroObserver.observe(hero);
+          observers.push(heroObserver);
+        }
+        if (footer) {
+          var footerObserver = new IntersectionObserver(function (entries) {
+            footerVisible = entries[entries.length - 1].isIntersecting;
+            updateShown();
+          });
+          footerObserver.observe(footer);
+          observers.push(footerObserver);
+        }
+      } else {
+        // Sin observador no hay a quién preguntar: el índice queda a la vista.
+        heroVisible = false;
+      }
+
+      // Estado inicial completo, aunque el índice arranque apartado: si el foco
+      // entra con Tab antes de bajar, ya muestra la sección correcta.
+      computeActive();
+      paint();
+      updateShown();
+
+      window.addEventListener('scroll', schedule, { passive: true, signal: signal });
+      window.addEventListener('resize', schedule, { passive: true, signal: signal });
+
+      nav.addEventListener(
+        'click',
+        function (event) {
+          var link = event.target.closest ? event.target.closest('a[href^="#"]') : null;
+          if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) {
+            return;
+          }
+          closeMenu();
+          var target = document.getElementById(link.getAttribute('href').slice(1));
+          // El salto ocurre en este mismo clic (navegador o `ClientRouter`); el
+          // foco se mueve en el cuadro siguiente, sin volver a desplazar.
+          if (target) {
+            requestAnimationFrame(function () {
+              focusSection(target);
+            });
+          }
+        },
+        { signal: signal },
+      );
+
+      if (menu) {
+        var backdrop = menu.querySelector('[data-sdock-backdrop]');
+        if (backdrop) backdrop.addEventListener('click', closeMenu, { signal: signal });
+        menu.addEventListener(
+          'focusout',
+          function (event) {
+            if (event.relatedTarget && !menu.contains(event.relatedTarget)) closeMenu();
+          },
+          { signal: signal },
+        );
+        document.addEventListener(
+          'keydown',
+          function (event) {
+            if (event.key !== 'Escape' || !menu.open) return;
+            closeMenu();
+            if (summary) summary.focus();
+          },
+          { signal: signal },
+        );
+      }
+    }
+
+    document.addEventListener('astro:before-swap', stop);
+    document.addEventListener('astro:page-load', start);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start, { once: true });
+    } else {
+      start();
+    }
+  })();
+</script>
+
+<style is:global>
+  /* Margen de abajo para el foco con teclado: lo que recibe el foco no queda
+     debajo del índice. Solo en las páginas que lo montan. */
+  html:has(.sdock) {
+    scroll-padding-bottom: 6rem;
+  }
+
+  .sdock {
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+
+  /* Apartado: mientras se ve la apertura o el pie, y antes de que arranque el
+     script. Sin `visibility`, para que el foco pueda entrar y traerlo. */
+  .sdock:not([data-state='shown']):not(:focus-within) .sdock-bar {
+    opacity: 0;
+    transform: translateY(calc(100% + 3rem));
+    pointer-events: none;
+  }
+
+  /* Rescate: sin JS (o si el script fallara) se muestra a los 2,5 s y se queda. */
+  @keyframes sdock-rescue {
+    to {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+  }
+  .sdock:not([data-sdock-ready]) .sdock-bar {
+    animation-name: sdock-rescue;
+    animation-duration: 1ms;
+    animation-delay: 2.5s;
+    animation-fill-mode: forwards;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sdock-bar {
+      transition-property: opacity, transform;
+      transition-duration: var(--duration-micro);
+      transition-timing-function: ease-out;
+    }
+  }
+
+  /* Con un diálogo modal montado en `<body>` (visor de fotos, buscador), el
+     índice desaparece del todo. El cajón del menú móvil también es un diálogo,
+     pero vive montado siempre como hijo directo de `<body>`: este selector no lo
+     alcanza, y con el menú abierto el índice ya queda bajo su velo. */
+  body:has(> div > [role='dialog'][aria-modal='true']) .sdock {
+    visibility: hidden;
+  }
+
+  /* Bajo `lg` hay una sola columna hasta que el script decide cuál es el salto. */
+  .sdock-compact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sdock[data-sdock-ready] .sdock-compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sdock-panel {
+    max-height: min(26rem, calc(100dvh - var(--header-h, 4rem) - 6rem));
+  }
+
+  .sdock-backdrop {
+    display: none;
+  }
+  .sdock[data-sdock-ready] .sdock-menu[open] .sdock-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+  }
+
+  /* La sección que nombra la píldora lleva la misma regla lima que el ítem
+     actual del riel: una línea fija de imprenta, no una barra de avance. */
+  .sdock[data-sdock-active] .sdock-menu > summary::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0.75rem;
+    bottom: 0.25rem;
+    height: 2px;
+    background: var(--color-accent);
+  }
+</style>

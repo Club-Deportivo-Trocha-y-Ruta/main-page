@@ -6,6 +6,21 @@
 # CSP, HSTS, protección de archivos sensibles, y GZIP.
 # ============================================================
 
+# ── www → dominio sin www (301) ─────────────────────────────
+# El host con `www.` respondía 200 con la misma página (comprobado el
+# 6-oct-2026): contenido duplicado para Google y, peor, la galería de la
+# válida rota, porque sus fotos se piden con URL absoluta al dominio sin
+# `www` y la CSP (`img-src 'self'`) las bloquea desde el otro host; el
+# atributo `download` tampoco descarga entre orígenes. El canonical del sitio
+# ya es el dominio sin `www`, así que redirigir es solo hacer cumplir lo que
+# el sitio ya declara. `.htaccess` solo aplica en Hostinger: en `dev` y
+# `preview` no hay `www` que redirigir.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+</IfModule>
+
 # ── Bloquear archivos sensibles ─────────────────────────────
 # Impide acceso directo a archivos de configuración, estado
 # de deploy, y directorios de control de versiones.
