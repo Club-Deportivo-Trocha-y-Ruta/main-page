@@ -246,10 +246,6 @@ const { title: emptyTitle, body: emptyBody } = galleryEmptyCopy(evento.date);
 const whatsappMessage = (text: string) => `${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
 const photosLead = 'Toca su categoría, abre la foto y descárgala.';
 
-const familyRequestHref = whatsappMessage(
-  `Hola, quiero las fotos de mi deportista de la ${evento.edition} de ${evento.venue.city}. Nombre y categoría: `,
-);
-
 // ─── La casa ────────────────────────────────────────────────────────────────
 const trackHistory = buildMilestoneItems(filterTrackMilestones(milestones).map((e) => e.data));
 // La foto de la pista es la del hito «La casa» (`historia-pista`): va grande, en duotono lima,
@@ -513,16 +509,6 @@ const dock = dockItems({
         emptyTitle={emptyTitle}
         emptyBody={emptyBody}
       />
-      <noscript>
-        <p class="bg-surface-muted text-text-primary mt-4 rounded-2xl p-4 text-sm">
-          Para ver y descargar las fotos hace falta activar JavaScript en tu navegador. Si no
-          puedes,{' '}
-          <a href={familyRequestHref} class="font-semibold underline underline-offset-2"
-            >escríbenos por WhatsApp</a
-          >{' '}
-          y te las enviamos.
-        </p>
-      </noscript>
     </div>
 
     <!-- Compartir la página va al final de la galería, cuando la familia ya
