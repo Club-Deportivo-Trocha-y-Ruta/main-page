@@ -1706,9 +1706,6 @@ por piezas, con el informe y las capturas en
   95 % con `backdrop-blur` las miniaturas se transparentaban detrás de los chips. La foto
   de la apertura lleva `ring-1 ring-hairline` y no `shadow-raised`, la única sombra suave
   de la página.
-- **El recurso de ayuda no es el llamado principal.** «Escribir por WhatsApp» de
-  `FamilyCard` es de contorno: el relleno lima es el color del llamado principal de la
-  página, y cien píxeles más abajo «Compartir por WhatsApp» ya es un relleno.
 - **Botones de la apertura a ancho completo en el teléfono** (`w-full sm:w-auto`): el
   secundario era más ancho que el primario.
 - **El muro, en oscuro, lleva un filete lima arriba** (`dark:shadow-[inset_0_3px_0_…]`):

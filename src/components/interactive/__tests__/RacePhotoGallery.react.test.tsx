@@ -14,7 +14,6 @@ const BASE = 'https://media.example.org/valida-2026';
 const PAGE_URL = 'https://example.org/copa-valle-yumbo-2026';
 const EVENT_SLUG = 'copa-valle-yumbo-2026';
 const EVENT_TITLE = 'VI Válida Copa Valle';
-const FAMILY_HREF = 'https://wa.me/573000000000?text=Hola';
 
 const GROUPS: PhotoGroup[] = [
   {
@@ -60,7 +59,6 @@ function renderGallery(
       pageUrl={PAGE_URL}
       eventSlug={EVENT_SLUG}
       eventTitle={EVENT_TITLE}
-      familyRequestHref={FAMILY_HREF}
       {...props}
     />,
   );
@@ -127,7 +125,6 @@ describe('RacePhotoGallery', () => {
         'Antes de la salida',
         'Infantil A y B',
         'Premiación',
-        '¿No encuentras a tu deportista?',
       ]);
 
       // Bajo el titular, en pequeño: la manga y el conteo. Lo que el titular ya dice no se repite.
@@ -175,21 +172,13 @@ describe('RacePhotoGallery', () => {
       ).toBeInTheDocument();
     });
 
-    it('las mangas son div: solo la tarjeta familiar queda como región con nombre', () => {
-      const { container, unmount } = renderGallery();
+    it('las mangas son div: no hay regiones con nombre que llenen los puntos de referencia', () => {
+      const { container } = renderGallery();
 
-      expect(container.querySelectorAll('section')).toHaveLength(1);
-      expect(screen.getAllByRole('region').map((region) => region.tagName)).toEqual(['SECTION']);
-      expect(
-        screen.getByRole('region', { name: '¿No encuentras a tu deportista?' }),
-      ).toBeInTheDocument();
-      // Los titulares siguen ahí para quien navega por encabezados.
-      expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(4);
-      unmount();
-
-      const sinFamilia = renderGallery({ familyRequestHref: null });
-      expect(sinFamilia.container.querySelectorAll('section')).toHaveLength(0);
+      expect(container.querySelectorAll('section')).toHaveLength(0);
       expect(screen.queryAllByRole('region')).toHaveLength(0);
+      // Los titulares siguen ahí para quien navega por encabezados.
+      expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(3);
     });
 
     it('cada foto es un botón con el texto alternativo de manga y posición, sin nombres', () => {
@@ -2104,51 +2093,10 @@ describe('RacePhotoGallery', () => {
     });
   });
 
-  // ─── Bloque familiar ─────────────────────────────────────────────────────────
-
-  describe('bloque familiar', () => {
-    it('muestra la tarjeta con el enlace de WhatsApp y su analítica', () => {
-      renderGallery();
-
-      expect(
-        screen.getByRole('heading', { name: '¿No encuentras a tu deportista?' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(
-          'Escríbenos con su nombre y su categoría, y te ayudamos a buscarlas.',
-        ),
-      ).toBeInTheDocument();
-      const link = screen.getByRole('link', { name: /Escribir por WhatsApp/ });
-      expect(link).toHaveAttribute('href', FAMILY_HREF);
-      expect(link).toHaveAttribute('target', '_blank');
-      expect(link.getAttribute('rel')).toBe('noopener noreferrer');
-      expect(link).toHaveAttribute('data-analytics-event', 'whatsapp_click');
-      expect(link).toHaveAttribute('data-analytics-content-id', 'fotos-familia');
-    });
-
-    it('el botón es de contorno: el relleno de la zona es el de «Compartir por WhatsApp»', () => {
-      renderGallery();
-
-      const link = screen.getByRole('link', { name: /Escribir por WhatsApp/ });
-      expect(link).toHaveClass('border-2', 'border-primary-deep', 'text-primary-deep');
-      expect(link).not.toHaveClass('bg-accent');
-    });
-
-    it('sin familyRequestHref (o con null) el bloque no existe', () => {
-      const { unmount } = renderGallery({ familyRequestHref: null });
-      expect(screen.queryByText('¿No encuentras a tu deportista?')).not.toBeInTheDocument();
-      expect(screen.queryByRole('link', { name: /Escribir por WhatsApp/ })).not.toBeInTheDocument();
-      unmount();
-
-      renderGallery({ familyRequestHref: undefined });
-      expect(screen.queryByText('¿No encuentras a tu deportista?')).not.toBeInTheDocument();
-    });
-  });
-
   // ─── Estado vacío ────────────────────────────────────────────────────────────
 
   describe('estado vacío', () => {
-    it('sin fotos muestra solo el panel: sin barra de filtros ni bloque familiar', () => {
+    it('sin fotos muestra solo el panel: sin barra de filtros', () => {
       renderGallery(
         { emptyTitle: 'Las fotos llegan el martes', emptyBody: 'Estamos curándolas.' },
         buildManifest({ photos: [] }),

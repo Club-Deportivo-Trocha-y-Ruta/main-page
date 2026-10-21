@@ -87,8 +87,6 @@ export interface RacePhotoGalleryProps {
   eventSlug: string;
   /** Título corto del evento, para el texto de compartir. */
   eventTitle: string;
-  /** Enlace `wa.me` para pedir las fotos de un deportista; `null` oculta el bloque. */
-  familyRequestHref?: string | null;
   /** Nombre de quien tomó las fotos, para el crédito del visor. */
   photographerName?: string | null;
   /** Aliados de la válida (patrocinio y apoyo), para el crédito del visor. */
@@ -947,43 +945,6 @@ function PhotoViewer({
   );
 }
 
-// ─── Paneles ───────────────────────────────────────────────────────────────────
-
-function FamilyCard({ href }: { href: string }) {
-  const headingId = useId();
-  // El botón es de contorno, como «Conoce la pista»: el relleno lima es el color del llamado
-  // principal de la página y esto es el recurso de ayuda. Con el relleno verde de «Compartir por
-  // WhatsApp», cien píxeles más abajo, eran dos botones grandes de relleno compitiendo.
-  // `section` con nombre, no `aside`: un `aside` es un landmark complementario y
-  // dentro del `<section>` de la galería axe lo marca (landmark-complementary-is-top-level).
-  return (
-    <section
-      aria-labelledby={headingId}
-      className="border-hairline bg-surface-raised shadow-card mt-12 flex flex-col gap-4 rounded-2xl border p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-7"
-    >
-      <div>
-        <h3 id={headingId} className="font-display text-text-primary text-xl font-bold">
-          ¿No encuentras a tu deportista?
-        </h3>
-        <p className="text-text-secondary mt-1">
-          Escríbenos con su nombre y su categoría, y te ayudamos a buscarlas.
-        </p>
-      </div>
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        data-analytics-event="whatsapp_click"
-        data-analytics-content-id="fotos-familia"
-        className="border-primary-deep text-primary-deep hover:bg-primary-deep hover:text-on-deep shadow-pressable ease-spring focus-visible:outline-primary-deep inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-lg border-2 px-6 font-semibold transition-transform duration-[var(--duration-micro)] [--btn-shadow-color:var(--color-primary-deep)] hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-1 active:shadow-none motion-reduce:transition-none"
-      >
-        <Icon name="whatsapp" />
-        Escribir por WhatsApp <span className="sr-only">(se abre en una pestaña nueva)</span>
-      </a>
-    </section>
-  );
-}
-
 // ─── Galería ───────────────────────────────────────────────────────────────────
 
 interface ActiveView {
@@ -993,7 +954,7 @@ interface ActiveView {
 
 export default function RacePhotoGallery(props: RacePhotoGalleryProps) {
   const { manifest, emptyTitle = 'Las fotos vienen pronto', emptyBody } = props;
-  // Las fotos son lo único que se muestra sin filtros: sin ellas no hay barra ni bloque familiar.
+  // Las fotos son lo único que se muestra sin filtros: sin ellas no hay barra.
   if (manifest.photos.length === 0) {
     return (
       <div className="border-hairline bg-surface-raised text-text-secondary rounded-2xl border p-6">
@@ -1010,7 +971,6 @@ function Gallery({
   pageUrl,
   eventSlug,
   eventTitle,
-  familyRequestHref = null,
   photographerName = null,
   allyCount = null,
 }: RacePhotoGalleryProps) {
@@ -1311,8 +1271,6 @@ function Gallery({
           />
         ))}
       </div>
-
-      {familyRequestHref && <FamilyCard href={familyRequestHref} />}
 
       {activeEntry !== null && active !== null && (
         <PhotoViewer
