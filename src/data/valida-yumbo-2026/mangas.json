@@ -51,7 +51,7 @@
         "Prejuvenil femenina",
         "Máster femenina"
       ],
-      "description": "Categorías femeninas y primera premiación",
+      "description": "Élite y Prejuvenil femenino",
       "start": "11:00",
       "chip": "Femeninas"
     },
@@ -83,7 +83,7 @@
       "id": "premiacion",
       "label": "Premiación",
       "categories": [],
-      "description": "Podios de la segunda premiación y cierre",
+      "description": "Los podios de las dos tandas de premiación",
       "start": "13:00",
       "chip": "Premiación"
     }

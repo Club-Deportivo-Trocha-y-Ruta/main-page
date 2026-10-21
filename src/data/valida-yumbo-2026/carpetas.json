@@ -1,0 +1,32 @@
+{
+  "_comentario": "Carpeta que entregó el fotógrafo → grupo de mangas.json. Se compara sin número inicial, sin tildes y en minúsculas. Manda sobre la hora EXIF: el reloj de la Canon va corrido entre 1 y 3 horas. Las categorías femeninas de Preinfantil e Infantil salieron con sus pares masculinas; las dos tandas de premiación van juntas en «Premiación».",
+  "carpetas": {
+    "teteros sin pedales": "manga-1",
+    "teteros con pedales": "manga-1",
+    "preinfantil a": "manga-2",
+    "preinfantil b": "manga-2",
+    "preinfantil a femenino": "manga-2",
+    "preinfantil b femenino": "manga-2",
+    "infantil a": "manga-3",
+    "infantil b": "manga-3",
+    "infantil a femenino": "manga-3",
+    "infantil b femenino": "manga-3",
+    "elite femenino": "manga-4",
+    "prejuvenil a femenino": "manga-4",
+    "prejuvenil b femenino": "manga-4",
+    "prejuvenil a": "manga-5",
+    "promocional": "manga-5",
+    "master a": "manga-5",
+    "master b1": "manga-5",
+    "master b2": "manga-5",
+    "master c1": "manga-5",
+    "master c2": "manga-5",
+    "master d": "manga-5",
+    "junior": "manga-6",
+    "elite": "manga-6",
+    "prejuvenil b": "manga-6",
+    "1er tanda de premiacion": "premiacion",
+    "2da tanda de premiacion": "premiacion",
+    "extras": "previa"
+  }
+}

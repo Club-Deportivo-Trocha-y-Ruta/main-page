@@ -34,6 +34,8 @@ export interface ValidaPhotographer {
   name: string | null;
   instagram: string | null;
   url: string | null;
+  /** Logo para el tema claro (negro) y el oscuro (blanco). */
+  logo?: { light: string; dark: string } | null;
 }
 
 export interface ValidaEvent {
@@ -326,6 +328,31 @@ export function assignGroup(taken: string | null, groups: ScheduledGroup[]): str
   return current;
 }
 
+/** Nombre de carpeta sin número inicial ni tildes, en minúsculas: la llave de `carpetas.json`. */
+export function folderKey(folder: string): string {
+  return folder
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/^\s*\d+\s*-\s*/, '')
+    .trim()
+    .toLowerCase();
+}
+
+/**
+ * Grupo según la carpeta con que el fotógrafo entregó la foto (`relativePath` es
+ * la ruta dentro de la carpeta de originales). `null` si la carpeta no está en el
+ * mapa o apunta a un grupo que no existe: quien llama cae entonces a la hora EXIF.
+ */
+export function assignGroupByFolder(
+  relativePath: string,
+  folders: Record<string, string>,
+  groups: PhotoGroup[],
+): string | null {
+  const folder = relativePath.split(/[\\/]/)[0];
+  const id = folders[folderKey(folder)];
+  return id && groups.some((group) => group.id === id) ? id : null;
+}
+
 // ─── Agrupación y textos ───────────────────────────────────────────────────────
 
 export interface GroupedPhotos {
@@ -337,12 +364,15 @@ function byTakenThenId(a: Photo, b: Photo): number {
   const ta = takenSeconds(a.taken) ?? Number.MAX_SAFE_INTEGER;
   const tb = takenSeconds(b.taken) ?? Number.MAX_SAFE_INTEGER;
   if (ta !== tb) return ta - tb;
+  // Sin hora en ninguna (el pipeline la omite cuando las cámaras no comparten
+  // reloj), manda el orden del manifest: el pipeline ya lo dejó por carpeta y nombre.
+  if (takenSeconds(a.taken) === null && takenSeconds(b.taken) === null) return 0;
   return a.id.localeCompare(b.id);
 }
 
 /**
  * Fotos por grupo, en el orden del manifest y ordenadas por hora dentro de
- * cada uno. Los grupos vacíos no se devuelven: un encabezado «Manga 2» sin
+ * cada uno (si no tienen hora, en el orden del manifest). Los grupos vacíos no se devuelven: un encabezado «Manga 2» sin
  * fotos debajo es peor que ninguno. Una foto cuyo grupo no exista se agrupa
  * bajo un grupo «Otras» al final, para no perderla en silencio.
  */

@@ -254,9 +254,6 @@ const photosLead = placaSearch
 const familyRequestHref = whatsappMessage(
   `Hola, quiero las fotos de mi deportista de la ${evento.edition} de ${evento.venue.city}. Número de placa: `,
 );
-const removalHref = whatsappMessage(
-  `Hola, quiero que retiren una foto de la ${evento.edition} de ${evento.venue.city}. Enlace de la foto: `,
-);
 
 // ─── La casa ────────────────────────────────────────────────────────────────
 const trackHistory = buildMilestoneItems(filterTrackMilestones(milestones).map((e) => e.data));
@@ -453,46 +450,23 @@ const dock = dockItems({
           )
         }
 
-        <!-- «Buscar mis fotos» emite `page_nav_click` (salto dentro de la página), no
-             `gallery_filter`: no filtra nada, y contarlo como filtro inflaba el embudo.
-             Aterriza en `#buscar`, la barra de categorías, no en el titular de la sección. -->
         {
-          (totalPhotos > 0 || resultsUrl) && (
+          resultsUrl && (
             <div class="mt-5 flex flex-wrap items-center gap-3">
-              {totalPhotos > 0 && (
-                <Button
-                  href="#buscar"
-                  variant="accent"
-                  size="lg"
-                  class="w-full gap-2 sm:w-auto"
-                  data-analytics-event="page_nav_click"
-                  data-analytics-content-id="buscar"
-                  data-analytics-method="apertura"
-                >
-                  <Icon
-                    name="ph:magnifying-glass-bold"
-                    class="size-5 shrink-0"
-                    aria-hidden="true"
-                  />
-                  Buscar mis fotos
-                </Button>
-              )}
-              {resultsUrl && (
-                <Button
-                  href={resultsUrl}
-                  variant="outline"
-                  size="lg"
-                  class="afiche-contorno w-full gap-2 sm:w-auto"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-analytics-event="race_results_click"
-                  data-analytics-content-id="hero"
-                >
-                  <Icon name="ph:trophy-bold" class="size-5 shrink-0" aria-hidden="true" />
-                  Resultados oficiales
-                  <span class="sr-only">(se abre en una pestaña nueva)</span>
-                </Button>
-              )}
+              <Button
+                href={resultsUrl}
+                variant="outline"
+                size="lg"
+                class="afiche-contorno w-full gap-2 sm:w-auto"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-analytics-event="race_results_click"
+                data-analytics-content-id="hero"
+              >
+                <Icon name="ph:trophy-bold" class="size-5 shrink-0" aria-hidden="true" />
+                Resultados oficiales
+                <span class="sr-only">(se abre en una pestaña nueva)</span>
+              </Button>
             </div>
           )
         }
@@ -535,11 +509,30 @@ const dock = dockItems({
     {
       photographer.name && (
         <p class="text-text-secondary mt-4 flex items-center gap-2 text-sm">
-          <Icon
-            name="ph:camera-bold"
-            class="text-primary-deep size-4 shrink-0"
-            aria-hidden="true"
-          />
+          {photographer.logo ? (
+            <>
+              <img
+                src={photographer.logo.light}
+                alt=""
+                width="42"
+                height="48"
+                class="h-12 w-auto shrink-0 dark:hidden"
+              />
+              <img
+                src={photographer.logo.dark}
+                alt=""
+                width="42"
+                height="48"
+                class="hidden h-12 w-auto shrink-0 dark:block"
+              />
+            </>
+          ) : (
+            <Icon
+              name="ph:camera-bold"
+              class="text-primary-deep size-4 shrink-0"
+              aria-hidden="true"
+            />
+          )}
           <span>
             Fotos:{' '}
             {photographerHref ? (
@@ -605,80 +598,6 @@ const dock = dockItems({
         </div>
       )
     }
-
-    <!-- Aviso de imagen, en palabras de familia. Es una `note`, no un `<aside>`:
-         un `aside` es un landmark y no puede ir dentro de la sección. Fondo
-         `surface-raised`, no gris: es información, no una advertencia. -->
-    <div
-      role="note"
-      aria-labelledby="valida-aviso-titulo"
-      class="bg-surface-raised text-text-primary ring-hairline mt-10 rounded-2xl p-5 text-sm leading-relaxed ring-1 sm:p-6"
-    >
-      <h3
-        id="valida-aviso-titulo"
-        class="font-display text-text-primary flex items-center gap-2 text-base font-bold"
-      >
-        <Icon name="ph:shield-check-bold" class="size-5 shrink-0" aria-hidden="true" />
-        Sobre estas fotos
-      </h3>
-      <p class="mt-2">
-        Las publica el {evento.host}, operador de la válida, para que cada familia tenga las suyas.
-        No publicamos nombres de deportistas. Puedes guardarlas y compartirlas, también desde la
-        cuenta de tu club{photographer.name ? `, mencionando a ${photographer.name}` : ''}; no se
-        pueden vender ni usar en publicidad.
-      </p>
-      <p class="mt-2">
-        ¿Sales en una foto y prefieres que no esté? Escríbenos por{' '}
-        <a
-          href={removalHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-analytics-event="whatsapp_click"
-          data-analytics-content-id="retiro-foto"
-          class="font-semibold underline underline-offset-2"
-          >WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span></a
-        >{' '}
-        o a{' '}
-        <a href={`mailto:${CONTACT.email}`} class="font-semibold underline underline-offset-2"
-          >{CONTACT.email}</a
-        >{' '}
-        y la retiramos el mismo día.
-      </p>
-      <details class="group mt-3">
-        <summary class="cursor-pointer py-1.5 font-semibold underline underline-offset-2">
-          Política de imágenes de la válida
-        </summary>
-        <ol class="mt-3 list-decimal space-y-2 pl-5">
-          <li>
-            <strong>Responsable.</strong>
-            {evento.host}, operador de la válida. {CONTACT.email}.
-          </li>
-          <li>
-            <strong>Finalidad.</strong> Contar la válida y entregar a cada familia las fotos de su deportista.
-            Las fotos de niños y niñas no se venden ni se usan en piezas de patrocinadores.
-          </li>
-          <li>
-            <strong>Sin nombres.</strong> No publicamos nombres de deportistas, ni en las fotos ni en
-            sus descripciones.
-          </li>
-          <li>
-            <strong>Retiro.</strong> Cualquiera puede pedirlo por WhatsApp o por correo (asunto «Retiro
-            de foto»). Se retira el mismo día, sin pedir explicaciones.
-          </li>
-          <li>
-            <strong>Archivos.</strong> Se publican sin metadatos: sin ubicación, sin número de serie de
-            la cámara, sin nombres.
-          </li>
-        </ol>
-        <p class="mt-3">
-          Tus derechos sobre tus datos:{' '}
-          <a
-            href="/politica-de-tratamiento-de-datos"
-            class="font-semibold underline underline-offset-2">política de tratamiento de datos</a
-          >.
-        </p>
-      </details>
-    </div>
   </SectionShell>
 
   <!-- 5. Aliados: el agradecimiento, entre las fotos y las cifras: quien baja de las
@@ -702,7 +621,7 @@ const dock = dockItems({
         width="wide"
         spacing={recapBand ? 'compact' : 'default'}
         id="resultados"
-        class="text-white scroll-mt-[var(--header-h,4rem)]"
+        class="scroll-mt-[var(--header-h,4rem)] text-white"
         labelledby="valida-resultados-titulo"
       >
         <span

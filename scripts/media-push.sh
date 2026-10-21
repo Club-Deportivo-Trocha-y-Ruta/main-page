@@ -4,20 +4,20 @@
 # en Hostinger por FTPS, con lftp. Es la tarea T1 de docs/10-plan-media-hostinger.md.
 #
 # Uso:
-#   npm run media:push -- --dry-run --only valida-yumbo-2026     # ensayo
-#   npm run media:push -- --only valida-yumbo-2026               # subida de verdad
+#   npm run media:push -- --dry-run --only <subcarpeta>     # ensayo
+#   npm run media:push -- --only <subcarpeta>               # subida de verdad
 #   bash scripts/media-push.sh [--dry-run] [--only <subcarpeta>] [--exclude <glob>]...
 #
 # Opciones:
 #   --dry-run          Muestra lo que subiría sin subir ni crear nada.
-#   --only <subcarpeta>  Sube solo esa subcarpeta de MEDIA_SRC (p. ej. valida-yumbo-2026,
-#                      o valida-yumbo-2026/thumb). SIEMPRE conviene usarla: sin ella se
+#   --only <subcarpeta>  Sube solo esa subcarpeta de MEDIA_SRC (p. ej. <subcarpeta>,
+#                      o <subcarpeta>/thumb). SIEMPRE conviene usarla: sin ella se
 #                      sube todo lo que haya en MEDIA_SRC.
 #   --exclude <glob>   Patrón extra a excluir (se puede repetir), relativo a lo que se sube.
 #                      Con una conexión lenta, primero las miniaturas y las versiones web:
-#                        --only valida-yumbo-2026 --exclude 'original/'
+#                        --only <subcarpeta> --exclude 'original/'
 #                      y después los originales:
-#                        --only valida-yumbo-2026/original
+#                        --only <subcarpeta>/original
 #   -h, --help         Esta ayuda.
 #
 # Variables (de .env en la raíz del repo o del entorno; nunca se imprimen):
@@ -62,13 +62,13 @@ while [ $# -gt 0 ]; do
     --dry-run) DRY_RUN=1 ;;
     --only)
       # Un valor vacío (p. ej. una variable sin definir) NO puede caer en «subirlo todo».
-      { [ $# -ge 2 ] && [ -n "$2" ]; } || die "--only necesita una subcarpeta (p. ej. --only valida-yumbo-2026)"
+      { [ $# -ge 2 ] && [ -n "$2" ]; } || die "--only necesita una subcarpeta (p. ej. --only <subcarpeta>)"
       ONLY="$2"
       shift
       ;;
     --only=*)
       ONLY="${1#--only=}"
-      [ -n "$ONLY" ] || die "--only necesita una subcarpeta (p. ej. --only=valida-yumbo-2026)"
+      [ -n "$ONLY" ] || die "--only necesita una subcarpeta (p. ej. --only=<subcarpeta>)"
       ;;
     --exclude)
       { [ $# -ge 2 ] && [ -n "$2" ]; } || die "--exclude necesita un patrón (p. ej. --exclude 'original/')"
@@ -108,7 +108,7 @@ Si no puedes instalarlo, sube la carpeta a mano por el gestor de archivos de hPa
      que se sube de una vez: 1 GB en Single, 1,5 GB en Premium, 2 GB en Unlimited).
      Los JPG ya vienen comprimidos: -0 guarda sin recomprimir y es mucho más rápido.
 
-       cd ~/Trocha-media/valida-yumbo-2026
+       cd ~/Trocha-media/<subcarpeta>
        zip -0 -r thumb.zip thumb
        zip -0 -r web.zip web
        zip -0 base.zip .htaccess original/.htaccess manifest.json
@@ -117,11 +117,11 @@ Si no puedes instalarlo, sube la carpeta a mano por el gestor de archivos de hPa
 
      (60 originales por zip: unos 900 MB si pesan 15 MB cada uno. Ajusta -l si pesan menos.)
 
-  2. En hPanel: Archivos > Administrador de archivos > public_html/media/valida-yumbo-2026
+  2. En hPanel: Archivos > Administrador de archivos > public_html/media/<subcarpeta>
      (créala si no existe) > Subir > cada .zip > clic derecho > Extraer en esa misma carpeta.
      Los zips ya traen las subcarpetas thumb/, web/ y original/. Borra los .zip al terminar.
 
-  3. NO subas la carpeta valida-yumbo-2026-familiar: es solo para las familias.
+  3. NO subas la carpeta <subcarpeta>-familiar: es solo para las familias.
 MENSAJE
   exit 127
 fi

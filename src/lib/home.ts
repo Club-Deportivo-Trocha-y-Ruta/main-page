@@ -24,6 +24,8 @@
  */
 import { buildSeason } from './calendar';
 import { summarizePrograms } from './programs';
+import { countPhotos, isPublished, photoCount } from './valida';
+import type { Ally, PhotoManifest, ValidaEvent } from './valida';
 
 // ─── Cifras verificables de la portada ──────────────────────────────────────
 
@@ -165,5 +167,70 @@ export function heroPulse(events: SeasonFigureInput[], now: Date = new Date()): 
     when: today ? 'Hoy' : `${next.day} de ${next.month}`,
     where: next.event.data.city ?? '',
     title: next.event.data.title,
+  };
+}
+
+// ─── La franja de la válida ─────────────────────────────────────────────────
+
+/** Días, contados desde la fecha de la válida, que la franja sigue en la portada. */
+export const VALIDA_PROMO_DAYS = 28;
+
+export interface ValidaPromo {
+  /** «VI Válida Copa Valle · Yumbo». */
+  eyebrow: string;
+  title: string;
+  /** Fragmento de `title` que va resaltado. */
+  highlight: string;
+  /** «416 fotos oficiales, gratis y en calidad original, gracias a 25 aliados.» */
+  lead: string;
+  cta: string;
+  href: string;
+  /** Valor de `content_id` del clic (catálogo cerrado de analítica). */
+  contentId: string;
+}
+
+/**
+ * La franja de la portada que lleva a la galería de la válida en casa.
+ *
+ * Devuelve `null` —y la portada no pinta nada— cuando la franja no se puede
+ * sostener: la página no está publicada (el enlace caería en un `noindex`),
+ * se arma con datos de prueba, no hay fotos, o ya pasaron
+ * `VALIDA_PROMO_DAYS` días de la válida y la portada vuelve a hablar de lo
+ * que viene. Las fechas de `evento.json` son `AAAA-MM-DD`: se leen como
+ * medianoche UTC, igual que el resto del sitio.
+ *
+ * Las cifras salen de los datos; no se promete que la búsqueda por número
+ * encuentre todas las fotos, porque no todas tienen placa etiquetada.
+ */
+export function validaPromo(
+  event: ValidaEvent,
+  manifest: PhotoManifest,
+  allies: Ally[],
+  isPreview: boolean,
+  now: Date = new Date(),
+): ValidaPromo | null {
+  if (isPreview || !isPublished(event)) return null;
+
+  const photos = countPhotos(manifest);
+  if (photos === 0) return null;
+
+  const [year, month, day] = event.date.split('-').map(Number);
+  const expires = new Date(Date.UTC(year, month - 1, day + VALIDA_PROMO_DAYS));
+  if (Number.isNaN(expires.getTime()) || now.getTime() > expires.getTime()) return null;
+
+  const official = photos === 1 ? 'oficial' : 'oficiales';
+  const thanks =
+    allies.length > 0
+      ? `, gracias a ${allies.length} ${allies.length === 1 ? 'aliado' : 'aliados'}`
+      : '';
+
+  return {
+    eyebrow: `${event.edition} Copa Valle · ${event.venue.city}`,
+    title: 'Encuentra a tu ciclista en las fotos de la válida',
+    highlight: 'fotos',
+    lead: `${photoCount(photos)} ${official}, gratis y en calidad original${thanks}.`,
+    cta: 'Buscar mi foto',
+    href: `/${event.slug}`,
+    contentId: 'valida-yumbo-2026',
   };
 }

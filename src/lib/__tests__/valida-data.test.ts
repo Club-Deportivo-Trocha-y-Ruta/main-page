@@ -114,6 +114,19 @@ describe('los schemas rechazan lo que rompería la página', () => {
     expect(validaEventoSchema.safeParse(photographer('fotografo.yumbo')).success).toBe(true);
   });
 
+  it('acepta el logo del fotógrafo solo como rutas públicas por tema', () => {
+    const withLogo = (logo: unknown) => ({
+      ...eventoBase,
+      photographer: { name: 'Nombre', instagram: null, url: null, logo },
+    });
+    const ok = { light: '/images/a-negro.webp', dark: '/images/a-blanco.webp' };
+    expect(validaEventoSchema.safeParse(withLogo(ok)).success).toBe(true);
+    expect(validaEventoSchema.safeParse(withLogo(null)).success).toBe(true);
+    expect(
+      validaEventoSchema.safeParse(withLogo({ ...ok, dark: 'images/sin-barra.webp' })).success,
+    ).toBe(false);
+  });
+
   it('evento: la imagen para compartir es una ruta pública, no una URL ni una ruta relativa', () => {
     expect(validaEventoSchema.safeParse({ ...eventoBase, ogImage: 'og.jpg' }).success).toBe(false);
     expect(validaEventoSchema.safeParse({ ...eventoBase, ogImage: '/images/og.jpg' }).success).toBe(
@@ -262,13 +275,13 @@ describe('fotos', () => {
   it('ninguna foto del evento está en el repositorio', () => {
     // Si alguien copia las fotos a `public/` «mientras tanto», el build las
     // subiría con el sitio y git las guardaría para siempre (el repo ya pesa
-    // 249 MB). En `public/` de esta válida solo caben los logos de los aliados, la
-    // imagen para compartir y el mapa vectorial de los municipios.
+    // 249 MB). En `public/` de esta válida solo caben los logos de los aliados y del
+    // fotógrafo, la imagen para compartir y el mapa vectorial de los municipios.
     expect(existsSync(join(PUBLIC_DIR, 'media'))).toBe(false);
     const files = fg.sync(`${PUBLIC_DIR}/images/valida-yumbo-2026/**/*`, { onlyFiles: true });
     const strangers = files.filter(
       (file) =>
-        !/\/aliados\/[a-z0-9-]+\.webp$/.test(file) &&
+        !/\/(aliados|fotografo)\/[a-z0-9-]+\.webp$/.test(file) &&
         !file.endsWith('/og.jpg') &&
         !file.endsWith('/mapa-municipios.svg'),
     );

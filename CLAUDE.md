@@ -32,7 +32,6 @@ node scripts/prepare-valida-aliados.mjs # logos de los aliados de la válida →
 npm run valida:fotos -- --src <dir> --out <dir>   # fotos oficiales de la válida: thumb/web/original + manifest (fuera de git)
 npm run valida:preview                            # fotos de prueba de la válida en :8765 (~420 fotos desde un banco de ~56 MB en ~/Trocha-media/_valida-preview/); `-- --make-manifest 420` regenera el manifest de prueba
 VALIDA_PREVIEW=true npm run dev                   # la página de la válida lee src/data/valida-yumbo-2026/preview/ en vez de los JSON reales (franja roja + noindex; solo local, CI no la define)
-npm run media:push -- --only valida-yumbo-2026    # sube ~/Trocha-media/ a /public_html/media/ por FTPS (lftp; nunca --delete)
 ```
 
 Node ≥ 22.12 (`engines`; CI usa 22.12). Variables de entorno (`.env.example`): `PUBLIC_WEB3FORMS_KEY`, `PUBLIC_GA4_MEASUREMENT_ID`, `PUBLIC_CLOUDINARY_CLOUD_NAME`, tipadas en `env.schema` de `astro.config.mjs`, todas opcionales, se importan desde `astro:env/client`. Sin `PUBLIC_GA4_MEASUREMENT_ID` no se renderizan ni `Analytics.astro` ni `ConsentBanner.astro`.

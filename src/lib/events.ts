@@ -27,10 +27,13 @@ export const EVENT_NAMES = [
   // vieron sus logos», no solo visitas.
   'sponsor_wall_view',
   // Salto dentro de la página: `content_id` es la sección de destino
-  // («aliados», «resultados», «buscar») y `method` dice desde dónde (`indice`,
-  // `franja`, `apertura`). Dice qué buscan quienes salen de la galería y qué
+  // («aliados», «resultados», «buscar») y `method` dice desde dónde (`indice` o
+  // `franja`). Dice qué buscan quienes salen de la galería y qué
   // atajo usan.
   'page_nav_click',
+  // Clic en una franja de la portada que lleva a otra página. `content_id` dice
+  // a cuál («valida-yumbo-2026»).
+  'home_promo_click',
 ] as const;
 
 export type EventName = (typeof EVENT_NAMES)[number];
@@ -48,7 +51,7 @@ export const ALLOWED_PARAM_KEYS = [
   'content_id',
   // Cómo o desde dónde: el canal con que se compartió una foto (`native`, hoja
   // del sistema o portapapeles, o `whatsapp`) o el punto de la página desde el
-  // que se saltó (`indice`, `franja`, `apertura`). Un nombre de canal o de
+  // que se saltó (`indice` o `franja`). Un nombre de canal o de
   // lugar, nunca una persona.
   'method',
 ] as const;

@@ -23,7 +23,7 @@
  *    Profondos que ya están en `public/images/news/` (sin personas inventadas,
  *    sin descargar nada), cada fuente en sus proporciones y con thumb, web y
  *    original. Viven en `~/Trocha-media/_valida-preview/banco/`; la carpeta
- *    empieza con `_`: `media:push` nunca la sube.
+ *    empieza con `_`: no es parte de lo que se sube al hosting.
  * 3. Servidor. Responde `/{thumb|web|original}/<id>.<ext>` de cualquier id del
  *    manifest con una imagen del banco de su misma proporción, elegida con un
  *    hash del id (siempre la misma) y sin repetir la de las fotos vecinas.

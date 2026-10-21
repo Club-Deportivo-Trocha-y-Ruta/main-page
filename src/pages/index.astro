@@ -23,6 +23,9 @@
  * es el final, no una sección más. Si mueves una sección de sitio, revisa que
  * la alternancia siga cuadrando.
  *
+ * Entre el hero y las cifras vive la franja de la válida en casa
+ * (`ValidaPromo`, tono `dark`): caduca sola 28 días después de la válida.
+ *
  * Ver docs/04-sistema-editorial.md.
  */
 import BaseLayout from '@layouts/BaseLayout.astro';
@@ -35,6 +38,7 @@ import {
 } from '@lib/seo';
 
 import Hero from '@components/sections/Hero.astro';
+import ValidaPromo from '@components/sections/ValidaPromo.astro';
 import StatsCounter from '@components/sections/StatsCounter.astro';
 import ProgramsGrid from '@components/sections/ProgramsGrid.astro';
 import AboutPreview from '@components/sections/AboutPreview.astro';
@@ -59,6 +63,11 @@ const jsonLd = [
 >
   <!-- 1. El gancho, con el pulso de la temporada (tinted, claro) -->
   <Hero />
+
+  <!-- 1b. Franja de la galería de la válida en casa (dark): solo se pinta
+       mientras la página esté publicada y la válida sea reciente (28 días).
+       Rompe el tinted del hero y el plain de las cifras. -->
+  <ValidaPromo />
 
   <!-- 2. Por qué creerle: cifras que el lector puede comprobar (plain) -->
   <div class="reveal">

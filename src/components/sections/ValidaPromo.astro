@@ -1,0 +1,66 @@
+---
+/**
+ * Franja de la portada hacia la galería de la VI Válida en Yumbo.
+ *
+ * Una franja, no una sección: entra entre el hero (`tinted`) y la banda de
+ * cifras (`plain`), así que el tono `dark` es el único que no repite fondo con
+ * ninguno de los dos vecinos. Va sin imagen —la galería son fotos de menores y
+ * la portada no las muestra— y sin JS: el clic se mide por delegación
+ * (`data-analytics-event`, ver `Analytics.astro`).
+ *
+ * Todo el texto sale de `validaPromo()` (`@lib/home`), que devuelve `null` si la
+ * página no está publicada, es vista previa, no hay fotos o pasaron 28 días de
+ * la válida. En ese caso la portada no pinta nada.
+ */
+import SectionShell from '@components/editorial/SectionShell.astro';
+import SectionIntro from '@components/editorial/SectionIntro.astro';
+import Button from '@components/common/Button.astro';
+import { Icon } from 'astro-icon/components';
+import { validaPromo } from '@lib/home';
+import { eventoJson, fotosJson, aliadosJson, isPreview } from '../../data/valida-yumbo-2026';
+import type { Ally, PhotoManifest, ValidaEvent } from '@lib/valida';
+
+const promo = validaPromo(
+  eventoJson as ValidaEvent,
+  fotosJson as PhotoManifest,
+  aliadosJson as Ally[],
+  isPreview,
+  new Date(),
+);
+---
+
+{
+  promo && (
+    <SectionShell
+      tone="dark"
+      width="wide"
+      spacing="none"
+      class="py-10 md:py-12"
+      labelledby="valida-promo-titulo"
+    >
+      <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-10">
+        <SectionIntro
+          tone="dark"
+          id="valida-promo-titulo"
+          eyebrow={promo.eyebrow}
+          eyebrowIcon="ph:camera-bold"
+          title={promo.title}
+          highlight={promo.highlight}
+          lead={promo.lead}
+          class="md:max-w-2xl"
+        />
+        <Button
+          href={promo.href}
+          variant="accent"
+          size="lg"
+          class="w-full shrink-0 md:w-auto"
+          data-analytics-event="home_promo_click"
+          data-analytics-content-id={promo.contentId}
+        >
+          {promo.cta}
+          <Icon name="ph:arrow-right-bold" class="ml-2 size-5" aria-hidden="true" />
+        </Button>
+      </div>
+    </SectionShell>
+  )
+}

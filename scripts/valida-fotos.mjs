@@ -65,7 +65,7 @@ try {
   process.exit(1);
 }
 const { JPEG_MARKER, exifDateToIso, parseJpegSegments, readExif, stripJpegMetadata } = jpegMeta;
-const { assignGroup } = valida;
+const { assignGroup, assignGroupByFolder } = valida;
 
 const run = promisify(execFile);
 
@@ -75,6 +75,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_DIR = path.join(ROOT, 'src', 'data', 'valida-yumbo-2026');
 const MANGAS_FILE = path.join(DATA_DIR, 'mangas.json');
 const EVENTO_FILE = path.join(DATA_DIR, 'evento.json');
+const CARPETAS_FILE = path.join(DATA_DIR, 'carpetas.json');
 const FOTOS_FILE = path.join(DATA_DIR, 'fotos.json');
 const OG_REPO_FILE = path.join(ROOT, 'public', 'images', 'valida-yumbo-2026', 'og.jpg');
 const OG_PUBLIC_PATH = '/images/valida-yumbo-2026/og.jpg';
@@ -146,6 +147,8 @@ Opciones:
   --out <carpeta>      Salida. Por defecto ${DEFAULT_OUT}
   --familiar <lista>   Archivo con un id por línea: esas fotos van a <out>-familiar/
                        y no entran al manifest ni a thumb/web/original.
+  --placas <json>      Archivo { "<ruta relativa a --src>": [placas] } con los números leídos en
+                       cada foto; se suman a los que ya tenga el manifest anterior.
   --og <id>            Escribe public/images/valida-yumbo-2026/og.jpg (1200×630,
                        menos de 300 KB) a partir de esa foto.
   --force              Regenera lo que ya existe (por defecto se salta).
@@ -167,6 +170,7 @@ function parseCli(argv) {
         out: { type: 'string' },
         familiar: { type: 'string' },
         og: { type: 'string' },
+        placas: { type: 'string' },
         force: { type: 'boolean', default: false },
         'dry-run': { type: 'boolean', default: false },
         'no-data': { type: 'boolean', default: false },
@@ -638,7 +642,9 @@ async function processPhoto(file, ctx, state) {
       id,
       name,
       size: buffer.length,
-      group: assignGroup(taken, ctx.groups),
+      // La carpeta del fotógrafo manda; la hora EXIF solo si la carpeta no está en el mapa.
+      group: assignGroupByFolder(name, ctx.folders, ctx.groups) ?? assignGroup(taken, ctx.groups),
+      placas: ctx.placasByPath.get(name.split(path.sep).join('/')) ?? [],
       taken,
       source,
       orientation: exif.orientation,
@@ -707,6 +713,10 @@ const byTakenThenId = (a, b) => {
   return a.id.localeCompare(b.id);
 };
 
+/** Orden del manifest sin hora: por carpeta del fotógrafo y luego por nombre de archivo, con números en orden natural. */
+const byFolderThenName = (a, b) =>
+  a.name.localeCompare(b.name, 'es', { numeric: true, sensitivity: 'base' });
+
 /** JSON en una sola línea pero con espacios, como el `fotos.json` escrito a mano. */
 function jsonInline(value) {
   if (Array.isArray(value)) return `[${value.map(jsonInline).join(', ')}]`;
@@ -735,13 +745,16 @@ function formatManifest(manifest) {
 }
 
 function toManifestPhoto(record, placas) {
+  const merged = normalizePlacas([...(placas.get(record.id) ?? []), ...record.placas]);
   return {
     id: record.id,
     group: record.group,
     w: record.w,
     h: record.h,
-    taken: record.taken,
-    placas: placas.get(record.id) ?? [],
+    // Sin hora: la Canon va 2-3 h adelantada y sin un desfase fijo, y una hora falsa
+    // en el visor es peor que ninguna. La página oculta la hora si `taken` está vacío.
+    taken: '',
+    placas: merged,
   };
 }
 
@@ -810,6 +823,26 @@ async function writeOgImage(id, ctx, target) {
 
 // ─── Programa principal ────────────────────────────────────────────────────────
 
+/** `carpetas.json`: carpeta del fotógrafo → grupo. Si falta, todo cae a la hora EXIF. */
+async function readCarpetas() {
+  try {
+    return (await readJson(CARPETAS_FILE)).carpetas ?? {};
+  } catch {
+    return {};
+  }
+}
+
+/** `--placas`: ruta relativa a --src → números de placa, ya normalizados. */
+async function readPlacasFile(file) {
+  let data;
+  try {
+    data = await readJson(path.resolve(expandHome(file)));
+  } catch (error) {
+    throw new Error(`No pude leer --placas ${file}: ${error.message}`);
+  }
+  return new Map(Object.entries(data).map(([name, list]) => [name, normalizePlacas(list)]));
+}
+
 async function buildContext(args) {
   const srcDir = path.resolve(expandHome(args.src));
   const outDir = path.resolve(expandHome(args.out ?? DEFAULT_OUT));
@@ -851,13 +884,15 @@ async function buildContext(args) {
     ogId,
     familiarIds,
     groups: await readMangas(),
+    folders: await readCarpetas(),
+    placasByPath: args.placas ? await readPlacasFile(args.placas) : new Map(),
     eventDate: await readEventDate(),
     jpegtran: await findJpegtran(),
     notes: new Set(),
   };
 }
 
-/** Borra los temporales que dejó una corrida interrumpida: `media:push` los subiría. */
+/** Borra los temporales que dejó una corrida interrumpida: se subirían con el resto. */
 async function removeStaleTemps(directories) {
   for (const directory of directories) {
     let names;
@@ -1115,7 +1150,7 @@ async function main() {
         description,
         ...(chip ? { chip } : {}),
       })),
-      photos: records.map((record) => toManifestPhoto(record, placas)),
+      photos: [...records].sort(byFolderThenName).map((record) => toManifestPhoto(record, placas)),
     };
     const text = formatManifest(manifest);
     await writeFile(manifestFile, text);
@@ -1182,17 +1217,6 @@ async function main() {
     }
   }
 
-  if (!ctx.dryRun && !ctx.noData) {
-    // `media:push` sube lo que hay bajo MEDIA_SRC (por defecto ~/Trocha-media): si la
-    // salida está en otro lado hay que decírselo, y siempre con --only para no subir
-    // la carpeta -familiar ni nada más.
-    const parent = path.dirname(ctx.outDir);
-    const prefix =
-      parent === path.join(os.homedir(), 'Trocha-media') ? '' : `MEDIA_SRC="${parent}" `;
-    console.log(
-      `\nSiguiente paso (primero con --dry-run): ${prefix}npm run media:push -- --only ${path.basename(ctx.outDir)}`,
-    );
-  }
   if (failures.length > 0) process.exitCode = 1;
 }
 

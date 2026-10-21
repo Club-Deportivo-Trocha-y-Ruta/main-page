@@ -8,6 +8,8 @@ import {
   equalAreaWidth,
   groupAlliesByRole,
   assignGroup,
+  assignGroupByFolder,
+  folderKey,
   chipLabel,
   countPhotos,
   DESCRIPTION_MAX,
@@ -286,6 +288,15 @@ describe('groupPhotos', () => {
       'otras',
     ]);
     expect(grouped[1].photos.map((p) => p.id)).toEqual(['a-0001', 'b-0002']);
+  });
+
+  it('sin hora de captura conserva el orden del manifest en vez de ordenar por id', () => {
+    const sinHora: PhotoManifest = {
+      ...manifest,
+      photos: ['z-0003', 'a-0001', 'm-0002'].map((id) => photo(id, 'manga-1', '')),
+    };
+    const grouped = groupPhotos(sinHora);
+    expect(grouped[0].photos.map((p) => p.id)).toEqual(['z-0003', 'a-0001', 'm-0002']);
   });
 
   it('omite los grupos vacíos y recoge las fotos de grupos desconocidos en «Otras»', () => {
@@ -1347,5 +1358,36 @@ describe('municipalityLegend', () => {
     expect(municipalityTotal(places)).toBe(3);
     expect(municipalityTotal(null)).toBe(0);
     expect(municipalityLegend(undefined)).toEqual([]);
+  });
+});
+
+describe('folderKey y assignGroupByFolder', () => {
+  const folders = {
+    'teteros sin pedales': 'manga-1',
+    'preinfantil a femenino': 'manga-2',
+    extras: 'previa',
+    inexistente: 'manga-99',
+  };
+
+  it('normaliza el nombre de carpeta: sin número, sin tildes, en minúsculas', () => {
+    expect(folderKey('1402 - TETEROS SIN PEDALES')).toBe('teteros sin pedales');
+    expect(folderKey('1ER TANDA DE PREMIACIÓN')).toBe('1er tanda de premiacion');
+    expect(folderKey('EXTRAS')).toBe('extras');
+  });
+
+  it('asigna por la primera carpeta de la ruta, no por el nombre del archivo', () => {
+    expect(assignGroupByFolder('1402 - TETEROS SIN PEDALES/DSC_0015.jpg', folders, schedule)).toBe(
+      'manga-1',
+    );
+    expect(
+      assignGroupByFolder('303 - PREINFANTIL A FEMENINO/IMG_5230.jpg', folders, schedule),
+    ).toBe('manga-2');
+    expect(assignGroupByFolder('EXTRAS/DSC_0027-2.jpg', folders, schedule)).toBe('previa');
+  });
+
+  it('devuelve null si la carpeta no está en el mapa o apunta a un grupo inexistente', () => {
+    expect(assignGroupByFolder('999 - OTRA/IMG_1.jpg', folders, schedule)).toBeNull();
+    expect(assignGroupByFolder('INEXISTENTE/IMG_1.jpg', folders, schedule)).toBeNull();
+    expect(assignGroupByFolder('IMG_1.jpg', folders, schedule)).toBeNull();
   });
 });

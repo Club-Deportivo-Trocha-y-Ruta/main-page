@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { buildClubFigures, heroPulse } from '../home';
+import { buildClubFigures, heroPulse, validaPromo, VALIDA_PROMO_DAYS } from '../home';
+import type { Ally, PhotoManifest, ValidaEvent } from '../valida';
 
 const HOY = new Date('2026-08-16T12:00:00Z');
 
@@ -66,7 +67,7 @@ describe('buildClubFigures', () => {
       programs: [{ ageMin: 4, ageMax: 5, schedule: 'A convenir' }],
     });
     expect(figures.find((f) => f.id === 'programs')!.note).toBe(
-      'De la iniciación al alto rendimiento'
+      'De la iniciación al alto rendimiento',
     );
   });
 
@@ -142,5 +143,123 @@ describe('heroPulse', () => {
   it('deja la ciudad vacía si el evento no la trae, sin romperse', () => {
     const sinCiudad = [{ id: 'x', data: { title: 'Clásica', date: new Date('2026-09-01') } }];
     expect(heroPulse(sinCiudad, HOY)?.where).toBe('');
+  });
+});
+
+// ============================================================
+// validaPromo
+// ============================================================
+
+describe('validaPromo', () => {
+  const event: ValidaEvent = {
+    slug: 'copa-valle-yumbo-2026',
+    published: true,
+    eventId: 'x',
+    nextEventId: null,
+    title: 'VI Válida Copa Valle 2026 · Yumbo',
+    shortTitle: 'VI Válida · Yumbo',
+    series: 'Copa Valle',
+    edition: 'VI Válida',
+    date: '2026-10-18',
+    venue: {
+      name: 'Pista',
+      shortName: 'Pista',
+      address: '',
+      city: 'Yumbo',
+      department: 'Valle del Cauca',
+      lat: 0,
+      lng: 0,
+    },
+    organizer: 'o',
+    host: 'h',
+    resultsUrl: null,
+    chronicle: null,
+    album: null,
+    photographer: { name: null, instagram: null, url: null },
+    hero: { photoId: null, alt: '' },
+    ogImage: null,
+    institutions: [],
+  };
+  const photo = (id: string) => ({ id, group: 'g', w: 1, h: 1, taken: '', placas: [] });
+  const manifest = (n: number): PhotoManifest => ({
+    base: 'https://x',
+    generatedAt: null,
+    groups: [],
+    photos: Array.from({ length: n }, (_, i) => photo(`p${i}`)),
+  });
+  const ally = (id: string): Ally => ({
+    id,
+    name: id,
+    role: 'patrocinio',
+    tagline: null,
+    instagram: null,
+    url: null,
+    logo: `/${id}.webp`,
+  });
+  const allies = (n: number) => Array.from({ length: n }, (_, i) => ally(`a${i}`));
+  const DURANTE = new Date('2026-10-21T12:00:00Z');
+
+  it('arma los textos con las cifras de los datos', () => {
+    expect(validaPromo(event, manifest(416), allies(25), false, DURANTE)).toEqual({
+      eyebrow: 'VI Válida Copa Valle · Yumbo',
+      title: 'Encuentra a tu ciclista en las fotos de la válida',
+      highlight: 'fotos',
+      lead: '416 fotos oficiales, gratis y en calidad original, gracias a 25 aliados.',
+      cta: 'Buscar mi foto',
+      href: '/copa-valle-yumbo-2026',
+      contentId: 'valida-yumbo-2026',
+    });
+  });
+
+  it('el resaltado es un fragmento literal del titular', () => {
+    const promo = validaPromo(event, manifest(3), allies(2), false, DURANTE);
+    expect(promo?.title).toContain(promo?.highlight);
+  });
+
+  it('concuerda el singular y omite el agradecimiento sin aliados', () => {
+    expect(validaPromo(event, manifest(1), allies(1), false, DURANTE)?.lead).toBe(
+      '1 foto oficial, gratis y en calidad original, gracias a 1 aliado.',
+    );
+    expect(validaPromo(event, manifest(5), [], false, DURANTE)?.lead).toBe(
+      '5 fotos oficiales, gratis y en calidad original.',
+    );
+  });
+
+  it('devuelve null si la página no está publicada', () => {
+    const oculta = { ...event, published: false };
+    expect(validaPromo(oculta, manifest(10), allies(2), false, DURANTE)).toBeNull();
+  });
+
+  it('devuelve null con datos de vista previa', () => {
+    expect(validaPromo(event, manifest(10), allies(2), true, DURANTE)).toBeNull();
+  });
+
+  it('devuelve null sin fotos', () => {
+    expect(validaPromo(event, manifest(0), allies(2), false, DURANTE)).toBeNull();
+  });
+
+  it('dura 28 días desde la fecha de la válida, medianoche UTC incluida', () => {
+    expect(VALIDA_PROMO_DAYS).toBe(28);
+    // 18-oct + 28 días = 15-nov 00:00 UTC.
+    const ultimo = new Date('2026-11-15T00:00:00Z');
+    const despues = new Date('2026-11-15T00:00:01Z');
+    expect(validaPromo(event, manifest(10), allies(2), false, ultimo)).not.toBeNull();
+    expect(validaPromo(event, manifest(10), allies(2), false, despues)).toBeNull();
+  });
+
+  it('se muestra antes de la fecha de la válida', () => {
+    const antes = new Date('2026-10-10T12:00:00Z');
+    expect(validaPromo(event, manifest(10), allies(2), false, antes)).not.toBeNull();
+  });
+
+  it('cruza el fin de mes sin desfasarse', () => {
+    const finDeMes = { ...event, date: '2026-12-10' };
+    // 10-dic + 28 = 7-ene-2027.
+    expect(
+      validaPromo(finDeMes, manifest(2), [], false, new Date('2027-01-07T00:00:00Z')),
+    ).not.toBeNull();
+    expect(
+      validaPromo(finDeMes, manifest(2), [], false, new Date('2027-01-07T00:00:01Z')),
+    ).toBeNull();
   });
 });

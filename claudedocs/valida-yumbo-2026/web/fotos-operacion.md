@@ -11,17 +11,14 @@ Arquitectura y política de imagen: `plan-pagina-valida.md` §5 y §5.1. Esto es
 
 1. **El Drive del fotógrafo trae GPS y datos de la cámara. Nunca va dentro de `~/Trocha-media/`**
    (esa carpeta es la que se sube). Va en `~/Trocha-entregas/`, que está fuera.
-2. **Siempre `--only valida-yumbo-2026` al subir.** Sin `--only`, `media:push` sube todo lo que haya
-   en `~/Trocha-media/`. (Aunque se te olvide, nunca sube carpetas `*-familiar`, `_*`, `.DS_Store` ni
-   `*.bak.json`, pero no dependas de eso.)
+2. **La subida es manual y solo de `valida-yumbo-2026/`** (paso 8). Nunca subas carpetas
+   `*-familiar`, `_*`, `.DS_Store` ni `*.bak.json`.
 3. **La carpeta `valida-yumbo-2026-familiar/` no se sube jamás.** Es el nivel «por deportista»:
    solo se entrega a su familia.
-4. **El servidor nunca se limpia solo.** `media:push` no borra nada. Lo que retires, lo borras tú
+4. **El servidor nunca se limpia solo.** Lo que retires, lo borras tú
    en hPanel (ver «Retirar una foto»).
 5. **Siempre se corre sobre la carpeta completa**, no por tandas. El manifest se arma con lo que haya
    en `--src`: una tanda más chica deja fuera de la página las fotos que no estén.
-6. Un comando de `npm` con banderas lleva `--` antes de ellas: `npm run media:push -- --dry-run`.
-   (Si se te olvida, ambos scripts detectan el `--dry-run` que se come npm y lo tratan como ensayo.)
 
 Rutas que usa todo el instructivo. Pégalas una vez en la terminal de trabajo:
 
@@ -39,10 +36,7 @@ export FAMILIAR=~/Trocha-entregas/familiar.txt                   # ids de las fo
   otro disco). 1.500 fotos de 10 MB son 15 GB: **no caben**. Opciones: un disco externo para
   `ENTREGA` y `SALIDA` (abajo), liberar espacio, o pedirle al fotógrafo JPG a calidad ≈90 (3-5 MB: ahí
   quedan en ≈ 12 GB entre los dos y apenas caben). Mira el espacio con `df -h ~`.
-- [ ] **Instalar lftp**: `brew install lftp`. `jpegtran` ya está (`/opt/homebrew/bin/jpegtran`; si
-  alguna vez falta, `brew install jpeg-turbo`).
-- [ ] **Credenciales** en `.env` (modelo en `.env.example`): `FTP_SERVER`, `FTP_USERNAME`,
-  `FTP_PASSWORD`, las mismas del deploy. No se imprimen nunca.
+- [ ] **jpegtran**: ya está en `/opt/homebrew/bin/jpegtran`; si alguna vez falta, `brew install jpeg-turbo`.
 - [ ] **hPanel**: plan y disco libre (Premium 20 GB, Unlimited 50, Cloud Startup 100; un plan Premium
   comprado antes del 17-dic-2025 trae más). Los originales de una válida (hasta ≈ 15-30 GB) tienen que
   caber *además* del sitio. Confirma que el CDN siga apagado: si estuviera encendido convertiría los
@@ -60,11 +54,10 @@ networkQuality -d        # SOLO subida (en este macOS -d omite la descarga; -u o
 ```
 
 Anota «Uplink capacity». Desde este Mac, el 6-oct, dio **270 Mbps**. Eso es lo que da tu línea hacia
-internet, no lo que aceptará el servidor de Hostinger por FTPS: calcula con la mitad de ese número
-hasta confirmarlo con el primer lote real (lftp muestra la velocidad de cada archivo y, al final,
-«N bytes transferred in S seconds»).
+internet, no lo que aceptará el servidor de Hostinger: calcula con la mitad de ese número
+hasta confirmarlo con el primer zip real.
 
-**Tiempo estimado** (`minutos por GB = 8.192 Mb ÷ Mbps ÷ 60`, más 25 % de sobrecarga de FTPS y lftp):
+**Tiempo estimado** (`minutos por GB = 8.192 Mb ÷ Mbps ÷ 60`, más 25 % de sobrecarga):
 
 | Subida real | Por GB | 5 GB | 15 GB | 30 GB |
 |---|---|---|---|---|
@@ -81,12 +74,11 @@ tandas (ver paso 8) y no pongas `published: true` hasta que terminen los origina
 
 ### Si el Mac no tiene espacio: disco externo
 
-Todo igual, con otras rutas. `media:push` busca en `~/Trocha-media` salvo que le digas dónde:
+Todo igual, con otras rutas:
 
 ```bash
 export ENTREGA="/Volumes/MI_DISCO/Trocha-entregas/valida-yumbo-2026-drive"
 export SALIDA="/Volumes/MI_DISCO/Trocha-media/valida-yumbo-2026"
-export MEDIA_SRC="/Volumes/MI_DISCO/Trocha-media"                 # lo lee media:push
 ```
 
 ### Ensayo del sábado 17 (con las fotos de la «prueba del sábado»)
@@ -97,8 +89,7 @@ Sirve para probar el flujo completo, incluida la subida real, sin tocar nada de 
 ```bash
 mkdir -p ~/Trocha-entregas/prueba-sabado                   # ahí van 10-20 JPG del sábado
 npm run valida:fotos -- --src ~/Trocha-entregas/prueba-sabado --out ~/Trocha-media/valida-prueba --no-data
-npm run media:push -- --dry-run --only valida-prueba
-npm run media:push -- --only valida-prueba
+# la subida de prueba se hace a mano, como en el paso 8, a public_html/media/valida-prueba/
 ```
 
 Verifica las URLs (paso 9, cambiando `valida-yumbo-2026` por `valida-prueba`), mide la velocidad real,
@@ -255,29 +246,25 @@ Escribe `public/images/valida-yumbo-2026/og.jpg` (1200×630, recorte por zona de
 más alta que pese **menos de 300 KB**, el tope de la vista previa de WhatsApp) e imprime la línea para
 `evento.json`. Ábrela y mírala antes de seguir. Se puede cambiar de foto las veces que quieras.
 
-### Paso 8. Subir (lftp)
+### Paso 8. Subir (a mano, con zips)
+
+Se sube con el Administrador de archivos de hPanel; no hay script de subida para la válida. Los JPG y
+WebP ya vienen comprimidos: `zip -0` guarda sin recomprimir y es mucho más rápido.
 
 ```bash
-npm run media:push -- --dry-run --only valida-yumbo-2026     # revisa la lista: thumb/, web/, original/, manifest.json, .htaccess
-caffeinate -i npm run media:push -- --only valida-yumbo-2026 # sube; caffeinate evita que el Mac se duerma
+mkdir -p ~/Trocha-media/_zips && cd ~/Trocha-media/valida-yumbo-2026
+zip -q -0 -r -X ~/Trocha-media/_zips/valida-1-base.zip .htaccess thumb web
+find original -name '*.jpg' | sort | split -l 70 - /tmp/lote-original-
+for lote in /tmp/lote-original-*; do zip -q -0 -X ~/Trocha-media/_zips/valida-2-original-$(basename "$lote").zip -@ < "$lote"; done
+zip -q -0 -X ~/Trocha-media/_zips/valida-2-original-aaa.zip original/.htaccess   # el .htaccess de original/
 ```
 
-Con disco externo, antepón `MEDIA_SRC=...` (arriba). Si se corta la conexión, **repite el mismo
-comando**: retoma lo que falte. Cada archivo se sube con un nombre temporal `.in.*` y se renombra al
-terminar, así que un corte no deja una foto cortada con su nombre definitivo. Si el error menciona
-«Certificate», prueba con `FTP_VERIFY_CERT=no npm run media:push -- ...` (el deploy de CI ya lo hace).
-
-**Conexión lenta (< 20 Mbps)**: primero lo liviano y luego los originales.
-
-```bash
-npm run media:push -- --only valida-yumbo-2026 --exclude 'original/'   # .htaccess, manifest, thumb, web (≈ 0,3 MB por foto)
-npm run media:push -- --only valida-yumbo-2026/original               # los originales, en el tiempo que tomen
-```
-
-**Sin lftp** (no se pudo instalar): `bash scripts/media-push.sh` lo dice y explica el camino manual.
-Resumen: un zip por `thumb`, `web`, otro con `.htaccess original/.htaccess manifest.json`, y los originales
-en zips de menos de 1 GB (`zip -0`, porque los JPG ya vienen comprimidos); súbelos a
-`public_html/media/valida-yumbo-2026/` con el Administrador de archivos de hPanel y usa «Extraer».
+En hPanel: Archivos > Administrador de archivos > `public_html/media/valida-yumbo-2026/` (créala si no
+existe) > subir cada `.zip` > clic derecho > **Extraer en esa misma carpeta** (los zips ya traen
+`thumb/`, `web/` y `original/`). Primero el de base: comprueba una URL de `thumb/` antes de seguir con los
+originales. **No olvides los dos `.htaccess`** (Finder los oculta; `⌘⇧.` los muestra): sin ellos la carpeta
+queda con listado público y «Descargar» no descarga en iPhone. Borra los `.zip` del servidor y de
+`_zips/` al terminar. NO subas `valida-yumbo-2026-familiar/`.
 
 ### Paso 9. Verificar tres URLs y las cabeceras
 
@@ -355,7 +342,7 @@ El mismo día, por WhatsApp o correo, y anótalo en la bitácora (plan §5.1):
      `${SALIDA}-familiar/`.
    - *Se borra del todo*: mueve el JPG fuera de `$ENTREGA`, borra a mano `thumb/<id>.webp`,
      `web/<id>.webp` y `original/<id>.jpg` de `$SALIDA` y repite el paso 5 (refresca el manifest). Si
-     dejas los archivos, el próximo `media:push` los vuelve a subir.
+     dejas los archivos, los vuelves a subir en la próxima tanda.
 2. **Bórrala del servidor** en hPanel → Administrador de archivos → `public_html/media/valida-yumbo-2026/`:
    `thumb/<id>.webp`, `web/<id>.webp` y `original/<id>.jpg`.
 3. Publica de nuevo: `fotos.json` cambió y la página es estática. Si es urgente, borra solo la línea de
@@ -373,9 +360,6 @@ va en `noindex` y la página no tiene sitemap de imágenes.
 | Una foto girada perdió «hasta 15 px de borde» | Su tamaño no es múltiplo del bloque JPEG (8/16 px) y se giró sin pérdida | Es lo normal con `jpegtran -trim` y no se nota; el original queda sin recompresión. |
 | Fotos en la manga equivocada | Horas de `mangas.json` o desfase del reloj | Corrige `mangas.json` y repite el paso 5: solo recalcula el manifest. |
 | «Salieron del manifest N fotos con placas etiquetadas» | Corriste sobre una carpeta más chica | Copia `$SALIDA/manifest.<fecha>.bak.json` sobre `manifest.json` y repite con la carpeta completa. |
-| lftp: «Certificate verification» | El certificado del FTP no coincide con el nombre | `FTP_VERIFY_CERT=no` (el deploy de CI ya lo hace). |
-| lftp: «Login failed» | Credenciales del `.env` | Compáralas con las de GitHub y con hPanel. |
-| La subida se corta | Conexión | Repite el comando. Los `.in.*` que queden en el servidor se borran a mano. |
 | `original/…jpg` llega como `image/webp` o hay cabeceras `x-hcdn-*` | El CDN de Hostinger está convirtiendo imágenes | Apágalo en hPanel: los «originales» dejarían de serlo. |
 | `cache-control` dice `max-age=3600` en vez de 30 días | El `.htaccess` de la raíz pesa más en ese servidor | Solo afecta al caché del navegador; no bloquea nada. |
 | «Descargar» da 404 | Faltan los originales o la carpeta `original/` | Termina la subida de `original/` antes de publicar. |

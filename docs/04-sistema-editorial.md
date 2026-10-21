@@ -1050,6 +1050,13 @@ hero entrega directo al blanco de las cifras, sin ola de corte de por medio.
 
 ---
 
+**Franja de la válida (`ValidaPromo`).** Entre el hero (`tinted`) y las cifras
+(`plain`) va una franja `dark` con `spacing="none"` + `py-10 md:py-12`, sin
+imagen y sin JS, que lleva a `/copa-valle-yumbo-2026`. Todo su texto sale
+de `validaPromo()` (`@lib/home`), que devuelve `null` —y la franja no se pinta—
+si la página no está publicada, es vista previa, no hay fotos o pasaron 28 días
+desde `evento.date`. El clic emite `home_promo_click` con `content_id`.
+
 ## 20. Referencia del detalle de noticia
 
 **Qué cambió.** Una crónica del club no es una entrada de blog suelta: es un

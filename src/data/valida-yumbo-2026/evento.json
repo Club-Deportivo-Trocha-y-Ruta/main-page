@@ -1,6 +1,6 @@
 {
   "slug": "copa-valle-yumbo-2026",
-  "published": false,
+  "published": true,
   "eventId": "2026-10-copa-valle-vii-yumbo",
   "nextEventId": "2026-11-copa-valle-vi-roldanillo",
   "title": "VI Válida Copa Valle 2026 · Yumbo",
@@ -24,9 +24,13 @@
   "chronicle": null,
   "album": null,
   "photographer": {
-    "name": null,
-    "instagram": null,
-    "url": null
+    "name": "Huesos Films",
+    "instagram": "huesosfilms",
+    "url": null,
+    "logo": {
+      "light": "/images/valida-yumbo-2026/fotografo/huesos-films-negro.webp",
+      "dark": "/images/valida-yumbo-2026/fotografo/huesos-films-blanco.webp"
+    }
   },
   "hero": {
     "photoId": null,

@@ -633,6 +633,11 @@ export const validaEventoSchema = z.object({
     name: nonEmpty.nullable(),
     instagram: z.string().regex(INSTAGRAM_HANDLE).nullable(),
     url: webUrl.nullable(),
+    /** Logo por tema: rutas públicas (empiezan con `/`) del negro y del blanco. */
+    logo: z
+      .object({ light: z.string().regex(/^\/\S+$/), dark: z.string().regex(/^\/\S+$/) })
+      .nullable()
+      .optional(),
   }),
   hero: z.object({
     /** Id de una foto del manifest; sin él, la apertura usa la foto de la pista. */
