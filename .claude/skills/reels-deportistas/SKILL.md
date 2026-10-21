@@ -65,6 +65,63 @@ el borde de cada tramo se confirma con `edges.py` antes de dar el corte por buen
 7. **Ver la pieza en el teléfono** antes de publicarla: la UI de la app tapa el 20 %
    inferior y ahí vive la banda del evento (ver `referencias/estilo-visual.md`).
 
+## Trazado del circuito
+
+Efecto «course preview» de la Copa del Mundo: sobre la toma va el **trazado completo de la
+pista** en línea blanca gruesa, con bandera a cuadros en la meta. `scripts/trazado.py` lo dibuja
+local desde `src/data/la-pista.gpx` (Pillow con supersampling 3×, capa RGBA qtrle, `overlay`).
+Opcional por plano en `voz_en_off.py`; sin la clave `track` la pieza sale idéntica a antes.
+
+**Uso aprobado (17-oct): solo la apertura.** El trazado completo y quieto, unos 3,5 s encima del
+primer plano POV, grande y centrado, sin GPS ni marcador durante el video:
+
+```json
+{ "at": 0.0, "src": "POV salida.mp4", "in": 3.7,
+  "track": { "preset": "apertura" } }
+```
+
+`apertura` = modo `full`, caja `[40, 260, 1000, 1240]` (termina en y = 1500, nada bajo 1536),
+trazo 13 px, entra con fundido de 0,4 s en `at` 0,3 s, dura 3,5 s y sale con otro fundido de
+0,4 s. Se eligió `full` y no un `draw` de 0,8 s: el trazo está completo desde el primer
+fotograma, no compite con el movimiento del POV y no hay un instante «a medio dibujar» que se
+lea como error. Todo se puede pisar en el mismo dict (`at`, `secs`, `fade`, `width`, `box`).
+
+- Los modos `draw` (se dibuja de `from` a `to`) y `marker` (completo tenue + recorrido + punto
+  lima) siguen en el código, **pero no son el uso aprobado**. Claves: `mode`, `from`/`to`
+  (fracción de vuelta 0..1), `at`, `secs`, `fade`, `ease`, `keep`, `box`, `width`, `rotation`.
+- **La orientación es una sola por pieza**: sale sola de la caja (la que más llena; con la
+  de la apertura, 16°, 2,74 px/m) o se fija con `rotation`.
+- El tiempo es el del plano de **salida** (con la cámara lenta ya aplicada, sin la cola
+  congelada de 0,5 s). El demo (`--demo`) también lleva el trazado: es parte de lo que se aprueba.
+- Herramienta suelta: `python3 scripts/trazado.py --still ap.png --preset apertura`,
+  `--demo ap.mp4 --preset apertura` (6 s), `--demo out.mp4` (los tres modos, 12 s),
+  `--on clip_1080x1920.mp4 out.mp4 --preset apertura` y `--info`. Los fondos de prueba llevan
+  guías rojas en las zonas seguras (y = 270 y 1536).
+- **El GPX es la vuelta grabada el 5-sep-2026 (3.717 m, cierra a 6,5 m de la salida), no el
+  circuito homologado de 3,8 km de la válida.** No se rotula distancia ni «oficial» en pantalla
+  sin confirmarlo con el club.
+- **Descartado por el usuario**: `"sync": "gps"` (marcador que sigue al ciclista con GPS de GoPro
+  o Strava). No se implementa.
+- Medidas y zonas seguras: `referencias/estilo-visual.md`.
+
+## Música de fondo (opcional)
+
+Bloque en la raíz del JSON de `voz_en_off.py`; sin él, la mezcla no cambia:
+
+```json
+"music": { "src": "pista.mp3", "in": 0.0, "db_under_voice": 18, "duck": true,
+           "fade_in": 1.0, "fade_out": 2.0 }
+```
+
+Se mezcla en numpy con el resto (nunca `amix`: dejó muda la voz en Cali sin dar error) y el
+máster sigue a −14 LUFS con pico real ≤ −1 dBTP. `db_under_voice`: dB que queda la música bajo
+la voz **dentro de las frases**; `duck` (sí por defecto) la sube 6 dB en las pausas (es bajarla
+6 dB mientras alguien habla, con rampas de 0,25 s) usando las frases del relato, del arranque y
+del cierre. Se repite con cruce de 1 s o se recorta al largo de la pieza y cierra con `fade_out`.
+Medido con voz sintética: voz 17,8 dB sobre la música en las frases, −14,0 LUFS, −2,7 dBTP.
+**Solo música libre de derechos o con licencia.** Alternativa: ponerla desde la app de
+Instagram al publicar, a costa del control del nivel y de la versión de WhatsApp (sin música).
+
 ## Entrega
 
 Lo que esperan Instagram, TikTok y YouTube Shorts, y que los scripts ya producen:
@@ -148,6 +205,7 @@ scripts/montage.py     formato entrevistas: corta, superpone, encadena y exporta
 scripts/voz_en_off.py  formato relato en off: planos mudos + mezcla en numpy + subtítulos
 scripts/captions.py    subtítulos palabra a palabra (estilo B) y rótulo compacto
 scripts/overlays.py    rótulo, subtítulos y banda de Alcalá; curva de zoom   (tokens del club)
+scripts/trazado.py     línea blanca del circuito (GPX) sobre el plano: full / draw / marker; demo y still
 scripts/hlg.py         LUT HLG → SDR bt709 para los clips con «Vídeo HDR»
 scripts/edges.py       hoja de espectrogramas de cada borde `say`
 scripts/verify.py      re-transcribe la salida y mide cortes y sonoridad (formato entrevistas)

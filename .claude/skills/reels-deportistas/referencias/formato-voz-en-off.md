@@ -90,3 +90,21 @@ Instagram limita a 5 por publicación; si al publicar deja más, ese dato cambi�
 
 **Menores**: antes de publicar, confirmar con el club o las familias que se pueden mostrar
 los planos de los deportistas. Nadie lo había revisado en Cali.
+
+## Música de fondo (opcional)
+
+`"music": {"src": "pista.mp3", "in": 0.0, "db_under_voice": 18, "duck": true, "fade_in": 1.0, "fade_out": 2.0}`
+en la raíz del JSON. Va a poco volumen bajo la voz del relator.
+
+- **Nivel**: la música queda `db_under_voice` (18 por defecto) dB bajo la voz en las frases
+  (referencia: el nivel por frase T = −16 dB RMS) y con `duck` sube 6 dB en las pausas, con rampas
+  de 0,25 s. Los tiempos de frase son los que el script ya usa (Whisper o `level.phrases`).
+- **Mezcla**: en numpy, antes del máster, igual que el relato y el ambiente. No se usa `amix`
+  en el filtergraph. El máster sigue a −14 LUFS y ≤ −1 dBTP, así que la voz baja una fracción de dB.
+- **Largo**: se repite con cruce de 1 s o se recorta al de la pieza; `fade_out` termina con el
+  último fotograma (el fundido final a negro dura 0,45 s).
+- **Licencia**: solo música libre de derechos o con licencia; anotar la fuente en el post. La
+  alternativa es ponerla desde la app de Instagram al publicar, perdiendo el control del nivel
+  y de la versión de WhatsApp (que queda sin música).
+- **Verificar**: re-transcribir el máster y medir la voz por frase; con música debajo, la
+  voz debe seguir ~18 dB por encima.

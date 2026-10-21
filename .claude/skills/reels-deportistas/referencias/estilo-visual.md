@@ -105,6 +105,35 @@ Para el dato que debe quedar aunque vean sin sonido. Formato del texto: `fecha �
 La duración pedida es un techo: `montage.py` la recorta al aire real del corte. Si hay
 que elegir entre un fundido bonito y una sílaba, gana la sílaba.
 
+## Trazado del circuito (`trazado.py`)
+
+Línea blanca de la pista sobre el plano, estilo «course preview». Lienzo de 1080 × 1920.
+**Uso aprobado: solo la apertura** (`"track": {"preset": "apertura"}`): trazado completo y quieto
+unos 3,5 s sobre el primer plano POV, sin marcador. Preset: caja `[40, 260, 1000, 1240]` (termina
+en y = 1500, bajo la zona segura de 270 px por arriba y por encima del 20 % inferior), trazo
+**13 px** (a 2,74 px/m las curvas cerradas todavía se separan; a 15 empiezan a empastarse),
+fundido de 0,4 s al entrar y al salir, orientación 16° (la que mejor llena esa caja). La tabla es
+de la caja pequeña de los modos `draw`/`marker`, que se conservan pero no se usan.
+
+| Qué | Valor |
+|---|---|
+| Caja por defecto | `x 60, y 290, ancho 960, alto 720` (termina en y = 1010: mitad superior, bajo la zona segura de 270 px y 140 px por encima de la banda de subtítulos en 1150). Fuera del 20 % inferior (y > 1536) nunca cae nada |
+| Margen interior | 40 px (medio trazo + sombra; el halo del punto pide 40) |
+| Trazo | blanco, **15 px** (13 en la apertura) (rango útil 14–18: más grueso funde las curvas cerradas del tramo técnico), extremos y uniones redondos |
+| Sombra | grafito/negro a 42 %, desenfoque 7 px, 5 px hacia abajo: lo que lo despega del cielo claro |
+| Antialiasing | supersampling 3× con círculos densos a lo largo de la curva (extremos y uniones perfectos) y reducción por caja |
+| Marcador | punto lima `#8BE000` r 16 px, aro blanco r 22 px, halo lima a 30 % (r 34–40 px, respira a 1,1 Hz); trazado completo al 50 % y tramo recorrido opaco |
+| Bandera | cuadros de 14 px, 4 × 3 (56 × 42 px), asta de 96 px, contorno y cuadros grafito `#2F2F2F` sobre blanco; ondea ±1,6 px. Salida y meta son el mismo punto (la vuelta cierra) |
+| Fundido | 0,3 s de aparición y 0,3 s de desaparición; el movimiento ocupa el resto |
+| Easing | `draw`: quíntico (como el zoom); `marker`: lineal |
+| Geometría | GPX → metros (equirectangular) → Douglas-Peucker 2,5 m → remuestreo 2,5 m → suavizado gaussiano de 3 m en bucle cerrado. Conserva ~93 % del largo; con 6 m perdía 13 % y las curvas cerradas se volvían manchas |
+| Orientación | una sola para todo el video: la rotación (0–359°, paso 1°) de mayor escala en la caja, prefiriendo la más cercana a «norte arriba» si pierde menos de 3 %. Con la caja por defecto: 287°, ~2,03 px/m |
+
+El GPX es la **vuelta grabada el 5-sep-2026 (3.717 m)**, no el circuito homologado de 3,8 km:
+no se rotula la distancia ni «circuito oficial» sin confirmarlo con el club. La caja del
+trazado no debe tapar la cara del deportista: en planos de cara a cámara se baja a un tamaño menor
+(`box`) o se omite.
+
 ## Cierre
 
 El último plano se funde a negro dentro de su propio aire. **Sin placa final**: se probó

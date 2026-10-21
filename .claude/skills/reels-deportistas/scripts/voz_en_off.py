@@ -163,7 +163,24 @@ def clip_gain(src):
 
 # ---------- imagen ----------
 
-def render_shot(i, sh, src, dur, demo, work):
+def track_overlay(i, sh, dur, work, defaults, ins, last):
+    """Agrega la capa del trazado como entrada extra de `ins`; devuelve (filtro, etiqueta de salida).
+
+    La capa se genera en el tiempo del plano de SALIDA (el de la pieza, ya con la cámara lenta
+    aplicada y con la cola congelada de HANDLE s): el marcador no sabe de `slow`, y el reloj
+    `at`/`secs` cuenta desde el primer fotograma del plano. `at` (0,25 s por defecto) deja pasar
+    el fundido de entrada del plano y el trazo se apaga 0,1 s antes de que termine el plano propio
+    (`dur`, sin cola), así que no se arrastra a la transición siguiente.
+    """
+    import trazado
+    d = dict(sh['track'], shot_secs=dur)
+    mov, x, y = trazado.shot_layer(d, dur + HANDLE, work, i, defaults or {})
+    ins += ['-i', str(mov)]
+    n = ins.count('-i') - 1
+    return f';[{last}][{n}:v]overlay=x={x}:y={y}:eof_action=pass[vt]', 'vt'
+
+
+def render_shot(i, sh, src, dur, demo, work, track_defaults=None):
     out = work / 'shots' / f'{i:02d}{"d" if demo else ""}.mov'
     out.parent.mkdir(parents=True, exist_ok=True)
     slow = sh.get('slow', 1.0)
@@ -198,6 +215,9 @@ def render_shot(i, sh, src, dur, demo, work):
         ins += ['-i', str(p)]
         fc += f";[v0][1:v]overlay=x='{x}':y=0:enable='between(t,{t0},{min(dur - 0.3, t0 + 3.6)})'[v1]"
         last = 'v1'
+    if sh.get('track'):   # trazado del circuito (opcional): línea blanca sobre el plano; ver trazado.py
+        f, last = track_overlay(i, sh, dur, work, track_defaults, ins, last)
+        fc += f
     fc += f';[{last}]{COLOR}[v]'
     run(['ffmpeg', '-v', 'error', '-y', *ins, '-filter_complex', fc, '-map', '[v]', '-t', f'{dur + HANDLE}',
          '-an', '-c:v', 'libx264', '-crf', '17', '-preset', 'fast', str(out)])
@@ -221,6 +241,68 @@ def plan(cfg):
         s['start'], s['path'] = t, d / s['src']
         t += s['dur']
     return shots, t
+
+
+# ---------- música de fondo (opcional) ----------
+
+def read_music(src, t0, dur, af='anull'):
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-ss', f'{t0}', '-t', f'{dur}', '-i', str(src), '-vn', '-af', af,
+                          '-f', 'f32le', '-ac', '2', '-ar', str(SR), '-'], capture_output=True).stdout
+    x = np.frombuffer(raw, np.float32).reshape(-1, 2).copy()
+    if not len(x):
+        raise SystemExit(f'{src}: sin audio a partir de {t0} s')
+    return x
+
+
+def loop_to(x, n, xf=SR):
+    """Repite `x` hasta `n` muestras con un cruce de potencia constante de 1 s en cada empalme."""
+    if len(x) >= n:
+        return x[:n]
+    xf = min(xf, len(x) // 2)
+    a = np.sin(np.linspace(0, np.pi / 2, xf))[:, None]
+    out = x.copy()
+    while len(out) < n:
+        out = np.concatenate([out[:-xf], out[-xf:] * a[::-1] + x[:xf] * a, x[xf:]])
+    return out[:n]
+
+
+def music_bed(cfg, total, spans):
+    """Cama musical estéreo de `total` s (en numpy, como el resto de la mezcla).
+
+    Nivel: con la voz a T (−16 dB RMS por frase), la música queda `db_under_voice` dB debajo
+    DENTRO de las frases (RMS con pasa-altos de 120 Hz, igual que la voz). Con `duck` (por
+    defecto sí) sube +6 dB en las pausas: es lo mismo que bajarla 6 dB mientras hay voz, con
+    rampas de 0,25 s. Se repite (con cruce) o se recorta al largo de la pieza y cierra con
+    `fade_out` hasta el último fotograma.
+    """
+    m = cfg['music']
+    src = Path(cfg['dir']).expanduser() / m['src']
+    n = int(round(total * SR))
+    t0 = m.get('in', 0.0)
+    x = loop_to(read_music(src, t0, total), n)
+    ref = loop_to(read_music(src, t0, total, 'highpass=f=120'), n)
+    x = x * 10 ** ((T - m.get('db_under_voice', 18) - rms_db(ref)) / 20)
+    gaps = 6.0 if m.get('duck', True) else 0.0
+    x = x * envelope(n, gaps, [(a - 0.1, b + 0.1, 0.0) for a, b in spans], 0.0, ramp=0.25)
+    return fade(x, m.get('fade_in', 1.0), m.get('fade_out', 2.0))
+
+
+def voice_spans(shots, segs, vt0, v, work, prompt):
+    """Dónde hay voz, en tiempo de la pieza: frases del relato y de arranque/cierre."""
+    spans = [(vt0 + a - v['in'], vt0 + b - v['in']) for a, b in segs]
+    for s in shots:
+        if s['part'] == 'broll' or s.get('audio', 'full') != 'full':
+            continue
+        lv = s.get('level', {})
+        if lv.get('phrases') or lv.get('fixed'):
+            ph = lv.get('phrases') or lv['fixed']
+        elif lv.get('mode') == 'whole':
+            ph = [(s['in'], s['out'])]
+        else:
+            ph = [(g['start'], g['end']) for g in transcript(s['path'], prompt, work)['segments']
+                  if g['end'] > s['in'] and g['start'] < s['out']]
+        spans += [(s['start'] + max(p0, s['in']) - s['in'], s['start'] + min(p1, s['out']) - s['in']) for p0, p1 in ph]
+    return spans
 
 
 def mix(cfg, shots, total, work, prompt):
@@ -252,6 +334,9 @@ def mix(cfg, shots, total, work, prompt):
         amb *= 10 ** ((rms_db(vo) - v.get('ambient_db', 20) - rms_db(amb)) / 20)
     put(vo + amb, vt0)
     buf = buf[:int(round(total * SR))]
+    if cfg.get('music'):   # cama musical opcional; sin la clave la mezcla no cambia
+        bed = music_bed(cfg, total, voice_spans(shots, segs, vt0, v, work, prompt))
+        buf[:len(bed)] += bed
     # Máster: ganancia fija a −14 LUFS y limitador; si el pico real pasa de −1 dBTP, se baja
     raw = work / 'mix.f32'
     buf.astype(np.float32).tofile(raw)
@@ -305,7 +390,7 @@ def build(cfg, demo):
     wav, vt0 = mix(cfg, shots, total, work, prompt)
     parts = []
     for i, s in enumerate(shots):
-        parts.append(render_shot(i, s, s['path'], s['dur'], demo, work))
+        parts.append(render_shot(i, s, s['path'], s['dur'], demo, work, cfg.get('track')))
         print(f"  {i:02d} {s['part']:5s} {s['start']:6.2f}s +{s['dur']:5.2f}s  {s['src'][:34]}")
 
     ins, fc, last = [], [], '0:v'

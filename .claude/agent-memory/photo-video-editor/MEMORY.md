@@ -1,0 +1,1 @@
+- [Video del recorrido, VI Válida 2026](project_video_recorrido_valida_2026.md) — sectores del GPX, trampa distancia vs tiempo, cifras citables
