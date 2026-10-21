@@ -147,8 +147,6 @@ Opciones:
   --out <carpeta>      Salida. Por defecto ${DEFAULT_OUT}
   --familiar <lista>   Archivo con un id por línea: esas fotos van a <out>-familiar/
                        y no entran al manifest ni a thumb/web/original.
-  --placas <json>      Archivo { "<ruta relativa a --src>": [placas] } con los números leídos en
-                       cada foto; se suman a los que ya tenga el manifest anterior.
   --og <id>            Escribe public/images/valida-yumbo-2026/og.jpg (1200×630,
                        menos de 300 KB) a partir de esa foto.
   --force              Regenera lo que ya existe (por defecto se salta).
@@ -170,7 +168,6 @@ function parseCli(argv) {
         out: { type: 'string' },
         familiar: { type: 'string' },
         og: { type: 'string' },
-        placas: { type: 'string' },
         force: { type: 'boolean', default: false },
         'dry-run': { type: 'boolean', default: false },
         'no-data': { type: 'boolean', default: false },
@@ -427,13 +424,7 @@ async function readFamiliarList(file) {
   return ids;
 }
 
-function normalizePlacas(value) {
-  if (!Array.isArray(value)) return [];
-  const numbers = value.filter((item) => Number.isInteger(item) && item > 0);
-  return [...new Set(numbers)].sort((a, b) => a - b);
-}
-
-/** El manifest previo más reciente de los candidatos, para no perder las placas ya etiquetadas. */
+/** El manifest previo más reciente de los candidatos, para saber qué fotos salieron. */
 async function loadPreviousManifest(candidates) {
   let best = null;
   for (const file of candidates) {
@@ -446,10 +437,7 @@ async function loadPreviousManifest(candidates) {
     }
   }
   if (!best) return null;
-  const placas = new Map(
-    best.data.photos.map((photo) => [photo.id, normalizePlacas(photo.placas)]),
-  );
-  return { file: best.file, placas };
+  return { file: best.file, ids: new Set(best.data.photos.map((photo) => photo.id)) };
 }
 
 // ─── Salidas por foto ──────────────────────────────────────────────────────────
@@ -644,7 +632,6 @@ async function processPhoto(file, ctx, state) {
       size: buffer.length,
       // La carpeta del fotógrafo manda; la hora EXIF solo si la carpeta no está en el mapa.
       group: assignGroupByFolder(name, ctx.folders, ctx.groups) ?? assignGroup(taken, ctx.groups),
-      placas: ctx.placasByPath.get(name.split(path.sep).join('/')) ?? [],
       taken,
       source,
       orientation: exif.orientation,
@@ -744,8 +731,7 @@ function formatManifest(manifest) {
   return `{\n${lines.join('\n')}\n}\n`;
 }
 
-function toManifestPhoto(record, placas) {
-  const merged = normalizePlacas([...(placas.get(record.id) ?? []), ...record.placas]);
+function toManifestPhoto(record) {
   return {
     id: record.id,
     group: record.group,
@@ -754,7 +740,6 @@ function toManifestPhoto(record, placas) {
     // Sin hora: la Canon va 2-3 h adelantada y sin un desfase fijo, y una hora falsa
     // en el visor es peor que ninguna. La página oculta la hora si `taken` está vacío.
     taken: '',
-    placas: merged,
   };
 }
 
@@ -832,17 +817,6 @@ async function readCarpetas() {
   }
 }
 
-/** `--placas`: ruta relativa a --src → números de placa, ya normalizados. */
-async function readPlacasFile(file) {
-  let data;
-  try {
-    data = await readJson(path.resolve(expandHome(file)));
-  } catch (error) {
-    throw new Error(`No pude leer --placas ${file}: ${error.message}`);
-  }
-  return new Map(Object.entries(data).map(([name, list]) => [name, normalizePlacas(list)]));
-}
-
 async function buildContext(args) {
   const srcDir = path.resolve(expandHome(args.src));
   const outDir = path.resolve(expandHome(args.out ?? DEFAULT_OUT));
@@ -885,7 +859,6 @@ async function buildContext(args) {
     familiarIds,
     groups: await readMangas(),
     folders: await readCarpetas(),
-    placasByPath: args.placas ? await readPlacasFile(args.placas) : new Map(),
     eventDate: await readEventDate(),
     jpegtran: await findJpegtran(),
     notes: new Set(),
@@ -1117,25 +1090,9 @@ async function main() {
     const previous = await loadPreviousManifest(
       ctx.noData ? [manifestFile] : [manifestFile, FOTOS_FILE],
     );
-    const placas = previous?.placas ?? new Map();
     if (previous) {
-      const kept = records.filter((record) => (placas.get(record.id) ?? []).length > 0).length;
-      if (kept > 0) {
-        const origin = previous.file.startsWith(ROOT) ? repoRelative(previous.file) : previous.file;
-        console.log(`Placas: ${kept} foto(s) conservan las que ya tenían (de ${origin}).`);
-      }
       const currentIds = new Set(oks.map((record) => record.id));
-      removedIds = [...placas.keys()].filter((id) => !currentIds.has(id));
-      // Si salen del manifest fotos con placas etiquetadas, se guarda el anterior: ese trabajo es de horas.
-      const losingTags = removedIds.filter((id) => (placas.get(id) ?? []).length > 0);
-      if (losingTags.length > 0) {
-        const stamp = toColombiaIso(new Date()).slice(0, 19).replace(/[-:T]/g, '');
-        const backup = path.join(ctx.outDir, `manifest.${stamp}.bak.json`);
-        await writeFile(backup, await readFile(previous.file, 'utf8'));
-        ctx.notes.add(
-          `Salieron del manifest ${losingTags.length} foto(s) con placas etiquetadas: guardé el anterior en ${backup}.`,
-        );
-      }
+      removedIds = [...previous.ids].filter((id) => !currentIds.has(id));
     }
 
     const manifest = {
@@ -1150,7 +1107,7 @@ async function main() {
         description,
         ...(chip ? { chip } : {}),
       })),
-      photos: [...records].sort(byFolderThenName).map((record) => toManifestPhoto(record, placas)),
+      photos: [...records].sort(byFolderThenName).map(toManifestPhoto),
     };
     const text = formatManifest(manifest);
     await writeFile(manifestFile, text);
@@ -1165,8 +1122,6 @@ async function main() {
 
     if (familiar.length > 0) {
       const familiarManifest = `${ctx.familiarDir}/familiar-manifest.json`;
-      const previousFamiliar = await loadPreviousManifest([familiarManifest]);
-      const familiarPlacas = previousFamiliar?.placas ?? new Map();
       await mkdir(ctx.familiarDir, { recursive: true });
       await writeFile(
         familiarManifest,
@@ -1174,7 +1129,7 @@ async function main() {
           base: null,
           generatedAt: manifest.generatedAt,
           groups: manifest.groups,
-          photos: familiar.map((record) => toManifestPhoto(record, familiarPlacas)),
+          photos: familiar.map(toManifestPhoto),
         }),
       );
       console.log(

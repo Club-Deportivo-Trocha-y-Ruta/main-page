@@ -1778,7 +1778,7 @@ se muestra la nativa, delgada y con tokens del tema (pulgar `text-secondary` sob
 riel `surface-muted`, legible en claro y en oscuro), porque una tira sin barra no se
 puede recorrer, y la tira gana 6 px de aire abajo para que no toque las miniaturas
 (el alto en táctil no cambia; en macOS la barra es superpuesta y solo aparece al
-desplazar). Con una categoría elegida o una placa, las fotos van en **filas
+desplazar). Con una categoría elegida, las fotos van en **filas
 justificadas**
 (`flex-basis` y `flex-grow` proporcionales a la foto). Las filas dejaban una foto
 sola en la última fila de casi cada manga y hacían de «Todas» una vista de 9.120 px
@@ -1796,8 +1796,7 @@ Cuántas fotos se pintan depende de la vista: en «Todas», 12 por categoría y,
 más, «Ver las N fotos» (la categoría la dice el titular de la manga y solo la oye el
 lector de pantalla: «… de X»), que aplica el filtro de esa categoría (lo mismo que
 tocar su chip); con una categoría elegida, 48 por manga y «Mostrar las N restantes»
-(«Mostrar la foto restante» si queda una) despliega el resto en el sitio; con una
-placa, todas las coincidencias. Lo desplegado vale solo para la vista donde se
+(«Mostrar la foto restante» si queda una) despliega el resto en el sitio. Lo desplegado vale solo para la vista donde se
 hizo: al cambiar de categoría cada una arranca en su tope, y «Todas» no se alarga
 por lo que se abrió en otra. El visor, en cambio, recorre todas las fotos del
 filtro activo sin detenerse en el tope; al pasarlo despliega la manga (que pasa de
@@ -1812,12 +1811,9 @@ por categoría) y debajo, en pequeño, la manga y las categorías completas («M
 alternativo de las fotos no cambia. Las mangas son `div`, no `section` (nueve
 regiones con nombre llenaban la lista de puntos de referencia del lector de
 pantalla) y su lista lleva el nombre del titular. **La barra de filtros es de una
-sola fila**, con la placa primero (`w-32`: caben el rótulo, cuatro dígitos y el
-botón de borrar) y los chips a su lado; sin campo de placa los chips ocupan la fila,
-y desde `md` los chips pasan a varias líneas junto al campo (el mismo orden en el
-DOM y a la vista, y sin la fila que repetía el conteo del chip activo). El mensaje
-de resultados solo se ve con una placa escrita; el `role="status"` siempre existe y
-su texto largo siempre llega al lector de pantalla. En medio de la galería,
+sola fila** (id `#filtros`): los chips ocupan la fila entera y desde `md` pasan a
+varias líneas (sin la fila que repetía el conteo del chip activo). El
+`role="status"` es solo para el lector de pantalla y siempre existe. En medio de la galería,
 cabecera, barra e índice ocupan 185 px: el 22,1 % de un Pixel 7 y el 28,9 % de un
 360×640 (antes, 241 px: 28,7 % y 37,7 %). La barra es `sticky`, por lo que la
 sección lleva `scrollDriven` (`overflow-clip` en vez de `overflow-hidden`, trampa 1
@@ -1870,11 +1866,10 @@ el selector depende de marcado de otro componente o de una isla, y nunca un
 `<style>` dentro de un condicional. `global.css` queda para lo que comparte todo
 el sitio.
 
-**Nunca el nombre de un menor, nunca el número de placa en analítica.** Los
+**Nunca el nombre de un menor en analítica ni en textos.** Los
 textos alternativos se arman con manga, categoría y posición («Manga 3,
 Infantil A y B: foto 17 de 180»); las tarjetas de crónica y álbum no imprimen
-su título porque los titulares deportivos llevan nombres. El filtro por placa
-solo vive en el navegador: a GA4 va `gallery_filter` con `content_id: 'placa'`.
+su título porque los titulares deportivos llevan nombres.
 Eventos propios: `photo_download`, `photo_share`, `gallery_filter`,
 `race_results_click`, todos con `content_id`; `analytics-parity.test.ts` exige
 que cada evento escrito en una plantilla o island exista en el catálogo.

@@ -46,8 +46,7 @@ export const ALLOWED_PARAM_KEYS = [
   'pdf_name',
   'sponsor_id',
   // Destino del clic o id de una foto o de un grupo de fotos («hero», «manga-3»,
-  // «retiro-foto»). Nunca una persona ni un número de placa: identifica a un
-  // corredor y la mayoría son niños.
+  // «retiro-foto»). Nunca una persona: la mayoría de los corredores son niños.
   'content_id',
   // Cómo o desde dónde: el canal con que se compartió una foto (`native`, hoja
   // del sistema o portapapeles, o `whatsapp`) o el punto de la página desde el

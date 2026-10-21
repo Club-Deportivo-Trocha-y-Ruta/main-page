@@ -180,7 +180,7 @@ describe('validaPromo', () => {
     ogImage: null,
     institutions: [],
   };
-  const photo = (id: string) => ({ id, group: 'g', w: 1, h: 1, taken: '', placas: [] });
+  const photo = (id: string) => ({ id, group: 'g', w: 1, h: 1, taken: '' });
   const manifest = (n: number): PhotoManifest => ({
     base: 'https://x',
     generatedAt: null,

@@ -27,10 +27,10 @@ const GROUPS: PhotoGroup[] = [
   { id: 'premiacion', label: 'Premiación', categories: [], description: '' },
 ];
 
-function photo(id: string, group: string, minuteOfDay: number, placas: number[] = []): Photo {
+function photo(id: string, group: string, minuteOfDay: number): Photo {
   const hours = String(Math.floor(minuteOfDay / 60)).padStart(2, '0');
   const minutes = String(minuteOfDay % 60).padStart(2, '0');
-  return { id, group, w: 1600, h: 1067, taken: `2026-10-18T${hours}:${minutes}:00-05:00`, placas };
+  return { id, group, w: 1600, h: 1067, taken: `2026-10-18T${hours}:${minutes}:00-05:00` };
 }
 
 function series(prefix: string, group: string, count: number, startMinute: number): Photo[] {
@@ -43,21 +43,11 @@ function buildPhotos(): Photo[] {
   const previa = series('previa', 'previa', 6, 8 * 60);
   const manga = series('manga-1', 'manga-1', 52, 9 * 60);
   const premiacion = series('premiacion', 'premiacion', 8, 13 * 60);
-  // La placa 112 está en tres fotos de la manga 1 y una de la premiación; la 7, en dos de la manga 1.
-  manga[0].placas = [112];
-  manga[1].placas = [112, 7];
-  manga[2].placas = [7];
-  manga[5].placas = [112];
-  premiacion[0].placas = [112];
   return [...previa, ...manga, ...premiacion];
 }
 
 function buildManifest(overrides: Partial<PhotoManifest> = {}): PhotoManifest {
   return { base: BASE, generatedAt: null, groups: GROUPS, photos: buildPhotos(), ...overrides };
-}
-
-function withoutPlacas(manifest: PhotoManifest): PhotoManifest {
-  return { ...manifest, photos: manifest.photos.map((item) => ({ ...item, placas: [] })) };
 }
 
 function renderGallery(
@@ -82,8 +72,8 @@ const firstPhotoButton = () =>
 /** La lista de fotos de una manga, por el titular que la nombra (el texto de su chip). */
 const groupList = (name: string) => screen.getByRole('list', { name });
 
-/** La barra fija de filtros: el ancla `#buscar`. */
-const filterBar = () => document.getElementById('buscar') as HTMLElement;
+/** La barra fija de filtros: el ancla `#filtros`. */
+const filterBar = () => document.getElementById('filtros') as HTMLElement;
 
 /** Los resultados van justo después de la barra, dentro de la raíz de la isla. */
 const resultsOf = () => filterBar().nextElementSibling as HTMLElement;
@@ -247,16 +237,6 @@ describe('RacePhotoGallery', () => {
       expect(item).not.toHaveClass('aspect-[4/3]');
     });
 
-    it('con una placa, la búsqueda también va en filas justificadas', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '112');
-
-      expect(groupList('Infantil A y B')).toHaveClass('flex-wrap');
-      expect(groupList('Infantil A y B')).not.toHaveClass('overflow-x-auto');
-    });
-
     it('el alto de fila baja a 6rem en pantallas de 360 px, para que quepan dos horizontales', async () => {
       const user = userEvent.setup();
       renderGallery();
@@ -315,8 +295,8 @@ describe('RacePhotoGallery', () => {
   });
 
   // ─── Revelado progresivo ─────────────────────────────────────────────────────
-  // «Todas» pinta 12 fotos por manga; con una categoría elegida son 48; con una
-  // placa, todas las coincidencias. La manga 1 (52 fotos) pasa de los dos topes.
+  // «Todas» pinta 12 fotos por manga; con una categoría elegida son 48.
+  // La manga 1 (52 fotos) pasa de los dos topes.
 
   describe('revelado progresivo', () => {
     const ENTER_MANGA = 'Ver las 52 fotos de Infantil A y B';
@@ -331,14 +311,6 @@ describe('RacePhotoGallery', () => {
       screen.getByRole('button', { name: `Manga 1, Infantil A y B: foto ${position} de 52` });
     /** Los botones «Ver las N fotos» que hay a la vista (su nombre accesible sigue diciendo «de X»). */
     const enterButtons = () => screen.queryAllByRole('button', { name: /^Ver las \d+ fotos de / });
-    /** Una sola manga de 60 fotos, todas con la placa 5. */
-    const placaManifest = () =>
-      buildManifest({
-        groups: [GROUPS[1]],
-        photos: Array.from({ length: 60 }, (_, index) =>
-          photo(`manga-1-${index + 1}`, 'manga-1', 540 + index, [5]),
-        ),
-      });
 
     describe('vista «Todas»', () => {
       it('pinta 12 fotos por manga y «Ver las N fotos» solo donde hay más', () => {
@@ -574,53 +546,6 @@ describe('RacePhotoGallery', () => {
       });
     });
 
-    describe('con una placa', () => {
-      it('muestra todas las coincidencias, sin el tope de la vista', async () => {
-        const user = userEvent.setup();
-        renderGallery({}, placaManifest());
-
-        expect(screen.getAllByRole('button', { name: /foto \d+ de 60$/ })).toHaveLength(12);
-
-        fireEvent.change(screen.getByRole('textbox', { name: 'Tu número de placa' }), {
-          target: { value: '5' },
-        });
-
-        expect(screen.getAllByRole('button', { name: /foto \d+ de 60$/ })).toHaveLength(60);
-        expect(enterButtons()).toHaveLength(0);
-        expect(screen.queryByRole('button', { name: /Mostrar las/ })).not.toBeInTheDocument();
-
-        // También con la categoría elegida (cuyo tope sin placa es 48).
-        await user.click(
-          screen.getByRole('button', { name: 'Manga 1 · Infantil A y B: 60 fotos' }),
-        );
-        expect(screen.getAllByRole('button', { name: /foto \d+ de 60$/ })).toHaveLength(60);
-        expect(screen.queryByRole('button', { name: /Mostrar las/ })).not.toBeInTheDocument();
-      });
-
-      it('el visor abierto en la búsqueda no deja la manga desplegada al quitar la placa', async () => {
-        const user = userEvent.setup();
-        renderGallery({}, placaManifest());
-
-        await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '5');
-        await user.click(
-          screen.getByRole('button', { name: 'Manga 1, Infantil A y B: foto 1 de 60' }),
-        );
-        await user.keyboard('{ArrowLeft}');
-        expect(within(screen.getByRole('dialog')).getByText('60 / 60')).toBeInTheDocument();
-        await user.keyboard('{Escape}');
-        await waitFor(() => expect(window.location.hash).toBe(''));
-        // Con placa se pintan todas: la miniatura existe y recibe el foco.
-        expect(
-          screen.getByRole('button', { name: 'Manga 1, Infantil A y B: foto 60 de 60' }),
-        ).toHaveFocus();
-
-        await user.click(screen.getByRole('button', { name: 'Borrar número de placa' }));
-
-        expect(screen.getAllByRole('button', { name: /foto \d+ de 60$/ })).toHaveLength(12);
-        expect(enterButtons()).toHaveLength(1);
-      });
-    });
-
     describe('lo desplegado vale solo para la vista en que se hizo', () => {
       it('las restantes pedidas en una categoría no alargan «Todas» ni la próxima vez que se entra', async () => {
         const user = userEvent.setup();
@@ -823,11 +748,11 @@ describe('RacePhotoGallery', () => {
       expect(chip).toHaveAttribute('title', 'Manga 1 · Infantil A y B');
     });
 
-    it('la barra es el ancla #buscar y respeta la altura del encabezado', () => {
+    it('la barra es el ancla #filtros y respeta la altura del encabezado', () => {
       renderGallery();
 
       const bar = filterBar();
-      expect(bar).toHaveAttribute('id', 'buscar');
+      expect(bar).toHaveAttribute('id', 'filtros');
       expect(bar).toContainElement(screen.getByRole('group', { name: 'Filtrar por categoría' }));
       expect(bar.className).toContain('scroll-mt-[var(--header-h,4rem)]');
       // Sangra hasta el borde (las fotos pasan por debajo al bajar): si solo cubriera la columna,
@@ -844,49 +769,18 @@ describe('RacePhotoGallery', () => {
       expect(bar.className).not.toMatch(/bg-surface-raised\/|backdrop-blur/);
     });
 
-    it('es una sola fila: el campo de placa primero y los chips a su lado', () => {
+    it('es una sola fila: los chips ocupan la fila entera', () => {
       renderGallery();
 
-      const form = screen.getByRole('search', { name: 'Buscar por número de placa' });
       const chips = screen.getByRole('group', { name: 'Filtrar por categoría' });
-      const row = form.parentElement as HTMLElement;
-      // Misma fila, y el campo antes en el DOM: el orden de Tab es el orden visual.
-      expect(chips.parentElement).toBe(row);
+      const row = chips.parentElement as HTMLElement;
       expect(row).toHaveClass('flex', 'items-center');
-      // Campo de píldora de la misma altura que los chips (44 px), alineado con la primera fila.
-      expect(screen.getByRole('textbox', { name: 'Tu número de placa' })).toHaveClass(
-        'h-11',
-        'rounded-full',
-      );
-      expect(form).toHaveClass('md:mt-1');
-      expect(Array.from(row.children)).toEqual([form, chips]);
+      expect(row.children).toHaveLength(1);
       expect(filterBar().firstElementChild).toBe(row);
-      // El campo no se encoge y el carrusel ocupa el resto sin ensanchar la fila.
-      expect(form).toHaveClass('shrink-0');
+      // El carrusel ocupa la fila sin ensancharla.
       expect(chips).toHaveClass('min-w-0', 'flex-1', 'overflow-x-auto');
-    });
-
-    it('sin campo de placa (nadie etiquetó placas) los chips ocupan la fila entera', () => {
-      renderGallery({}, withoutPlacas(buildManifest()));
-
-      const chips = screen.getByRole('group', { name: 'Filtrar por categoría' });
-      expect(chips.parentElement?.children).toHaveLength(1);
-      expect(chips).toHaveClass('min-w-0', 'flex-1');
       expect(screen.queryByRole('search')).not.toBeInTheDocument();
-    });
-
-    it('el campo muestra cuatro dígitos y el botón de borrar sin taparlos', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      const input = screen.getByRole('textbox', { name: 'Tu número de placa' });
-      expect(input.className).toContain('pr-4');
-      await user.type(input, '8064');
-
-      // Con texto, el relleno derecho deja libre el botón de borrar (32 px + 4 de margen).
-      expect(input).toHaveValue('8064');
-      expect(input.className).toContain('pr-10');
-      expect(screen.getByRole('button', { name: 'Borrar número de placa' })).toBeInTheDocument();
+      expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
     });
 
     it('al elegir un chip escribe ?manga= en la URL y conserva history.state y el hash', async () => {
@@ -905,17 +799,6 @@ describe('RacePhotoGallery', () => {
         '/pagina#otro',
       );
       expect(window.history.state).toEqual(ASTRO_STATE);
-    });
-
-    it('la URL nunca lleva la placa, ni al escribirla', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      await user.click(screen.getByRole('button', { name: 'Manga 1 · Infantil A y B: 52 fotos' }));
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '112');
-
-      expect(window.location.search).toBe('?manga=manga-1');
-      expect(window.location.href).not.toContain('112');
     });
 
     it('los chips son botones con aria-pressed y llevan los atributos de analítica', () => {
@@ -1009,329 +892,7 @@ describe('RacePhotoGallery', () => {
     });
   });
 
-  // ─── Búsqueda por placa ──────────────────────────────────────────────────────
-
-  describe('campo de placa', () => {
-    it('es numérico, con etiqueta y botón para limpiar', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      const input = screen.getByRole('textbox', { name: 'Tu número de placa' });
-      expect(input).toHaveAttribute('inputmode', 'numeric');
-      expect(input).toHaveAttribute('pattern', '[0-9]*');
-      expect(
-        screen.getByRole('search', { name: 'Buscar por número de placa' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByRole('button', { name: 'Borrar número de placa' }),
-      ).not.toBeInTheDocument();
-
-      await user.type(input, '112');
-      expect(screen.getByRole('button', { name: 'Borrar número de placa' })).toBeInTheDocument();
-    });
-
-    it('se oculta cuando ninguna foto tiene placa etiquetada', () => {
-      renderGallery({}, withoutPlacas(buildManifest()));
-
-      expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
-      expect(screen.queryByRole('search')).not.toBeInTheDocument();
-    });
-
-    it('filtra con filterByPlaca y los chips muestran dónde está esa placa', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '112');
-
-      expect(screen.getByText('4 fotos con la placa 112')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Todas las fotos: 4 fotos' })).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Antes de la salida: 0 fotos' }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Manga 1 · Infantil A y B: 3 fotos' }),
-      ).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Premiación: 1 foto' })).toBeInTheDocument();
-      // Sin coincidencias, el chip se atenúa con el texto secundario (no con opacidad: contraste).
-      expect(screen.getByRole('button', { name: 'Antes de la salida: 0 fotos' })).toHaveClass(
-        'text-text-secondary',
-      );
-      expect(screen.queryByRole('heading', { name: 'Antes de la salida' })).not.toBeInTheDocument();
-      expect(screen.getByRole('heading', { name: 'Infantil A y B' })).toBeInTheDocument();
-      expect(screen.getByRole('heading', { name: 'Premiación' })).toBeInTheDocument();
-    });
-
-    it('combina placa y manga: solo cuenta lo que está en la manga elegida', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      await user.click(screen.getByRole('button', { name: 'Manga 1 · Infantil A y B: 52 fotos' }));
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '112');
-
-      expect(screen.getByText('3 fotos con la placa 112 en Manga 1')).toBeInTheDocument();
-    });
-
-    it('solo deja pasar dígitos y máximo cuatro', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      const input = screen.getByRole('textbox', { name: 'Tu número de placa' });
-      await user.type(input, 'a1b-1 2x3456');
-
-      expect(input).toHaveValue('1123');
-    });
-
-    it('dice cuando no hay ninguna foto con esa placa y ofrece salidas', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '999');
-
-      expect(
-        screen.getByText('Ninguna foto con la placa 999; revisa el número'),
-      ).toBeInTheDocument();
-      expect(screen.getByText('No encontramos la placa 999 en las fotos')).toBeInTheDocument();
-      expect(
-        screen.getByText(
-          'Puede que no se lea en ninguna. Busca en su categoría o escríbenos y te ayudamos.',
-        ),
-      ).toBeInTheDocument();
-      expect(screen.queryByRole('heading', { name: 'Infantil A y B' })).not.toBeInTheDocument();
-      // Versión corta para el celular dentro del mismo `role="status"`.
-      expect(screen.getByRole('status').textContent).toContain('Ninguna con la placa 999');
-
-      const whatsapp = screen.getAllByRole('link', { name: /Escribir por WhatsApp/ });
-      const noMatches = whatsapp.find(
-        (link) => link.getAttribute('data-analytics-content-id') === 'placa-sin-fotos',
-      )!;
-      expect(noMatches).toHaveAttribute('href', FAMILY_HREF);
-      expect(noMatches).toHaveAttribute('data-analytics-event', 'whatsapp_click');
-      expect(noMatches).toHaveAttribute('target', '_blank');
-      expect(noMatches).toHaveAttribute('rel', 'noopener noreferrer');
-
-      await user.click(screen.getByRole('button', { name: 'Ver todas las fotos' }));
-      expect(screen.getByRole('textbox', { name: 'Tu número de placa' })).toHaveValue('');
-      expect(screen.getByText('66 fotos en toda la jornada')).toBeInTheDocument();
-    });
-
-    it('sin enlace familiar, el estado sin resultados no ofrece WhatsApp', async () => {
-      const user = userEvent.setup();
-      renderGallery({ familyRequestHref: null });
-
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '999');
-
-      expect(screen.getByRole('button', { name: 'Ver todas las fotos' })).toBeInTheDocument();
-      expect(screen.queryByRole('link', { name: /Escribir por WhatsApp/ })).not.toBeInTheDocument();
-    });
-
-    it('el campo muestra la etiqueta «Placa» a la vista, sin placeholder', () => {
-      renderGallery();
-
-      const input = screen.getByRole('textbox', { name: 'Tu número de placa' });
-      expect(input).not.toHaveAttribute('placeholder');
-      expect(input.className).toContain('pl-[4.25rem]');
-      // 144 px: caben el rótulo, cuatro dígitos y el botón de borrar, y deja sitio a los chips.
-      expect(input.className).toContain('w-36');
-      expect(input.className).toContain('sm:w-44');
-      const label = screen.getByText('Placa');
-      expect(label).toHaveAttribute('aria-hidden', 'true');
-    });
-
-    it('el mensaje de resultados tiene versión corta visible y larga para lectores', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      const status = screen.getByRole('status');
-      expect(within(status).getByText('66 fotos')).toHaveClass('sm:hidden');
-      expect(within(status).getByText('66 fotos en toda la jornada')).toHaveClass('sr-only');
-
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '112');
-      expect(within(status).getByText('4 con la placa 112')).toBeInTheDocument();
-      expect(within(status).getByText('4 fotos con la placa 112')).toBeInTheDocument();
-    });
-
-    it('el mensaje solo se ve con una placa escrita; la región viva siempre existe y dice todo', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      // Sin placa: oculto a la vista (el chip activo ya dice cuántas fotos hay), pero el lector
-      // de pantalla oye cada cambio. La región es la misma antes y después: una región viva que
-      // aparece con el texto ya puesto no se anuncia.
-      const status = screen.getByRole('status');
-      expect(status).toHaveClass('sr-only');
-      expect(status).toHaveTextContent('66 fotos en toda la jornada');
-
-      await user.click(screen.getByRole('button', { name: 'Premiación: 8 fotos' }));
-      expect(screen.getByRole('status')).toBe(status);
-      expect(status).toHaveClass('sr-only');
-      expect(status).toHaveTextContent('8 fotos en Premiación');
-
-      const input = screen.getByRole('textbox', { name: 'Tu número de placa' });
-      await user.type(input, '112');
-      expect(screen.getByRole('status')).toBe(status);
-      expect(status).not.toHaveClass('sr-only');
-      expect(status).toHaveTextContent('1 con la placa 112');
-      expect(status).toHaveTextContent('1 foto con la placa 112 en Premiación');
-
-      // Una placa que no cuenta (0) no abre el mensaje.
-      await user.clear(input);
-      await user.type(input, '0');
-      expect(status).toHaveClass('sr-only');
-    });
-
-    it('con una manga elegida sugiere probar otra y «Ver todas las fotos» quita placa y manga', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      await user.click(screen.getByRole('button', { name: 'Premiación: 8 fotos' }));
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '7');
-
-      expect(
-        screen.getByText('Ninguna foto con la placa 7 en Premiación; prueba otra manga'),
-      ).toBeInTheDocument();
-
-      // «Ver todas las fotos» borra la placa y el filtro de grupo a la vez.
-      await user.click(screen.getByRole('button', { name: 'Ver todas las fotos' }));
-      expect(screen.getByRole('textbox', { name: 'Tu número de placa' })).toHaveValue('');
-      expect(screen.getByText('66 fotos en toda la jornada')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Todas las fotos: 66 fotos' })).toHaveAttribute(
-        'aria-pressed',
-        'true',
-      );
-      expect(window.location.search).toBe('');
-    });
-
-    it('el botón de limpiar vacía el campo, devuelve el foco y restaura la rejilla', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      const input = screen.getByRole('textbox', { name: 'Tu número de placa' });
-      await user.type(input, '112');
-      await user.click(screen.getByRole('button', { name: 'Borrar número de placa' }));
-
-      expect(input).toHaveValue('');
-      expect(input).toHaveFocus();
-      expect(screen.getByText('66 fotos en toda la jornada')).toBeInTheDocument();
-    });
-
-    it('la placa 0 no cuenta como filtro', () => {
-      renderGallery();
-
-      fireEvent.change(screen.getByRole('textbox', { name: 'Tu número de placa' }), {
-        target: { value: '0' },
-      });
-
-      expect(screen.getByText('66 fotos en toda la jornada')).toBeInTheDocument();
-    });
-  });
-
   // ─── Analítica ───────────────────────────────────────────────────────────────
-
-  describe('analítica de la búsqueda por placa', () => {
-    it('emite gallery_filter con content_id «placa» una sola vez y nunca el número', () => {
-      vi.useFakeTimers();
-      const emit = vi.fn();
-      (window as TestWindow).__trochaEmit = emit;
-      renderGallery();
-
-      const input = screen.getByRole('textbox', { name: 'Tu número de placa' });
-      fireEvent.change(input, { target: { value: '1' } });
-      fireEvent.change(input, { target: { value: '11' } });
-      fireEvent.change(input, { target: { value: '112' } });
-      expect(emit).not.toHaveBeenCalled();
-
-      act(() => {
-        vi.advanceTimersByTime(1000);
-      });
-
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith('gallery_filter', { content_id: 'placa' });
-      expect(JSON.stringify(emit.mock.calls)).not.toContain('112');
-    });
-
-    it('distingue la búsqueda sin resultados con content_id «placa-sin-fotos»', () => {
-      vi.useFakeTimers();
-      const emit = vi.fn();
-      (window as TestWindow).__trochaEmit = emit;
-      renderGallery();
-
-      fireEvent.change(screen.getByRole('textbox', { name: 'Tu número de placa' }), {
-        target: { value: '999' },
-      });
-      act(() => {
-        vi.advanceTimersByTime(1000);
-      });
-
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith('gallery_filter', { content_id: 'placa-sin-fotos' });
-      expect(JSON.stringify(emit.mock.calls)).not.toContain('999');
-    });
-
-    it('Enter (o «Buscar» del teclado) emite al instante y baja el teclado', () => {
-      vi.useFakeTimers();
-      const emit = vi.fn();
-      (window as TestWindow).__trochaEmit = emit;
-      renderGallery();
-
-      const input = screen.getByRole('textbox', { name: 'Tu número de placa' });
-      input.focus();
-      fireEvent.change(input, { target: { value: '112' } });
-      fireEvent.submit(screen.getByRole('search'));
-
-      expect(emit).toHaveBeenCalledTimes(1);
-      expect(emit).toHaveBeenCalledWith('gallery_filter', { content_id: 'placa' });
-      expect(input).not.toHaveFocus();
-
-      // El temporizador pendiente se canceló: no hay un segundo evento.
-      act(() => {
-        vi.advanceTimersByTime(2000);
-      });
-      expect(emit).toHaveBeenCalledTimes(1);
-    });
-
-    it('no emite nada con el campo vacío, con un número inválido ni al limpiar', () => {
-      vi.useFakeTimers();
-      const emit = vi.fn();
-      (window as TestWindow).__trochaEmit = emit;
-      renderGallery();
-
-      const input = screen.getByRole('textbox', { name: 'Tu número de placa' });
-      fireEvent.change(input, { target: { value: '0' } });
-      fireEvent.change(input, { target: { value: '' } });
-      fireEvent.submit(screen.getByRole('search'));
-      act(() => {
-        vi.advanceTimersByTime(2000);
-      });
-
-      expect(emit).not.toHaveBeenCalled();
-    });
-
-    it('sin el emisor global del sitio (dev sin GA4) no falla', () => {
-      vi.useFakeTimers();
-      renderGallery();
-
-      fireEvent.change(screen.getByRole('textbox', { name: 'Tu número de placa' }), {
-        target: { value: '112' },
-      });
-
-      expect(() => act(() => vi.advanceTimersByTime(1000))).not.toThrow();
-    });
-
-    it('cancela el evento pendiente al desmontar', () => {
-      vi.useFakeTimers();
-      const emit = vi.fn();
-      (window as TestWindow).__trochaEmit = emit;
-      const { unmount } = renderGallery();
-
-      fireEvent.change(screen.getByRole('textbox', { name: 'Tu número de placa' }), {
-        target: { value: '112' },
-      });
-      unmount();
-      vi.advanceTimersByTime(2000);
-
-      expect(emit).not.toHaveBeenCalled();
-    });
-  });
 
   describe('analítica de las fotos vistas', () => {
     it('emite photo_view una vez por foto mostrada: miniatura, flechas y cierre/reapertura', async () => {
@@ -1406,15 +967,14 @@ describe('RacePhotoGallery', () => {
   // ─── Filtro inicial desde la URL ─────────────────────────────────────────────
 
   describe('filtro inicial desde la URL', () => {
-    it('?manga=… se aplica al montar y ?placa=… se ignora (la placa no viaja por la URL)', async () => {
-      window.history.replaceState(null, '', '/?manga=manga-1&placa=112');
+    it('?manga=… se aplica al montar', async () => {
+      window.history.replaceState(null, '', '/?manga=manga-1');
       renderGallery();
 
       await waitFor(() => expect(screen.getByText('52 fotos en Manga 1')).toBeInTheDocument());
       expect(
         screen.getByRole('button', { name: 'Manga 1 · Infantil A y B: 52 fotos' }),
       ).toHaveAttribute('aria-pressed', 'true');
-      expect(screen.getByRole('textbox', { name: 'Tu número de placa' })).toHaveValue('');
     });
 
     it('ignora una manga que no existe o que no tiene fotos', async () => {
@@ -1441,13 +1001,6 @@ describe('RacePhotoGallery', () => {
         'aria-pressed',
         'true',
       );
-    });
-
-    it('ignora ?placa= también cuando no hay fotos con placa etiquetada', () => {
-      window.history.replaceState(null, '', '/?placa=112');
-      renderGallery({}, withoutPlacas(buildManifest()));
-
-      expect(screen.getByText('66 fotos en toda la jornada')).toBeInTheDocument();
     });
   });
 
@@ -1865,22 +1418,6 @@ describe('RacePhotoGallery', () => {
         expect(within(dialog).getByText('Manga 1 · Infantil A y B')).toBeInTheDocument();
         await user.keyboard('{ArrowRight}');
         expect(within(dialog).getByText('1 / 52')).toBeInTheDocument();
-      });
-
-      it('recorre las coincidencias de la placa', async () => {
-        const user = userEvent.setup();
-        renderGallery();
-
-        await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '112');
-        await user.click(
-          screen.getByRole('button', { name: 'Manga 1, Infantil A y B: foto 1 de 3' }),
-        );
-        const dialog = screen.getByRole('dialog');
-        expect(within(dialog).getByText('1 / 4')).toBeInTheDocument();
-
-        await user.keyboard('{ArrowLeft}');
-        expect(within(dialog).getByText('4 / 4')).toBeInTheDocument();
-        expect(within(dialog).getByText('Premiación')).toBeInTheDocument();
       });
     });
 
@@ -2482,7 +2019,6 @@ describe('RacePhotoGallery', () => {
       renderGallery();
 
       await user.click(screen.getByRole('button', { name: 'Premiación: 8 fotos' }));
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '112');
       act(() => {
         window.history.pushState(null, '', '#foto-previa-03');
         window.dispatchEvent(new HashChangeEvent('hashchange'));
@@ -2494,7 +2030,6 @@ describe('RacePhotoGallery', () => {
         'aria-pressed',
         'true',
       );
-      expect(screen.getByRole('textbox', { name: 'Tu número de placa' })).toHaveValue('');
     });
 
     it('un hash que no es de una foto no abre ni cierra nada', async () => {
@@ -2580,7 +2115,7 @@ describe('RacePhotoGallery', () => {
       ).toBeInTheDocument();
       expect(
         screen.getByText(
-          'Escríbenos con su número de placa y su categoría, y te ayudamos a buscarlas.',
+          'Escríbenos con su nombre y su categoría, y te ayudamos a buscarlas.',
         ),
       ).toBeInTheDocument();
       const link = screen.getByRole('link', { name: /Escribir por WhatsApp/ });
@@ -2607,19 +2142,6 @@ describe('RacePhotoGallery', () => {
 
       renderGallery({ familyRequestHref: undefined });
       expect(screen.queryByText('¿No encuentras a tu deportista?')).not.toBeInTheDocument();
-    });
-
-    it('sigue a la vista cuando una búsqueda por placa no encuentra nada', async () => {
-      const user = userEvent.setup();
-      renderGallery();
-
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '999');
-
-      // La tarjeta familiar y el botón del estado sin resultados.
-      const ids = screen
-        .getAllByRole('link', { name: /Escribir por WhatsApp/ })
-        .map((link) => link.getAttribute('data-analytics-content-id'));
-      expect(ids).toEqual(['placa-sin-fotos', 'fotos-familia']);
     });
   });
 
@@ -2655,15 +2177,6 @@ describe('RacePhotoGallery', () => {
   describe('accesibilidad', () => {
     it('la rejilla y la barra no tienen violaciones', async () => {
       const { container } = renderGallery();
-
-      expect(await axe(container)).toHaveNoViolations();
-    });
-
-    it('con una búsqueda sin resultados tampoco', async () => {
-      const user = userEvent.setup();
-      const { container } = renderGallery();
-
-      await user.type(screen.getByRole('textbox', { name: 'Tu número de placa' }), '999');
 
       expect(await axe(container)).toHaveNoViolations();
     });

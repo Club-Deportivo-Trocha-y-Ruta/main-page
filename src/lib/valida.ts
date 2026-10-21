@@ -14,8 +14,6 @@
  * Reglas que atraviesan el módulo:
  * - Ningún nombre de menor: los textos alternativos y los pies de foto se arman
  *   con manga y categoría, nunca con personas.
- * - El número de placa nunca viaja a analítica: identifica a un corredor y la
- *   mayoría son niños. Aquí solo sirve para filtrar en el navegador.
  */
 
 // ─── Tipos de los datos ────────────────────────────────────────────────────────
@@ -118,8 +116,6 @@ export interface Photo {
   h: number;
   /** Hora de captura, ISO local (`2026-10-18T08:41:12-05:00`). */
   taken: string;
-  /** Números de placa visibles, si alguien los etiquetó. */
-  placas: number[];
 }
 
 export interface PhotoManifest {
@@ -471,32 +467,9 @@ export function photoAlt(group: PhotoGroup, index: number, total: number): strin
   return `${where}: foto ${index + 1} de ${total}`;
 }
 
-// ─── Filtro por placa ──────────────────────────────────────────────────────────
+// ─── Filtro por URL ────────────────────────────────────────────────────────────
 
-/** Número de placa escrito por una persona: solo dígitos, de 1 a 4 cifras. */
-export function parsePlaca(input: string): number | null {
-  const digits = input.replace(/\D/g, '');
-  if (digits.length === 0 || digits.length > 4) return null;
-  const value = Number(digits);
-  return value > 0 ? value : null;
-}
-
-export function hasPlacaTags(manifest: PhotoManifest): boolean {
-  return manifest.photos.some((photo) => photo.placas.length > 0);
-}
-
-export function filterByPlaca(photos: Photo[], placa: number): Photo[] {
-  return photos.filter((photo) => photo.placas.includes(placa));
-}
-
-/**
- * Filtro inicial que pide la URL: solo `?manga=manga-3`.
- *
- * La placa **no** se lee de la URL a propósito: GA4 recibe la URL completa en
- * cada `page_view`, y una placa en la query, cruzada con los resultados
- * públicos, identifica a un menor. El número solo existe en el campo de la
- * página y nunca se escribe en la dirección.
- */
+/** Filtro inicial que pide la URL: solo `?manga=manga-3`. */
 export function initialFilterFromSearch(
   search: string,
   manifest: PhotoManifest,

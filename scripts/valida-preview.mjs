@@ -2,7 +2,7 @@
 /**
  * Vista previa de `/copa-valle-yumbo-2026` a escala real, sin tocar los JSON
  * reales y sin llenar el disco: unas 420 fotos de prueba repartidas como una
- * válida de verdad (chips con conteos, filtro por placa, visor, descarga).
+ * válida de verdad (chips con conteos, visor, descarga).
  *
  *   npm run valida:preview            # arma el banco (si falta) y sirve las fotos en :8765
  *   VALIDA_PREVIEW=true npm run dev   # en otra terminal: la página lee preview/*.json
@@ -16,8 +16,7 @@
  *    suma hasta N fotos generadas con semilla fija, así que el mismo comando da
  *    siempre el mismo archivo. Se reparten por manga como en una válida, con
  *    `taken` dentro de la ventana de cada manga (`mangas.json`), proporciones de
- *    cámara (3:2 y 2:3, algo de 4:3) y placas en una de cada cuatro fotos, con
- *    números que se repiten para que el filtro devuelva varias.
+ *    cámara (3:2 y 2:3, algo de 4:3).
  * 2. Banco. Tres archivos por foto serían ~350 MB para 420 fotos: en su lugar se
  *    generan una sola vez unas 70 imágenes a partir de las fotos del chequeo de
  *    Profondos que ya están en `public/images/news/` (sin personas inventadas,
@@ -145,18 +144,6 @@ const SHAPES = [
 ];
 /** Lado largo: el tope de la versión web (1600) en la mayoría; el resto, recortes. */
 const LONG_SIDE = { cap: 1600, min: 1280, capShare: 0.7 };
-/** Placas: [mínimo, máximo, cuántas]. 45 y 112 ya las usan las fotos de siempre. */
-const PLATE_MIX = [
-  [1, 9, 4],
-  [10, 99, 20],
-  [100, 999, 26],
-  [1000, 9999, 10],
-];
-const KNOWN_PLATES = [45, 112];
-/** Una de cada cuatro fotos lleva placa; una (82 %), dos (15 %) o tres (3 %). */
-const PLATED_SHARE = 0.25;
-const PLATES_PER_PHOTO = [82, 15, 3];
-const POPULARITY_EXPONENT = 0.9;
 
 /** mulberry32: generador chico y determinista. */
 function mulberry32(seed) {
@@ -179,15 +166,6 @@ function weightedIndex(rng, weights) {
     if (roll < 0) return index;
   }
   return weights.length - 1;
-}
-
-function shuffle(rng, list) {
-  const copy = [...list];
-  for (let index = copy.length - 1; index > 0; index--) {
-    const other = randInt(rng, 0, index);
-    [copy[index], copy[other]] = [copy[other], copy[index]];
-  }
-  return copy;
 }
 
 const clockToSeconds = (clock) => {
@@ -242,33 +220,6 @@ function quotas(total, groupIds) {
     counts[index] += 1;
   }
   return new Map(groupIds.map((id, index) => [id, counts[index]]));
-}
-
-/**
- * Placas de prueba en orden de popularidad (las primeras salen más), cada una
- * con su manga de origen: un corredor aparece en las fotos de su manga, no en
- * las de otras.
- */
-function buildPlates(rng, raceIds) {
-  const pool = new Set(KNOWN_PLATES);
-  for (const [min, max, count] of PLATE_MIX) {
-    const bucket = new Set([...pool].filter((plate) => plate >= min && plate <= max));
-    while (bucket.size < count) bucket.add(randInt(rng, min, max));
-    for (const plate of bucket) pool.add(plate);
-  }
-  return shuffle(rng, [...pool]).map((number, rank) => ({
-    number,
-    home: raceIds[rank % raceIds.length],
-  }));
-}
-
-/** Entre 1 y 3 placas distintas de `candidates`, con las primeras más probables. */
-function pickPlates(rng, candidates) {
-  const weights = candidates.map((_, rank) => 1 / (rank + 1) ** POPULARITY_EXPONENT);
-  const wanted = Math.min(1 + weightedIndex(rng, PLATES_PER_PHOTO), candidates.length);
-  const chosen = new Set();
-  while (chosen.size < wanted) chosen.add(candidates[weightedIndex(rng, weights)].number);
-  return [...chosen].sort((a, b) => a - b);
 }
 
 const cameraNumber = (id) => Number(/^dsc-(\d+)-/.exec(id)?.[1] ?? 0);
@@ -348,22 +299,14 @@ function makeManifest(total) {
 
   // El número de cámara sigue a la hora, como en una cámara de verdad.
   raw.sort((a, b) => a.at - b.at || a.group.localeCompare(b.group));
-  const raceIds = groupIds.filter((id) => {
-    const group = current.groups.find((item) => item.id === id);
-    return group.categories.length > 0;
-  });
-  const plates = buildPlates(rng, raceIds);
   const generated = raw.map((photo, index) => {
     const hex = randInt(rng, 0, 0xffff).toString(16).padStart(4, '0');
-    const local = plates.filter((plate) => plate.home === photo.group);
-    const pool = local.length > 0 ? local : plates;
     return {
       id: `dsc-${FIRST_GENERATED + index}-${hex}`,
       group: photo.group,
       w: photo.w,
       h: photo.h,
       taken: toIso(date, photo.at),
-      placas: rng() < PLATED_SHARE ? pickPlates(rng, pool) : [],
     };
   });
 
@@ -371,19 +314,10 @@ function makeManifest(total) {
   writeFileSync(MANIFEST, formatManifest({ ...current, photos }));
 
   const perGroup = groupIds.map((id) => `${id} ${photos.filter((p) => p.group === id).length}`);
-  const tagged = photos.filter((photo) => photo.placas.length > 0);
-  const uses = new Map();
-  for (const number of tagged.flatMap((photo) => photo.placas)) {
-    uses.set(number, (uses.get(number) ?? 0) + 1);
-  }
-  const [topPlate, topCount] = [...uses].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0] ?? [0, 0];
   console.log(
     `Manifest de prueba: ${photos.length} fotos (${kept.length} de siempre + ${generated.length} generadas) en ${MANIFEST.replace(`${ROOT}/`, '')}`,
   );
   console.log(`  ${perGroup.join(' · ')}`);
-  console.log(
-    `  ${tagged.length} con placa, ${uses.size} placas distintas; la más repetida, ${topPlate}, en ${topCount} fotos`,
-  );
 }
 
 // ─── Banco de fotos ────────────────────────────────────────────────────────────

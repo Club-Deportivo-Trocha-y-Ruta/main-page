@@ -17,12 +17,10 @@ import {
   downloadFileName,
   editionFacts,
   editionHighlights,
-  filterByPlaca,
   galleryEmptyCopy,
   groupPhotos,
   groupSearch,
   groupTitle,
-  hasPlacaTags,
   heroCopy,
   historicStats,
   initialFilterFromSearch,
@@ -32,7 +30,6 @@ import {
   longDate,
   numbersAvailable,
   pageMeta,
-  parsePlaca,
   photoAlt,
   photoCount,
   photoIdFromHash,
@@ -89,8 +86,8 @@ const schedule: ScheduledGroup[] = [
   },
 ];
 
-function photo(id: string, group: string, taken: string, placas: number[] = []) {
-  return { id, group, w: 1600, h: 1067, taken, placas };
+function photo(id: string, group: string, taken: string) {
+  return { id, group, w: 1600, h: 1067, taken };
 }
 
 const manifest: PhotoManifest = {
@@ -98,9 +95,9 @@ const manifest: PhotoManifest = {
   generatedAt: '2026-10-19T09:00:00-05:00',
   groups: schedule.map(({ start: _start, ...group }) => group),
   photos: [
-    photo('b-0002', 'manga-1', '2026-10-18T08:41:12-05:00', [45]),
+    photo('b-0002', 'manga-1', '2026-10-18T08:41:12-05:00'),
     photo('a-0001', 'manga-1', '2026-10-18T08:41:12-05:00'),
-    photo('c-0003', 'manga-3', '2026-10-18T10:20:00-05:00', [112, 45]),
+    photo('c-0003', 'manga-3', '2026-10-18T10:20:00-05:00'),
     photo('d-0004', 'fantasma', '2026-10-18T13:10:00-05:00'),
     photo('e-0005', 'previa', 'sin-hora'),
   ],
@@ -350,37 +347,16 @@ describe('textos de grupo y de foto', () => {
   });
 });
 
-// ─── Placas ────────────────────────────────────────────────────────────────────
+// ─── Filtro por URL ────────────────────────────────────────────────────────────
 
-describe('placas', () => {
-  it('parsea lo que escribe una persona', () => {
-    expect(parsePlaca(' 112 ')).toBe(112);
-    expect(parsePlaca('#45')).toBe(45);
-    expect(parsePlaca('abc')).toBeNull();
-    expect(parsePlaca('12345')).toBeNull();
-    expect(parsePlaca('0')).toBeNull();
-    expect(parsePlaca('')).toBeNull();
-  });
-
-  it('filtra por placa y sabe si hay etiquetas', () => {
-    expect(filterByPlaca(manifest.photos, 45).map((p) => p.id)).toEqual(['b-0002', 'c-0003']);
-    expect(filterByPlaca(manifest.photos, 999)).toEqual([]);
-    expect(hasPlacaTags(manifest)).toBe(true);
-    expect(
-      hasPlacaTags({ ...manifest, photos: [photo('x', 'manga-1', '2026-10-18T08:40:00')] }),
-    ).toBe(false);
-  });
-
-  it('lee el filtro inicial de la URL, descarta grupos que no existen y nunca lee la placa', () => {
-    // La placa en la URL llegaría a GA4 con el page_view: no se admite.
-    expect(initialFilterFromSearch('?manga=manga-3&placa=112', manifest)).toEqual({
-      group: 'manga-3',
-    });
-    expect(initialFilterFromSearch('manga=nada&placa=x', manifest)).toEqual({ group: null });
+describe('filtro por URL', () => {
+  it('lee el filtro inicial de la URL y descarta grupos que no existen', () => {
+    expect(initialFilterFromSearch('?manga=manga-3', manifest)).toEqual({ group: 'manga-3' });
+    expect(initialFilterFromSearch('manga=nada', manifest)).toEqual({ group: null });
     expect(initialFilterFromSearch('', manifest)).toEqual({ group: null });
   });
 
-  it('arma la query para compartir un grupo, sin placa', () => {
+  it('arma la query para compartir un grupo', () => {
     expect(groupSearch('manga-3')).toBe('?manga=manga-3');
     expect(groupSearch(null)).toBe('');
   });

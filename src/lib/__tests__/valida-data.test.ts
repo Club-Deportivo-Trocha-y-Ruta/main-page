@@ -143,36 +143,21 @@ describe('los schemas rechazan lo que rompería la página', () => {
     );
   });
 
-  it('fotos: placa en cero o decimal, id con barra y tamaño en cero', () => {
+  it('fotos: id con barra y tamaño en cero', () => {
     const photo = {
       id: 'a-0001',
       group: 'manga-1',
       w: 1600,
       h: 1067,
       taken: '2026-10-18T08:41:12-05:00',
-      placas: [45],
     };
     const manifest = (overrides: Record<string, unknown>) => ({
       ...fotos,
       photos: [{ ...photo, ...overrides }],
     });
     expect(validaFotosSchema.safeParse(manifest({})).success).toBe(true);
-    expect(validaFotosSchema.safeParse(manifest({ placas: [0] })).success).toBe(false);
-    expect(validaFotosSchema.safeParse(manifest({ placas: [4.5] })).success).toBe(false);
     expect(validaFotosSchema.safeParse(manifest({ id: 'carpeta/foto' })).success).toBe(false);
     expect(validaFotosSchema.safeParse(manifest({ w: 0 })).success).toBe(false);
-  });
-
-  it('fotos: una foto sin `placas` queda con la lista vacía en vez de romper el build', () => {
-    const sinPlacas = {
-      id: 'a-0001',
-      group: 'manga-1',
-      w: 1600,
-      h: 1067,
-      taken: '2026-10-18T08:41:12-05:00',
-    };
-    const parsed = validaFotosSchema.parse({ ...fotos, photos: [sinPlacas] });
-    expect(parsed.photos[0].placas).toEqual([]);
   });
 
   it('datos: icono sin prefijo ph:, conteo negativo; una cifra en blanco se admite (apaga la cifra)', () => {
@@ -252,7 +237,7 @@ describe('fotos', () => {
     // El schema descarta lo que no conoce al parsear; esto mira el JSON crudo,
     // que es lo que queda en git y viaja al navegador.
     const raw = readJson('fotos.json') as { photos: Record<string, unknown>[] };
-    const allowed = new Set(['id', 'group', 'w', 'h', 'taken', 'placas']);
+    const allowed = new Set(['id', 'group', 'w', 'h', 'taken']);
     const extras = raw.photos.flatMap((photo) =>
       Object.keys(photo)
         .filter((key) => !allowed.has(key))
@@ -563,7 +548,7 @@ describe('vista previa con datos de prueba', () => {
 
   it('las fotos de prueba solo traen los campos del contrato: sin nombres, leyendas ni rostros', () => {
     const raw = readJson('preview/fotos.json') as { photos: Record<string, unknown>[] };
-    const allowed = new Set(['id', 'group', 'w', 'h', 'taken', 'placas']);
+    const allowed = new Set(['id', 'group', 'w', 'h', 'taken']);
     const extras = raw.photos.flatMap((photo) =>
       Object.keys(photo)
         .filter((key) => !allowed.has(key))
@@ -583,11 +568,4 @@ describe('vista previa con datos de prueba', () => {
     ).toBeGreaterThanOrEqual(400);
   });
 
-  it('hay placas repetidas en varias fotos: el filtro por placa devuelve varias', () => {
-    const uses = new Map<number, number>();
-    for (const photo of fotosPrueba().photos) {
-      for (const placa of photo.placas) uses.set(placa, (uses.get(placa) ?? 0) + 1);
-    }
-    expect(Math.max(0, ...uses.values())).toBeGreaterThanOrEqual(3);
-  });
 });

@@ -684,8 +684,6 @@ export const validaFotoSchema = z.object({
   h: z.number().int().positive(),
   /** Hora de captura, ISO local. Sin hora legible el pipeline escribe otra cosa. */
   taken: z.string(),
-  /** Números de placa etiquetados a mano. Nunca viajan a analítica. */
-  placas: z.array(z.number().int().positive()).default([]),
 });
 
 export const validaFotosSchema = z.object({

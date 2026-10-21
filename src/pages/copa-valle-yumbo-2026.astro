@@ -19,7 +19,7 @@
  * sin cifras de 2026, no hay bloque ni promesa de que lo haya.
  *
  * Regla que atraviesa la página: **nunca el nombre de un menor** en un texto,
- * un pie de foto o un parámetro de analítica, ni el número de placa.
+ * un pie de foto o un parámetro de analítica.
  *
  * Orden y tonos (rediseño «afiche», maqueta v6; el papel `#f4f2eb` es una variable local
  * de la página, `--valida-papel`, que en tema oscuro pasa a `--color-surface`). El índice
@@ -76,7 +76,6 @@ import {
   countPhotos,
   dockItems,
   galleryEmptyCopy,
-  hasPlacaTags,
   heroCopy,
   isPublished,
   pageMeta,
@@ -245,14 +244,10 @@ const photographerHref =
 const { title: emptyTitle, body: emptyBody } = galleryEmptyCopy(evento.date);
 
 const whatsappMessage = (text: string) => `${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
-// Con placas etiquetadas la bajada lo dice; sin ellas, el campo ni aparece.
-const placaSearch = hasPlacaTags(fotos);
-const photosLead = placaSearch
-  ? 'Toca su categoría o escribe su número de placa, abre la foto y descárgala.'
-  : 'Toca su categoría, abre la foto y descárgala.';
+const photosLead = 'Toca su categoría, abre la foto y descárgala.';
 
 const familyRequestHref = whatsappMessage(
-  `Hola, quiero las fotos de mi deportista de la ${evento.edition} de ${evento.venue.city}. Número de placa: `,
+  `Hola, quiero las fotos de mi deportista de la ${evento.edition} de ${evento.venue.city}. Nombre y categoría: `,
 );
 
 // ─── La casa ────────────────────────────────────────────────────────────────
@@ -506,53 +501,6 @@ const dock = dockItems({
       lead={photosLead}
     />
 
-    {
-      photographer.name && (
-        <p class="text-text-secondary mt-4 flex items-center gap-2 text-sm">
-          {photographer.logo ? (
-            <>
-              <img
-                src={photographer.logo.light}
-                alt=""
-                width="42"
-                height="48"
-                class="h-12 w-auto shrink-0 dark:hidden"
-              />
-              <img
-                src={photographer.logo.dark}
-                alt=""
-                width="42"
-                height="48"
-                class="hidden h-12 w-auto shrink-0 dark:block"
-              />
-            </>
-          ) : (
-            <Icon
-              name="ph:camera-bold"
-              class="text-primary-deep size-4 shrink-0"
-              aria-hidden="true"
-            />
-          )}
-          <span>
-            Fotos:{' '}
-            {photographerHref ? (
-              <a
-                href={photographerHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-primary-deep font-semibold underline underline-offset-2"
-              >
-                {photographer.name}
-                <span class="sr-only"> (se abre en una pestaña nueva)</span>
-              </a>
-            ) : (
-              <span class="text-text-primary font-semibold">{photographer.name}</span>
-            )}
-          </span>
-        </p>
-      )
-    }
-
     <div class="mt-10">
       <RacePhotoGallery
         client:visible
@@ -596,6 +544,55 @@ const dock = dockItems({
             <WhatsappShareButton title={shareTitle} url={pageUrl} />
           </div>
         </div>
+      )
+    }
+
+    <!-- El crédito va al final de la sección y no entre la bajada y la galería: ahí, con el
+         enlace al perfil del fotógrafo, la gente lo tocaba creyendo que seguía bajando. -->
+    {
+      photographer.name && (
+        <p class="text-text-secondary mt-10 flex items-center gap-2 text-sm">
+          {photographer.logo ? (
+            <>
+              <img
+                src={photographer.logo.light}
+                alt=""
+                width="42"
+                height="48"
+                class="h-12 w-auto shrink-0 dark:hidden"
+              />
+              <img
+                src={photographer.logo.dark}
+                alt=""
+                width="42"
+                height="48"
+                class="hidden h-12 w-auto shrink-0 dark:block"
+              />
+            </>
+          ) : (
+            <Icon
+              name="ph:camera-bold"
+              class="text-primary-deep size-4 shrink-0"
+              aria-hidden="true"
+            />
+          )}
+          <span>
+            Fotografía de la jornada:{' '}
+            {photographerHref ? (
+              <a
+                href={photographerHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary-deep font-semibold underline underline-offset-2"
+              >
+                {photographer.name}
+                <span class="sr-only"> (se abre en una pestaña nueva)</span>
+              </a>
+            ) : (
+              <span class="text-text-primary font-semibold">{photographer.name}</span>
+            )}
+          </span>
+        </p>
       )
     }
   </SectionShell>

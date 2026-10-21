@@ -13,7 +13,7 @@
  *   a ella), así que todas las fotos de una fila comparten altura, se ven
  *   enteras y el espacio queda reservado antes de que cargue la imagen (CLS 0).
  *   Un `::after` con `flex-grow` enorme evita que la última fila se estire. Es la
- *   rejilla de la vista de una categoría y de la búsqueda por placa.
+ *   rejilla de la vista de una categoría.
  * - **Muestra en rejilla en «Todas».** La vista general no usa filas: cada
  *   manga es una rejilla de miniaturas iguales (4:3, recortadas) de dos filas,
  *   sin desplazamiento horizontal. Las filas justificadas dejaban una foto sola
@@ -26,8 +26,7 @@
  *   tiene más, un botón «Ver las N fotos» (la categoría la dice el titular de
  *   arriba; el lector de pantalla oye «… de X») que aplica el filtro de su
  *   categoría (lo mismo que tocar su chip). Con una categoría elegida se pintan
- *   48 por manga y «Mostrar las N restantes» despliega el resto en el sitio; con
- *   una placa, todas las coincidencias. Lo desplegado vale solo para la vista en
+ *   48 por manga y «Mostrar las N restantes» despliega el resto en el sitio. Lo desplegado vale solo para la vista en
  *   que se hizo: al cambiar de categoría cada una arranca en su tope, y «Todas»
  *   no se vuelve a alargar por lo que se abrió en otra. El visor, en cambio,
  *   recorre todas las fotos del filtro activo: no se detiene en el tope, y al
@@ -38,9 +37,9 @@
  *   categorías completas van debajo, en pequeño. Las mangas son `div` y no
  *   `section`: nueve regiones con nombre llenaban la lista de puntos de
  *   referencia del lector de pantalla.
- * - **Una sola fila de filtros.** La placa primero y los chips a su lado: la
- *   barra es fija y, con la cabecera y el índice de la página, no puede tapar
- *   media pantalla. El mensaje de resultados solo se ve con una placa escrita.
+ * - **Una sola fila de filtros.** Los chips ocupan la fila entera: la barra es
+ *   fija y, con la cabecera y el índice de la página, no puede tapar media
+ *   pantalla.
  * - **Historial.** Abrir una foto empuja `#foto-<id>` (el botón atrás de Android
  *   cierra el visor en vez de sacar de la página) y navegar entre fotos solo lo
  *   reemplaza. Bajo `ClientRouter` la entrada nueva imita el estado del router y
@@ -51,9 +50,6 @@
  *   listeners de `window` corren en orden de registro y el router llega
  *   primero. Reemplazar una entrada nunca pasa `null` como estado, para no
  *   borrarle el índice al router.
- * - **Placa.** Identifica a un corredor y la mayoría son niños: solo filtra en
- *   el navegador. Ni a analítica ni a la URL viaja el número (GA4 recibe la URL
- *   completa en cada `page_view`): solo `content_id: 'placa'` o `'placa-sin-fotos'`.
  * - **Compartir.** Los enlaces llevan UTM con `shareUrl()` (docs/05): sin ellos,
  *   lo que circula por WhatsApp llega a GA4 como «Direct».
  *
@@ -62,7 +58,7 @@
  * con `overflow-clip`) o montar la isla fuera de ese marco.
  */
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import type { ChangeEvent, MouseEvent, RefObject, SubmitEvent, TouchEvent } from 'react';
+import type { MouseEvent, RefObject, TouchEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { shareUrl } from '@lib/utm';
 import type { GroupedPhotos, Photo, PhotoGroup, PhotoManifest } from '@lib/valida';
@@ -70,14 +66,11 @@ import {
   PHOTO_HASH_PREFIX,
   chipLabel,
   downloadFileName,
-  filterByPlaca,
   groupPhotos,
   groupSearch,
   groupTitle,
-  hasPlacaTags,
   initialFilterFromSearch,
   joinCategories,
-  parsePlaca,
   photoAlt,
   photoCount,
   photoIdFromHash,
@@ -115,8 +108,6 @@ const PAGE_PER_GROUP = 48;
 const NO_EXPANSION: ReadonlySet<string> = new Set();
 /** Recorrido horizontal mínimo, en px, para que un gesto cuente como swipe. */
 const SWIPE_MIN_PX = 50;
-/** Espera antes de reportar la búsqueda por placa: así no sale un evento por dígito. */
-const PLACA_ANALYTICS_DELAY_MS = 800;
 /** Cuánto vive el aviso «Enlace copiado». */
 const NOTICE_MS = 2500;
 
@@ -178,26 +169,10 @@ function ratioOf(photo: Photo): number {
   return photo.w > 0 && photo.h > 0 ? photo.w / photo.h : 1.5;
 }
 
-function resultMessage(total: number, placa: number | null, group: PhotoGroup | null): string {
-  if (placa === null) {
-    return group === null
-      ? `${photoCount(total)} en toda la jornada`
-      : `${photoCount(total)} en ${group.label}`;
-  }
-  if (total === 0) {
-    return group === null
-      ? `Ninguna foto con la placa ${placa}; revisa el número`
-      : `Ninguna foto con la placa ${placa} en ${group.label}; prueba otra manga`;
-  }
+function resultMessage(total: number, group: PhotoGroup | null): string {
   return group === null
-    ? `${photoCount(total)} con la placa ${placa}`
-    : `${photoCount(total)} con la placa ${placa} en ${group.label}`;
-}
-
-/** Versión corta para el celular: la larga sigue en el DOM para lectores de pantalla. */
-function shortResultMessage(total: number, placa: number | null): string {
-  if (placa === null) return photoCount(total);
-  return total === 0 ? `Ninguna con la placa ${placa}` : `${total} con la placa ${placa}`;
+    ? `${photoCount(total)} en toda la jornada`
+    : `${photoCount(total)} en ${group.label}`;
 }
 
 /** Lo que el router de Astro (`ClientRouter`) guarda en cada entrada del historial. */
@@ -269,8 +244,7 @@ function replacePhotoHash(id: string | null): void {
 
 /**
  * Refleja el filtro de grupo en la URL (`?manga=<id>`) para poder compartirlo,
- * conservando `history.state` (ver `replacePhotoHash`) y el hash. La placa
- * nunca se escribe aquí.
+ * conservando `history.state` (ver `replacePhotoHash`) y el hash.
  */
 function replaceGroupSearch(groupId: string | null): void {
   try {
@@ -299,7 +273,7 @@ function insidePicture(rect: DOMRect, ratio: number, x: number, y: number): bool
 
 // ─── Miniatura y bloque por manga ──────────────────────────────────────────────
 
-/** `row` es una fila justificada (categoría y placa); `grid`, la rejilla de muestra de «Todas». */
+/** `row` es una fila justificada (la vista de una categoría); `grid`, la rejilla de muestra de «Todas». */
 type TileLayout = 'row' | 'grid';
 
 interface PhotoTileProps {
@@ -364,7 +338,7 @@ const PhotoTile = memo(function PhotoTile({
  * Cuánto se pinta de una manga: `preview` es la vista «Todas» ({@link PREVIEW_PER_GROUP}
  * fotos y la entrada a su categoría), `page` es la de una categoría elegida
  * ({@link PAGE_PER_GROUP} fotos y «Mostrar las N restantes») y `all` es todo el grupo
- * (búsqueda por placa o manga ya desplegada).
+ * (manga ya desplegada).
  */
 type GroupDepth = 'preview' | 'page' | 'all';
 
@@ -380,7 +354,7 @@ function depthLimit(depth: GroupDepth): number {
  */
 const ROW_HEIGHT = '[--row-h:6rem] min-[400px]:[--row-h:7rem] sm:[--row-h:9rem] lg:[--row-h:10rem]';
 
-/** Filas justificadas: la vista de una categoría y la búsqueda por placa. */
+/** Filas justificadas: la vista de una categoría. */
 const ROWS = `flex flex-wrap items-start gap-2 after:flex-[1000000_1_0] after:content-[''] sm:gap-3 ${ROW_HEIGHT}`;
 
 /**
@@ -512,34 +486,11 @@ interface FilterBarProps {
   barRef: RefObject<HTMLDivElement | null>;
   chips: Chip[];
   selected: string | null;
-  placaEnabled: boolean;
-  placaText: string;
-  /** Hay una placa aplicada: los chips sin coincidencias se atenúan. */
-  placaActive: boolean;
   message: string;
-  shortMessage: string;
   onSelect: (id: string | null) => void;
-  onPlacaChange: (digits: string) => void;
-  onPlacaSubmit: () => void;
-  onPlacaClear: () => void;
 }
 
-function FilterBar({
-  barRef,
-  chips,
-  selected,
-  placaEnabled,
-  placaText,
-  placaActive,
-  message,
-  shortMessage,
-  onSelect,
-  onPlacaChange,
-  onPlacaSubmit,
-  onPlacaClear,
-}: FilterBarProps) {
-  const inputId = useId();
-  const inputRef = useRef<HTMLInputElement>(null);
+function FilterBar({ barRef, chips, selected, message, onSelect }: FilterBarProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const chipRefs = useRef(new Map<string, HTMLButtonElement>());
 
@@ -555,80 +506,21 @@ function FilterBar({
     });
   }, [selected]);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onPlacaChange(event.target.value.replace(/\D/g, '').slice(0, 4));
-  };
-
-  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // En Android la tecla «Buscar» envía el formulario: se baja el teclado para
-    // que los resultados no queden tapados.
-    inputRef.current?.blur();
-    onPlacaSubmit();
-  };
-
-  const handleClear = () => {
-    onPlacaClear();
-    inputRef.current?.focus();
-  };
-
-  // Una sola fila: la placa primero y los chips a su lado. Una segunda fila repetía el conteo
-  // del chip activo («Todas 420») y sumaba 44 px a una barra fija que, con la cabecera y el
-  // índice, ya tapaba casi la tercera parte de la pantalla. Sin campo de placa los chips ocupan
-  // la fila entera. El mensaje de resultados se ve solo con una placa escrita; el `role="status"`
-  // siempre existe (una región viva que aparece con el texto ya puesto no se anuncia) y su texto
-  // largo siempre llega al lector de pantalla. La barra sangra hasta el borde (`-mx` y `px`
-  // iguales): si solo cubriera la columna, las fotos que pasan por debajo asomarían a los lados.
-  // Fondo opaco, sin `backdrop-blur`: al 95 % las miniaturas se transparentaban detrás de los
-  // chips como fantasmas (vidrio, que la página no usa en ninguna otra parte).
+  // Una sola fila de chips. Una segunda fila repetía el conteo del chip activo («Todas 420») y
+  // sumaba 44 px a una barra fija que, con la cabecera y el índice, ya tapaba casi la tercera
+  // parte de la pantalla. El `role="status"` es solo para el lector de pantalla y siempre existe
+  // (una región viva que aparece con el texto ya puesto no se anuncia). La barra sangra hasta el
+  // borde (`-mx` y `px` iguales): si solo cubriera la columna, las fotos que pasan por debajo
+  // asomarían a los lados. Fondo opaco, sin `backdrop-blur`: al 95 % las miniaturas se
+  // transparentaban detrás de los chips como fantasmas (vidrio, que la página no usa en ninguna
+  // otra parte).
   return (
     <div
       ref={barRef}
-      id="buscar"
+      id="filtros"
       className="border-hairline sticky top-[var(--header-h,4rem)] z-30 -mx-4 scroll-mt-[var(--header-h,4rem)] border-b bg-[var(--valida-papel,var(--color-surface-raised))] px-4 py-2 sm:-mx-1.5 sm:px-1.5"
     >
       <div className="flex items-center gap-2 md:items-start md:gap-3">
-        {placaEnabled && (
-          <form
-            role="search"
-            aria-label="Buscar por número de placa"
-            onSubmit={handleSubmit}
-            className="relative shrink-0 md:mt-1"
-          >
-            <label htmlFor={inputId} className="sr-only">
-              Tu número de placa
-            </label>
-            <span
-              aria-hidden="true"
-              className="text-text-secondary pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-sm whitespace-nowrap"
-            >
-              Placa
-            </span>
-            <input
-              ref={inputRef}
-              id={inputId}
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              enterKeyHint="search"
-              autoComplete="off"
-              value={placaText}
-              onChange={handleChange}
-              className={`bg-surface-raised text-text-primary ring-hairline focus-visible:outline-primary-deep h-11 w-36 rounded-full pl-[4.25rem] text-sm ring-1 focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-44 ${placaText === '' ? 'pr-4' : 'pr-10'}`}
-            />
-            {placaText !== '' && (
-              <button
-                type="button"
-                aria-label="Borrar número de placa"
-                onClick={handleClear}
-                className="text-text-secondary hover:bg-surface-muted focus-visible:outline-primary-deep absolute top-1/2 right-1 flex size-8 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-1"
-              >
-                <Icon name="close" className="size-4" />
-              </button>
-            )}
-          </form>
-        )}
-
         <div
           ref={scrollerRef}
           role="group"
@@ -638,7 +530,6 @@ function FilterBar({
           {chips.map((chip) => {
             const key = chip.id ?? 'todas';
             const active = selected === chip.id;
-            const empty = placaActive && chip.count === 0;
             return (
               <button
                 key={key}
@@ -656,9 +547,7 @@ function FilterBar({
                 className={`focus-visible:outline-primary-deep ease-spring inline-flex min-h-11 shrink-0 snap-start items-center rounded-full px-4 text-sm font-semibold whitespace-nowrap transition-transform duration-[var(--duration-micro)] focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 motion-reduce:transition-none ${
                   active
                     ? 'bg-primary-deep text-on-deep'
-                    : empty
-                      ? 'bg-surface-muted text-text-secondary ring-hairline ring-1'
-                      : 'bg-surface-muted text-text-primary ring-hairline ring-1 [@media(hover:hover)]:hover:bg-[color-mix(in_srgb,var(--color-surface-muted)_85%,var(--color-surface-dark))]'
+                    : 'bg-surface-muted text-text-primary ring-hairline ring-1 [@media(hover:hover)]:hover:bg-[color-mix(in_srgb,var(--color-surface-muted)_85%,var(--color-surface-dark))]'
                 }`}
               >
                 {chip.label}
@@ -671,16 +560,8 @@ function FilterBar({
         </div>
       </div>
 
-      <p
-        role="status"
-        className={
-          placaActive ? 'text-text-primary mt-1 text-sm leading-tight font-medium' : 'sr-only'
-        }
-      >
-        <span aria-hidden="true" className="sm:hidden">
-          {shortMessage}
-        </span>
-        <span className="sr-only sm:not-sr-only">{message}</span>
+      <p role="status" className="sr-only">
+        {message}
       </p>
     </div>
   );
@@ -1085,7 +966,7 @@ function FamilyCard({ href }: { href: string }) {
           ¿No encuentras a tu deportista?
         </h3>
         <p className="text-text-secondary mt-1">
-          Escríbenos con su número de placa y su categoría, y te ayudamos a buscarlas.
+          Escríbenos con su nombre y su categoría, y te ayudamos a buscarlas.
         </p>
       </div>
       <a
@@ -1100,47 +981,6 @@ function FamilyCard({ href }: { href: string }) {
         Escribir por WhatsApp <span className="sr-only">(se abre en una pestaña nueva)</span>
       </a>
     </section>
-  );
-}
-
-interface NoMatchesProps {
-  placa: number;
-  familyRequestHref: string | null;
-  onShowAll: () => void;
-}
-
-function NoMatches({ placa, familyRequestHref, onShowAll }: NoMatchesProps) {
-  return (
-    <div className="border-hairline bg-surface-raised rounded-2xl border p-6 text-center">
-      <p className="font-display text-text-primary text-lg font-bold">
-        No encontramos la placa {placa} en las fotos
-      </p>
-      <p className="text-text-secondary mx-auto mt-2 max-w-prose">
-        Puede que no se lea en ninguna. Busca en su categoría o escríbenos y te ayudamos.
-      </p>
-      <div className="mt-4 flex flex-wrap justify-center gap-3">
-        <button
-          type="button"
-          onClick={onShowAll}
-          className="bg-surface-muted text-text-primary ring-hairline focus-visible:outline-primary-deep inline-flex min-h-11 items-center rounded-lg px-5 font-semibold ring-1 focus-visible:outline-2 focus-visible:outline-offset-2"
-        >
-          Ver todas las fotos
-        </button>
-        {familyRequestHref && (
-          <a
-            href={familyRequestHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-analytics-event="whatsapp_click"
-            data-analytics-content-id="placa-sin-fotos"
-            className="bg-accent text-surface-dark focus-visible:outline-primary-deep inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-5 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            <Icon name="whatsapp" />
-            Escribir por WhatsApp <span className="sr-only">(se abre en una pestaña nueva)</span>
-          </a>
-        )}
-      </div>
-    </div>
   );
 }
 
@@ -1175,7 +1015,6 @@ function Gallery({
   allyCount = null,
 }: RacePhotoGalleryProps) {
   const groups = useMemo<GroupedPhotos[]>(() => groupPhotos(manifest), [manifest]);
-  const placaEnabled = useMemo(() => hasPlacaTags(manifest), [manifest]);
   const groupIdByPhoto = useMemo(
     () =>
       new Map(
@@ -1187,7 +1026,6 @@ function Gallery({
   );
 
   const [groupFilter, setGroupFilter] = useState<string | null>(null);
-  const [placaText, setPlacaText] = useState('');
   /** Mangas desplegadas (con «Mostrar las N restantes» o por el visor) en la vista actual. */
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(NO_EXPANSION);
   /** Filtro de categoría al que pertenece `expanded`. */
@@ -1215,31 +1053,19 @@ function Gallery({
   const triggerRef = useRef<HTMLElement | null>(null);
   /** La entrada de historial actual la empujó el visor (o el navegador para un `#foto-`). */
   const ownsEntryRef = useRef(false);
-  const placaTimer = useRef<number | undefined>(undefined);
   const pendingFocusRef = useRef<string | null>(null);
-  /** Total de fotos del filtro vigente: el temporizador de la placa lo lee al dispararse. */
-  const totalRef = useRef(0);
   const wasOpenRef = useRef(false);
 
-  const placa = placaEnabled ? parsePlaca(placaText) : null;
-  /** Profundidad de una manga sin desplegar en la vista vigente (con placa, todas las coincidencias). */
-  const baseDepth: GroupDepth = placa !== null ? 'all' : groupFilter === null ? 'preview' : 'page';
+  /** Profundidad de una manga sin desplegar en la vista vigente. */
+  const baseDepth: GroupDepth = groupFilter === null ? 'preview' : 'page';
 
-  const matches = useMemo(
-    () =>
-      groups.map(({ group, photos }) => ({
-        group,
-        photos: placa === null ? photos : filterByPlaca(photos, placa),
-      })),
-    [groups, placa],
-  );
   const visibleGroups = useMemo(
     () =>
-      matches.filter(
+      groups.filter(
         ({ group, photos }) =>
           photos.length > 0 && (groupFilter === null || group.id === groupFilter),
       ),
-    [matches, groupFilter],
+    [groups, groupFilter],
   );
   /** Recorrido del visor: todas las fotos del filtro activo, en el orden de la rejilla. */
   const entries = useMemo<ViewEntry[]>(
@@ -1259,7 +1085,7 @@ function Gallery({
   const activeEntry = activeIndex >= 0 ? entries[activeIndex] : null;
 
   const chips = useMemo<Chip[]>(() => {
-    const totalCount = matches.reduce((sum, { photos }) => sum + photos.length, 0);
+    const totalCount = groups.reduce((sum, { photos }) => sum + photos.length, 0);
     return [
       {
         id: null,
@@ -1267,7 +1093,7 @@ function Gallery({
         ariaLabel: `Todas las fotos: ${photoCount(totalCount)}`,
         count: totalCount,
       },
-      ...matches.map(({ group, photos }) => ({
+      ...groups.map(({ group, photos }) => ({
         id: group.id,
         label: chipLabel(group),
         ariaLabel: `${groupTitle(group)}: ${photoCount(photos.length)}`,
@@ -1275,7 +1101,7 @@ function Gallery({
         count: photos.length,
       })),
     ];
-  }, [matches]);
+  }, [groups]);
   const selectedGroup = useMemo(
     () => groups.find(({ group }) => group.id === groupFilter)?.group ?? null,
     [groups, groupFilter],
@@ -1374,14 +1200,12 @@ function Gallery({
   useEffect(() => {
     if (active === null || entryIndex.has(active.id)) return;
     setGroupFilter(null);
-    setPlacaText('');
     replaceGroupSearch(null);
   }, [active, entryIndex]);
 
   // Si el visor pasó del tope de su manga en la vista vigente (12 en «Todas», 48 con una
   // categoría elegida), se despliega la manga: al cerrar tiene que existir la miniatura a la
-  // que devolver el foco. Con una placa no hay tope y no se despliega nada: así, al quitarla,
-  // «Todas» no queda alargada por una búsqueda.
+  // que devolver el foco.
   useEffect(() => {
     if (activeEntry === null || activeEntry.position < depthLimit(baseDepth)) return;
     const groupId = activeEntry.group.id;
@@ -1429,39 +1253,6 @@ function Gallery({
     replaceGroupSearch(id);
   }, []);
 
-  const flushPlacaAnalytics = useCallback((digits: string) => {
-    window.clearTimeout(placaTimer.current);
-    // Nunca el número: identifica a un corredor y casi todos son menores.
-    if (parsePlaca(digits) !== null) {
-      emitAnalytics('gallery_filter', {
-        content_id: totalRef.current > 0 ? 'placa' : 'placa-sin-fotos',
-      });
-    }
-  }, []);
-
-  const handlePlacaChange = useCallback(
-    (digits: string) => {
-      setPlacaText(digits);
-      setFilterTick((tick) => tick + 1);
-      window.clearTimeout(placaTimer.current);
-      if (parsePlaca(digits) !== null) {
-        placaTimer.current = window.setTimeout(
-          () => flushPlacaAnalytics(digits),
-          PLACA_ANALYTICS_DELAY_MS,
-        );
-      }
-    },
-    [flushPlacaAnalytics],
-  );
-
-  const handlePlacaClear = useCallback(() => {
-    window.clearTimeout(placaTimer.current);
-    setPlacaText('');
-    setFilterTick((tick) => tick + 1);
-  }, []);
-
-  useEffect(() => () => window.clearTimeout(placaTimer.current), []);
-
   // Tras un filtro, los resultados vuelven al inicio si la persona estaba más abajo.
   useEffect(() => {
     if (filterTick === 0) return;
@@ -1493,12 +1284,7 @@ function Gallery({
     tileRefs.current.get(id)?.focus();
   }, [expanded, groupFilter]);
 
-  useEffect(() => {
-    totalRef.current = total;
-  }, [total]);
-
-  const message = resultMessage(total, placa, selectedGroup);
-  const shortMessage = shortResultMessage(total, placa);
+  const message = resultMessage(total, selectedGroup);
 
   return (
     <div inert={viewerOpen || undefined} className="w-full">
@@ -1506,42 +1292,24 @@ function Gallery({
         barRef={barRef}
         chips={chips}
         selected={groupFilter}
-        placaEnabled={placaEnabled}
-        placaText={placaText}
-        placaActive={placa !== null}
         message={message}
-        shortMessage={shortMessage}
         onSelect={handleSelectGroup}
-        onPlacaChange={handlePlacaChange}
-        onPlacaSubmit={() => flushPlacaAnalytics(placaText)}
-        onPlacaClear={handlePlacaClear}
       />
 
       <div ref={resultsRef} className="mt-6 space-y-10 sm:mt-8 sm:space-y-12">
-        {placa !== null && total === 0 ? (
-          <NoMatches
-            placa={placa}
-            familyRequestHref={familyRequestHref}
-            onShowAll={() => {
-              handlePlacaClear();
-              handleSelectGroup(null);
-            }}
+        {visibleGroups.map(({ group, photos }) => (
+          <GroupSection
+            key={group.id}
+            group={group}
+            photos={photos}
+            base={manifest.base}
+            depth={expanded.has(group.id) ? 'all' : baseDepth}
+            onOpen={handleOpen}
+            register={registerTile}
+            onReveal={handleReveal}
+            onEnter={handleEnterGroup}
           />
-        ) : (
-          visibleGroups.map(({ group, photos }) => (
-            <GroupSection
-              key={group.id}
-              group={group}
-              photos={photos}
-              base={manifest.base}
-              depth={expanded.has(group.id) ? 'all' : baseDepth}
-              onOpen={handleOpen}
-              register={registerTile}
-              onReveal={handleReveal}
-              onEnter={handleEnterGroup}
-            />
-          ))
-        )}
+        ))}
       </div>
 
       {familyRequestHref && <FamilyCard href={familyRequestHref} />}
