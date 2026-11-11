@@ -8,7 +8,8 @@ department: "Valle del Cauca"
 category: "xco"
 level: "departamental"
 organizer: "Super Amigos Bike"
-status: "upcoming"
+status: "past"
+relatedNews: ["2026-11-copa-valle-roldanillo-xco"]
 featured: false
 draft: false
 ---

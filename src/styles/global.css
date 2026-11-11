@@ -784,6 +784,11 @@
   margin: 0;
   max-width: none;
 }
+/* Dos columnas fijas, también en móvil (fotos 4:5 de retratos pequeños) */
+.prose :where(.figure-grid--duo) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
 .prose :where(.figure-grid figcaption) {
   font-size: 0.8125rem;
   margin-top: 0.4rem;
@@ -1482,7 +1487,7 @@
    thread, standings-board). Desde septiembre de 2026 cada crónica puede
    traer una o dos piezas PROPIAS, dictadas por la forma del evento que cubre:
    una carrera de un solo día con horario por mangas se cuenta con un reloj;
-   un evento pro-fondos, con un recibo. Seis piezas, tres reglas comunes:
+   un evento pro-fondos, con un recibo. Ocho piezas, tres reglas comunes:
 
      1. Todas son CSS puro y viven bajo `.prose`, como las de v3/v4. El autor
         pega el HTML en el markdown (plantillas en
@@ -2462,6 +2467,274 @@
   }
   .prose :where(.thanks-wall.reveal.revealed) .thanks-wall__plate:nth-child(8) {
     transition-delay: 560ms;
+  }
+}
+
+/* ── Marcas del año (.season-marks) ──
+   Cierre de temporada: lo que el club hizo este año puesto al lado de una
+   temporada anterior COMPARABLE. Una tarjeta por marca: la cifra del año en
+   grande, qué mide, y dos barras finas sobre la misma escala (la de este
+   año en lima, la de referencia en gris). Es énfasis, no categórico: un
+   solo color con significado y el resto atenuado.
+     --now   valor de la temporada que se cierra (en cada __row)
+     --then  valor de la temporada de referencia
+   El CSS calcula el ancho contra el mayor de los dos; el redactor nunca
+   escribe porcentajes. Las barras son decorativas (`aria-hidden`): la
+   cifra de referencia va SIEMPRE en texto en `__then`, con su año. Máximo
+   6 tarjetas (hasta ahí llega el escalonado). Solo marcas con fuente: si
+   el año de referencia no es comparable, la tarjeta no existe. */
+.prose :where(.season-marks) {
+  list-style: none;
+  margin-block: 2rem 0.75rem;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+@media (min-width: 640px) {
+  .prose :where(.season-marks) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.prose :where(.season-marks__row) {
+  margin: 0;
+  padding: 1rem 1.125rem 0.875rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.625rem 0.875rem;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-tint);
+}
+.prose :where(.season-marks__value) {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 8vw, 2.5rem);
+  line-height: 1;
+  color: var(--color-accent-deep);
+}
+.prose :where(.season-marks__label) {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+}
+.prose :where(.season-marks__bars) {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.25rem;
+}
+.prose :where(.season-marks__bar) {
+  display: block;
+  height: 0.5rem;
+  min-width: 0.5rem;
+  border-radius: var(--radius-pill);
+  transform-origin: left center;
+}
+.prose :where(.season-marks__bar--now) {
+  width: calc(var(--now) / max(var(--now), var(--then)) * 100%);
+  background: var(--color-accent-deep);
+}
+.prose :where(.season-marks__bar--then) {
+  width: calc(var(--then) / max(var(--now), var(--then)) * 100%);
+  background: color-mix(in srgb, var(--color-text-secondary) 45%, var(--color-surface-tint));
+}
+.prose :where(.season-marks__then) {
+  grid-column: 1 / -1;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+.prose :where(.season-marks__legend) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 1.25rem;
+  margin: 0 0 2rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+.prose :where(.season-marks__key) {
+  display: inline-block;
+  width: 1.25rem;
+  height: 0.5rem;
+  margin-right: 0.375rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-deep);
+  vertical-align: middle;
+}
+.prose :where(.season-marks__key--then) {
+  background: color-mix(in srgb, var(--color-text-secondary) 45%, var(--color-surface-tint));
+}
+/* Las barras crecen desde la izquierda, tarjeta por tarjeta, y la de
+   referencia sale un instante después que la del año: primero se lee lo
+   de hoy, luego contra qué se compara. Solo `transform`. */
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.season-marks.reveal) .season-marks__bar {
+    transition: transform 0.7s ease-out;
+  }
+  .prose :where(.season-marks.reveal):not(.revealed) .season-marks__bar {
+    transform: scaleX(0);
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__bar--then {
+    transition-delay: 160ms;
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__row:nth-child(2) .season-marks__bar--now {
+    transition-delay: 80ms;
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__row:nth-child(2) .season-marks__bar--then {
+    transition-delay: 240ms;
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__row:nth-child(3) .season-marks__bar--now {
+    transition-delay: 160ms;
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__row:nth-child(3) .season-marks__bar--then {
+    transition-delay: 320ms;
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__row:nth-child(4) .season-marks__bar--now {
+    transition-delay: 240ms;
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__row:nth-child(4) .season-marks__bar--then {
+    transition-delay: 400ms;
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__row:nth-child(5) .season-marks__bar--now {
+    transition-delay: 320ms;
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__row:nth-child(5) .season-marks__bar--then {
+    transition-delay: 480ms;
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__row:nth-child(6) .season-marks__bar--now {
+    transition-delay: 400ms;
+  }
+  .prose :where(.season-marks.reveal.revealed) .season-marks__row:nth-child(6) .season-marks__bar--then {
+    transition-delay: 560ms;
+  }
+}
+
+/* ── Aprendizaje (.lesson) ──
+   La lección que deja una temporada, en una sola tarjeta: una frase y los
+   dos o tres números que la sostienen. Es la única pieza de crónica sobre
+   fondo grafito (`--color-surface-dark`, que no cambia con el tema), para
+   que se lea como tablero aparte y no como un párrafo más: texto blanco y
+   cifras en lima, que sobre grafito sí cumple contraste (el lima solo falla
+   como texto sobre fondo claro).
+   Los siete puntos de arriba son las siete válidas de la copa: decorativos
+   (`aria-hidden`), se encienden uno tras otro. Si la temporada tiene otro
+   número de válidas, se cambia el número de `<i>`.
+   Reglas de contenido: una sola por crónica y solo en cierres de temporada;
+   la frase es del club, no de un corredor; las pruebas son cifras agregadas
+   del equipo. Nunca señala a un menor por lo que dejó de hacer (ver «Tono
+   al cubrir resultados adversos» en content-marketer.md). */
+.prose :where(.lesson) {
+  margin-block: 2.5rem;
+  padding: 1.5rem 1.25rem;
+  border-radius: var(--radius-card);
+  background: var(--color-surface-dark);
+  color: #fff;
+}
+@media (min-width: 640px) {
+  .prose :where(.lesson) {
+    padding: 2rem;
+  }
+}
+.prose :where(.lesson__pips) {
+  display: flex;
+  gap: 0.375rem;
+  margin-bottom: 1rem;
+}
+.prose :where(.lesson__pips > i) {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+}
+.prose :where(.lesson__headline) {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.375rem, 5.5vw, 1.875rem);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: #fff;
+}
+.prose :where(.lesson__proof) {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.prose :where(.lesson__item) {
+  margin: 0;
+  padding: 0.75rem 0 0;
+  display: grid;
+  grid-template-columns: 5.75rem 1fr;
+  align-items: baseline;
+  gap: 0.125rem 0.75rem;
+  border-top: 1px solid rgb(255 255 255 / 0.16);
+}
+@media (min-width: 640px) {
+  .prose :where(.lesson__proof) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .prose :where(.lesson__item) {
+    grid-template-columns: 1fr;
+  }
+}
+.prose :where(.lesson__num) {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1.1;
+  white-space: nowrap;
+  color: var(--color-accent);
+}
+.prose :where(.lesson__text) {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: rgb(255 255 255 / 0.82);
+}
+.prose :where(.lesson__next) {
+  margin: 1.25rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #fff;
+}
+/* La tipografía de `.prose` pinta `<strong>` con el color de texto del
+   tema, que sobre grafito no se lee: aquí hereda el blanco de la tarjeta. */
+.prose :where(.lesson) strong {
+  color: inherit;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.lesson.reveal) .lesson__pips > i {
+    transition:
+      transform var(--duration-micro) var(--ease-pop),
+      opacity 0.2s ease-out;
+  }
+  .prose :where(.lesson.reveal):not(.revealed) .lesson__pips > i {
+    opacity: 0;
+    transform: scale(0);
+  }
+  .prose :where(.lesson.reveal.revealed) .lesson__pips > i:nth-child(1) {
+    transition-delay: 200ms;
+  }
+  .prose :where(.lesson.reveal.revealed) .lesson__pips > i:nth-child(2) {
+    transition-delay: 300ms;
+  }
+  .prose :where(.lesson.reveal.revealed) .lesson__pips > i:nth-child(3) {
+    transition-delay: 400ms;
+  }
+  .prose :where(.lesson.reveal.revealed) .lesson__pips > i:nth-child(4) {
+    transition-delay: 500ms;
+  }
+  .prose :where(.lesson.reveal.revealed) .lesson__pips > i:nth-child(5) {
+    transition-delay: 600ms;
+  }
+  .prose :where(.lesson.reveal.revealed) .lesson__pips > i:nth-child(6) {
+    transition-delay: 700ms;
+  }
+  .prose :where(.lesson.reveal.revealed) .lesson__pips > i:nth-child(7) {
+    transition-delay: 800ms;
   }
 }
 

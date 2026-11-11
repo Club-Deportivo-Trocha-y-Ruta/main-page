@@ -272,7 +272,7 @@ evento, en lugar del juego común de v4. La regla para inventar una: nace del da
 ese evento tiene (un horario por mangas, un recaudo), se escribe una vez en `global.css`
 bajo `.prose`, y cumple las tres condiciones de siempre — CSS puro con `reveal` opt-in,
 estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`opacity`
-(más `stroke-dashoffset`, la excepción documentada). Seis existen hoy:
+(más `stroke-dashoffset`, la excepción documentada). Estas existen hoy:
 
 | Pieza | Para qué | Estreno |
 |---|---|---|
@@ -283,6 +283,8 @@ estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`o
 | `.check-sheet` | Planilla de chequeo: una casilla por grupo de categoría que se marca al entrar en pantalla, con campos "Se probó" / "Se vio". Reemplaza a la tabla-diagnóstico. | Chequeo 2026 |
 | `.thanks-wall` | Muro de placas: los agradecimientos de una jornada en casa como pared de dorsales, con el nombre donde iría el número. Sirve para entes (`--org`) y para personas naturales. Nunca se inventa una placa: cada nombre sale de una fuente o del visto bueno del club. | Chequeo 2026 |
 | `.clip` | Un clip vertical de ≤ 15 s o una nota de voz de ≤ 20 s, alojados en el sitio (`public/videos/news/…`), dentro de una `<figure>`. Sin `reveal`: `preload="none"` + póster WebP. Máx. 3 clips y 1 audio por crónica. Es la base del formato v6 (foto y clip primero, ≤ 700 palabras). | Alcalá 2026 |
+| `.season-marks` | Balance de cierre de temporada: una tarjeta por marca con la cifra del año en grande y dos barras finas (este año en lima, la temporada de referencia en gris). Solo contra una temporada **comparable** y con la cifra de referencia siempre en texto. Máx. 6 tarjetas. | Roldanillo 2026 |
+| `.lesson` | El aprendizaje de la temporada en una tarjeta grafito: una frase del club y dos o tres cifras agregadas que la sostienen. Una por crónica, solo en cierres de temporada. Nunca señala a un menor por lo que dejó de hacer. | Roldanillo 2026 |
 
 ```html
 <!-- Ficha de la visita — el talón es decorativo (la fecha va también en la
@@ -397,6 +399,40 @@ estado final visible sin JS y bajo `prefers-reduced-motion`, solo `transform`/`o
   </video>
   <figcaption>Salida de la manga 2, 9:20 a. m.: Kanguritos y Pre Infantil Mixto A en la pista especial.</figcaption>
 </figure>
+
+<!-- Marcas del año — --now = valor de la temporada que cierra, --then = el
+     de la temporada de referencia; el CSS calcula los anchos. Las barras son
+     decorativas: la cifra de referencia va en texto en __then, con su año.
+     La leyenda va aparte. Regla dura: solo se compara contra una temporada
+     comparable (en la Copa Valle, las que imprimen el club en la planilla:
+     2023 y 2026); si no hay con qué comparar, la tarjeta no existe. -->
+<ul class="season-marks reveal">
+  <li class="season-marks__row" style="--now:33; --then:24">
+    <span class="season-marks__value">33</span>
+    <span class="season-marks__label">podios (del 1.º al 5.º) en siete válidas</span>
+    <span class="season-marks__bars" aria-hidden="true">
+      <span class="season-marks__bar season-marks__bar--now"></span>
+      <span class="season-marks__bar season-marks__bar--then"></span>
+    </span>
+    <span class="season-marks__then">En 2023: 24, con una válida más</span>
+  </li>
+</ul>
+<p class="season-marks__legend">
+  <span><span class="season-marks__key"></span> 2026</span>
+  <span><span class="season-marks__key season-marks__key--then"></span> 2023</span>
+</p>
+
+<!-- Aprendizaje — un <i> por válida de la temporada en __pips (decorativo).
+     La frase es del club y la valida el club; las pruebas son cifras
+     agregadas del equipo, máx. 3. Sin <strong> dentro: la tarjeta ya grita. -->
+<aside class="lesson reveal" aria-label="Aprendizaje de la temporada">
+  <span class="lesson__pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+  <p class="lesson__headline">La copa premia al que está en todas.</p>
+  <ul class="lesson__proof">
+    <li class="lesson__item"><span class="lesson__num">6</span><span class="lesson__text">corredores del club puntuaron en las siete válidas</span></li>
+  </ul>
+  <p class="lesson__next">El reto para 2027: que más corredores hagan la temporada completa.</p>
+</aside>
 ```
 
 ## Regla de dos artículos (eventos de dos días)

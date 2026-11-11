@@ -1,351 +1,381 @@
 ---
-# TÍTULO PROVISIONAL — reemplazar con el hito real del día (50-65 caracteres).
-# Patrón: "[Hito del club] en el XCO de Roldanillo" / ej.: "Isabel pelea el segundo
-# lugar de la general en Roldanillo". Nunca "Trocha y Ruta arrasó".
-title: "Trocha y Ruta define su temporada en el XCO de Roldanillo"
-# Fecha del XCO. Válida reprogramada por el terremoto: el calendario
-# actualizado la fija el sábado 7 y el domingo 8 de noviembre (gymkanas + XCO),
-# así que el XCO va el domingo 8. CONFIRMAR el orden de pruebas con el afiche.
+title: "Mariana Coronado sube al podio final de la Copa Valle 2026"
 date: 2026-11-08
 author: "Juan Diego García"
 category: "competencias"
-# Agregar tags de los corredores protagonistas al cerrar (patrón Palmira).
-tags: ["copa-valle", "copa-valle-2026", "xco", "roldanillo", "sendero-ecoparque", "resultados", "clasificacion-general"]
-# Afiche oficial de la séptima válida cuando salga; mientras tanto no publicar.
+tags: ["copa-valle", "copa-valle-2026", "xco", "roldanillo", "sendero-ecoparque", "resultados", "podio", "clasificacion-general", "balance-temporada", "mariana-coronado", "samuel-ortiz", "isabel-quinones", "miguel-anaya", "sofia-gomez", "juan-diego-garcia"]
 image: "/images/news/copa-valle-roldanillo-2026/afiche-copa-valle-roldanillo.webp"
-imageAlt: "Afiche de la séptima válida de la Copa Valle 2026 en el Sendero Eco-parque de Roldanillo"
+imageAlt: "Afiche de la gran final de la Copa Valle GW Shimano 2026 en el Sendero Ecoparque de Roldanillo"
 imageLayout: contain
-# Máximo 200 caracteres (lo valida el schema). Reescribir con el hito real.
-excerpt: "La válida de Roldanillo, reprogramada a noviembre, cerró la Copa Valle 2026 en el Sendero Eco-parque: resultados, historias y la general definitiva del club."
+excerpt: "Mariana Coronado fue segunda en la final de Roldanillo y cerró tercera de la general. Siete corredores del club terminaron la Copa Valle 2026 entre los cinco primeros de su categoría."
 featured: true
-draft: true
+draft: false
 relatedEvent: "2026-11-copa-valle-vi-roldanillo"
 relatedGallery: "copa-valle-roldanillo-2026"
 galleryFolder: "/images/news/copa-valle-roldanillo-2026"
 galleryImages: []
 seo:
-  metaTitle: "Trocha y Ruta en el XCO de Roldanillo (Copa Valle 2026)"
-  metaDescription: "Resultados del Club Trocha y Ruta en la válida de Roldanillo, cierre de la Copa Valle 2026, con la clasificación general definitiva de la temporada."
-  ogImage: "/images/news/copa-valle-roldanillo-2026/og-copa-valle-roldanillo.webp"
+  metaTitle: "Trocha y Ruta en la final de la Copa Valle XCO 2026"
+  metaDescription: "Trocha y Ruta en la final de la Copa Valle 2026 en Roldanillo: seis podios, la general definitiva, el balance del año frente a 2023 y un aprendizaje."
+  ogImage: "/images/news/copa-valle-roldanillo-2026/og-afiche-copa-valle-roldanillo.jpg"
 ---
 
-<!-- =====================================================================
-     PLANTILLA FORMATO v4 — CRÓNICA VII VÁLIDA ROLDANILLO
-     Estado: esqueleto de producción. Se publica solo cuando el checklist
-     esté completo. Protocolo completo: .claude/agents/content-marketer.md.
+<!-- PRODUCCIÓN — BORRADOR (draft: true). Formato corto: cifras y piezas, poco texto.
 
-     ⚠ VÁLIDA REPROGRAMADA (calendario actualizado tras el terremoto del 10 de
-     agosto). Roldanillo pasó del 26 de septiembre al 7 y 8 de noviembre y
-     ahora se corre DESPUÉS de Yumbo: pasó a ser la séptima válida y la
-     ÚLTIMA fecha de la temporada. Lo que eso cambia en este esqueleto:
-       · Entre Palmira y Roldanillo se corre Yumbo (18 de octubre). Toda cuenta
-         pre-escrita con la general de Palmira quedó vieja: rehacerla con la
-         general publicada tras Yumbo.
-       · En Roldanillo se juegan los últimos 40 puntos; después no queda nada.
-         El tablero de la general ya no lleva zona de alcance (--reach:0) y la
-         escala sube a 280 (siete válidas × 40).
-       · El cierre ya no anuncia la final en casa: Roldanillo ES el cierre.
+     FUENTES (10-nov-2026)
+     · PDF oficial «RESULTADOS», válida VII Roldanillo, 8-nov-2026 (174 filas, 25
+       categorías): puestos, tiempos y puntos de los 12 corredores del club.
+     · PDF oficial «CLASIFICACIÓN GENERAL» final (405 filas, 26 categorías): puntos
+       válida a válida, puesto final y línea del podio por categoría. Total = suma
+       simple de I a VII, sin descartes.
+     · Base de la plataforma del club (MySQL local, solo lectura, tablas race_*):
+       comparación 2023 vs 2026 y mejor puesto 2025 → 2026 de tres corredores.
+     · Balance interno del club (informes/trocha-y-ruta-2026.pdf, 9-nov): 26
+       deportistas, 88 salidas, 13 de 26 con una o dos válidas.
+     Copias de trabajo fuera del repo: ~/Trocha-media/_roldanillo-2026-pdf/ y
+     ~/Trocha-media/_roldanillo-2026-scripts/.
 
-     NOVEDADES v4 (estreno en esta crónica): .thread en cada historia del
-     bloque 4 y .standings-board abriendo la general. Ambos piden datos que
-     antes no se recogían — están en el checklist de abajo.
-     El tercer componente de v4, .circuit-map, queda EN RESERVA (ver bloque
-     3b): existe en global.css pero no se usa hasta tener el trazado real.
+     VERIFICADO: las 12 filas de Roldanillo; las 24 filas del club en la general y
+     el top 3 de cada categoría; tendencias contra la tabla de la crónica de Yumbo;
+     33 podios, 9 corredores y 8 categorías con podio (recontados desde la general
+     oficial y contra la base); 24 podios en 124 salidas en 2023 (base).
 
-     CHECKLIST DEL FIN DE SEMANA DE CARRERA
-     [ ] Formato de dos días según el calendario actualizado (sáb 7 gymkanas
-         + dom 8 XCO, como Palmira): crear 2026-11-copa-valle-roldanillo-
-         gymkanas.md (crónica corta del día 1, regla de dos artículos) y
-         cruzar enlaces en el primer párrafo de cada una. Confirmar el orden
-         de pruebas con el afiche antes de escribir.
-     [ ] PDFs oficiales: "RESULTADOS VII copa valle XCO 2026" y "GENERAL VII
-         copa valle XCO 2026". Todo dato de tabla sale de ahí. Cero memoria.
-     [ ] Fotos por corredor en /public/images/news/copa-valle-roldanillo-2026/
-         (WebP, máx 1600 px, q76): salida, acción en obstáculo/curva, podios,
-         grupal del equipo. Nombrar como en Palmira: nombre-contexto-dia-N.webp.
-     [ ] Color por corredor dictado por el club: cómo corrió, vuelta clave,
-         ánimo, anécdota. Sin esto las secciones quedan planas — no publicar
-         solo con posiciones y tiempos.
-     [ ] Voces: 1-2 citas textuales recogidas en sitio. Menores: con padre
-         presente y autorización registrada (Ley 1581 y Ley 1098).
-         Si no hay cita real, el bloque se elimina.
-     [ ] Autorizaciones de imagen de cualquier corredor nuevo o debutante
-         (Ley 1581 y Ley 1098).
-     [ ] Datos de pista: desnivel, tipo de terreno, clima del día.
-     [ ] TABLERO DE LA GENERAL (nuevo v4): por cada corredor del club, tres
-         números del PDF GENERAL VII — sus puntos, su total antes de esta
-         válida y los puntos del 3° de su categoría. El tercero hay que
-         buscarlo en el top-3 de cada categoría; sin él la fila no se dibuja.
-         Y el movimiento de puesto (VII vs VI) para el chip: subió / mantiene /
-         bajó / entra. Debe coincidir con la columna "Tendencia" de la tabla.
-     [ ] Verificar todo lo marcado CONFIRMAR (viaje, vía, color local).
-     [ ] Título definitivo (50-65 chars), excerpt ≤200, metaTitle/metaDescription,
-         tags de protagonistas, galleryImages.
-     [ ] Verificar nombres contra src/content/riders/ y draft -> false.
-===================================================================== -->
+     FALTA ANTES DE PUBLICAR
+     [x] Fotos (10-nov): podio de Prejuvenil A Femenina (Mariana e Isabel), podio de
+         Prejuvenil A (Samuel) y grupal del equipo; también Teteros (7 fotos), Juan Diego en carrera y fotos en carrera de Mariana,
+         Samuel, Isabel, Miguel Ángel, Sofía y Jostin (bajadas del álbum de
+         fotos.caminhodeluz.online; DSC_0458 y DSC_0568 quedaron sin usar). Sin galleryImages ni carrusel (precedente: Yumbo).
+         equipo-grupal.webp es la portada ya referenciada por el álbum
+         (gallery/copa-valle-roldanillo-2026.md, que sigue en draft).
+     [ ] Fotógrafo: las fotos en carrera de Mariana, Samuel, Isabel, Miguel Ángel,
+         Sofía y Jostin salen de fotos.caminhodeluz.online (cámara Nikon, 8-nov).
+         Confirmar autoría, permiso de uso y el crédito que pide el fotógrafo; la
+         nota no lo cita todavía. En la de Jostin aparece un rival de otro club.
+     [ ] Oscar Ortiz sale en la foto de los Teteros como director deportivo: confirmar
+         que está de acuerdo con que se publique.
+     [ ] Autorización de imagen: en la grupal salen adultos y menores sin
+         identificar; en los podios, corredores de otros clubes. Confirmar con el club.
+     [ ] Nombres nuevos: Jeeykol Casamachin (4.º en su primera válida) y Javier
+         Mosquera no habían salido en ninguna crónica. Confirmar con el club que se
+         publican, la grafía (el PDF dice «Casamachin», sin tilde) y la autorización
+         de imagen. Las fotos de Jeeykol, Mathiw, Celeste y Javier (placas 1436, 1414,
+         1422, 1440; 10-nov) ya están en la nota, con nombre y primer apellido: sin
+         esa autorización de los acudientes, quitar la sección «Los Teteros».
+     [ ] Mathiw Bohórquez (placa 1414) y Matthew Bohórquez (placa 1426): el PDF y el
+         balance del club los tratan como dos corredores. Confirmar; si es el mismo
+         niño, son 11 corredores y cambian stat-strip, tabla y general.
+     [ ] Juan Diego García, 5.º de Élite: empate a 153 con el 6.º y la celda de la
+         válida VII está resaltada en amarillo en el PDF. Confirmar el puesto.
+     [ ] La general oficial no trae todavía a Jeeykol ni a Javier (el archivo se
+         generó el mismo día de la carrera). Si la Comisión publica una versión
+         corregida, revisar la tabla plegada.
+     [ ] Gymkanas del sábado 7: no hay resultados en los insumos. Si el club corrió,
+         va crónica corta aparte (regla de dos artículos).
+     [ ] Clima, estado de la pista y relato de carrera: no se saben; no se narran.
+     [ ] Citas, si las hay (menores: con acudiente y autorización).
+     [ ] El aprendizaje y la frase del reto 2027 son propuesta: los valida Juan Diego.
+     [ ] Al publicar: draft: false aquí; en el evento 2026-11-copa-valle-vi-roldanillo,
+         status: "past" y relatedNews con este slug. -->
 
-<!-- ── BLOQUE 1 · COLD OPEN (50-80 palabras) ──
-     Un momento concreto, no logística ni resultado plano. El zoom out
-     (sede + séptima válida) llega en la segunda o tercera frase.
-     Direcciones posibles según cómo se dé el día:
-     a) La madrugada: el club saliendo de Yumbo a oscuras hacia el norte
-        del Valle — el viaje más largo de la temporada. (CONFIRMAR hora)
-     b) Un corredor del club resolviendo el primer tramo técnico del
-        Sendero Eco-parque en el reconocimiento.
-     c) El contraste: el pueblo que mira al cielo (parapente) y una carrera
-        que se decide mirando el suelo. Usar solo si no suena forzado. -->
+<figure>
+  <img
+    src="/images/news/copa-valle-roldanillo-2026/podio-prejuvenil-a-femenina.webp"
+    alt="Podio de Prejuvenil A Femenina en la séptima válida Copa Valle XCO, Roldanillo, 2026: Mariana Coronado, del Club Trocha y Ruta, segunda, e Isabel Quiñones, quinta, con sus medallas bajo el arco de GW Shimano"
+    width="1600"
+    height="1200"
+    loading="eager"
+    decoding="async"
+  />
+  <figcaption>Podio de Prejuvenil A Femenina: Mariana Coronado, segunda (a la izquierda de la ganadora), e Isabel Quiñones, quinta (a la derecha).</figcaption>
+</figure>
 
-[PENDIENTE — cold open]
-
-<!-- ── BLOQUE 2 · EL PARTE DE LA VÁLIDA ──
-     4-6 cifras que un padre lee en cinco segundos. La más noticiosa lleva
-     --accent. No repetir la cifra del título. Ejemplo Palmira: 11 corredores,
-     2 platas, 241 puntos, 3,4 km. -->
+La **Copa Valle Paraíso de Todos GW Shimano 2026** terminó el domingo 8 de noviembre en el Sendero Ecoparque de Roldanillo. En la séptima y última válida, **Mariana Coronado** fue segunda en Prejuvenil A Femenina, a 1 minuto y 27 segundos de Luciana Ríos, que ganó en casa, y cerró el año **tercera de la general**.
 
 <div class="stat-strip reveal">
-  <div class="stat-strip__item"><span class="stat-strip__value">—</span><span class="stat-strip__label">corredores en pista</span></div>
-  <div class="stat-strip__item stat-strip__item--accent"><span class="stat-strip__value">—</span><span class="stat-strip__label">podios del club</span></div>
-  <div class="stat-strip__item"><span class="stat-strip__value">—</span><span class="stat-strip__label">puntos sumados</span></div>
-  <div class="stat-strip__item"><span class="stat-strip__value">3,7 km</span><span class="stat-strip__label">por vuelta en el Sendero Eco-parque</span></div>
+  <div class="stat-strip__item"><span class="stat-strip__value"><span class="count-up" style="--count-target:12;--count-digits:2"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">12</span></span></span><span class="stat-strip__label">corredores del club en la final</span></div>
+  <div class="stat-strip__item stat-strip__item--accent"><span class="stat-strip__value"><span class="count-up" style="--count-target:6;--count-digits:1"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">6</span></span></span><span class="stat-strip__label">podios (del 1.º al 5.º puesto)</span></div>
+  <div class="stat-strip__item"><span class="stat-strip__value"><span class="count-up" style="--count-target:256;--count-digits:3"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">256</span></span></span><span class="stat-strip__label">puntos sumados en Roldanillo</span></div>
+  <div class="stat-strip__item"><span class="stat-strip__value"><span class="count-up" style="--count-target:7;--count-digits:1"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">7</span></span></span><span class="stat-strip__label">del club entre los cinco primeros de la general</span></div>
 </div>
 
-## El viaje más largo de la temporada
+<nav class="jump-nav" aria-label="Salto rápido dentro de la crónica">
+  <span class="jump-nav__label">Salta a</span>
+  <a href="#resultados-del-club--xco">Resultados</a>
+  <a href="#la-general-final">La general</a>
+  <a href="#el-año-del-club-menos-salidas-más-podios">El año</a>
+  <a href="#un-aprendizaje">El aprendizaje</a>
+</nav>
 
-<!-- Bloque de color pre-escrito. VERIFICAR antes de publicar: que el viaje
-     haya sido por la Panorama (o corregir la vía), la duración real del
-     desplazamiento y que la referencia al parapente no sobre. Roldanillo es
-     sede mundial de vuelo libre y tierra del Museo Rayo — color legítimo,
-     pero solo si el texto lo aguanta sin volverse folleto turístico. -->
+## La final, en cuatro historias
 
-Roldanillo queda en el norte del Valle, a [CONFIRMAR: ~dos horas] de Yumbo por la vía Panorama, y para el club fue el desplazamiento más largo de la Copa Valle 2026. Es un pueblo acostumbrado a los visitantes que llegan mirando al cielo — su fama mundial se la dio el parapente —, pero este fin de semana la cita fue a ras de tierra: el **Sendero Eco-parque**, sede de la **sexta válida de la Copa Valle Paraíso de Todos GW Shimano 2026**.
-
-<!-- ── BLOQUE 3 · CONTEXTO TÉCNICO DE PISTA (60-120 palabras) ──
-     Dato fijo del evento: circuito de 3,7 km. PENDIENTE: desnivel, terreno
-     (¿tierra suelta, raíces, piedra?), tramos clave, clima del día y cómo
-     afectó la carrera. Imagen mental del esfuerzo para el lector familiar. -->
-
-[PENDIENTE — contexto de pista]
-
-<!-- ── BLOQUE 3b · MAPA DEL CIRCUITO — EN RESERVA ──
-     El componente `.circuit-map` existe y está probado en global.css, pero
-     NO se usa todavía: el trazado real del Sendero Eco-parque no está
-     levantado y un mapa de relleno ocupa pantalla sin decir nada.
-
-     Para activarlo hace falta, primero, el material:
-     · La forma del circuito (trazo a mano alzada, croquis del organizador o
-       el GPX del reconocimiento pasado a un `path` sobre viewBox 0 0 480 300).
-     · 4-6 momentos ubicados EN el trazado, concretos y con nombre propio
-       ("aquí Miguel Ángel pasó a Benavides en la tercera vuelta"), no
-       etiquetas genéricas de terreno.
-
-     Con eso en mano, el markup completo y las reglas están en la sección
-     "Componentes visuales de crónica" de .claude/agents/content-marketer.md,
-     y el histórico en el commit que estrenó el formato v4.
-     Misma convención que TrochaVerdeGrid: construido, documentado, sin usar
-     hasta que haya contenido que lo justifique. -->
-
-## Lo que se jugaba
-
-<!-- REESCRIBIR CON LA GENERAL POSTERIOR A YUMBO. Las cuentas de abajo se
-     escribieron con el PDF GENERAL V (tras Palmira), cuando Roldanillo era la
-     sexta de siete. Con la reprogramación, entre Palmira y Roldanillo se corre
-     Yumbo: todas las distancias cambian y aquí ya solo quedan 40 puntos en
-     juego, los últimos de la temporada. Rehacer el bloque con la general
-     publicada tras Yumbo y con quién viajó de verdad al norte del Valle.
-     Texto anterior, guardado como referencia de tono y estructura:
-
-     «El club llegaba a Roldanillo con las cuentas claras y **80 puntos todavía en juego** entre esta válida y la final. **Isabel Quiñones** era tercera de la general de Prejuvenil A Femenina, a **7 puntos** del segundo lugar. **Thiago Duque** tenía la distancia más corta del equipo: a **6 del podio** de Teteros Con Pedales con una sola válida corrida. **Mariana Coronado** estaba a 11 del tercer escalón de su categoría —el que ocupa su propia compañera—, **Miguel Ángel Anaya** a 13 en la categoría más poblada del campeonato, y **Sofía Gómez** a 20. Todo eso venía a decidirse en dos domingos: este, y el de casa.»
--->
-
-[PENDIENTE — lo que se jugaba, con la general posterior a Yumbo y los últimos
-40 puntos de la temporada en disputa]
-
-<!-- ── BLOQUE 4 · HISTORIAS DEL CLUB ──
-     Una sección ## por corredor o arco (dupla, regreso, debut), con título
-     con gancho (la historia, no el puesto). Estructura por sección:
-       1. .thread — el hilo de temporada (v4, nuevo): la pregunta con la que
-          el corredor llegó a Roldanillo y la respuesta que se llevó. Va
-          justo bajo el ## y antes del texto corrido. Ver abajo.
-       2. Cómo se desarrolló la carrera (salida, vuelta clave, momento decisivo).
-       3. Dato técnico (tiempo, diferencia con el siguiente).
-       4. Línea humana: qué significa para el proceso.
-       5. <figure> con foto(s): acción + podio si aplica.
-     Intercalar máx. 2-3 .stat-callout con números que cuenten historia sola.
-
-     SOBRE EL .thread — por qué existe
-     Hasta v3 el hilo de cada corredor vivía en estos comentarios: el lector
-     nunca veía que Isabel llegaba a 7 puntos del segundo lugar, así que el
-     resultado del domingo le llegaba sin tensión. El .thread saca ese
-     subtexto a la página y convierte la temporada en una serie: quien leyó
-     Palmira reconoce su pregunta, y quien no, entiende en dos líneas qué
-     estaba en juego. Reglas:
-       · "Venía con" — pasado, cuenta el estado ANTES de la válida, con la
-         cifra concreta (puntos, posición, la lección de la fecha anterior).
-       · "Se fue con" — el saldo REAL de Roldanillo. Puede ser una respuesta
-         negativa ("se fue sin acercarse: siguen siendo 7") o una pregunta
-         nueva de cara a la final. Nunca se maquilla.
-       · Máximo 2 líneas por lado. Si no cabe, es texto del cuerpo, no thread.
-       · Un corredor sin hilo entrante (debutante) va sin .thread: no se
-         inventa una pregunta para llenar el molde.
-
-     HILOS ENTRANTES (el lado "Venía con" ya redactado — retomar el que
-     corresponda y cerrarlo o dejarlo avanzado; verificados contra la crónica
-     y los PDFs de Palmira):
-
-     · Isabel Quiñones — ¿recortó los 7 puntos al 2° lugar de la general?
-       Venía de oro en gymkanas de Palmira (cero faltas y mejor tiempo) y 5ª
-       en el XCO. Arriba, Luciana Ríos llevaba pleno de 200/200.
-     · Mariana Coronado — volvió a su nivel en Palmira (plata, 36 pts). ¿Se
-       consolida? Estaba empatada a 139 con Miranda Dorado por el 4° y el
-       desempate la dejaba detrás; a 11 de Isabel: el podio se pelea en casa.
-     · Miguel Ángel Anaya — a 13 del podio de Infantil A (33 inscritos en la
-       tabla), acababa de pasar a Benavides por 3. La pelea más viva del club.
-     · Samuel Ortiz — doble podio en Palmira tras la fractura de mano y las
-       semanas por la ruta. ¿Sostiene la racha? Estaba a 9 puntos del 8°.
-     · Sofía Gómez — la más constante del club: cinco válidas, siempre entre
-       21 y 27 puntos. ¿Primer pico fuera del rango?
-     · Sophia Vargas — la lección de Palmira fue resolver el tráfico sin
-       perder la cabeza (venía de pelear arriba y ceder al quedar trancada).
-       ¿La aplicó? En gymkanas ya había demostrado la precisión.
-     · Jostin Villamizar — su lección fue de reconocimiento de circuito (la
-       vuelta de más a la palmera en Palmira). ¿Hizo el reconocimiento?
-     · Juan David Giraldo — decidió entrenar más seguido y corre cada válida
-       como diagnóstico. ¿Se le notó el paso adelante?
-       (PENDIENTE heredado de Palmira: confirmar si Preinfantil B es
-       categoría nueva para él o si el hito es su primer XCO completo.)
-     · Thiago Duque — a 6 del podio de Teteros Con Pedales sin correr desde
-       Cali. ¿Viajó a Roldanillo? Dos rivales lo pasaron sin que corriera.
-     · Juan Diego García — quinto de Élite, podio a 42: vivo en la matemática,
-       cuesta arriba en lo deportivo. Venía de su segunda mejor válida (27).
-     · Liam Guevara y Celeste Muriel — segunda salida de los teteros que
-       debutaron en Palmira llegando juntos (5 segundos entre los dos).
-     · Samuel Anaya — sexto de Preinfantil A sin correr desde La Cumbre.
-       ¿Volvió a la parrilla?
--->
-
-## [PENDIENTE — historia 1: título con gancho]
-
-<!-- Ejemplo de hilo ya redactado del lado izquierdo, si la historia 1 es
-     Isabel: "Llegó tercera de Prejuvenil A Femenina, a 7 puntos del segundo
-     lugar y con Luciana Ríos arriba con pleno de 200 sobre 200." -->
+### Mariana Coronado, al podio de la general
 
 <div class="thread">
-  <p class="thread__item thread__item--q"><span class="thread__tag">Venía con</span>[PENDIENTE — la pregunta de Palmira, con la cifra]</p>
-  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>[PENDIENTE — el saldo real de Roldanillo]</p>
+  <p class="thread__item thread__item--q"><span class="thread__tag">Venía con</span>Su primera victoria en la copa, en Yumbo, y el podio de la general a 1 punto.</p>
+  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>El segundo puesto de la final (0:52:22) y el tercero de la general, con 215 puntos.</p>
 </div>
 
 <figure class="figure--portrait">
   <img
-    src="/images/news/copa-valle-roldanillo-2026/[PENDIENTE].webp"
-    alt="[Corredor] del Club Trocha y Ruta en la séptima válida Copa Valle XCO, Roldanillo, 2026"
+    src="/images/news/copa-valle-roldanillo-2026/mariana-en-carrera-904.webp"
+    alt="Mariana Coronado, con casco blanco y el uniforme del club, pedalea por un tramo de arena húmeda con la placa 904"
+    width="800"
+    height="1212"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Mariana Coronado, placa 904, en plena carrera.</figcaption>
+</figure>
+
+### Samuel Ortiz: tres podios seguidos
+
+<div class="thread">
+  <p class="thread__item thread__item--q"><span class="thread__tag">Venía con</span>El octavo puesto de la general y podio en Palmira y en Yumbo.</p>
+  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>El tercer puesto de Prejuvenil A (0:59:03) y el quinto de la general: subió tres.</p>
+</div>
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-roldanillo-2026/samuel-en-carrera-609.webp"
+    alt="Samuel Ortiz, con casco verde, gafas y la chaqueta abierta, toma una curva de tierra seca con la placa 609"
+    width="640"
+    height="970"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Samuel Ortiz, placa 609, en carrera.</figcaption>
+</figure>
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-roldanillo-2026/samuel-ortiz-podio.webp"
+    alt="Samuel Ortiz, del Club Trocha y Ruta, en el tercer puesto del podio de Prejuvenil A en la séptima válida Copa Valle XCO, Roldanillo, 2026"
     width="1200"
     height="1600"
     loading="lazy"
     decoding="async"
   />
-  <figcaption>[PENDIENTE]</figcaption>
+  <figcaption>Samuel Ortiz, tercero en Prejuvenil A.</figcaption>
 </figure>
 
-[PENDIENTE — desarrollo, dato técnico, línea humana]
-
-<div class="stat-callout reveal">
-  <span class="stat-callout__value">—</span>
-  <span class="stat-callout__text">[PENDIENTE — un número que cuente una historia por sí solo]</span>
-</div>
-
-## [PENDIENTE — historia 2]
+### Isabel Quiñones: siete de siete
 
 <div class="thread">
-  <p class="thread__item thread__item--q"><span class="thread__tag">Venía con</span>[PENDIENTE]</p>
-  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>[PENDIENTE]</p>
+  <p class="thread__item thread__item--q"><span class="thread__tag">Venía con</span>Seis podios en seis válidas.</p>
+  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>El séptimo: quinta en Prejuvenil A Femenina. Cerró cuarta de la general, con 207 puntos.</p>
 </div>
 
-[PENDIENTE]
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-roldanillo-2026/isabel-en-carrera.webp"
+    alt="Isabel Quiñones, con casco gris y el uniforme del club, avanza con su bicicleta cargada de barro por un sendero entre árboles"
+    width="800"
+    height="1214"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Isabel Quiñones, con la bicicleta cargada de barro.</figcaption>
+</figure>
 
-<!-- ── BLOQUE 5 · VOCES (opcional) ──
-     Solo citas textuales reales recogidas en Roldanillo, con autorización.
-     Menor de edad: padre/tutor presente. Máx. 200 caracteres por cita.
-     Sin cita real → borrar el bloque completo, sin excepciones. -->
+### Miguel Ángel Anaya: a 7 puntos, entre 34
 
-<div class="pull-quote">
-  <p class="pull-quote__text">"[PENDIENTE — cita textual]"</p>
-  <p class="pull-quote__attribution">— [Nombre], [relación/categoría]</p>
+<div class="thread">
+  <p class="thread__item thread__item--q"><span class="thread__tag">Venía con</span>El quinto puesto de la general de Infantil A, a 9 puntos del podio.</p>
+  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>Quinto en la final (0:41:50) y quinto en la general de 34 corredores, a 7 del podio.</p>
 </div>
+
+
+<div class="figure-grid figure-grid--duo">
+  <figure>
+    <img
+      src="/images/news/copa-valle-roldanillo-2026/miguel-en-carrera-407.webp"
+      alt="Miguel Ángel Anaya, con casco blanco, gafas azules y el uniforme del club, baja por un sendero de tierra húmeda en su bicicleta, con la placa 407"
+      width="640"
+      height="969"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Miguel Ángel Anaya, placa 407.</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/copa-valle-roldanillo-2026/miguel-en-carrera-407-2.webp"
+      alt="Miguel Ángel Anaya, con casco blanco y las piernas llenas de barro, desciende por una ladera de tierra entre árboles, con la placa 407"
+      width="640"
+      height="970"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Cuarenta y un minutos de barro.</figcaption>
+  </figure>
+</div>
+
+Los otros dos podios: **Jeeykol Casamachin**, cuarto de 25 en Teteros Sin Pedales en su primera válida, y **Sofía Gómez**, quinta en Infantil A Femenina, que con esos 27 puntos subió al cuarto puesto de su general.
+
+<div class="figure-grid figure-grid--duo">
+  <figure>
+    <img
+      src="/images/news/copa-valle-roldanillo-2026/sofia-en-carrera-1257.webp"
+      alt="Sofía Gómez, con casco morado y el uniforme del club, baja por un sendero de tierra con barro en las piernas, con la placa 1257"
+      width="640"
+      height="970"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Sofía Gómez, 5.ª en Infantil A Femenina.</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/copa-valle-roldanillo-2026/jostin-en-carrera-362.webp"
+      alt="Jostin Villamizar, con la placa 362 y casco gris, toma una curva lado a lado con un rival del Club Súper Amigos Bike, entre cintas azules y amarillas"
+      width="640"
+      height="960"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Jostin Villamizar, 9.º en Infantil B.</figcaption>
+  </figure>
+</div>
+
+### Los Teteros: cuatro del club en la pista
+
+Teteros Sin Pedales es la categoría de la bicicleta de equilibrio, la primera del ciclomontañismo. En la foto, cuatro de los Teteros del club con el director deportivo, Oscar Ortiz.
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-roldanillo-2026/teteros-grupal.webp"
+    alt="Cuatro niños del Club Trocha y Ruta de Teteros Sin Pedales, embarrados y sonriendo sobre sus bicicletas de equilibrio con las placas 1440, 1414, 1422 y 1436, junto al director deportivo del club"
+    width="1200"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Los Teteros del club con Oscar Ortiz, director deportivo, antes de la salida.</figcaption>
+</figure>
+
+<div class="figure-grid figure-grid--duo">
+  <figure>
+    <img
+      src="/images/news/copa-valle-roldanillo-2026/teteros-jeeykol-1436.webp"
+      alt="Jeeykol Casamachin, con casco rojo, sonríe sobre su bicicleta de equilibrio naranja con la placa 1436"
+      width="640"
+      height="800"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Jeeykol Casamachin · 4.º</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/copa-valle-roldanillo-2026/teteros-mathiw-1414.webp"
+      alt="Mathiw Bohórquez, con el jersey del club y el pulgar arriba, junto a su bicicleta de equilibrio con la placa 1414"
+      width="640"
+      height="800"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Mathiw Bohórquez · 11.º</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/copa-valle-roldanillo-2026/teteros-celeste-1422.webp"
+      alt="Celeste Muriel, con casco morado y jersey rosado, sobre su bicicleta de equilibrio con la placa 1422"
+      width="640"
+      height="800"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Celeste Muriel · 14.ª</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/copa-valle-roldanillo-2026/teteros-javier-1440.webp"
+      alt="Javier Mosquera, con casco blanco integral, sonríe sobre su bicicleta de equilibrio con la placa 1440"
+      width="640"
+      height="800"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Javier Mosquera · 15.º</figcaption>
+  </figure>
+</div>
+
+<div class="figure-grid figure-grid--duo">
+  <figure>
+    <img
+      src="/images/news/copa-valle-roldanillo-2026/mathiw-en-barro.webp"
+      alt="Mathiw Bohórquez, con la placa 1414, empuja su bicicleta de equilibrio por un tramo de barro profundo, con la rueda delantera cubierta de lodo"
+      width="640"
+      height="1042"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Mathiw Bohórquez, en plena carrera.</figcaption>
+  </figure>
+  <figure>
+    <img
+      src="/images/news/copa-valle-roldanillo-2026/jeeykol-con-barro.webp"
+      alt="Jeeykol Casamachin, con la cara y las manos llenas de barro, hace la señal de paz sobre su bicicleta de equilibrio con la placa 1436"
+      width="640"
+      height="1042"
+      loading="lazy"
+      decoding="async"
+    />
+    <figcaption>Jeeykol Casamachin, 4.º, al llegar.</figcaption>
+  </figure>
+</div>
+
+<aside class="mid-cta" aria-label="Inscripciones al club">
+  <p class="mid-cta__text">
+    En Trocha y Ruta se aprende ciclomontañismo desde los 4 años, y la primera
+    clase es gratis.
+  </p>
+  <a class="mid-cta__link" href="/inscripciones" data-analytics-event="cta_inscripcion_click">
+    Clase de prueba gratis
+  </a>
+</aside>
 
 ## Resultados del club — XCO
 
-<!-- Del PDF oficial RESULTADOS VII. Negrita a los podios (top-5 Copa Valle).
-     Tiempo H:MM:SS · "-1 vuelta" si fue doblado · DNF solo en tabla. -->
-
 | Deportista | Categoría | Pos. | Tiempo | Puntos |
 |------------|-----------|:----:|--------|:------:|
-| [PENDIENTE] | | | | |
+| **Mariana Coronado** | Prejuvenil A Fem. | **2.ª** | 0:52:22 | 36 |
+| **Samuel Ortiz** | Prejuvenil A | **3.º** | 0:59:03 | 33 |
+| **Jeeykol Casamachin** | Teteros Sin Pedales | **4.º** | 0:06:57 | 30 |
+| **Miguel Ángel Anaya** | Infantil A | **5.º** | 0:41:50 | 27 |
+| **Sofía Gómez** | Infantil A Fem. | **5.ª** | -1 vuelta | 27 |
+| **Isabel Quiñones** | Prejuvenil A Fem. | **5.ª** | 1:07:19 | 27 |
+| Juan Diego García | Élite | 6.º | -2 vueltas | 25 |
+| Jostin Villamizar | Infantil B | 9.º | 0:43:34 | 19 |
+| Mathiw Bohórquez | Teteros Sin Pedales | 11.º | 0:10:58 | 15 |
+| Celeste Muriel | Teteros Sin Pedales | 14.ª | -1 vuelta | 9 |
+| Javier Mosquera | Teteros Sin Pedales | 15.º | -1 vuelta | 7 |
+| Matthew Bohórquez | Teteros Sin Pedales | 25.º | -2 vueltas | 1 |
 
-## La general del cierre
+<small>Fuente: resultados oficiales de la séptima válida. En la Copa Valle el podio llega hasta el quinto puesto.</small>
 
-Con las siete válidas disputadas, así queda Trocha y Ruta en la tabla general del **XCO** de la Copa Valle. Cuentas claras: es una general aparte, las gymkanas tienen su propio acumulado y no suman aquí.
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-roldanillo-2026/juan-diego-en-carrera.webp"
+    alt="Juan Diego García, con la placa 10, sube una rampa del circuito de Roldanillo en su bicicleta blanca, con casco gris, gafas y uniforme verde oliva y negro"
+    width="1000"
+    height="1452"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>Juan Diego García, placa 10, en la prueba Élite.</figcaption>
+</figure>
 
-<!-- ── TABLERO DE LA GENERAL (v4, nuevo) ──
-     La tabla de doce columnas es información de consulta: en el celular se
-     scrollea de lado y nadie suma puntos mentalmente. El tablero responde de
-     un vistazo la única pregunta que importa al cerrar la temporada:
-     ¿dónde terminó cada corredor y por cuánto?
+## La general final
 
-     CÓMO SE LLENA (todo sale del PDF GENERAL VII)
-     · --board-max:280 — máximo posible tras las siete válidas (40 por
-       válida). Es la escala común: no cambia entre corredores.
-     · --reach:0 — Roldanillo cierra la temporada: no quedan puntos por
-       repartir, así que la barra va sin zona rayada de alcance.
-     · --pts — puntos acumulados del corredor (columna Total).
-     · --pts-prev — su total ANTES de esta válida (Total menos lo que sumó
-       hoy). Dibuja el tramo claro al final de la barra: se ve de un vistazo
-       cuánto creció el corredor esta fecha. Si no se declara, la barra sale
-       sólida (correcto para la primera válida del año).
-     · --podio — puntos del 3° de SU categoría en la general. Es la línea
-       punteada. Este dato NO está en la fila del corredor: hay que leerlo
-       del top-3 de cada categoría en el PDF. Sin él la fila no se dibuja.
-     · Fila con el podio ya ocupado → añadir standings-board__row--podium
-       (pinta la barra en lima y resalta el meta).
-
-     MOVIMIENTO EN LA GENERAL (.standings-board__move)
-     El chip bajo el nombre dice cómo se movió respecto de la válida
-     anterior. Cuatro estados, cada uno con su modificador:
-       --up    ▲ subió al 4°        (ganó posiciones)
-       --down  ▼ bajó al 8°         (las perdió)
-       (base)  = mantiene el 5°     (sin cambio; va sin modificador)
-       --new   ★ entra a la general (primera vez que puntúa)
-     Reglas: la flecha va en un <span aria-hidden> y el VERBO en texto — el
-     color nunca es el único portador del dato, así funciona impreso en
-     blanco y negro y con lector de pantalla. Los puestos salen de comparar
-     el PDF GENERAL VII con el GENERAL VI; son los mismos datos de la columna
-     "Tendencia" de la tabla de abajo, así que deben coincidir con ella.
-     Si un corredor no corrió esta válida, igual puede haber bajado porque
-     otros lo pasaron: ese caso se marca --down y se explica en "Quién se
-     movió y por qué" (le pasó a Thiago tras Palmira).
-
-     LECTURA QUE HABILITA
-     · Línea punteada dentro de la barra → cerró en zona de podio.
-     · Línea punteada por delante de la barra → se quedó a esa distancia del
-       podio de su categoría; la crónica lo dice sin rodeos y cambia el foco
-       a lo deportivo y a lo que deja el año.
-
-     ACCESIBILIDAD: la pista es decorativa (aria-hidden). Todo el dato viaja
-     en el texto de __meta — hay que escribirlo completo ahí, incluida la
-     distancia al podio, o el lector de pantalla se queda sin la información.
-
-     EJEMPLO CON DATOS REALES DE PALMIRA (V válida), para calibrar:
-     Isabel, 150 pts tras sumar 27, 3ª de Prejuvenil A Fem., ya en podio →
-       <li class="standings-board__row standings-board__row--podium" style="--pts:150; --pts-prev:123; --podio:139">
-     Miguel Ángel, 133 tras sumar 33, 5° de Infantil A, subió un puesto →
-       <li class="standings-board__row" style="--pts:133; --pts-prev:100; --podio:146">
-     Ojo: esos --podio son ilustrativos; los reales salen del PDF GENERAL VII. -->
+Así cerraron los siete del club que terminaron entre los cinco primeros de su categoría en el **XCO** (las gymkanas llevan su propio acumulado). El tramo claro de cada barra es lo que sumó en Roldanillo; la línea punteada, el podio de su categoría.
 
 <ol class="standings-board" style="--board-max:280; --reach:0">
-  <li class="standings-board__row" style="--pts:0; --pts-prev:0; --podio:0">
+  <li class="standings-board__row standings-board__row--podium" style="--pts:215; --pts-prev:179; --podio:215">
     <span class="standings-board__label">
-      <span class="standings-board__name">[PENDIENTE — corredor]</span>
-      <span class="standings-board__meta">[Categoría] · [pos.] · [a X del podio / en podio]</span>
-      <span class="standings-board__move standings-board__move--up"><span aria-hidden="true">▲</span> subió al [X]°</span>
+      <span class="standings-board__name">Mariana Coronado</span>
+      <span class="standings-board__meta">Prejuvenil A Fem. · 3.ª de 7 · en el podio</span>
+      <span class="standings-board__move standings-board__move--up"><span aria-hidden="true">▲</span> subió al 3.º</span>
     </span>
     <span class="standings-board__track" aria-hidden="true">
       <span class="standings-board__reach"></span>
@@ -353,60 +383,240 @@ Con las siete válidas disputadas, así queda Trocha y Ruta en la tabla general 
       <span class="standings-board__podium"></span>
     </span>
     <span class="standings-board__total">
-      <span class="standings-board__total-value">—</span>
-      <span class="standings-board__total-gain">+— hoy</span>
+      <span class="standings-board__total-value">215</span>
+      <span class="standings-board__total-gain">+36 en la final</span>
+    </span>
+  </li>
+  <li class="standings-board__row" style="--pts:207; --pts-prev:180; --podio:215">
+    <span class="standings-board__label">
+      <span class="standings-board__name">Isabel Quiñones</span>
+      <span class="standings-board__meta">Prejuvenil A Fem. · 4.ª de 7 · a 8 del podio</span>
+      <span class="standings-board__move standings-board__move--down"><span aria-hidden="true">▼</span> bajó al 4.º</span>
+    </span>
+    <span class="standings-board__track" aria-hidden="true">
+      <span class="standings-board__reach"></span>
+      <span class="standings-board__bar"><span class="standings-board__gain"></span></span>
+      <span class="standings-board__podium"></span>
+    </span>
+    <span class="standings-board__total">
+      <span class="standings-board__total-value">207</span>
+      <span class="standings-board__total-gain">+27 en la final</span>
+    </span>
+  </li>
+  <li class="standings-board__row" style="--pts:187; --pts-prev:160; --podio:194">
+    <span class="standings-board__label">
+      <span class="standings-board__name">Miguel Ángel Anaya</span>
+      <span class="standings-board__meta">Infantil A · 5.º de 34 · a 7 del podio</span>
+      <span class="standings-board__move"><span aria-hidden="true">=</span> mantiene el 5.º</span>
+    </span>
+    <span class="standings-board__track" aria-hidden="true">
+      <span class="standings-board__reach"></span>
+      <span class="standings-board__bar"><span class="standings-board__gain"></span></span>
+      <span class="standings-board__podium"></span>
+    </span>
+    <span class="standings-board__total">
+      <span class="standings-board__total-value">187</span>
+      <span class="standings-board__total-gain">+27 en la final</span>
+    </span>
+  </li>
+  <li class="standings-board__row" style="--pts:173; --pts-prev:146; --podio:211">
+    <span class="standings-board__label">
+      <span class="standings-board__name">Sofía Gómez</span>
+      <span class="standings-board__meta">Infantil A Fem. · 4.ª de 9 · a 38 del podio</span>
+      <span class="standings-board__move standings-board__move--up"><span aria-hidden="true">▲</span> subió al 4.º</span>
+    </span>
+    <span class="standings-board__track" aria-hidden="true">
+      <span class="standings-board__reach"></span>
+      <span class="standings-board__bar"><span class="standings-board__gain"></span></span>
+      <span class="standings-board__podium"></span>
+    </span>
+    <span class="standings-board__total">
+      <span class="standings-board__total-value">173</span>
+      <span class="standings-board__total-gain">+27 en la final</span>
+    </span>
+  </li>
+  <li class="standings-board__row" style="--pts:157; --pts-prev:124; --podio:206">
+    <span class="standings-board__label">
+      <span class="standings-board__name">Samuel Ortiz</span>
+      <span class="standings-board__meta">Prejuvenil A · 5.º de 20 · a 49 del podio</span>
+      <span class="standings-board__move standings-board__move--up"><span aria-hidden="true">▲</span> subió al 5.º</span>
+    </span>
+    <span class="standings-board__track" aria-hidden="true">
+      <span class="standings-board__reach"></span>
+      <span class="standings-board__bar"><span class="standings-board__gain"></span></span>
+      <span class="standings-board__podium"></span>
+    </span>
+    <span class="standings-board__total">
+      <span class="standings-board__total-value">157</span>
+      <span class="standings-board__total-gain">+33 en la final</span>
+    </span>
+  </li>
+  <li class="standings-board__row" style="--pts:153; --pts-prev:128; --podio:210">
+    <span class="standings-board__label">
+      <span class="standings-board__name">Juan Diego García</span>
+      <span class="standings-board__meta">Élite · 5.º de 26 · a 57 del podio</span>
+      <span class="standings-board__move"><span aria-hidden="true">=</span> mantiene el 5.º</span>
+    </span>
+    <span class="standings-board__track" aria-hidden="true">
+      <span class="standings-board__reach"></span>
+      <span class="standings-board__bar"><span class="standings-board__gain"></span></span>
+      <span class="standings-board__podium"></span>
+    </span>
+    <span class="standings-board__total">
+      <span class="standings-board__total-value">153</span>
+      <span class="standings-board__total-gain">+25 en la final</span>
+    </span>
+  </li>
+  <li class="standings-board__row" style="--pts:60; --pts-prev:60; --podio:112">
+    <span class="standings-board__label">
+      <span class="standings-board__name">Thiago Duque</span>
+      <span class="standings-board__meta">Teteros Con Pedales · 5.º de 9 · a 52 del podio</span>
+      <span class="standings-board__move"><span aria-hidden="true">=</span> mantiene el 5.º</span>
+    </span>
+    <span class="standings-board__track" aria-hidden="true">
+      <span class="standings-board__reach"></span>
+      <span class="standings-board__bar"><span class="standings-board__gain"></span></span>
+      <span class="standings-board__podium"></span>
+    </span>
+    <span class="standings-board__total">
+      <span class="standings-board__total-value">60</span>
+      <span class="standings-board__total-gain">no corrió la final</span>
     </span>
   </li>
 </ol>
 
 <p class="standings-board__legend">
   <span><span class="standings-board__key"></span> puntos antes de Roldanillo</span>
-  <span><span class="standings-board__key standings-board__key--gain"></span> lo que sumó hoy</span>
-  <span><span class="standings-board__key standings-board__key--podium"></span> cerró en zona de podio</span>
+  <span><span class="standings-board__key standings-board__key--gain"></span> lo que sumó en la final</span>
+  <span><span class="standings-board__key standings-board__key--podium"></span> cerró en el podio</span>
   <span><span class="standings-board__key standings-board__key--line"></span> podio de su categoría</span>
 </p>
 
-### La tabla completa
+<details class="visit-details">
+<summary>La tabla completa, válida por válida</summary>
 
-<!-- Del PDF oficial de la general final, fila por fila. Ojo con el orden:
-     Roldanillo es la válida VII y se corre después de Yumbo (VI), así que
-     la tendencia se compara contra la general publicada tras Yumbo. Columna "Al podio" = puntos al top-3 del campeonato.
-     Se mantiene como respaldo de consulta bajo el tablero: hay familias que
-     sí quieren ver válida por válida. -->
+| Deportista | Categoría | Pos. | Tendencia | I | II | III | IV | V | VI | VII | Total |
+|------------|-----------|:----:|:---------:|:--:|:--:|:--:|:--:|:--:|:--:|:---:|:-----:|
+| Mariana Coronado | Prejuvenil A Fem. | **3.ª** | <span class="text-green-600 font-semibold">▲ +1</span> | 1 | 36 | 36 | 30 | 36 | 40 | 36 | **215** |
+| Isabel Quiñones | Prejuvenil A Fem. | **4.ª** | <span class="text-red-500 font-semibold">▼ -1</span> | 30 | 30 | 30 | 33 | 27 | 30 | 27 | **207** |
+| Miguel Ángel Anaya | Infantil A | **5.º** | <span class="text-gray-400">— Estable</span> | 36 | 1 | 36 | 27 | 33 | 27 | 27 | **187** |
+| Sofía Gómez | Infantil A Fem. | **4.ª** | <span class="text-green-600 font-semibold">▲ +1</span> | 21 | 23 | 27 | 25 | 23 | 27 | 27 | **173** |
+| Samuel Ortiz | Prejuvenil A | **5.º** | <span class="text-green-600 font-semibold">▲ +3</span> | 25 | 33 | 0 | 0 | 36 | 30 | 33 | **157** |
+| Juan Diego García | Élite | **5.º** | <span class="text-gray-400">— Estable</span> | 21 | 21 | 27 | 9 | 27 | 23 | 25 | **153** |
+| Sophia Vargas | Infantil A Fem. | **7.ª** | <span class="text-gray-400">— Estable</span> | 25 | 1 | 25 | 23 | 21 | 23 | 0 | **118** |
+| Jostin Villamizar | Infantil B | **12.º** | <span class="text-green-600 font-semibold">▲ +1</span> | 15 | 15 | 1 | 15 | 11 | 1 | 19 | **77** |
+| Thiago Duque | Teteros Con Pedales | **5.º** | <span class="text-gray-400">— Estable</span> | 0 | 0 | 0 | 30 | 0 | 30 | 0 | **60** |
+| Mathiw Bohórquez | Teteros Sin Pedales | **10.º** | <span class="text-green-600 font-semibold">▲ +3</span> | 0 | 0 | 15 | 0 | 0 | 25 | 15 | **55** |
+| Juan David Giraldo | Preinfantil B | **17.º** | <span class="text-red-500 font-semibold">▼ -1</span> | 11 | 7 | 0 | 7 | 7 | 13 | 0 | **45** |
+| Celeste Muriel | Teteros Sin Pedales | **15.ª** | <span class="text-green-600 font-semibold">▲ +3</span> | 0 | 0 | 0 | 0 | 9 | 15 | 9 | **33** |
+| Jerónimo Franco | Preinfantil A | **13.º** | <span class="text-blue-500 font-semibold">★ NUEVO</span> | 0 | 0 | 0 | 0 | 0 | 25 | 0 | **25** |
+| Ihsan Garcés | Teteros Sin Pedales | **21.º** | <span class="text-gray-400">—</span> | 0 | 0 | 13 | 0 | 0 | 5 | 0 | **18** |
+| Liam Guevara | Teteros Sin Pedales | **23.º** | <span class="text-red-500 font-semibold">▼ -1</span> | 0 | 0 | 0 | 0 | 11 | 3 | 0 | **14** |
+| Matías Montoya | Infantil A | **27.º** | <span class="text-gray-400">— Estable</span> | 1 | 1 | 0 | 1 | 0 | 1 | 0 | **4** |
+| Isabella Quiñones Caicedo | Infantil B Fem. | **16.ª** | <span class="text-gray-400">— Estable</span> | 0 | 0 | 0 | 0 | 0 | 1 | 0 | **1** |
+| Andrés Felipe Polanco | Prejuvenil A | **20.º** | <span class="text-gray-400">— Estable</span> | 0 | 0 | 0 | 0 | 0 | 1 | 0 | **1** |
+| Santiago Cardona | Promocional | **24.º** | <span class="text-gray-400">— Estable</span> | 0 | 0 | 0 | 0 | 0 | 1 | 0 | **1** |
+| Anderson Cárdenas | Promocional | **25.º** | <span class="text-gray-400">— Estable</span> | 0 | 0 | 0 | 0 | 0 | 1 | 0 | **1** |
+| Matthew Bohórquez | Teteros Sin Pedales | **27.º** | <span class="text-blue-500 font-semibold">★ NUEVO</span> | 0 | 0 | 0 | 0 | 0 | 0 | 1 | **1** |
 
-| Deportista | Categoría | Pos. | Tendencia | I | II | III | IV | V | VI | VII | Total | Al podio |
-|------------|-----------|:----:|:---------:|:--:|:--:|:--:|:--:|:--:|:--:|:---:|:-----:|:--------:|
-| [PENDIENTE] | | | <span class="text-gray-400">— Estable</span> | | | | | | | | | |
+<small>Fuente: general oficial tras la séptima válida; la tendencia compara con la general tras Yumbo. No incluye a los corredores del club que no corrieron ni en Yumbo ni en Roldanillo. Jeeykol Casamachin y Javier Mosquera corrieron la final, pero todavía no figuran en la general oficial.</small>
 
-### Quién se movió y por qué
+</details>
 
-<!-- Párrafos cortos por corredor con movimiento o pelea viva: la CAUSA del
-     movimiento, no solo la posición (patrón Palmira). Retomar los hilos
-     entrantes de arriba y actualizar las distancias. -->
+## El año del club: menos salidas, más podios
 
-[PENDIENTE]
+Frente a 2023, la temporada anterior en que la planilla oficial registra el club de cada corredor, Trocha y Ruta salió menos veces a la pista (88 contra 124) y subió más veces al podio.
 
-### La cuenta final
+<ul class="season-marks reveal">
+  <li class="season-marks__row" style="--now:33; --then:24">
+    <span class="season-marks__value">33</span>
+    <span class="season-marks__label">podios (del 1.º al 5.º) en siete válidas</span>
+    <span class="season-marks__bars" aria-hidden="true">
+      <span class="season-marks__bar season-marks__bar--now"></span>
+      <span class="season-marks__bar season-marks__bar--then"></span>
+    </span>
+    <span class="season-marks__then">En 2023: 24, con una válida más</span>
+  </li>
+  <li class="season-marks__row" style="--now:38; --then:19">
+    <span class="season-marks__value">38 %</span>
+    <span class="season-marks__label">de las salidas terminó en el podio</span>
+    <span class="season-marks__bars" aria-hidden="true">
+      <span class="season-marks__bar season-marks__bar--now"></span>
+      <span class="season-marks__bar season-marks__bar--then"></span>
+    </span>
+    <span class="season-marks__then">En 2023: 19 %</span>
+  </li>
+  <li class="season-marks__row" style="--now:9; --then:6">
+    <span class="season-marks__value">9</span>
+    <span class="season-marks__label">corredores distintos subieron al podio</span>
+    <span class="season-marks__bars" aria-hidden="true">
+      <span class="season-marks__bar season-marks__bar--now"></span>
+      <span class="season-marks__bar season-marks__bar--then"></span>
+    </span>
+    <span class="season-marks__then">En 2023: 6</span>
+  </li>
+  <li class="season-marks__row" style="--now:8; --then:5">
+    <span class="season-marks__value">8</span>
+    <span class="season-marks__label">categorías con podio del club</span>
+    <span class="season-marks__bars" aria-hidden="true">
+      <span class="season-marks__bar season-marks__bar--now"></span>
+      <span class="season-marks__bar season-marks__bar--then"></span>
+    </span>
+    <span class="season-marks__then">En 2023: 5</span>
+  </li>
+</ul>
 
-<!-- El bloque que más comparte la gente. Ya no hay fecha por delante: aquí va
-     el saldo del año — dónde terminó cada corredor y por cuánto. Actualizar
-     valores con el PDF de la general final; --accent al dato más noticioso.
-     Quitar o sumar items según las cuentas reales. -->
+<p class="season-marks__legend">
+  <span><span class="season-marks__key"></span> 2026</span>
+  <span><span class="season-marks__key season-marks__key--then"></span> 2023</span>
+</p>
 
-<div class="stat-strip reveal">
-  <div class="stat-strip__item stat-strip__item--accent"><span class="stat-strip__value">a —</span><span class="stat-strip__label">[corredor] del podio de [categoría]</span></div>
-  <div class="stat-strip__item"><span class="stat-strip__value">a —</span><span class="stat-strip__label">[corredor] del segundo lugar</span></div>
-  <div class="stat-strip__item"><span class="stat-strip__value">a —</span><span class="stat-strip__label">[corredor] del podio</span></div>
-  <div class="stat-strip__item"><span class="stat-strip__value">—</span><span class="stat-strip__label">puntos del club en la temporada</span></div>
-</div>
+De un año al otro, tres corredores mejoraron su mejor puesto en una válida:
+
+| Deportista | 2025 | 2026 |
+|------------|:----:|:----:|
+| Samuel Ortiz · Prejuvenil A | 6.º | **2.º** |
+| Mariana Coronado · subió a Prejuvenil A Fem. | 3.ª | **1.ª** |
+| Isabel Quiñones · Prejuvenil A Fem. | 5.ª | **3.ª** |
+
+Y en la general, cuatro corredores subieron de puesto frente a 2025:
+
+| Deportista | General 2025 | General 2026 |
+|------------|:------------:|:------------:|
+| Samuel Ortiz · Prejuvenil A | 12.º de 45 | **5.º de 20** |
+| Sofía Gómez · subió a Infantil A Fem. | 10.ª de 22 | **4.ª de 9** |
+| Juan Diego García · Élite | 6.º de 19 | **5.º de 26** |
+| Isabel Quiñones · Prejuvenil A Fem. | 5.ª de 18 | **4.ª de 7** |
+
+Mariana Coronado mantuvo el tercer puesto de la general (3.ª de 12 en 2025) al subir de categoría.
+
+<small>Fuente: planillas oficiales de la Copa Valle, cargadas en la plataforma del club; la general 2026 es la oficial. La general 2025 es la que calcula la plataforma sumando los puntos de las siete válidas, porque no hay una general oficial cargada. En 2022, 2024 y 2025 la planilla trae el municipio y no el club; por eso el balance del equipo se compara con 2023. Los campos de 2026 son más chicos que los de 2025: la copa pasó de 2.711 salidas en 2023 a 1.478.</small>
+
+## Un aprendizaje
+
+<aside class="lesson reveal" aria-label="Aprendizaje de la temporada">
+  <span class="lesson__pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+  <p class="lesson__headline">La copa premia al que está en todas.</p>
+  <ul class="lesson__proof">
+    <li class="lesson__item"><span class="lesson__num">6</span><span class="lesson__text">corredores del club puntuaron en las siete válidas</span></li>
+    <li class="lesson__item"><span class="lesson__num">5 de 6</span><span class="lesson__text">cerraron entre los cinco primeros de su categoría</span></li>
+    <li class="lesson__item"><span class="lesson__num">13 de 26</span><span class="lesson__text">corrieron solo una o dos válidas en el año</span></li>
+  </ul>
+  <p class="lesson__next">El reto para 2027: que esos trece vuelvan y que más corredores hagan la temporada completa.</p>
+</aside>
+
+<figure class="figure--portrait">
+  <img
+    src="/images/news/copa-valle-roldanillo-2026/equipo-grupal.webp"
+    alt="Integrantes del Club Trocha y Ruta al final de la séptima válida Copa Valle XCO en Roldanillo, 2026, con medallas y el trofeo de tercer lugar"
+    width="1200"
+    height="1600"
+    loading="lazy"
+    decoding="async"
+  />
+  <figcaption>El equipo, al final de la jornada en Roldanillo.</figcaption>
+</figure>
 
 ## Se acabó la Copa Valle 2026
 
-<!-- Cierre por escribir. La sección anterior anunciaba la final de Yumbo; con
-     el calendario reprogramado, Yumbo ya se corrió el 18 de octubre y
-     Roldanillo cierra el año. El cierre ahora mira hacia atrás (qué deja la
-     temporada, quién creció) y hacia adelante solo a lo que el club ya tenga
-     confirmado: nada de calendario 2027 inventado. Mantener el tono de las
-     crónicas anteriores: concreto, sin épica de más. -->
-
-[PENDIENTE — cierre de temporada]
+Fueron siete válidas entre enero y noviembre, 26 corredores del club y 88 salidas a la pista. Las próximas fechas del club están en el [calendario](/calendario).
