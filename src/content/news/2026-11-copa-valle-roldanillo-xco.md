@@ -1,5 +1,5 @@
 ---
-title: "Siete corredores del club, en el podio final de la Copa Valle 2026"
+title: "Mariana Coronado e Isabel Quiñones, tercera y cuarta de la Copa Valle 2026"
 date: 2026-11-08
 author: "Juan Diego García"
 category: "competencias"
@@ -7,7 +7,7 @@ tags: ["copa-valle", "copa-valle-2026", "xco", "roldanillo", "sendero-ecoparque"
 image: "/images/news/copa-valle-roldanillo-2026/afiche-copa-valle-roldanillo.webp"
 imageAlt: "Afiche de la gran final de la Copa Valle GW Shimano 2026 en el Sendero Ecoparque de Roldanillo"
 imageLayout: contain
-excerpt: "Mariana Coronado e Isabel Quiñones, tercera y cuarta de la general de Prejuvenil A Femenina. Siete del club cerraron la Copa Valle 2026 en el podio, que premia hasta el quinto."
+excerpt: "Mariana Coronado fue segunda en la final de Roldanillo y cerró tercera de la general. Isabel Quiñones, con siete podios en siete válidas, fue cuarta. Siete del club, entre los cinco primeros."
 featured: true
 draft: false
 relatedEvent: "2026-11-copa-valle-vi-roldanillo"
@@ -89,13 +89,13 @@ seo:
   <figcaption>Podio de Prejuvenil A Femenina: Mariana Coronado, segunda (a la izquierda de la ganadora), e Isabel Quiñones, quinta (a la derecha).</figcaption>
 </figure>
 
-La **Copa Valle Paraíso de Todos GW Shimano 2026** terminó el domingo 8 de noviembre en el Sendero Ecoparque de Roldanillo. En la séptima y última válida, **Mariana Coronado** fue segunda en Prejuvenil A Femenina, a 1 minuto y 27 segundos de Luciana Ríos, que ganó en casa, e **Isabel Quiñones** fue quinta. En la general de la categoría cerraron **tercera y cuarta**: las dos en el podio de la copa, que premia hasta el quinto puesto.
+La **Copa Valle Paraíso de Todos GW Shimano 2026** terminó el domingo 8 de noviembre en el Sendero Ecoparque de Roldanillo. En la séptima y última válida, **Mariana Coronado** fue segunda en Prejuvenil A Femenina, a 1 minuto y 27 segundos de Luciana Ríos, que ganó en casa, e **Isabel Quiñones** fue quinta. En la general de la categoría cerraron **tercera y cuarta**, separadas por 8 puntos: Mariana, en el podio de la copa, e Isabel, con siete podios en siete válidas.
 
 <div class="stat-strip reveal">
   <div class="stat-strip__item"><span class="stat-strip__value"><span class="count-up" style="--count-target:12;--count-digits:2"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">12</span></span></span><span class="stat-strip__label">corredores del club en la final</span></div>
   <div class="stat-strip__item stat-strip__item--accent"><span class="stat-strip__value"><span class="count-up" style="--count-target:6;--count-digits:1"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">6</span></span></span><span class="stat-strip__label">podios (del 1.º al 5.º puesto)</span></div>
   <div class="stat-strip__item"><span class="stat-strip__value"><span class="count-up" style="--count-target:256;--count-digits:3"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">256</span></span></span><span class="stat-strip__label">puntos sumados en Roldanillo</span></div>
-  <div class="stat-strip__item"><span class="stat-strip__value"><span class="count-up" style="--count-target:7;--count-digits:1"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">7</span></span></span><span class="stat-strip__label">del club en el podio de la general</span></div>
+  <div class="stat-strip__item"><span class="stat-strip__value"><span class="count-up" style="--count-target:7;--count-digits:1"><span class="count-up__digits" aria-hidden="true"></span><span class="sr-only">7</span></span></span><span class="stat-strip__label">del club entre los cinco primeros de la general</span></div>
 </div>
 
 <nav class="jump-nav" aria-label="Salto rápido dentro de la crónica">
@@ -162,7 +162,7 @@ La **Copa Valle Paraíso de Todos GW Shimano 2026** terminó el domingo 8 de nov
 
 <div class="thread">
   <p class="thread__item thread__item--q"><span class="thread__tag">Venía con</span>Seis podios en seis válidas y el tercer puesto de la general.</p>
-  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>El séptimo: quinta en Prejuvenil A Femenina. Cerró cuarta de la general, con 207 puntos, y en el podio de la copa.</p>
+  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>El séptimo: quinta en Prejuvenil A Femenina. Cerró cuarta de la general, con 207 puntos.</p>
 </div>
 
 <figure class="figure--portrait">
@@ -180,8 +180,8 @@ La **Copa Valle Paraíso de Todos GW Shimano 2026** terminó el domingo 8 de nov
 ### Miguel Ángel Anaya: a 7 puntos, entre 34
 
 <div class="thread">
-  <p class="thread__item thread__item--q"><span class="thread__tag">Venía con</span>El quinto puesto de la general de Infantil A, a 9 puntos del tercero.</p>
-  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>Quinto en la final (0:41:50) y quinto en la general de 34 corredores, en el podio y a 7 del tercero.</p>
+  <p class="thread__item thread__item--q"><span class="thread__tag">Venía con</span>El quinto puesto de la general de Infantil A, a 9 puntos del podio.</p>
+  <p class="thread__item thread__item--a"><span class="thread__tag">Se fue con</span>Quinto en la final (0:41:50) y quinto en la general de 34 corredores, a 7 del podio.</p>
 </div>
 
 
@@ -368,13 +368,13 @@ Teteros Sin Pedales es la categoría de la bicicleta de equilibrio, la primera d
 
 ## La general final
 
-Así cerraron los siete del club que terminaron en el podio de la general del **XCO**, que premia hasta el quinto puesto (las gymkanas llevan su propio acumulado). El tramo claro de cada barra es lo que sumó en Roldanillo; la línea punteada, el tercer puesto de su categoría.
+Así cerraron los siete del club que terminaron entre los cinco primeros de su categoría en el **XCO** (las gymkanas llevan su propio acumulado). El tramo claro de cada barra es lo que sumó en Roldanillo; la línea punteada, el podio de su categoría, que en la general es de tres puestos.
 
 <ol class="standings-board" style="--board-max:280; --reach:0">
-  <li class="standings-board__row" style="--pts:215; --pts-prev:179; --podio:215">
+  <li class="standings-board__row standings-board__row--podium" style="--pts:215; --pts-prev:179; --podio:215">
     <span class="standings-board__label">
       <span class="standings-board__name">Mariana Coronado</span>
-      <span class="standings-board__meta">Prejuvenil A Fem. · 3.ª de 7</span>
+      <span class="standings-board__meta">Prejuvenil A Fem. · 3.ª de 7 · en el podio</span>
       <span class="standings-board__move standings-board__move--up"><span aria-hidden="true">▲</span> subió al 3.º</span>
     </span>
     <span class="standings-board__track" aria-hidden="true">
@@ -390,7 +390,7 @@ Así cerraron los siete del club que terminaron en el podio de la general del **
   <li class="standings-board__row" style="--pts:207; --pts-prev:180; --podio:215">
     <span class="standings-board__label">
       <span class="standings-board__name">Isabel Quiñones</span>
-      <span class="standings-board__meta">Prejuvenil A Fem. · 4.ª de 7 · a 8 del 3.º</span>
+      <span class="standings-board__meta">Prejuvenil A Fem. · 4.ª de 7 · a 8 del podio</span>
       <span class="standings-board__move standings-board__move--down"><span aria-hidden="true">▼</span> bajó al 4.º</span>
     </span>
     <span class="standings-board__track" aria-hidden="true">
@@ -406,7 +406,7 @@ Así cerraron los siete del club que terminaron en el podio de la general del **
   <li class="standings-board__row" style="--pts:187; --pts-prev:160; --podio:194">
     <span class="standings-board__label">
       <span class="standings-board__name">Miguel Ángel Anaya</span>
-      <span class="standings-board__meta">Infantil A · 5.º de 34 · a 7 del 3.º</span>
+      <span class="standings-board__meta">Infantil A · 5.º de 34 · a 7 del podio</span>
       <span class="standings-board__move"><span aria-hidden="true">=</span> mantiene el 5.º</span>
     </span>
     <span class="standings-board__track" aria-hidden="true">
@@ -422,7 +422,7 @@ Así cerraron los siete del club que terminaron en el podio de la general del **
   <li class="standings-board__row" style="--pts:173; --pts-prev:146; --podio:211">
     <span class="standings-board__label">
       <span class="standings-board__name">Sofía Gómez</span>
-      <span class="standings-board__meta">Infantil A Fem. · 4.ª de 9 · a 38 del 3.º</span>
+      <span class="standings-board__meta">Infantil A Fem. · 4.ª de 9 · a 38 del podio</span>
       <span class="standings-board__move standings-board__move--up"><span aria-hidden="true">▲</span> subió al 4.º</span>
     </span>
     <span class="standings-board__track" aria-hidden="true">
@@ -438,7 +438,7 @@ Así cerraron los siete del club que terminaron en el podio de la general del **
   <li class="standings-board__row" style="--pts:157; --pts-prev:124; --podio:206">
     <span class="standings-board__label">
       <span class="standings-board__name">Samuel Ortiz</span>
-      <span class="standings-board__meta">Prejuvenil A · 5.º de 20 · a 49 del 3.º</span>
+      <span class="standings-board__meta">Prejuvenil A · 5.º de 20 · a 49 del podio</span>
       <span class="standings-board__move standings-board__move--up"><span aria-hidden="true">▲</span> subió al 5.º</span>
     </span>
     <span class="standings-board__track" aria-hidden="true">
@@ -454,7 +454,7 @@ Así cerraron los siete del club que terminaron en el podio de la general del **
   <li class="standings-board__row" style="--pts:153; --pts-prev:128; --podio:210">
     <span class="standings-board__label">
       <span class="standings-board__name">Juan Diego García</span>
-      <span class="standings-board__meta">Élite · 5.º de 26 · a 57 del 3.º</span>
+      <span class="standings-board__meta">Élite · 5.º de 26 · a 57 del podio</span>
       <span class="standings-board__move"><span aria-hidden="true">=</span> mantiene el 5.º</span>
     </span>
     <span class="standings-board__track" aria-hidden="true">
@@ -470,7 +470,7 @@ Así cerraron los siete del club que terminaron en el podio de la general del **
   <li class="standings-board__row" style="--pts:60; --pts-prev:60; --podio:112">
     <span class="standings-board__label">
       <span class="standings-board__name">Thiago Duque</span>
-      <span class="standings-board__meta">Teteros Con Pedales · 5.º de 9 · a 52 del 3.º</span>
+      <span class="standings-board__meta">Teteros Con Pedales · 5.º de 9 · a 52 del podio</span>
       <span class="standings-board__move"><span aria-hidden="true">=</span> mantiene el 5.º</span>
     </span>
     <span class="standings-board__track" aria-hidden="true">
@@ -488,7 +488,8 @@ Así cerraron los siete del club que terminaron en el podio de la general del **
 <p class="standings-board__legend">
   <span><span class="standings-board__key"></span> puntos antes de Roldanillo</span>
   <span><span class="standings-board__key standings-board__key--gain"></span> lo que sumó en la final</span>
-  <span><span class="standings-board__key standings-board__key--line"></span> tercer puesto de su categoría</span>
+  <span><span class="standings-board__key standings-board__key--podium"></span> cerró en el podio</span>
+  <span><span class="standings-board__key standings-board__key--line"></span> podio de su categoría</span>
 </p>
 
 <details class="visit-details">
