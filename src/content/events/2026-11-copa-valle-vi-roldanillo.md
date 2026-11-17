@@ -1,5 +1,6 @@
 ---
 title: "VII Válida Copa Valle 2026 - Roldanillo"
+shortName: "Válida VII"
 date: 2026-11-07
 endDate: 2026-11-08
 location: "Sendero Eco-parque"

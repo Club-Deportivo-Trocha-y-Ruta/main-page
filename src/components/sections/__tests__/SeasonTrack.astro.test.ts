@@ -35,36 +35,64 @@ describe('SeasonTrack', () => {
     expect(doc.querySelector('figure')).toBeNull();
   });
 
+  const stopsOf = (doc: Document) => [...doc.querySelectorAll('[data-stop-id]')];
+  const monthsOf = (doc: Document) => [...doc.querySelectorAll('figure > ol > li')];
+
   it('dibuja una parada por fecha, en orden', async () => {
     const doc = await render({ season });
-    const stops = [...doc.querySelectorAll('ol > li')];
+    const stops = stopsOf(doc);
     expect(stops).toHaveLength(4);
-    expect(stops.map((li) => li.textContent?.trim().split('\n').pop()?.trim())).toBeTruthy();
     expect(stops[0].textContent).toContain('Sevilla');
     expect(stops[3].textContent).toContain('Yumbo');
   });
 
-  it('llena la barra hasta donde va la temporada', async () => {
+  it('reparte el año en doce meses, con cada parada en el suyo', async () => {
     const doc = await render({ season });
-    const fill = [...doc.querySelectorAll('[aria-hidden="true"]')].find((el) =>
-      el.getAttribute('style')?.includes('width')
-    );
-    // 2 de 4 corridas → la mitad del riel
-    expect(fill?.getAttribute('style')).toContain('width:50%');
+    const months = monthsOf(doc);
+    expect(months).toHaveLength(12);
+    expect(months[0].textContent).toContain('enero');
+    expect(months[0].querySelector('[data-stop-id]')?.getAttribute('data-stop-id')).toBe('sevilla');
+    expect(months[7].querySelector('[data-stop-id]')?.getAttribute('data-stop-id')).toBe('palmira');
+    expect(months[9].querySelector('[data-stop-id]')?.getAttribute('data-stop-id')).toBe('yumbo');
+  });
+
+  it('dice "sin fechas" en los meses vacíos', async () => {
+    const doc = await render({ season });
+    const marzo = monthsOf(doc)[2];
+    expect(marzo.querySelector('[data-stop-id]')).toBeNull();
+    expect(marzo.textContent).toContain('Sin fechas');
+  });
+
+  it('llena el riel hasta hoy, mes por mes', async () => {
+    const doc = await render({ season });
+    const fills = monthsOf(doc).map((li) => li.querySelector('.season-track-fill'));
+    // Enero a julio, completos: sin recorte.
+    for (const fill of fills.slice(0, 7)) {
+      expect(fill?.getAttribute('style')).not.toContain('clip-path');
+    }
+    // Agosto, hasta el 15 de 31 días.
+    expect(fills[7]?.getAttribute('style')).toContain('clip-path:inset(0 51.61% 0 0');
+    // De septiembre en adelante, vacíos.
+    expect(fills.slice(8).every((fill) => fill === null)).toBe(true);
+  });
+
+  it('cada mes muestra su tramo del mismo degradado', async () => {
+    const doc = await render({ season });
+    const fills = monthsOf(doc).map((li) => li.querySelector('.season-track-fill'));
+    expect(fills[0]?.getAttribute('style')).toContain('background-position:0% 0');
+    expect(fills[7]?.getAttribute('style')).toContain('background-position:63.64% 0');
   });
 
   it('marca la próxima fecha y solo esa', async () => {
     const doc = await render({ season });
-    const marcas = [...doc.querySelectorAll('ol > li')].filter((li) =>
-      li.textContent?.includes('Sigue')
-    );
+    const marcas = stopsOf(doc).filter((li) => li.textContent?.includes('Sigue'));
     expect(marcas).toHaveLength(1);
     expect(marcas[0].textContent).toContain('Roldanillo');
   });
 
   it('enlaza cada parada con el prefijo que se le pase', async () => {
     const doc = await render({ season, hrefBase: '/calendario#evento-' });
-    expect([...doc.querySelectorAll('ol > li a')].map((a) => a.getAttribute('href'))).toEqual([
+    expect([...doc.querySelectorAll('[data-stop-id] a')].map((a) => a.getAttribute('href'))).toEqual([
       '/calendario#evento-sevilla',
       '/calendario#evento-palmira',
       '/calendario#evento-roldanillo',
@@ -74,9 +102,16 @@ describe('SeasonTrack', () => {
 
   it('nombra cada parada completa para lectores de pantalla', async () => {
     const doc = await render({ season });
-    const label = doc.querySelector('ol > li a')?.getAttribute('aria-label');
+    const label = doc.querySelector('[data-stop-id] a')?.getAttribute('aria-label');
     expect(label).toContain('I Válida Copa Valle 2026 - Sevilla');
-    expect(label).toContain('31');
+    expect(label).toContain('31 de enero de 2026');
+    expect(label).toContain('corrida');
+  });
+
+  it('anuncia la próxima en su nombre accesible, no solo con el rótulo visible', async () => {
+    const doc = await render({ season });
+    const label = doc.querySelector('[data-stop-id="roldanillo"] a')?.getAttribute('aria-label');
+    expect(label).toContain('la próxima');
   });
 
   it('resume el avance en el figcaption y oculta los adornos', async () => {
@@ -97,7 +132,7 @@ describe('SeasonTrack', () => {
 
     it('la deja en el riel, rotulada y tachada', async () => {
       const doc = await render({ season: seasonCancelada });
-      const parada = [...doc.querySelectorAll('ol > li')][2];
+      const parada = stopsOf(doc)[2];
       expect(parada.textContent).toContain('Roldanillo');
       expect(parada.textContent).toContain('Cancelada');
       expect(parada.innerHTML).toContain('line-through');
@@ -105,16 +140,14 @@ describe('SeasonTrack', () => {
 
     it('no la anuncia como la próxima: esa pasa a ser la siguiente en pie', async () => {
       const doc = await render({ season: seasonCancelada });
-      const marcas = [...doc.querySelectorAll('ol > li')].filter((li) =>
-        li.textContent?.includes('Sigue')
-      );
+      const marcas = stopsOf(doc).filter((li) => li.textContent?.includes('Sigue'));
       expect(marcas).toHaveLength(1);
       expect(marcas[0].textContent).toContain('Yumbo');
     });
 
     it('la nombra como cancelada para lectores de pantalla', async () => {
       const doc = await render({ season: seasonCancelada });
-      const label = [...doc.querySelectorAll('ol > li a')][2].getAttribute('aria-label');
+      const label = doc.querySelectorAll('[data-stop-id] a')[2].getAttribute('aria-label');
       expect(label).toContain('Roldanillo');
       expect(label).toContain('cancelada');
     });
@@ -126,33 +159,14 @@ describe('SeasonTrack', () => {
     });
   });
 
-  it('deja el riel lleno cuando ya no queda nada por correr', async () => {
+  it('no marca ninguna como la que sigue cuando ya no queda nada por correr', async () => {
     const doc = await render({ season: buildSeason(events, new Date('2026-12-01T17:00:00Z')) });
     expect(doc.body.textContent).not.toContain('Sigue');
-    expect(doc.body.innerHTML).toContain('width:100%');
   });
 
-  describe('centrado inicial del riel', () => {
-    it('marca cada parada con su id, para que el script la encuentre', async () => {
-      const doc = await render({ season });
-      expect([...doc.querySelectorAll('ol > li')].map((li) => li.getAttribute('data-stop-id'))).toEqual([
-        'sevilla',
-        'palmira',
-        'roldanillo',
-        'yumbo',
-      ]);
-    });
-
-    it('apunta el scroll a la próxima parada', async () => {
-      const doc = await render({ season });
-      expect(doc.querySelector('.season-track-scroll')?.getAttribute('data-scroll-to')).toBe(
-        'roldanillo'
-      );
-    });
-
-    it('apunta a la última parada cuando ya se corrió toda la temporada', async () => {
-      const doc = await render({ season: buildSeason(events, new Date('2026-12-01T17:00:00Z')) });
-      expect(doc.querySelector('.season-track-scroll')?.getAttribute('data-scroll-to')).toBe('yumbo');
-    });
+  it('cabe sin scroll horizontal ni JS', async () => {
+    const doc = await render({ season });
+    expect(doc.body.innerHTML).not.toContain('overflow-x-auto');
+    expect(doc.querySelector('script')).toBeNull();
   });
 });

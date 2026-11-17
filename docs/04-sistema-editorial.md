@@ -96,9 +96,9 @@ Ilustraciones disponibles en `src/lib/editorial.ts`:
   pariente vertical del perfil: sirve para historias y secuencias con fecha.
 - `groupByMonth()` (`src/lib/news.ts`) — parte una colección con fecha en meses
   rotulados. Sirve para cualquier archivo que crezca con el tiempo.
-- `SeasonTrack.astro` + `buildSeason()` — riel horizontal con una parada por
-  fecha y la barra llena hasta donde va el año. Sirve para cualquier secuencia
-  con un "vas aquí".
+- `SeasonTrack.astro` + `buildSeason()` — el año en doce meses, cada fecha en
+  el suyo y un riel segmentado que se llena hasta hoy. Sirve para cualquier
+  secuencia con fecha y un "vas aquí".
 - `SeasonRail.astro` — la versión de una línea del riel, para cuando no cabe el
   recorrido navegable: sin enlaces, sin texto sobre las paradas y con el dibujo
   `aria-hidden`, porque el dato equivalente viaja en un resumen `sr-only`. La
@@ -441,7 +441,15 @@ Tres movimientos que conviene repetir en las páginas que faltan:
 
 - **Una temporada, no una lista de fechas.** `SeasonTrack` responde de un vistazo
   "¿en qué punto vamos?": paradas apagadas para lo corrido, lima para la que
-  sigue y la barra llena hasta ahí. Cada parada enlaza al ancla de su fecha.
+  sigue y la barra llena hasta hoy. Cada parada enlaza al ancla de su fecha.
+- **El año mide doce meses, no N fechas.** El riel de una parada por fecha se
+  volvió un carrusel con scroll horizontal al llegar a 14 fechas (y necesitaba
+  un script para centrarse en la que sigue). Agrupar por mes (`season.months`)
+  deja el dibujo de tamaño fijo y sin JS: 3 × 4 trimestres en el teléfono,
+  4 × 3, 6 × 2 semestres y el año en una fila desde `xl`. Cada tramo del riel es
+  una porción del mismo degradado (`background-size: 1200%`), así que en fila
+  se lee como una sola barra de teal a lima. Una fecha que cruza de mes va en el
+  mes en que arranca.
 - **El estado se deriva, no se declara.** `resolveEventStatus()` lo calcula de la
   fecha; del frontmatter solo se respeta `cancelled`, que no se puede deducir.
   El campo manual se quedaba viejo: un evento del sábado pasado seguía

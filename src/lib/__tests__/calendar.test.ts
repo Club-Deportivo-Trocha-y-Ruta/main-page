@@ -258,6 +258,75 @@ describe('buildSeason', () => {
     expect(season.next).toBeNull();
   });
 
+  it('da la fecha de cada parada en prosa', () => {
+    const { stops } = buildSeason(temporada, hoy);
+    expect(stops[0].dateLabel).toBe('31 de enero de 2026');
+    expect(stops[2].dateLabel).toBe('1 y 2 de agosto de 2026');
+  });
+
+  describe('meses', () => {
+    it('reparte el año en doce meses con su nombre', () => {
+      const { months } = buildSeason(temporada, hoy);
+      expect(months).toHaveLength(12);
+      expect(months.map((m) => m.index)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+      expect(months[0].name).toBe('enero');
+      expect(months[0].short).toBe('ene');
+      expect(months[11].name).toBe('diciembre');
+    });
+
+    it('pone cada parada en el mes en que arranca y deja vacíos los demás', () => {
+      const { months } = buildSeason(temporada, hoy);
+      expect(months[0].stops.map((s) => s.id)).toEqual(['sevilla']);
+      expect(months[7].stops.map((s) => s.id)).toEqual(['palmira']);
+      expect(months[2].stops).toEqual([]);
+    });
+
+    it('agrupa varias fechas del mismo mes, en orden', () => {
+      const { months } = buildSeason(
+        [
+          evento('alcala', '2026-09-10', { city: 'Alcalá' }),
+          evento('yumbo', '2026-09-05', { city: 'Yumbo' }),
+        ],
+        hoy,
+      );
+      expect(months[8].stops.map((s) => s.id)).toEqual(['yumbo', 'alcala']);
+    });
+
+    it('una fecha que cruza de mes se anuncia en el mes en que arranca', () => {
+      const { months } = buildSeason(
+        [evento('cruce', '2026-07-31', { city: 'Pereira', endDate: at('2026-08-02') })],
+        hoy,
+      );
+      expect(months[6].stops.map((s) => s.id)).toEqual(['cruce']);
+      expect(months[7].stops).toEqual([]);
+    });
+
+    it('llena los meses hasta hoy: completos los pasados, en parte el actual', () => {
+      const { months } = buildSeason(temporada, hoy);
+      expect(months.slice(0, 7).every((m) => m.elapsed === 1)).toBe(true);
+      // 15 de agosto: 15 de 31 días.
+      expect(months[7].elapsed).toBeCloseTo(15 / 31, 3);
+      expect(months.slice(8).every((m) => m.elapsed === 0)).toBe(true);
+    });
+
+    it('cuenta el día en la zona del club, no en UTC', () => {
+      // 31 de agosto a las 9 p. m. en Bogotá ya es 1 de septiembre en UTC.
+      const { months } = buildSeason(temporada, new Date('2026-09-01T02:00:00Z'));
+      expect(months[7].elapsed).toBe(1);
+      expect(months[8].elapsed).toBe(0);
+    });
+
+    it('deja todo el año lleno cuando se muestra una temporada ya cerrada', () => {
+      const { months } = buildSeason(temporada, new Date('2027-01-10T17:00:00Z'));
+      expect(months.every((m) => m.elapsed === 1)).toBe(true);
+    });
+
+    it('deja todo el año vacío cuando la temporada aún no empieza', () => {
+      const { months } = buildSeason(temporada, new Date('2025-12-20T17:00:00Z'));
+      expect(months.every((m) => m.elapsed === 0)).toBe(true);
+    });
+  });
+
   // Dos paradas en la misma ciudad se leían como una fecha repetida: la
   // temporada 2026 pasa dos veces por Yumbo (chequeo del club + válida) y dos
   // por Ginebra (válida + campeonato departamental).

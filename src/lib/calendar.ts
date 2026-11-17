@@ -209,9 +209,35 @@ export interface SeasonStop<T> {
   qualifier: string | null;
   day: string;
   month: string;
+  /** La fecha en prosa («1 y 2 de agosto de 2026»), para lectores de pantalla. */
+  dateLabel: string;
   status: EventStatus;
   /** Posición del punto en la barra, en % del ancho total. */
   pct: number;
+}
+
+/**
+ * Un mes del año de la temporada, con sus paradas.
+ *
+ * El riel de una parada por fecha crecía con cada evento que se agregaba hasta
+ * no caber en la pantalla. El año, en cambio, siempre tiene doce meses: agrupar
+ * por mes deja el dibujo de un tamaño fijo, por muchas fechas que tenga la
+ * temporada, y además muestra el ritmo real del año (los meses sin carrera
+ * también cuentan).
+ */
+export interface SeasonMonth<T> {
+  /** 0 = enero. */
+  index: number;
+  /** "ene", "sept": el rótulo corto, como el de cada parada. */
+  short: string;
+  /** "enero": el nombre completo, para lectores de pantalla. */
+  name: string;
+  stops: SeasonStop<T>[];
+  /**
+   * Cuánto del mes ya pasó, de 0 a 1, contado hasta hoy en la zona del club.
+   * Los meses de un año ya cerrado valen 1 y los de uno por venir, 0.
+   */
+  elapsed: number;
 }
 
 export interface Season<T> {
@@ -225,6 +251,19 @@ export interface Season<T> {
   /** Avance de la temporada en %, para pintar la barra. */
   progressPct: number;
   next: SeasonStop<T> | null;
+  /** Los doce meses del año de la temporada, de enero a diciembre. */
+  months: SeasonMonth<T>[];
+}
+
+const MONTH_LONG = new Intl.DateTimeFormat('es-CO', { month: 'long', timeZone: 'UTC' });
+
+/** Fracción del mes `index` de `year` que ya pasó a la fecha `today` (`AAAA-MM-DD`). */
+function monthElapsed(year: number, index: number, today: string): number {
+  const [todayYear, todayMonth, todayDay] = today.split('-').map(Number);
+  if (year !== todayYear) return year < todayYear ? 1 : 0;
+  if (index !== todayMonth - 1) return index < todayMonth - 1 ? 1 : 0;
+  const daysInMonth = new Date(Date.UTC(year, index + 1, 0)).getUTCDate();
+  return Math.round((todayDay / daysInMonth) * 10000) / 10000;
 }
 
 interface SeasonInput {
@@ -276,6 +315,7 @@ export function buildSeason<T extends SeasonInput>(events: T[], now: Date = new 
     qualifier: repeated.has(labelOf(event)) ? (event.data.shortName ?? null) : null,
     day: dayLabel(event.data.date, event.data.endDate),
     month: monthShort(event.data.date),
+    dateLabel: longDateRange(event.data.date, event.data.endDate),
     status: resolveEventStatus(event.data, now),
     // Los puntos se reparten en el centro de su tramo.
     pct: Math.round(((index + 0.5) / inSeason.length) * 10000) / 100,
@@ -283,6 +323,20 @@ export function buildSeason<T extends SeasonInput>(events: T[], now: Date = new 
 
   const completed = stops.filter((s) => s.status === 'past' || s.status === 'ongoing').length;
   const cancelled = stops.filter((s) => s.status === 'cancelled').length;
+
+  // Cada parada va en el mes en que arranca: una fecha del 31 de julio al 2 de
+  // agosto se anuncia en julio, que es cuando hay que estar allá.
+  const today = clubToday(now);
+  const months: SeasonMonth<T>[] = Array.from({ length: 12 }, (_, index) => {
+    const first = new Date(Date.UTC(year, index, 1));
+    return {
+      index,
+      short: monthShort(first),
+      name: MONTH_LONG.format(first),
+      stops: stops.filter((stop) => stop.event.data.date.getUTCMonth() === index),
+      elapsed: monthElapsed(year, index, today),
+    };
+  });
 
   return {
     year,
@@ -292,6 +346,7 @@ export function buildSeason<T extends SeasonInput>(events: T[], now: Date = new 
     cancelled,
     progressPct: stops.length === 0 ? 0 : Math.round((completed / stops.length) * 10000) / 100,
     next: stops.find((s) => s.status === 'upcoming' || s.status === 'ongoing') ?? null,
+    months,
   };
 }
 

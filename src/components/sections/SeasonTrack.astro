@@ -1,26 +1,31 @@
 ---
 /**
- * La temporada como recorrido: una parada por fecha, con la barra llena hasta
- * donde va el año.
+ * La temporada de un vistazo: el año en doce meses, cada fecha en el suyo y una
+ * barra que se llena hasta hoy.
  *
- * Responde de un vistazo "¿en qué punto vamos?", que es lo que uno quiere saber
- * al abrir un calendario deportivo a mitad de temporada. Las paradas corridas
- * quedan apagadas, la que sigue se marca y las futuras van en hueco.
+ * Responde "¿en qué punto vamos?", que es lo que uno quiere saber al abrir un
+ * calendario deportivo a mitad de temporada. Lo corrido queda apagado, la que
+ * sigue se resalta en lima y lo que falta va en hueco.
  *
- * En pantallas estrechas el riel se desliza en horizontal con anclaje, igual
- * que la tira de corredores de las crónicas.
+ * Antes era un riel de una parada por fecha. Con 14 fechas ya no cabía ni en
+ * escritorio: el riel se volvía un carrusel con scroll horizontal, la mitad del
+ * año quedaba fuera de pantalla y hacía falta un script para centrarlo en la
+ * fecha que sigue. El año siempre tiene doce meses, así que agrupar por mes
+ * deja el dibujo de un tamaño fijo por muchas fechas que se sumen, muestra el
+ * ritmo real de la temporada (los meses sin carrera también se ven) y no
+ * necesita JS. La rejilla se reacomoda por trimestres en el teléfono (3 × 4),
+ * cuatrimestres (4 × 3), semestres (6 × 2) y el año corrido en escritorio.
  *
- * Por defecto el navegador abre el scroll en el extremo izquierdo, que es la
- * fecha más vieja: en un teléfono, con la temporada mediada, eso muestra puras
- * fechas corridas y nada dice que "lo que sigue" está a la derecha, fuera de
- * pantalla. El script centra el riel en la parada que sigue (o, si ya se corrió
- * todo, en la última) al cargar la página.
+ * La barra de cada mes es un tramo del mismo degradado: puestos en fila,
+ * los doce tramos dibujan un solo riel de teal a lima.
  */
 import { Icon } from 'astro-icon/components';
-import type { Season, SeasonStop } from '@lib/calendar';
+import type { Season, SeasonMonth, SeasonStop } from '@lib/calendar';
+
+type Entry = { id: string; data: { title: string } };
 
 interface Props {
-  season: Season<{ id: string; data: { title: string } }>;
+  season: Season<Entry>;
   /** Prefijo del enlace de cada parada, normalmente un ancla de la página. */
   hrefBase?: string;
   class?: string;
@@ -28,176 +33,203 @@ interface Props {
 
 const { season, hrefBase = '#evento-', class: className } = Astro.props;
 
-// Estilos por estado. El lima marca lo que sigue; lo corrido se apaga para que
-// la vista salte sola a la próxima fecha.
-const dot: Record<string, string> = {
-  past: 'size-3 bg-primary-deep/50',
-  ongoing: 'size-5 bg-accent ring-4 ring-accent/30',
-  upcoming: 'size-3.5 bg-surface ring-2 ring-primary-deep/40',
-  cancelled: 'size-3.5 bg-surface ring-2 ring-hairline',
-};
-
-type Stop = SeasonStop<{ id: string; data: { title: string } }>;
+type Stop = SeasonStop<Entry>;
+type Month = SeasonMonth<Entry>;
 
 const isNext = (stop: Stop) => season.next?.id === stop.id;
 const isCancelled = (stop: Stop) => stop.status === 'cancelled';
+const isCurrentMonth = (month: Month) => month.elapsed > 0 && month.elapsed < 1;
 
-// A dónde centrar el riel al cargar: la que sigue y, si ya no queda nada por
-// correr, la última parada — así el riel siempre abre en "el punto donde va".
-const scrollTargetId = season.next?.id ?? season.stops.at(-1)?.id ?? null;
+// Ningún estado depende solo del color: la que sigue es más grande y va
+// rotulada, lo corrido es relleno y lo que falta, hueco.
+const dot: Record<string, string> = {
+  past: 'size-2 bg-primary-deep/60',
+  ongoing: 'size-3 bg-accent ring-[3px] ring-accent/30',
+  upcoming: 'size-2.5 bg-surface ring-2 ring-primary-deep/40',
+};
+const dotFor = (stop: Stop) => (isNext(stop) ? dot.ongoing : (dot[stop.status] ?? dot.upcoming));
 
-// La próxima fecha lleva el mismo punto que una en curso: es el "vas aquí".
-const dotFor = (stop: Stop) =>
-  isNext(stop) ? dot.ongoing : (dot[stop.status] ?? dot.upcoming);
+const statusNote = (stop: Stop) => {
+  if (isCancelled(stop)) return ' — cancelada';
+  if (isNext(stop)) return stop.status === 'ongoing' ? ' — en curso' : ' — la próxima';
+  return stop.status === 'past' ? ' — corrida' : '';
+};
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+// El tramo `index` del degradado de todo el año: el fondo mide doce meses y se
+// corre hasta mostrar solo el que toca.
+const fillStyle = (month: Month) =>
+  [
+    `background-position:${round2((month.index / 11) * 100)}% 0`,
+    month.elapsed < 1 &&
+      `clip-path:inset(0 ${round2((1 - month.elapsed) * 100)}% 0 0 round 9999px)`,
+  ]
+    .filter(Boolean)
+    .join(';');
 ---
 
-{season.stops.length > 0 && (
-  <figure class:list={['not-prose', className]}>
-    <figcaption class="sr-only">
-      Temporada {season.year}: {season.completed} de {season.total} fechas corridas.
-      {season.cancelled > 0 &&
-        ` ${season.cancelled === 1 ? 'Una fecha cancelada' : `${season.cancelled} fechas canceladas`}.`}
-      {season.next &&
-        ` La próxima es en ${season.next.label}${
-          season.next.qualifier ? ` (${season.next.qualifier})` : ''
-        }.`}
-    </figcaption>
+{
+  season.stops.length > 0 && (
+    <figure class:list={['not-prose', className]}>
+      <figcaption class="sr-only">
+        Temporada {season.year}: {season.completed} de {season.total} fechas corridas.
+        {season.cancelled > 0 &&
+          ` ${season.cancelled === 1 ? 'Una fecha cancelada' : `${season.cancelled} fechas canceladas`}.`}
+        {season.next &&
+          ` La próxima es en ${season.next.label}${
+            season.next.qualifier ? ` (${season.next.qualifier})` : ''
+          }.`}
+      </figcaption>
 
-    <div class="flex flex-wrap items-baseline justify-between gap-2">
-      <p class="text-xs font-bold uppercase tracking-[0.16em] text-primary-deep">
-        Temporada {season.year}
-      </p>
-      <p class="text-xs text-text-secondary">
-        <span class="font-bold text-text-primary">{season.completed}</span> de {season.total} fechas
-        corridas
-        {season.cancelled > 0 && (
-          <span class="whitespace-nowrap">
-            {' · '}
-            {season.cancelled === 1 ? '1 cancelada' : `${season.cancelled} canceladas`}
-          </span>
-        )}
-      </p>
-    </div>
-
-    <div
-      class="season-track-scroll mt-4 snap-x snap-mandatory overflow-x-auto pb-2 [scrollbar-width:thin]"
-      data-scroll-to={scrollTargetId}
-    >
-      <div class="relative w-max min-w-full">
-        <!-- Riel: gris de punta a punta, lima hasta donde va la temporada -->
-        <div class="absolute inset-x-0 top-6 h-1 rounded-full bg-text-primary/10" aria-hidden="true"></div>
-        <div
-          class="absolute left-0 top-6 h-1 rounded-full bg-gradient-to-r from-primary to-accent"
-          style={`width:${season.progressPct}%`}
-          aria-hidden="true"
-        ></div>
-
-        <ol
-          class="relative grid"
-          style={`grid-template-columns:repeat(${season.stops.length},minmax(5.25rem,1fr))`}
-        >
-          {season.stops.map((stop) => (
-            <li class="flex snap-start flex-col items-center px-1 text-center" data-stop-id={stop.id}>
-              <a
-                href={`${hrefBase}${stop.id}`}
-                class="group flex w-full flex-col items-center rounded-lg pt-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                aria-label={`${stop.event.data.title} — ${stop.day} de ${stop.month}${
-                  isCancelled(stop) ? ' — cancelada' : ''
-                }`}
-              >
-                <span class="flex size-5 shrink-0 items-center justify-center" aria-hidden="true">
-                  {isCancelled(stop) ? (
-                    <Icon
-                      name="ph:x-circle-fill"
-                      class="size-5 text-text-secondary/60 transition-transform duration-200 group-hover:scale-125"
-                    />
-                  ) : (
-                    <span
-                      class:list={[
-                        'block rounded-full transition-transform duration-200 group-hover:scale-125',
-                        dotFor(stop),
-                      ]}
-                    ></span>
-                  )}
-                </span>
-
-                <span
-                  class:list={[
-                    'mt-3 font-display text-sm font-bold leading-none',
-                    stop.status === 'past' ? 'text-text-secondary' : 'text-text-primary',
-                    stop.status === 'cancelled' && 'line-through',
-                  ]}
-                >
-                  {stop.day}
-                </span>
-                <span class="mt-0.5 text-[10px] uppercase tracking-wider text-text-secondary">
-                  {stop.month}
-                </span>
-                <span
-                  class:list={[
-                    'mt-1.5 line-clamp-2 text-xs leading-tight',
-                    isNext(stop) ? 'font-bold text-accent-deep' : 'text-text-secondary',
-                    isCancelled(stop) && 'line-through decoration-1',
-                  ]}
-                >
-                  {stop.label}
-                </span>
-
-                {/*
-                  Solo cuando la temporada pasa dos veces por la misma ciudad:
-                  sin esto, "Yumbo" el 5 de septiembre y "Yumbo" el 18 de octubre
-                  se leen como la misma fecha repetida. Va en texto plano y no en
-                  chip para no competir con "Sigue" y "Cancelada", que son estado.
-                */}
-                {stop.qualifier && (
-                  <span
-                    class:list={[
-                      'mt-0.5 text-[10px] leading-tight text-text-secondary',
-                      isCancelled(stop) && 'line-through decoration-1',
-                    ]}
-                  >
-                    {stop.qualifier}
-                  </span>
-                )}
-
-                {isCancelled(stop) && (
-                  <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-text-primary/[0.06] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-text-secondary">
-                    Cancelada
-                  </span>
-                )}
-
-                {isNext(stop) && (
-                  <span class="mt-1 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-accent-deep">
-                    <Icon name="ph:caret-down-bold" class="size-3" aria-hidden="true" />
-                    Sigue
-                  </span>
-                )}
-              </a>
-            </li>
-          ))}
-        </ol>
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <p class="text-primary-deep text-xs font-bold tracking-[0.16em] uppercase">
+          Temporada {season.year}
+        </p>
+        <p class="text-text-secondary text-xs">
+          <span class="text-text-primary font-bold">{season.completed}</span> de {season.total}{' '}
+          fechas corridas
+          {season.cancelled > 0 && (
+            <span class="whitespace-nowrap">
+              {' · '}
+              {season.cancelled === 1 ? '1 cancelada' : `${season.cancelled} canceladas`}
+            </span>
+          )}
+        </p>
       </div>
-    </div>
-  </figure>
-)}
 
-<script is:inline>
-  (function () {
-    function centerScrollTarget(scroller) {
-      var id = scroller.getAttribute('data-scroll-to');
-      if (!id) return;
-      var selector = '[data-stop-id="' + (window.CSS?.escape ? CSS.escape(id) : id) + '"]';
-      var target = scroller.querySelector(selector);
-      if (!target) return;
-      var left = target.offsetLeft + target.offsetWidth / 2 - scroller.clientWidth / 2;
-      scroller.scrollLeft = Math.max(0, left);
-    }
+      <ol class="mt-5 grid grid-cols-3 gap-x-1.5 gap-y-6 sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-12">
+        {season.months.map((month) => (
+          <li class="min-w-0">
+            <p
+              class:list={[
+                'px-1 text-[11px] tracking-wider uppercase',
+                isCurrentMonth(month)
+                  ? 'text-primary-deep font-bold'
+                  : 'text-text-secondary font-semibold',
+              ]}
+            >
+              <span aria-hidden="true">{month.short}</span>
+              <span class="sr-only">{month.name}</span>
+            </p>
 
-    function init() {
-      document.querySelectorAll('.season-track-scroll').forEach(centerScrollTarget);
-    }
+            {/* Tramo del riel: gris de fondo, lleno hasta donde va el mes */}
+            <div class="relative mt-1.5 flex h-3 items-center" aria-hidden="true">
+              <div class="bg-text-primary/10 relative h-1.5 w-full overflow-hidden rounded-full">
+                {month.elapsed > 0 && (
+                  <div
+                    class="season-track-fill from-primary to-accent absolute inset-0 bg-gradient-to-r bg-[length:1200%_100%]"
+                    style={fillStyle(month)}
+                  />
+                )}
+              </div>
+              {isCurrentMonth(month) && (
+                <span
+                  class="bg-text-primary ring-surface absolute size-2.5 -translate-x-1/2 rounded-full ring-2"
+                  style={`left:${round2(month.elapsed * 100)}%`}
+                />
+              )}
+            </div>
 
-    init();
-    document.addEventListener('astro:page-load', init);
-  })();
-</script>
+            {month.stops.length > 0 ? (
+              <ul class="mt-2 flex flex-col gap-1">
+                {month.stops.map((stop) => (
+                  <li data-stop-id={stop.id}>
+                    <a
+                      href={`${hrefBase}${stop.id}`}
+                      class:list={[
+                        'group focus-visible:outline-primary flex items-start gap-1 rounded-md px-0.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2',
+                        isNext(stop)
+                          ? 'bg-accent/15 ring-accent/50 ring-1 ring-inset'
+                          : 'hover:bg-primary/8',
+                      ]}
+                      aria-label={`${stop.event.data.title} — ${stop.dateLabel}${statusNote(stop)}`}
+                    >
+                      <span
+                        class="flex h-5 w-3 shrink-0 items-center justify-center"
+                        aria-hidden="true"
+                      >
+                        {isCancelled(stop) ? (
+                          <Icon
+                            name="ph:x-circle-fill"
+                            class="text-text-secondary/60 size-3.5 group-hover:scale-125 motion-safe:transition-transform motion-safe:duration-200"
+                          />
+                        ) : (
+                          <span
+                            class:list={[
+                              'block rounded-full group-hover:scale-125 motion-safe:transition-transform motion-safe:duration-200',
+                              dotFor(stop),
+                            ]}
+                          />
+                        )}
+                      </span>
+
+                      <span class="flex min-w-0 flex-col items-start break-words hyphens-auto">
+                        <span
+                          class:list={[
+                            'font-display text-sm leading-5 font-bold',
+                            stop.status === 'past' ? 'text-text-secondary' : 'text-text-primary',
+                            isCancelled(stop) && 'line-through',
+                          ]}
+                        >
+                          {stop.day}
+                        </span>
+                        <span
+                          class:list={[
+                            'max-w-full text-xs leading-tight',
+                            isNext(stop)
+                              ? 'text-text-primary font-semibold'
+                              : 'text-text-secondary',
+                            isCancelled(stop) && 'line-through decoration-1',
+                          ]}
+                        >
+                          {stop.label}
+                        </span>
+
+                        {/*
+                        Solo cuando la temporada pasa dos veces por la misma ciudad:
+                        sin esto, "Yumbo" el 5 de septiembre y "Yumbo" el 18 de octubre
+                        se leen como la misma fecha repetida. Va en texto plano y no en
+                        chip para no competir con "Sigue" y "Cancelada", que son estado.
+                      */}
+                        {stop.qualifier && (
+                          <span
+                            class:list={[
+                              'text-text-secondary mt-0.5 max-w-full text-[10px] leading-tight',
+                              isCancelled(stop) && 'line-through decoration-1',
+                            ]}
+                          >
+                            {stop.qualifier}
+                          </span>
+                        )}
+
+                        {isCancelled(stop) && (
+                          <span class="bg-text-primary/[0.06] text-text-secondary mt-1 rounded-full px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase">
+                            Cancelada
+                          </span>
+                        )}
+
+                        {isNext(stop) && (
+                          <span class="text-accent-deep mt-1 text-[10px] font-bold tracking-wider uppercase">
+                            {stop.status === 'ongoing' ? 'En curso' : 'Sigue'}
+                          </span>
+                        )}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="mt-2 px-1 text-xs leading-5">
+                <span class="text-text-secondary/50" aria-hidden="true">
+                  —
+                </span>
+                <span class="sr-only">Sin fechas</span>
+              </p>
+            )}
+          </li>
+        ))}
+      </ol>
+    </figure>
+  )
+}
